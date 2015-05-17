@@ -1,0 +1,33 @@
+{
+  "name": "openzwave",
+  "version": "0.0.32",
+  "description": "Control a Z-Wave network via the Open Z-Wave library",
+  "main": "./lib/openzwave.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "install": "node-gyp rebuild"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/jperkin/node-openzwave.git"
+  },
+  "keywords": [
+    "zwave",
+    "z-wave",
+    "home",
+    "automation",
+    "openzwave"
+  ],
+  "author": "Jonathan Perkin <jonathan@perkin.org.uk> (http://www.perkin.org.uk/)",
+  "licenses": [
+    {
+      "type": "ISC",
+      "url": "http://opensource.org/licenses/ISC"
+    },
+    {
+      "type": "GPLv3",
+      "url": "http://opensource.org/licenses/GPL-3.0"
+    }
+  ],
+  "gypfile": true
+}

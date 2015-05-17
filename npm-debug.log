@@ -1,0 +1,46 @@
+info it worked if it ends with ok
+verbose cli [ 'node', '/usr/bin/npm', 'install', 'gyp', '-g' ]
+info using npm@1.1.4
+info using node@v0.6.12
+verbose config file /home/ekarak/.npmrc
+verbose config file /usr/etc/npmrc
+verbose config file /usr/share/npm/npmrc
+silly exec /usr/bin/node "/usr/share/npm/bin/npm-get-uid-gid.js" "nobody" 1000
+silly spawning [ '/usr/bin/node',
+silly spawning   [ '/usr/share/npm/bin/npm-get-uid-gid.js', 'nobody', 1000 ],
+silly spawning   null ]
+silly output from getuid/gid {"uid":65534,"gid":1000}
+silly output from getuid/gid 
+verbose cache add [ 'gyp', null ]
+silly cache add: name, spec, args [ undefined, 'gyp', [ 'gyp', null ] ]
+verbose parsed url { pathname: 'gyp', path: 'gyp', href: 'gyp' }
+verbose addNamed [ 'gyp', '' ]
+verbose addNamed [ null, '' ]
+silly name, range, hasData [ 'gyp', '', false ]
+verbose raw, before any munging gyp
+verbose url resolving [ 'https://registry.npmjs.org/', './gyp' ]
+verbose url resolved https://registry.npmjs.org/gyp
+http GET https://registry.npmjs.org/gyp
+ERR! Error: failed to fetch from registry: gyp
+ERR!     at /usr/share/npm/lib/utils/npm-registry-client/get.js:139:12
+ERR!     at cb (/usr/share/npm/lib/utils/npm-registry-client/request.js:31:9)
+ERR!     at Request._callback (/usr/share/npm/lib/utils/npm-registry-client/request.js:136:18)
+ERR!     at Request.callback (/usr/lib/nodejs/request/main.js:119:22)
+ERR!     at Request.<anonymous> (/usr/lib/nodejs/request/main.js:212:58)
+ERR!     at Request.emit (events.js:88:20)
+ERR!     at ClientRequest.<anonymous> (/usr/lib/nodejs/request/main.js:412:12)
+ERR!     at ClientRequest.emit (events.js:67:17)
+ERR!     at HTTPParser.onIncoming (http.js:1261:11)
+ERR!     at HTTPParser.onHeadersComplete (http.js:102:31)
+ERR! You may report this log at:
+ERR!     <http://bugs.debian.org/npm>
+ERR! or use
+ERR!     reportbug --attach /home/ekarak/src/node-openzwave/npm-debug.log npm
+ERR! 
+ERR! System Linux 3.5.0-41-generic
+ERR! command "node" "/usr/bin/npm" "install" "gyp" "-g"
+ERR! cwd /home/ekarak/src/node-openzwave
+ERR! node -v v0.6.12
+ERR! npm -v 1.1.4
+ERR! message failed to fetch from registry: gyp
+verbose exit [ 1, true ]
