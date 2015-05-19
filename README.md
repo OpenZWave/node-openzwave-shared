@@ -19,15 +19,20 @@ with it, OK?
 Manually compiling OpenZwave involves the usual dance of 
 (`make && sudo make install`) OR you could try installing
 a precompiled package (eg for Raspbian it should be like
-`sudo apt-get install libopenzwave-dev`)
+`sudo apt-get install libopenzwave-dev`). 
+
+Precompiled packages for various Linux flavours and architectures
+can also be downloaded from http://old.openzwave.com/snapshots/.
+Be sure to install BOTH the binary (libopenzwave-x.y) AND the development
+package (libopenzwave-dev).
 
 ## Install
 
-The module currently builds only on OS X and Linux.  On Linux you will need to
-ensure the libudev headers are installed first.
+The module currently builds only on Linux. On Linux you will need to
+ensure the OpenZWave library and headers are installed first.
 
-```sh
-$ npm install openzwave
+```
+$ sudo npm install -g node-red-contrib-openzwave
 ```
 
 ## API

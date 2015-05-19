@@ -1,15 +1,15 @@
 {
-  "name": "openzwave",
-  "version": "0.0.32",
-  "description": "Control a Z-Wave network via the Open Z-Wave library",
+  "name": "openzwave-shared",
+  "version": "0.0.1",
+  "description": "Provide Node.JS bindings for the OpenZWave library in order to control a Z-Wave network",
   "main": "./lib/openzwave.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "node test.js",
     "install": "node-gyp rebuild"
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/jperkin/node-openzwave.git"
+    "url": "git://github.com/ekarak/node-openzwave-shared.git"
   },
   "keywords": [
     "zwave",
@@ -18,7 +18,8 @@
     "automation",
     "openzwave"
   ],
-  "author": "Jonathan Perkin <jonathan@perkin.org.uk> (http://www.perkin.org.uk/)",
+  "author": "Elias Karakoulakis <elias.karakoulakis@gmail.com>",
+  "contributors": [ "Jonathan Perkin <jonathan@perkin.org.uk> (http://www.perkin.org.uk/)" ],
   "licenses": [
     {
       "type": "ISC",

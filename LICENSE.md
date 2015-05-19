@@ -1,13 +1,8 @@
 ## Licenses
 
-This software comprises two parts under different licenses.
+This software uses OpenZWave (GPLv3) but comes with 
 
 ### OpenZWave
-
-The OpenZWave library is everything held under `deps/open-zwave`, and is
-licensed under the GPL3:
-
-    OpenZWave
     
     Copyright (c) 2010 Mal Lansell <openzwave@lansell.org>
     
@@ -26,22 +21,23 @@ licensed under the GPL3:
     You should have received a copy of the GNU Lesser General Public License
     along with OpenZWave.  If not, see <http://www.gnu.org/licenses/>.
 
-You can find full copies of the GPL licenses under the
-`deps/open-zwave/license` directory.
+You can find full copies of the GPL licenses under OpenZWave's 
+installation directory.
 
 ### node-openzwave
 
 Everything else is licensed under the ISC license:
 
     Copyright (c) 2013 Jonathan Perkin <jonathan@perkin.org.uk>
+    Copyright (c) 2015 Elias Karakoulakis <elias.karakoulakis@gmail.com>
     
     Permission to use, copy, modify, and distribute this software for any
     purpose with or without fee is hereby granted, provided that the above
     copyright notice and this permission notice appear in all copies.
     
-    THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+    THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHORS DISCLAIM ALL WARRANTIES
     WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
-    MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+    MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR
     ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
     WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
     ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
