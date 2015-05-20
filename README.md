@@ -41,7 +41,7 @@ Start by loading the addon and creating a new instance, specifying a path to
 the USB device:
 
 ```js
-var OZW = require('openzwave');
+var OZW = require('node-openzwave-shared');
 var zwave = new OZW('/dev/ttyUSB0');
 ```
 
@@ -78,23 +78,26 @@ Modifying device state:
 /*
  * Set a multi-level device to the specified level (between 0-99).
  */
-zwave.setLevel(nodeid, level);
+zwave.setLevel(5, 50); // node 5: dim to 50%
 
 /*
  * Turn a binary switch on/off.
  */
-zwave.switchOn(nodeid);
-zwave.switchOff(nodeid);
+zwave.setNodeOn(3); // node 3: switch ON
+zwave.setNodeOff(3);// node 3: switch OFF
 
 /*
  * Set arbitrary values.
  */
-zwave.setValue(nodeid, commandclass, index, instance, value);
+zwave.setValue(nodeid, commandclass, instance, index, value);
 ```
+
 This is useful for multi-instance devices, such as the Fibaro FGS-221 eg:
 ```js
-zwave.setValue(8, 37, 0, 1, true); // turn on 1st output relay
-zwave.setValue(8, 37, 0, 2, true); // turn on 2nd output relay
+zwave.setValue(8, 37, 1, 0, true); // node 8: turn on 1st relay
+zwave.setValue(8, 37, 1, 0, false);// node 8: turn off 1st relay
+zwave.setValue(8, 37, 2, 0, true); // node 8: turn on 2nd relay
+zwave.setValue(8, 37, 2, 0, false);// node 8: turn off 2nd relay
 ```
 
 
@@ -116,9 +119,28 @@ Reset the controller.  Calling `hardReset` will clear any associations, so use
 carefully:
 
 ```js
-zwave.hardReset();      // destructive! will wipe out all known configuration
-zwave.softReset();      // non-destructive, just resets the chip
 ```
+
+Scenes control:
+```js
+createScene
+removeScene
+getScenes
+addSceneValue
+removeSceneValue
+sceneGetValues
+activateScene
+```
+
+ZWave network management:
+```js
+zwave.hardReset();      // destructive! will wipe out all configuration stored in the chip
+zwave.softReset();      // non-destructive, just resets the chip
+zwave.healNetworkNode
+zwave.healNetwork
+zwave.getNeighbors
+```
+
 
 ### Events
 
@@ -154,7 +176,7 @@ their unique identifiers are:
 * `COMMAND_CLASS_SWITCH_MULTILEVEL` (38)
 * `COMMAND_CLASS_VERSION` (134)
 
-Binary switches can be controlled with `.switchOn()` and `.switchOff()`.
+Binary switches can be controlled with `.setNodeOn()` and `.setNodeOff()`.
 
 Multi-level devices can be set with `.setLevel()`.
 
@@ -202,7 +224,7 @@ scan for changes until the user hits `^C`.
  * OpenZWave test program.
  */
 
-var OpenZWave = require('openzwave');
+var OpenZWave = require('openzwave-shared');
 
 var zwave = new OpenZWave('/dev/ttyUSB0', {
 	saveconfig: true,
