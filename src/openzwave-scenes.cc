@@ -1,242 +1,265 @@
-/* OpenZWave scene management functions */
+/*
+* Copyright (c) 2013 Jonathan Perkin <jonathan@perkin.org.uk>
+* Copyright (c) 2013 Elias Karakoulakis <elias.karakoulakis@gmail.com>
+* 
+* Permission to use, copy, modify, and distribute this software for any
+* purpose with or without fee is hereby granted, provided that the above
+* copyright notice and this permission notice appear in all copies.
+*
+* THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+* WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+* MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+* ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+* WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+* ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+* OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+*/
 
-Handle<Value> OZW::CreateScene(const Arguments& args) {
-	HandleScope scope;
+#include "openzwave.hpp"
+using namespace v8;
+using namespace node;
 
-	std::string label = (*String::Utf8Value(args[0]->ToString()));
+namespace OZW {
+	
+	/* OpenZWave scene management functions */
 
-	SceneInfo *scene;
+	Handle<Value> OZW::CreateScene(const Arguments& args) {
+		HandleScope scope;
 
-	uint8 sceneid = OpenZWave::Manager::Get()->CreateScene();
+		std::string label = (*String::Utf8Value(args[0]->ToString()));
 
-	if (sceneid > 0) {
-		OpenZWave::Manager::Get()->SetSceneLabel(sceneid, label);
-		scene = new SceneInfo();
-		scene->sceneid = sceneid;
-		scene->label = label;
-		mutex::scoped_lock sl(zscenes_mutex);
-		zscenes.push_back(scene);
-	}
+		SceneInfo *scene;
 
-	return scope.Close(Undefined());
-}
+		uint8 sceneid = OpenZWave::Manager::Get()->CreateScene();
 
-Handle<Value> OZW::RemoveScene(const Arguments& args) {
-	HandleScope scope;
-
-	uint8_t sceneid = args[0]->ToNumber()->Value();
-
-	SceneInfo *scene;
-
-	if ((scene = get_scene_info(sceneid))) {
-		OpenZWave::Manager::Get()->RemoveScene(sceneid);
-		mutex::scoped_lock sl(zscenes_mutex);
-		zscenes.remove(scene);
-	}
-
-	return scope.Close(Undefined());
-}
-
-Handle<Value> OZW::GetScenes(const Arguments& args) {
-	HandleScope scope;
-
-	uint8_t numscenes = OpenZWave::Manager::Get()->GetNumScenes();
-	Local <Value> cbargs[16];
-	SceneInfo *scene;
-
-	if (numscenes != zscenes.size()) {
-		{
-			mutex::scoped_lock sl(zscenes_mutex);
-			zscenes.clear();
-		}
-		uint8_t *sceneids;
-		sceneids = new uint8_t[numscenes];
-
-		OpenZWave::Manager::Get()->GetAllScenes(&sceneids);
-
-		for (unsigned i = 0; i < numscenes; i++) {
+		if (sceneid > 0) {
+			OpenZWave::Manager::Get()->SetSceneLabel(sceneid, label);
 			scene = new SceneInfo();
-			scene->sceneid = sceneids[i];
-
-			scene->label = OpenZWave::Manager::Get()->GetSceneLabel(sceneids[i]);
+			scene->sceneid = sceneid;
+			scene->label = label;
 			mutex::scoped_lock sl(zscenes_mutex);
 			zscenes.push_back(scene);
 		}
+
+		return scope.Close(Undefined());
 	}
 
-	Local<Array> scenes = Array::New(zscenes.size());
-	std::list<SceneInfo *>::iterator it;
-	unsigned j = 0;
+	Handle<Value> OZW::RemoveScene(const Arguments& args) {
+		HandleScope scope;
 
-	for (it = zscenes.begin(); it != zscenes.end(); ++it) {
-		scene = *it;
+		uint8_t sceneid = args[0]->ToNumber()->Value();
 
-		Local <Object> info = Object::New();
-		info->Set(String::NewSymbol("sceneid"), Integer::New(scene->sceneid));
-		info->Set(String::NewSymbol("label"), String::New(scene->label.c_str()));
+		SceneInfo *scene;
 
-		scenes->Set(Number::New(j++), info);
+		if ((scene = get_scene_info(sceneid))) {
+			OpenZWave::Manager::Get()->RemoveScene(sceneid);
+			mutex::scoped_lock sl(zscenes_mutex);
+			zscenes.remove(scene);
+		}
+
+		return scope.Close(Undefined());
 	}
 
-	cbargs[0] = String::New("scenes list");
-	cbargs[1] = scenes;
+	Handle<Value> OZW::GetScenes(const Arguments& args) {
+		HandleScope scope;
 
-	MakeCallback(context_obj, "emit", 2, cbargs);
+		uint8_t numscenes = OpenZWave::Manager::Get()->GetNumScenes();
+		Local <Value> cbargs[16];
+		SceneInfo *scene;
 
-	return scope.Close(Undefined());
-}
+		if (numscenes != zscenes.size()) {
+			{
+				mutex::scoped_lock sl(zscenes_mutex);
+				zscenes.clear();
+			}
+			uint8_t *sceneids;
+			sceneids = new uint8_t[numscenes];
 
-Handle<Value> OZW::AddSceneValue(const Arguments& args) {
-	HandleScope scope;
+			OpenZWave::Manager::Get()->GetAllScenes(&sceneids);
 
-	uint8_t sceneid = args[0]->ToNumber()->Value();
-	uint8_t nodeid = args[1]->ToNumber()->Value();
-	uint8_t comclass = args[2]->ToNumber()->Value();
-	uint8_t instance = args[3]->ToNumber()->Value();
-	uint8_t index = args[4]->ToNumber()->Value();
+			for (unsigned i = 0; i < numscenes; i++) {
+				scene = new SceneInfo();
+				scene->sceneid = sceneids[i];
 
-	NodeInfo *node;
-	std::list<OpenZWave::ValueID>::iterator vit;
+				scene->label = OpenZWave::Manager::Get()->GetSceneLabel(sceneids[i]);
+				mutex::scoped_lock sl(zscenes_mutex);
+				zscenes.push_back(scene);
+			}
+		}
 
-	if ((node = get_node_info(nodeid))) {
-		for (vit = node->values.begin(); vit != node->values.end(); ++vit) {
-			if (((*vit).GetCommandClassId() == comclass) && ((*vit).GetInstance() == instance) && ((*vit).GetIndex() == index)) {
+		Local<Array> scenes = Array::New(zscenes.size());
+		std::list<SceneInfo *>::iterator it;
+		unsigned j = 0;
 
-				switch ((*vit).GetType()) {
-					case OpenZWave::ValueID::ValueType_Bool: {
-						//bool val; OpenZWave::Manager::Get()->GetValueAsBool(*vit, &val);
-						bool val = args[5]->ToBoolean()->Value();
-						OpenZWave::Manager::Get()->AddSceneValue(sceneid, *vit, val);
-						break;
-					}
-					case OpenZWave::ValueID::ValueType_Byte: {
-						//uint8_t val; OpenZWave::Manager::Get()->GetValueAsByte(*vit, &val);
-						uint8_t val = args[5]->ToInteger()->Value();
-						OpenZWave::Manager::Get()->AddSceneValue(sceneid, *vit, val);
-						break;
-					}
-					case OpenZWave::ValueID::ValueType_Decimal: {
-						//float val; OpenZWave::Manager::Get()->GetValueAsFloat(*vit, &val);
-						float val = args[5]->ToNumber()->NumberValue();
-						OpenZWave::Manager::Get()->AddSceneValue(sceneid, *vit, val);
-						break;
-					}
-					case OpenZWave::ValueID::ValueType_Int: {
-						//int32_t val; OpenZWave::Manager::Get()->GetValueAsInt(*vit, &val);
-						int32_t val = args[5]->ToInteger()->Value();
-						OpenZWave::Manager::Get()->AddSceneValue(sceneid, *vit, val);
-						break;
-					}
-					case OpenZWave::ValueID::ValueType_List: {
-						//std::string val; OpenZWave::Manager::Get()->GetValueListSelection(*vit, &val);
-						std::string val = (*String::Utf8Value(args[5]->ToString()));
-						OpenZWave::Manager::Get()->AddSceneValue(sceneid, *vit, val);
-						break;
-					}
-					case OpenZWave::ValueID::ValueType_Short: {
-						//int16_t val; OpenZWave::Manager::Get()->GetValueAsShort(*vit, &val);
-						int16_t val = args[5]->ToInteger()->Value();
-						OpenZWave::Manager::Get()->AddSceneValue(sceneid, *vit, val);
-						break;
-					}
-					case OpenZWave::ValueID::ValueType_String: {
-						//std::string val; OpenZWave::Manager::Get()->GetValueAsString(*vit, &val);
-						std::string val = (*String::Utf8Value(args[5]->ToString()));
-						OpenZWave::Manager::Get()->AddSceneValue(sceneid, *vit, val);
-						break;
-					}
-					case OpenZWave::ValueID::ValueType_Schedule: {
-						break;
-					}
-					case OpenZWave::ValueID::ValueType_Button: {
-						break;
-					}
-					case OpenZWave::ValueID::ValueType_Raw: {
-						break;
+		for (it = zscenes.begin(); it != zscenes.end(); ++it) {
+			scene = *it;
+
+			Local <Object> info = Object::New();
+			info->Set(String::NewSymbol("sceneid"), Integer::New(scene->sceneid));
+			info->Set(String::NewSymbol("label"), String::New(scene->label.c_str()));
+
+			scenes->Set(Number::New(j++), info);
+		}
+
+		cbargs[0] = String::New("scenes list");
+		cbargs[1] = scenes;
+
+		MakeCallback(context_obj, "emit", 2, cbargs);
+
+		return scope.Close(Undefined());
+	}
+
+	Handle<Value> OZW::AddSceneValue(const Arguments& args) {
+		HandleScope scope;
+
+		uint8_t sceneid = args[0]->ToNumber()->Value();
+		uint8_t nodeid = args[1]->ToNumber()->Value();
+		uint8_t comclass = args[2]->ToNumber()->Value();
+		uint8_t instance = args[3]->ToNumber()->Value();
+		uint8_t index = args[4]->ToNumber()->Value();
+
+		NodeInfo *node;
+		std::list<OpenZWave::ValueID>::iterator vit;
+
+		if ((node = get_node_info(nodeid))) {
+			for (vit = node->values.begin(); vit != node->values.end(); ++vit) {
+				if (((*vit).GetCommandClassId() == comclass) && ((*vit).GetInstance() == instance) && ((*vit).GetIndex() == index)) {
+
+					switch ((*vit).GetType()) {
+						case OpenZWave::ValueID::ValueType_Bool: {
+							//bool val; OpenZWave::Manager::Get()->GetValueAsBool(*vit, &val);
+							bool val = args[5]->ToBoolean()->Value();
+							OpenZWave::Manager::Get()->AddSceneValue(sceneid, *vit, val);
+							break;
+						}
+						case OpenZWave::ValueID::ValueType_Byte: {
+							//uint8_t val; OpenZWave::Manager::Get()->GetValueAsByte(*vit, &val);
+							uint8_t val = args[5]->ToInteger()->Value();
+							OpenZWave::Manager::Get()->AddSceneValue(sceneid, *vit, val);
+							break;
+						}
+						case OpenZWave::ValueID::ValueType_Decimal: {
+							//float val; OpenZWave::Manager::Get()->GetValueAsFloat(*vit, &val);
+							float val = args[5]->ToNumber()->NumberValue();
+							OpenZWave::Manager::Get()->AddSceneValue(sceneid, *vit, val);
+							break;
+						}
+						case OpenZWave::ValueID::ValueType_Int: {
+							//int32_t val; OpenZWave::Manager::Get()->GetValueAsInt(*vit, &val);
+							int32_t val = args[5]->ToInteger()->Value();
+							OpenZWave::Manager::Get()->AddSceneValue(sceneid, *vit, val);
+							break;
+						}
+						case OpenZWave::ValueID::ValueType_List: {
+							//std::string val; OpenZWave::Manager::Get()->GetValueListSelection(*vit, &val);
+							std::string val = (*String::Utf8Value(args[5]->ToString()));
+							OpenZWave::Manager::Get()->AddSceneValue(sceneid, *vit, val);
+							break;
+						}
+						case OpenZWave::ValueID::ValueType_Short: {
+							//int16_t val; OpenZWave::Manager::Get()->GetValueAsShort(*vit, &val);
+							int16_t val = args[5]->ToInteger()->Value();
+							OpenZWave::Manager::Get()->AddSceneValue(sceneid, *vit, val);
+							break;
+						}
+						case OpenZWave::ValueID::ValueType_String: {
+							//std::string val; OpenZWave::Manager::Get()->GetValueAsString(*vit, &val);
+							std::string val = (*String::Utf8Value(args[5]->ToString()));
+							OpenZWave::Manager::Get()->AddSceneValue(sceneid, *vit, val);
+							break;
+						}
+						case OpenZWave::ValueID::ValueType_Schedule: {
+							break;
+						}
+						case OpenZWave::ValueID::ValueType_Button: {
+							break;
+						}
+						case OpenZWave::ValueID::ValueType_Raw: {
+							break;
+						}
 					}
 				}
 			}
 		}
+
+		return scope.Close(Undefined());
 	}
 
-	return scope.Close(Undefined());
-}
+	Handle<Value> OZW::RemoveSceneValue(const Arguments& args) {
+		HandleScope scope;
 
-Handle<Value> OZW::RemoveSceneValue(const Arguments& args) {
-	HandleScope scope;
+		uint8_t sceneid = args[0]->ToNumber()->Value();
+		uint8_t nodeid = args[1]->ToNumber()->Value();
+		uint8_t comclass = args[2]->ToNumber()->Value();
+		uint8_t instance = args[3]->ToNumber()->Value();
+		uint8_t index = args[4]->ToNumber()->Value();
 
-	uint8_t sceneid = args[0]->ToNumber()->Value();
-	uint8_t nodeid = args[1]->ToNumber()->Value();
-	uint8_t comclass = args[2]->ToNumber()->Value();
-	uint8_t instance = args[3]->ToNumber()->Value();
-	uint8_t index = args[4]->ToNumber()->Value();
+		SceneInfo *scene;
 
-	SceneInfo *scene;
+		std::list<OpenZWave::ValueID>::iterator vit;
 
-	std::list<OpenZWave::ValueID>::iterator vit;
-
-	if ((scene = get_scene_info(sceneid))) {
-		for (vit = scene->values.begin(); vit != scene->values.end(); ++vit) {
-			if (((*vit).GetNodeId() == nodeid) && ((*vit).GetCommandClassId() == comclass) && ((*vit).GetInstance() == instance) && ((*vit).GetIndex() == index)) {
-				OpenZWave::Manager::Get()->RemoveSceneValue(sceneid, *vit);
-				scene->values.erase(vit);
-				break;
+		if ((scene = get_scene_info(sceneid))) {
+			for (vit = scene->values.begin(); vit != scene->values.end(); ++vit) {
+				if (((*vit).GetNodeId() == nodeid) && ((*vit).GetCommandClassId() == comclass) && ((*vit).GetInstance() == instance) && ((*vit).GetIndex() == index)) {
+					OpenZWave::Manager::Get()->RemoveSceneValue(sceneid, *vit);
+					scene->values.erase(vit);
+					break;
+				}
 			}
 		}
+
+		return scope.Close(Undefined());
 	}
 
-	return scope.Close(Undefined());
-}
+	Handle<Value> OZW::SceneGetValues(const Arguments& args) {
+		HandleScope scope;
 
-Handle<Value> OZW::SceneGetValues(const Arguments& args) {
-	HandleScope scope;
+		uint8_t sceneid = args[0]->ToNumber()->Value();
 
-	uint8_t sceneid = args[0]->ToNumber()->Value();
+		std::vector<OpenZWave::ValueID> values;
 
-	std::vector<OpenZWave::ValueID> values;
+		std::vector<OpenZWave::ValueID>::iterator vit;
 
-	std::vector<OpenZWave::ValueID>::iterator vit;
+		OpenZWave::Manager::Get()->SceneGetValues(sceneid, &values);
 
-	OpenZWave::Manager::Get()->SceneGetValues(sceneid, &values);
+		SceneInfo *scene;
 
-	SceneInfo *scene;
+		if ((scene = get_scene_info(sceneid))) {
+			scene->values.clear();
 
-	if ((scene = get_scene_info(sceneid))) {
-		scene->values.clear();
+			Local <Value> cbargs[16];
 
-		Local <Value> cbargs[16];
+			Local<Array> v8values = Array::New(scene->values.size());
 
-		Local<Array> v8values = Array::New(scene->values.size());
+			unsigned j = 0;
 
-		unsigned j = 0;
+			for (vit = values.begin(); vit != values.end(); ++vit) {
+				mutex::scoped_lock sl(zscenes_mutex);
+				scene->values.push_back(*vit);
 
-		for (vit = values.begin(); vit != values.end(); ++vit) {
-			mutex::scoped_lock sl(zscenes_mutex);
-			scene->values.push_back(*vit);
+				v8values->Set(Number::New(j++), zwaveSceneValue2v8Value(sceneid, *vit));
+			}
 
-			v8values->Set(Number::New(j++), zwaveSceneValue2v8Value(sceneid, *vit));
+			cbargs[0] = String::New("scene values list");
+			cbargs[1] = v8values;
+
+			MakeCallback(context_obj, "emit", 2, cbargs);
 		}
 
-		cbargs[0] = String::New("scene values list");
-		cbargs[1] = v8values;
-
-		MakeCallback(context_obj, "emit", 2, cbargs);
+		return scope.Close(Undefined());
 	}
 
-	return scope.Close(Undefined());
-}
+	Handle<Value> OZW::ActivateScene(const Arguments& args) {
+		HandleScope scope;
 
-Handle<Value> OZW::ActivateScene(const Arguments& args) {
-	HandleScope scope;
+		uint8_t sceneid = args[0]->ToNumber()->Value();
 
-	uint8_t sceneid = args[0]->ToNumber()->Value();
+		SceneInfo *scene;
 
-	SceneInfo *scene;
+		if ((scene = get_scene_info(sceneid))) {
+			OpenZWave::Manager::Get()->ActivateScene(sceneid);
+		}
 
-	if ((scene = get_scene_info(sceneid))) {
-		OpenZWave::Manager::Get()->ActivateScene(sceneid);
+		return scope.Close(Undefined());
 	}
-
-	return scope.Close(Undefined());
 }
-
