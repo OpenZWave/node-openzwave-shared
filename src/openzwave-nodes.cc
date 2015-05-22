@@ -71,30 +71,6 @@ namespace OZW {
 		return scope.Close(Undefined());
 	}
 
-	// ===================================================================
-	Handle<v8::Value> OZW::SetNodeOn(const Arguments& args)
-	// ===================================================================
-	{
-		HandleScope scope;
-		uint8_t nodeid = args[0]->ToNumber()->Value();
-		
-		OpenZWave::Manager::Get()->SetNodeOn(homeid, nodeid);
-
-		return scope.Close(Undefined());
-	}
-
-	// ===================================================================
-	Handle<v8::Value> OZW::SetNodeOff(const Arguments& args)
-	// ===================================================================
-	{
-		HandleScope scope;
-		uint8_t nodeid = args[0]->ToNumber()->Value();
-		
-		OpenZWave::Manager::Get()->SetNodeOff(homeid, nodeid);
-
-		return scope.Close(Undefined());
-	}
-
 	/*
 	* Write a new location string to the device, if supported.
 	*/

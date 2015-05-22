@@ -404,8 +404,7 @@ namespace OZW {
 		//
 		NODE_SET_PROTOTYPE_METHOD(t, "hardReset", OZW::HardReset);
 		NODE_SET_PROTOTYPE_METHOD(t, "softReset", OZW::SoftReset);
-		NODE_SET_PROTOTYPE_METHOD(t, "setNodeOn", OZW::SetNodeOn);
-		NODE_SET_PROTOTYPE_METHOD(t, "setNodeOff", OZW::SetNodeOff);
+		//
 		NODE_SET_PROTOTYPE_METHOD(t, "switchAllOn", OZW::SwitchAllOn);
 		NODE_SET_PROTOTYPE_METHOD(t, "switchAllOff", OZW::SwitchAllOff);
 		//

@@ -6,7 +6,8 @@ Z-Wave](https://www.openzwave.com/) library to provide access to a
 Z-Wave network from JavaScript.
 
 It is currently able to scan a Z-Wave network, report on connected devices,
-monitor the network for changes, and has rudimentary write support.
+monitor the network for changes, and has rudimentary write support. Initial
+support for management functions is included. Stay tuned, work in progress!
 
 *Important notice*
 This fork uses OpenZWave as a *shared library*, so you need to have 
@@ -85,6 +86,8 @@ zwave.setLevel(5, 50); // node 5: dim to 50%
  */
 zwave.setNodeOn(3); // node 3: switch ON
 zwave.setNodeOff(3);// node 3: switch OFF
+zwave.setValue(3, 37, 1, 0, true); // node 3: turn on (the hard way)
+zwave.setValue(3, 37, 1, 0, false); // node 3: turn off (the hard way)
 
 /*
  * Set arbitrary values.
@@ -136,10 +139,18 @@ ZWave network management:
 ```js
 zwave.hardReset();      // destructive! will wipe out all configuration stored in the chip
 zwave.softReset();      // non-destructive, just resets the chip
-zwave.healNetworkNode
-zwave.healNetwork
-zwave.getNeighbors
+zwave.healNetworkNode (nodeId, doRR);
+zwave.healNetwork();   // guru meditation
+zwave.getNeighbors();
 ```
+
+ZWave controller commands: (*work in progress!!!*)
+```js
+zwave.beginControllerCommand( "command", node1_id, node2_id );
+zwave,cancelControllerCommand();
+```
+command can be "AddDevice", "RemoveDevice", "ReplaceFailedNode" etc.
+see http://www.openzwave.com/dev/classOpenZWave_1_1Driver.html#ac1a7f80c64bd9e5147be468b7b5a40d9 for a list of controller commands
 
 
 ### Events

@@ -106,8 +106,6 @@ namespace OZW {
 		static Handle<v8::Value> SetPollIntensity(const Arguments& args);
 		static Handle<v8::Value> HardReset(const Arguments& args);
 		static Handle<v8::Value> SoftReset(const Arguments& args);
-		static Handle<v8::Value> SetNodeOn(const Arguments& args);
-		static Handle<v8::Value> SetNodeOff(const Arguments& args);
 		static Handle<v8::Value> SwitchAllOn(const Arguments& args);
 		static Handle<v8::Value> SwitchAllOff(const Arguments& args);
 		static Handle<v8::Value> CreateScene(const Arguments& args);
