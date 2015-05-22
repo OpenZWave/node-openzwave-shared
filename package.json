@@ -1,6 +1,6 @@
 {
   "name": "openzwave-shared",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Provide Node.JS bindings for the OpenZWave library in order to control a Z-Wave network",
   "main": "./lib/openzwave.js",
   "scripts": {

@@ -1,6 +1,6 @@
 /*
 * Copyright (c) 2013 Jonathan Perkin <jonathan@perkin.org.uk>
-* Copyright (c) 2013 Elias Karakoulakis <elias.karakoulakis@gmail.com>
+* Copyright (c) 2015 Elias Karakoulakis <elias.karakoulakis@gmail.com>
 * 
 * Permission to use, copy, modify, and distribute this software for any
 * purpose with or without fee is hereby granted, provided that the above
@@ -14,6 +14,7 @@
 * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
+
 #include "openzwave.hpp"
 
 using namespace v8;
@@ -41,11 +42,15 @@ namespace OZW {
 
 	uint32_t homeid;
 	
+	
 	/*
 	* OpenZWave callback, just push onto queue and trigger the handler
 	* in v8 land.
 	*/
-	void cb(OpenZWave::Notification const *cb, void *ctx) {
+	// ===================================================================
+	void cb(OpenZWave::Notification const *cb, void *ctx)
+	// ===================================================================
+	{
 		NotifInfo *notif = new NotifInfo();
 
 		notif->type = cb->GetType();
@@ -89,7 +94,10 @@ namespace OZW {
 	/*
 	* Async handler, triggered by the OpenZWave callback.
 	*/
-	void async_cb_handler(uv_async_t *handle, int status) {
+	// ===================================================================
+	void async_cb_handler(uv_async_t *handle, int status)
+	// ===================================================================
+	{
 		NodeInfo *node;
 		NotifInfo *notif;
 		Local < Value > args[16];
@@ -154,7 +162,7 @@ namespace OZW {
 				MakeCallback(context_obj, "emit", 3, args);
 				break;
 			}
-														   // XXX: these should be supported correctly.
+			// TODO: these should be supported correctly.
 			case OpenZWave::Notification::Type_PollingEnabled:
 			case OpenZWave::Notification::Type_PollingDisabled:
 				break;
@@ -308,7 +316,10 @@ namespace OZW {
 		}
 	}
 
-	Handle<Value> OZW::New(const Arguments& args) {
+	// ===================================================================
+	Handle<v8::Value> OZW::New(const Arguments& args)
+	// ===================================================================
+	{
 		HandleScope scope;
 
 		assert(args.IsConstructCall());
@@ -335,7 +346,10 @@ namespace OZW {
 		return scope.Close(args.This());
 	}
 
-	Handle<Value> OZW::Connect(const Arguments& args) {
+	// ===================================================================
+	Handle<v8::Value> OZW::Connect(const Arguments& args)
+	// ===================================================================
+	{
 		HandleScope scope;
 
 		std::string path = (*String::Utf8Value(args[0]->ToString()));
@@ -348,13 +362,16 @@ namespace OZW {
 		OpenZWave::Manager::Get()->AddWatcher(cb, NULL);
 		OpenZWave::Manager::Get()->AddDriver(path);
 
-		Handle<Value> argv[1] = { String::New("connected") };
+		Handle<v8::Value> argv[1] = { String::New("connected") };
 		MakeCallback(context_obj, "emit", 1, argv);
 
 		return Undefined();
 	}
 
-	Handle<Value> OZW::Disconnect(const Arguments& args) {
+	// ===================================================================
+	Handle<v8::Value> OZW::Disconnect(const Arguments& args)
+	// ===================================================================
+	{
 		HandleScope scope;
 
 		std::string path = (*String::Utf8Value(args[0]->ToString()));
@@ -367,9 +384,10 @@ namespace OZW {
 		return scope.Close(Undefined());
 	}
 
+	// ===================================================================
 	extern "C" void init(Handle<Object> target) {
 		HandleScope scope;
-
+		
 		Local < FunctionTemplate > t = FunctionTemplate::New(OZW::New);
 		t->InstanceTemplate()->SetInternalFieldCount(1);
 		t->SetClassName(String::New("OZW"));
@@ -379,14 +397,18 @@ namespace OZW {
 		NODE_SET_PROTOTYPE_METHOD(t, "setValue", OZW::SetValue);
 		NODE_SET_PROTOTYPE_METHOD(t, "setLocation", OZW::SetLocation);
 		NODE_SET_PROTOTYPE_METHOD(t, "setName", OZW::SetName);
+		//
 		NODE_SET_PROTOTYPE_METHOD(t, "enablePoll", OZW::EnablePoll);
 		NODE_SET_PROTOTYPE_METHOD(t, "disablePoll", OZW::EnablePoll);
+		NODE_SET_PROTOTYPE_METHOD(t, "setPollInterval",  OZW::SetPollInterval);
+		//
 		NODE_SET_PROTOTYPE_METHOD(t, "hardReset", OZW::HardReset);
 		NODE_SET_PROTOTYPE_METHOD(t, "softReset", OZW::SoftReset);
 		NODE_SET_PROTOTYPE_METHOD(t, "setNodeOn", OZW::SetNodeOn);
 		NODE_SET_PROTOTYPE_METHOD(t, "setNodeOff", OZW::SetNodeOff);
 		NODE_SET_PROTOTYPE_METHOD(t, "switchAllOn", OZW::SwitchAllOn);
 		NODE_SET_PROTOTYPE_METHOD(t, "switchAllOff", OZW::SwitchAllOff);
+		//
 		NODE_SET_PROTOTYPE_METHOD(t, "createScene", OZW::CreateScene);
 		NODE_SET_PROTOTYPE_METHOD(t, "removeScene", OZW::RemoveScene);
 		NODE_SET_PROTOTYPE_METHOD(t, "getScenes", OZW::GetScenes);
@@ -394,14 +416,40 @@ namespace OZW {
 		NODE_SET_PROTOTYPE_METHOD(t, "removeSceneValue", OZW::RemoveSceneValue);
 		NODE_SET_PROTOTYPE_METHOD(t, "sceneGetValues", OZW::SceneGetValues);
 		NODE_SET_PROTOTYPE_METHOD(t, "activateScene", OZW::ActivateScene);
+		//
 		NODE_SET_PROTOTYPE_METHOD(t, "healNetworkNode", OZW::HealNetworkNode);
 		NODE_SET_PROTOTYPE_METHOD(t, "healNetwork", OZW::HealNetwork);
 		NODE_SET_PROTOTYPE_METHOD(t, "getNeighbors", OZW::GetNodeNeighbors);
+		//
 		NODE_SET_PROTOTYPE_METHOD(t, "setConfigParam", OZW::SetConfigParam);
-
+		//
+		NODE_SET_PROTOTYPE_METHOD(t, "beginControllerCommand", OZW::BeginControllerCommand);
+		NODE_SET_PROTOTYPE_METHOD(t, "cancelControllerCommand", OZW::CancelControllerCommand);
+		
 		target->Set(String::NewSymbol("Emitter"), t->GetFunction());
+		
+		/* for BeginControllerCommand
+		 * http://openzwave.com/dev/classOpenZWave_1_1Manager.html#aa11faf40f19f0cda202d2353a60dbf7b
+		 */ 
+		ctrlCmdNames = new CommandMap();
+		// (*ctrlCmdNames)["None"] 					= OpenZWave::Driver::ControllerCommand_None;
+		(*ctrlCmdNames)["AddDevice"]				= OpenZWave::Driver::ControllerCommand_AddDevice;
+		(*ctrlCmdNames)["CreateNewPrimary"] 		= OpenZWave::Driver::ControllerCommand_CreateNewPrimary;
+		(*ctrlCmdNames)["ReceiveConfiguration"] 	= OpenZWave::Driver::ControllerCommand_ReceiveConfiguration;
+		(*ctrlCmdNames)["RemoveDevice"]  			= OpenZWave::Driver::ControllerCommand_RemoveDevice;
+		(*ctrlCmdNames)["RemoveFailedNode"]			= OpenZWave::Driver::ControllerCommand_RemoveFailedNode;
+		(*ctrlCmdNames)["HasNodeFailed "]			= OpenZWave::Driver::ControllerCommand_HasNodeFailed;
+		(*ctrlCmdNames)["ReplaceFailedNode"]		= OpenZWave::Driver::ControllerCommand_ReplaceFailedNode;
+		(*ctrlCmdNames)["TransferPrimaryRole"]		= OpenZWave::Driver::ControllerCommand_TransferPrimaryRole;
+		(*ctrlCmdNames)["RequestNetworkUpdate"]		= OpenZWave::Driver::ControllerCommand_RequestNetworkUpdate;
+		(*ctrlCmdNames)["RequestNodeNeighborUpdate"]= OpenZWave::Driver::ControllerCommand_RequestNodeNeighborUpdate;
+		(*ctrlCmdNames)["AssignReturnRoute"] 		= OpenZWave::Driver::ControllerCommand_AssignReturnRoute;
+		(*ctrlCmdNames)["DeleteAllReturnRoutes"]	= OpenZWave::Driver::ControllerCommand_DeleteAllReturnRoutes;
+		(*ctrlCmdNames)["SendNodeInformation"] 		= OpenZWave::Driver::ControllerCommand_SendNodeInformation;
+		(*ctrlCmdNames)["ReplicationSend"] 			= OpenZWave::Driver::ControllerCommand_ReplicationSend;
+		(*ctrlCmdNames)["CreateButton"]				= OpenZWave::Driver::ControllerCommand_CreateButton;
+		(*ctrlCmdNames)["DeleteButton"]				= OpenZWave::Driver::ControllerCommand_DeleteButton;
 	}
-
 }
 
 NODE_MODULE(openzwave, OZW::init)

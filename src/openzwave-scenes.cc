@@ -1,6 +1,6 @@
 /*
 * Copyright (c) 2013 Jonathan Perkin <jonathan@perkin.org.uk>
-* Copyright (c) 2013 Elias Karakoulakis <elias.karakoulakis@gmail.com>
+* Copyright (c) 2015 Elias Karakoulakis <elias.karakoulakis@gmail.com>
 * 
 * Permission to use, copy, modify, and distribute this software for any
 * purpose with or without fee is hereby granted, provided that the above
@@ -16,14 +16,17 @@
 */
 
 #include "openzwave.hpp"
+
 using namespace v8;
 using namespace node;
 
 namespace OZW {
 	
 	/* OpenZWave scene management functions */
-
-	Handle<Value> OZW::CreateScene(const Arguments& args) {
+	// ===================================================================
+	Handle<v8::Value> OZW::CreateScene(const Arguments& args) 
+	// ===================================================================
+	{
 		HandleScope scope;
 
 		std::string label = (*String::Utf8Value(args[0]->ToString()));
@@ -44,7 +47,10 @@ namespace OZW {
 		return scope.Close(Undefined());
 	}
 
-	Handle<Value> OZW::RemoveScene(const Arguments& args) {
+	// ===================================================================
+	Handle<v8::Value> OZW::RemoveScene(const Arguments& args)
+	// ===================================================================
+	{
 		HandleScope scope;
 
 		uint8_t sceneid = args[0]->ToNumber()->Value();
@@ -60,11 +66,14 @@ namespace OZW {
 		return scope.Close(Undefined());
 	}
 
-	Handle<Value> OZW::GetScenes(const Arguments& args) {
+	// ===================================================================
+	Handle<v8::Value> OZW::GetScenes(const Arguments& args)
+	// ===================================================================
+	{
 		HandleScope scope;
 
 		uint8_t numscenes = OpenZWave::Manager::Get()->GetNumScenes();
-		Local <Value> cbargs[16];
+		Local <v8::Value> cbargs[16];
 		SceneInfo *scene;
 
 		if (numscenes != zscenes.size()) {
@@ -109,7 +118,10 @@ namespace OZW {
 		return scope.Close(Undefined());
 	}
 
-	Handle<Value> OZW::AddSceneValue(const Arguments& args) {
+	// ===================================================================
+	Handle<v8::Value> OZW::AddSceneValue(const Arguments& args)
+	// ===================================================================
+	{
 		HandleScope scope;
 
 		uint8_t sceneid = args[0]->ToNumber()->Value();
@@ -185,7 +197,10 @@ namespace OZW {
 		return scope.Close(Undefined());
 	}
 
-	Handle<Value> OZW::RemoveSceneValue(const Arguments& args) {
+	// ===================================================================
+	Handle<v8::Value> OZW::RemoveSceneValue(const Arguments& args)
+	// ===================================================================
+	{
 		HandleScope scope;
 
 		uint8_t sceneid = args[0]->ToNumber()->Value();
@@ -211,13 +226,15 @@ namespace OZW {
 		return scope.Close(Undefined());
 	}
 
-	Handle<Value> OZW::SceneGetValues(const Arguments& args) {
+	// ===================================================================
+	Handle<v8::Value> OZW::SceneGetValues(const Arguments& args)
+	// ===================================================================
+	{
 		HandleScope scope;
 
 		uint8_t sceneid = args[0]->ToNumber()->Value();
 
 		std::vector<OpenZWave::ValueID> values;
-
 		std::vector<OpenZWave::ValueID>::iterator vit;
 
 		OpenZWave::Manager::Get()->SceneGetValues(sceneid, &values);
@@ -227,7 +244,7 @@ namespace OZW {
 		if ((scene = get_scene_info(sceneid))) {
 			scene->values.clear();
 
-			Local <Value> cbargs[16];
+			Local <v8::Value> cbargs[16];
 
 			Local<Array> v8values = Array::New(scene->values.size());
 
@@ -249,7 +266,10 @@ namespace OZW {
 		return scope.Close(Undefined());
 	}
 
-	Handle<Value> OZW::ActivateScene(const Arguments& args) {
+	// ===================================================================
+	Handle<v8::Value> OZW::ActivateScene(const Arguments& args)
+	// ===================================================================
+	{
 		HandleScope scope;
 
 		uint8_t sceneid = args[0]->ToNumber()->Value();

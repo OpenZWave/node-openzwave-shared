@@ -1,6 +1,6 @@
 /*
 * Copyright (c) 2013 Jonathan Perkin <jonathan@perkin.org.uk>
-* Copyright (c) 2013 Elias Karakoulakis <elias.karakoulakis@gmail.com>
+* Copyright (c) 2015 Elias Karakoulakis <elias.karakoulakis@gmail.com>
 * 
 * Permission to use, copy, modify, and distribute this software for any
 * purpose with or without fee is hereby granted, provided that the above
@@ -16,6 +16,7 @@
 */
 
 #include "openzwave.hpp"
+
 using namespace v8;
 using namespace node;
 
@@ -23,7 +24,9 @@ namespace OZW {
 	/*
 	* Heal network node by requesting the node rediscover their neighbors.
 	*/
-	Handle<Value> OZW::HealNetworkNode(const Arguments& args)
+	// ===================================================================
+	Handle<v8::Value> OZW::HealNetworkNode(const Arguments& args)
+	// ===================================================================
 	{
 		HandleScope scope;
 
@@ -40,7 +43,9 @@ namespace OZW {
 	* Sends a ControllerCommand_RequestNodeNeighborUpdate to every node.
 	* Can take a while on larger networks.
 	*/
-	Handle<Value> OZW::HealNetwork(const Arguments& args)
+	// ===================================================================
+	Handle<v8::Value> OZW::HealNetwork(const Arguments& args)
+	// ===================================================================
 	{
 		HandleScope scope;
 

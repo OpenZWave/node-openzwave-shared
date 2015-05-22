@@ -1,6 +1,6 @@
 /*
 * Copyright (c) 2013 Jonathan Perkin <jonathan@perkin.org.uk>
-* Copyright (c) 2013 Elias Karakoulakis <elias.karakoulakis@gmail.com>
+* Copyright (c) 2015 Elias Karakoulakis <elias.karakoulakis@gmail.com>
 * 
 * Permission to use, copy, modify, and distribute this software for any
 * purpose with or without fee is hereby granted, provided that the above
@@ -25,7 +25,10 @@ namespace OZW {
 	* Reset the ZWave controller chip.  A hard reset is destructive and wipes
 	* out all known configuration, a soft reset just restarts the chip.
 	*/
-	Handle<Value> OZW::HardReset(const Arguments& args) {
+	// ===================================================================
+	Handle<v8::Value> OZW::HardReset(const Arguments& args)
+	// ===================================================================
+	{
 		HandleScope scope;
 
 		OpenZWave::Manager::Get()->ResetController(homeid);
@@ -33,7 +36,10 @@ namespace OZW {
 		return scope.Close(Undefined());
 	}
 
-	Handle<Value> OZW::SoftReset(const Arguments& args) {
+	// ===================================================================
+	Handle<v8::Value> OZW::SoftReset(const Arguments& args)
+	// ===================================================================
+	{
 		HandleScope scope;
 
 		OpenZWave::Manager::Get()->SoftReset(homeid);

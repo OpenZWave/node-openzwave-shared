@@ -32,7 +32,7 @@ The module currently builds only on Linux. On Linux you will need to
 ensure the OpenZWave library and headers are installed first.
 
 ```
-$ sudo npm install -g node-red-contrib-openzwave
+$ sudo npm install -g openzwave-shared
 ```
 
 ## API
@@ -41,7 +41,7 @@ Start by loading the addon and creating a new instance, specifying a path to
 the USB device:
 
 ```js
-var OZW = require('node-openzwave-shared');
+var OZW = require('openzwave-shared');
 var zwave = new OZW('/dev/ttyUSB0');
 ```
 

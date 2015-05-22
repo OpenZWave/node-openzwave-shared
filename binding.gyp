@@ -5,6 +5,7 @@
 			"src/openzwave.cc",
 			"src/openzwave-config.cc",
 			"src/openzwave-connection.cc",
+			"src/openzwave-controller.cc",
 			"src/openzwave-network.cc",
 			"src/openzwave-nodes.cc",
 			"src/openzwave-polling.cc",

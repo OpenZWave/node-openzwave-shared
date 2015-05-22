@@ -1,6 +1,6 @@
 /*
 * Copyright (c) 2013 Jonathan Perkin <jonathan@perkin.org.uk>
-* Copyright (c) 2013 Elias Karakoulakis <elias.karakoulakis@gmail.com>
+* Copyright (c) 2015 Elias Karakoulakis <elias.karakoulakis@gmail.com>
 * 
 * Permission to use, copy, modify, and distribute this software for any
 * purpose with or without fee is hereby granted, provided that the above
@@ -21,15 +21,19 @@
 #include <iostream>
 #include <list>
 #include <queue>
+#include <tr1/unordered_map>
 
 #include <node.h>
 #include <v8.h>
 
 #include "Manager.h"
+#include "Driver.h"
 #include "Node.h"
 #include "Notification.h"
 #include "Options.h"
 #include "Value.h"
+
+#define stringify( name ) # name
 
 #ifdef WIN32
 class mutex
@@ -90,31 +94,40 @@ using namespace node;
 namespace OZW {
 	
 	struct OZW : ObjectWrap {
-		static Handle<Value> New(const Arguments& args);
-		static Handle<Value> Connect(const Arguments& args);
-		static Handle<Value> Disconnect(const Arguments& args);
-		static Handle<Value> SetValue(const Arguments& args);
-		static Handle<Value> SetLocation(const Arguments& args);
-		static Handle<Value> SetName(const Arguments& args);
-		static Handle<Value> EnablePoll(const Arguments& args);
-		static Handle<Value> DisablePoll(const Arguments& args);
-		static Handle<Value> HardReset(const Arguments& args);
-		static Handle<Value> SoftReset(const Arguments& args);
-		static Handle<Value> SetNodeOn(const Arguments& args);
-		static Handle<Value> SetNodeOff(const Arguments& args);
-		static Handle<Value> SwitchAllOn(const Arguments& args);
-		static Handle<Value> SwitchAllOff(const Arguments& args);
-		static Handle<Value> CreateScene(const Arguments& args);
-		static Handle<Value> RemoveScene(const Arguments& args);
-		static Handle<Value> GetScenes(const Arguments& args);
-		static Handle<Value> AddSceneValue(const Arguments& args);
-		static Handle<Value> RemoveSceneValue(const Arguments& args);
-		static Handle<Value> SceneGetValues(const Arguments& args);
-		static Handle<Value> ActivateScene(const Arguments& args);
-		static Handle<Value> HealNetworkNode(const Arguments& args);
-		static Handle<Value> HealNetwork(const Arguments& args);
-		static Handle<Value> GetNodeNeighbors(const Arguments& args);
-		static Handle<Value> SetConfigParam(const Arguments& args);
+		static Handle<v8::Value> New(const Arguments& args);
+		static Handle<v8::Value> Connect(const Arguments& args);
+		static Handle<v8::Value> Disconnect(const Arguments& args);
+		static Handle<v8::Value> SetValue(const Arguments& args);
+		static Handle<v8::Value> SetLocation(const Arguments& args);
+		static Handle<v8::Value> SetName(const Arguments& args);
+		static Handle<v8::Value> EnablePoll(const Arguments& args);
+		static Handle<v8::Value> DisablePoll(const Arguments& args);
+		static Handle<v8::Value> SetPollInterval(const Arguments& args);
+		static Handle<v8::Value> SetPollIntensity(const Arguments& args);
+		static Handle<v8::Value> HardReset(const Arguments& args);
+		static Handle<v8::Value> SoftReset(const Arguments& args);
+		static Handle<v8::Value> SetNodeOn(const Arguments& args);
+		static Handle<v8::Value> SetNodeOff(const Arguments& args);
+		static Handle<v8::Value> SwitchAllOn(const Arguments& args);
+		static Handle<v8::Value> SwitchAllOff(const Arguments& args);
+		static Handle<v8::Value> CreateScene(const Arguments& args);
+		static Handle<v8::Value> RemoveScene(const Arguments& args);
+		static Handle<v8::Value> GetScenes(const Arguments& args);
+		static Handle<v8::Value> AddSceneValue(const Arguments& args);
+		static Handle<v8::Value> RemoveSceneValue(const Arguments& args);
+		static Handle<v8::Value> SceneGetValues(const Arguments& args);
+		static Handle<v8::Value> ActivateScene(const Arguments& args);
+		static Handle<v8::Value> HealNetworkNode(const Arguments& args);
+		static Handle<v8::Value> HealNetwork(const Arguments& args);
+		static Handle<v8::Value> GetNodeNeighbors(const Arguments& args);
+		static Handle<v8::Value> SetConfigParam(const Arguments& args);
+		static Handle<v8::Value> BeginControllerCommand(const Arguments& args);
+		static Handle<v8::Value> CancelControllerCommand(const Arguments& args);
+		//
+		void controllerCommandCallback(
+			OpenZWave::Driver::ControllerState _state, 
+			OpenZWave::Driver::ControllerError _err, 
+			void *_context );
 	};
 
 	typedef struct {
@@ -171,8 +184,10 @@ namespace OZW {
 	//
 	void cb(OpenZWave::Notification const *cb, void *ctx);
 	void async_cb_handler(uv_async_t *handle, int status);
-	
 
+	typedef ::std::tr1::unordered_map <std::string, OpenZWave::Driver::ControllerCommand> CommandMap;
+	extern CommandMap* ctrlCmdNames;
+	
 }
 
 #endif // __OPENZWAVE_HPP_INCLUDED__

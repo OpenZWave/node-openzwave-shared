@@ -1,6 +1,6 @@
 /*
 * Copyright (c) 2013 Jonathan Perkin <jonathan@perkin.org.uk>
-* Copyright (c) 2013 Elias Karakoulakis <elias.karakoulakis@gmail.com>
+* Copyright (c) 2015 Elias Karakoulakis <elias.karakoulakis@gmail.com>
 * 
 * Permission to use, copy, modify, and distribute this software for any
 * purpose with or without fee is hereby granted, provided that the above
@@ -16,6 +16,7 @@
 */
 
 #include "openzwave.hpp"
+
 using namespace v8;
 using namespace node;
 
@@ -23,7 +24,9 @@ namespace OZW {
 	/*
 	* Gets the neighbors for a node
 	*/
-	Handle<Value> OZW::GetNodeNeighbors(const Arguments& args)
+	// ===================================================================
+	Handle<v8::Value> OZW::GetNodeNeighbors(const Arguments& args)
+	// ===================================================================
 	{
 		HandleScope scope;
 		uint8* neighbors;
@@ -36,7 +39,7 @@ namespace OZW {
 			o_neighbors->Set(Integer::New(nr), Integer::New(neighbors[nr]));
 		}
 
-		Local<Value> argv[3];
+		Local<v8::Value> argv[3];
 		argv[0] = String::New("neighbors");
 		argv[1] = Integer::New(nodeid);
 		argv[2] = o_neighbors;
@@ -45,8 +48,11 @@ namespace OZW {
 
 		return scope.Close(Undefined());
 	}
-
-	Handle<Value> OZW::SwitchAllOn(const Arguments& args) {
+	
+	// ===================================================================
+	Handle<v8::Value> OZW::SwitchAllOn(const Arguments& args)
+	// ===================================================================
+	{
 		HandleScope scope;
 
 		OpenZWave::Manager::Get()->SwitchAllOn(homeid);
@@ -54,7 +60,10 @@ namespace OZW {
 		return scope.Close(Undefined());
 	}
 
-	Handle<Value> OZW::SwitchAllOff(const Arguments& args) {
+	// ===================================================================
+	Handle<v8::Value> OZW::SwitchAllOff(const Arguments& args)
+	// ===================================================================
+	{
 		HandleScope scope;
 
 		OpenZWave::Manager::Get()->SwitchAllOff(homeid);
@@ -62,7 +71,10 @@ namespace OZW {
 		return scope.Close(Undefined());
 	}
 
-	Handle<Value> OZW::SetNodeOn(const Arguments& args) {
+	// ===================================================================
+	Handle<v8::Value> OZW::SetNodeOn(const Arguments& args)
+	// ===================================================================
+	{
 		HandleScope scope;
 		uint8_t nodeid = args[0]->ToNumber()->Value();
 		
@@ -71,7 +83,10 @@ namespace OZW {
 		return scope.Close(Undefined());
 	}
 
-	Handle<Value> OZW::SetNodeOff(const Arguments& args) {
+	// ===================================================================
+	Handle<v8::Value> OZW::SetNodeOff(const Arguments& args)
+	// ===================================================================
+	{
 		HandleScope scope;
 		uint8_t nodeid = args[0]->ToNumber()->Value();
 		
@@ -83,7 +98,10 @@ namespace OZW {
 	/*
 	* Write a new location string to the device, if supported.
 	*/
-	Handle<Value> OZW::SetLocation(const Arguments& args) {
+	// ===================================================================
+	Handle<v8::Value> OZW::SetLocation(const Arguments& args)
+	// ===================================================================
+	{
 		HandleScope scope;
 
 		uint8_t nodeid = args[0]->ToNumber()->Value();
@@ -97,7 +115,10 @@ namespace OZW {
 	/*
 	* Write a new name string to the device, if supported.
 	*/
-	Handle<Value> OZW::SetName(const Arguments& args) {
+	// ===================================================================
+	Handle<v8::Value> OZW::SetName(const Arguments& args)
+	// ===================================================================
+	{
 		HandleScope scope;
 
 		uint8_t nodeid = args[0]->ToNumber()->Value();
