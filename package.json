@@ -1,8 +1,8 @@
 {
   "name": "openzwave-shared",
-  "version": "0.0.2",
+  "version": "0.1.0",
   "description": "Provide Node.JS bindings for the shared OpenZWave library in order to control a Z-Wave network",
-  "main": "./lib/openzwave.js",
+  "main": "./lib/openzwave-shared.js",
   "scripts": {
     "test": "node test.js",
     "install": "node-gyp rebuild"

@@ -22,6 +22,41 @@ using namespace node;
 
 namespace OZW {
 	/*
+	* Test network node. Sends a series of messages to a network node 
+	* for testing network reliability.
+	*/
+	// ===================================================================
+	Handle<v8::Value> OZW::TestNetworkNode(const Arguments& args)
+	// ===================================================================
+	{
+		HandleScope scope;
+
+		uint8_t nodeid = args[0]->ToNumber()->Value();
+		uint8_t nummsg = args[1]->ToBoolean()->Value();
+
+		OpenZWave::Manager::Get()->TestNetworkNode(homeid, nodeid, nummsg);
+
+		return scope.Close(Undefined());
+	}
+
+	/*
+	* Test network. Sends a series of messages to every node on the 
+	* network for testing network reliability.
+	*/
+	// ===================================================================
+	Handle<v8::Value> OZW::TestNetwork(const Arguments& args)
+	// ===================================================================
+	{
+		HandleScope scope;
+		
+		uint8_t nummsg = args[0]->ToNumber()->Value();
+		
+		OpenZWave::Manager::Get()->HealNetwork(homeid, nummsg);
+		
+		return scope.Close(Undefined());
+	}
+	
+	/*
 	* Heal network node by requesting the node rediscover their neighbors.
 	*/
 	// ===================================================================

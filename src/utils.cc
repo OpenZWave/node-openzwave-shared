@@ -89,6 +89,7 @@ namespace OZW {
 		valobj->Set(String::NewSymbol("units"), String::New(OpenZWave::Manager::Get()->GetValueUnits(value).c_str()));
 		valobj->Set(String::NewSymbol("read_only"), Boolean::New(OpenZWave::Manager::Get()->IsValueReadOnly(value))->ToBoolean());
 		valobj->Set(String::NewSymbol("write_only"), Boolean::New(OpenZWave::Manager::Get()->IsValueWriteOnly(value))->ToBoolean());
+		valobj->Set(String::NewSymbol("is_polled"), Boolean::New(OpenZWave::Manager::Get()->IsValuePolled(value))->ToBoolean());
 		// XXX: verify_changes=
 		// XXX: poll_intensity=
 		valobj->Set(String::NewSymbol("min"), Integer::New(OpenZWave::Manager::Get()->GetValueMin(value)));

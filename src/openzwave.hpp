@@ -115,19 +115,20 @@ namespace OZW {
 		static Handle<v8::Value> RemoveSceneValue(const Arguments& args);
 		static Handle<v8::Value> SceneGetValues(const Arguments& args);
 		static Handle<v8::Value> ActivateScene(const Arguments& args);
+		//
+		static Handle<v8::Value> TestNetworkNode(const Arguments& args);
+		static Handle<v8::Value> TestNetwork(const Arguments& args);
 		static Handle<v8::Value> HealNetworkNode(const Arguments& args);
 		static Handle<v8::Value> HealNetwork(const Arguments& args);
+		//
 		static Handle<v8::Value> GetNodeNeighbors(const Arguments& args);
+		static Handle<v8::Value> RefreshNodeInfo(const Arguments& args);
 		static Handle<v8::Value> SetConfigParam(const Arguments& args);
 		static Handle<v8::Value> BeginControllerCommand(const Arguments& args);
 		static Handle<v8::Value> CancelControllerCommand(const Arguments& args);
-		//
-		void controllerCommandCallback(
-			OpenZWave::Driver::ControllerState _state, 
-			OpenZWave::Driver::ControllerError _err, 
-			void *_context );
 	};
 
+	// callback struct to copy data from the OZW thread to the v8 event loop: 
 	typedef struct {
 		uint32_t type;
 		uint32_t homeid;
@@ -138,8 +139,10 @@ namespace OZW {
 		uint8_t sceneid;
 		uint8_t notification;
 		std::list<OpenZWave::ValueID> values;
+		OpenZWave::Driver::ControllerState state;
+		OpenZWave::Driver::ControllerError err;
 	} NotifInfo;
-
+	
 	typedef struct {
 		uint32_t homeid;
 		uint8_t nodeid;
@@ -152,9 +155,10 @@ namespace OZW {
 		std::string label;
 		std::list<OpenZWave::ValueID> values;
 	} SceneInfo;
-
+	
 	/*  
 	 */
+	extern uv_async_t 		async;
 	extern Persistent<Object> context_obj;
 	
 	/*
@@ -171,7 +175,8 @@ namespace OZW {
 
 	extern mutex zscenes_mutex;
 	extern std::list<SceneInfo *> zscenes;
-
+	
+	// our ZWave Home ID
 	extern uint32_t homeid;
 
 	Local<Object> zwaveValue2v8Value(OpenZWave::ValueID value);
@@ -179,10 +184,21 @@ namespace OZW {
 	
 	NodeInfo *get_node_info(uint8_t nodeid);
 	SceneInfo *get_scene_info(uint8_t sceneid);
-	//
-	void cb(OpenZWave::Notification const *cb, void *ctx);
+	
+	// OpenZWave callbacks
+	void ozw_watcher_callback(
+		OpenZWave::Notification const *cb, 
+		void *ctx);
+	void ozw_ctrlcmd_callback(
+		OpenZWave::Driver::ControllerState _state, 
+		OpenZWave::Driver::ControllerError _err, 
+		void *ctx);
+		
+	// v8 asynchronous callback handler
 	void async_cb_handler(uv_async_t *handle, int status);
-
+	//
+	
+	// map of controller command names to enum values
 	typedef ::std::tr1::unordered_map <std::string, OpenZWave::Driver::ControllerCommand> CommandMap;
 	extern CommandMap* ctrlCmdNames;
 	

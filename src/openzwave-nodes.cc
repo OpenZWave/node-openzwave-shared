@@ -104,4 +104,28 @@ namespace OZW {
 
 		return scope.Close(Undefined());
 	}
+	
+	/*
+	* Trigger the fetching of fixed data about a node. Causes the node's 
+	* data to be obtained from the Z-Wave network in the same way as if 
+	* it had just been added. This method would normally be called 
+	* automatically by OpenZWave, but if you know that a node has been 
+	* changed, calling this method will force a refresh of all of the 
+	* data held by the library. This can be especially useful for 
+	* devices that were asleep when the application was first run. 
+	* This is the same as the query state starting from the beginning.
+	*/
+	// ===================================================================
+	Handle<v8::Value> OZW::RefreshNodeInfo(const Arguments& args)
+	// ===================================================================
+	{
+		HandleScope scope;
+		
+		uint8_t nodeid = args[0]->ToNumber()->Value();
+		
+		OpenZWave::Manager::Get()->RefreshNodeInfo(homeid, nodeid);
+		
+		return scope.Close(Undefined());
+	}
+	
 }

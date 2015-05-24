@@ -3,16 +3,21 @@ node-openzwave-shared
 
 This is a node.js add-on which wraps the [Open
 Z-Wave](https://www.openzwave.com/) library to provide access to a
-Z-Wave network from JavaScript.
+Z-Wave network from within node.js (server-side JavaScript.)
 
-It is currently able to scan a Z-Wave network, report on connected devices,
-monitor the network for changes, and has rudimentary write support. Initial
-support for management functions is included. Stay tuned, work in progress!
+It is currently able to:
+- scan a Z-Wave network and report on connected devices,
+- write values to zwave nodes
+- monitor the network for changes,
+- healing nodes and/or the network
+- perform management tasks (add/remove nodes, replace failed nodes etc)
 
 *Important notice*
-This fork uses OpenZWave as a *shared library*, so you need to have 
-OpenZWave fully installed on your system (both the compiled library
-AND the development headers) before trying to install this little baby.
+
+This library differs in that it links dynamically to an OpenZWave  
+*shared library* (in contrast to statically linking to it). 
+Thus you need to have OpenZWave fully installed on your system (both the
+compiled library AND the development headers) before trying to install this little baby.
 This also means that its definately going to break if you upgrade your 
 OZW without rebuilding this plugin. So don't control nuclear reactors 
 with it, OK?
@@ -116,6 +121,7 @@ Polling a device for changes (not all devices require this):
 ```js
 zwave.enablePoll(nodeid, commandclass);
 zwave.disablePoll(nodeid, commandclass);
+zwave.setPollInterval(nodeid http://www.openzwave.com/dev/classOpenZWave_1_1Manager.html#ac7032ff3978d645b6dcd3284a8055207
 ```
 
 Reset the controller.  Calling `hardReset` will clear any associations, so use
@@ -219,6 +225,10 @@ in the `nodeinfo` object:
 * `nodeinfo.product`
 * `nodeinfo.type`
 * `nodeinfo.loc` (location, renamed to avoid `location` keyword).
+
+#### `.on('controller command feedback', function(controllerState, controllerError){})`
+
+Controller is reporting feedback on the currently active command.
 
 #### `.on('scan complete', function(){})`
 
@@ -347,6 +357,10 @@ zwave.on('notification', function(nodeid, notif) {
 		console.log('node%d: node alive', nodeid);
 		break;
         }
+});
+
+zwave.on('controller command', function (state, error) {
+	console.log('controller command feedback: state:%d error:%d', state, error);
 });
 
 zwave.on('scan complete', function() {

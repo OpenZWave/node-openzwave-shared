@@ -24,7 +24,10 @@ namespace OZW {
 	/*
 	* Generic value set.
 	*/
-	Handle<v8::Value> OZW::SetValue(const Arguments& args) {
+	// =================================================================
+	Handle<v8::Value> OZW::SetValue(const Arguments& args)
+	// =================================================================
+	{
 		HandleScope scope;
 
 		uint8_t nodeid = args[0]->ToNumber()->Value();

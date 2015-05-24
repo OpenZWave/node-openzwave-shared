@@ -19,35 +19,35 @@
 
 using namespace v8;
 using namespace node;
-using namespace  ::OpenZWave;
-
-static void controllerCommandCallback (
-	Driver::ControllerState _state, 
-	Driver::ControllerError _err, 
-	void *_context )
-{
-	//return(NULL);
-}
+using namespace ::OpenZWave;
 
 namespace OZW {
+	
 	// ===================================================================
 	Handle<v8::Value> OZW::BeginControllerCommand(const Arguments& args) {
 	// ===================================================================
-		
 		HandleScope scope;
-
-		std::string ctrcmd = (*String::Utf8Value(args[0]->ToString()));
-		uint8_t    nodeid1 = args[1]->ToNumber()->Value();
-		uint8_t    nodeid2 = args[2]->ToNumber()->Value();
 		
+		std::string ctrcmd = (*String::Utf8Value(args[0]->ToString()));
+		uint8_t    nodeid1 = 0xff;
+		uint8_t    nodeid2 = 0;
+		bool highpower = false;
+		if (args.Length() > 1) {
+			highpower = args[1]->ToBoolean()->Value();
+			if (args.Length() > 2) {
+				nodeid1 = args[2]->ToNumber()->Value();
+				if (args.Length() > 3) {
+					nodeid2 = args[3]->ToNumber()->Value();
+				}
+			}
+		}
 		CommandMap::const_iterator search = (*ctrlCmdNames).find(ctrcmd);
 		if(search != (*ctrlCmdNames).end()) {
-			
 			/*
 			 * BeginControllerCommand
 			 * http://openzwave.com/dev/classOpenZWave_1_1Manager.html#aa11faf40f19f0cda202d2353a60dbf7b
 			 * 
-			_homeId	The Home ID of the Z-Wave controller.
+			_homeId		The Home ID of the Z-Wave controller.
 			_command	The command to be sent to the controller.
 			_callback	pointer to a function that will be called at various stages during the command process to notify the user of progress or to request actions on the user's part. Defaults to NULL.
 			_context	pointer to user defined data that will be passed into to the callback function. Defaults to NULL.
@@ -57,25 +57,22 @@ namespace OZW {
 			* */
 			OpenZWave::Manager::Get()->BeginControllerCommand (
 				homeid,
-				search->second,
-				&::controllerCommandCallback,
+				search->second, // _command
+				ozw_ctrlcmd_callback, // _callback
 				NULL, 	// void * 	_context = NULL,
-				true,	// bool 	_highPower = false,
+				highpower,	// bool 	_highPower = false,
 				nodeid1,// uint8 	_nodeId = 0xff,
 				nodeid2	// uint8 	_arg = 0 
 			);
 		}
-		return scope.Close(Undefined());	
+		return scope.Close(Undefined());
 	}
 	
 	// ===================================================================
 	Handle<v8::Value> OZW::CancelControllerCommand(const Arguments& args) {
 	// ===================================================================
 		HandleScope scope;
-		OpenZWave::Manager::Get()->CancelControllerCommand	(homeid);
+		OpenZWave::Manager::Get()->CancelControllerCommand (homeid);
 		return scope.Close(Undefined());
 	}
-	
-
-	
 }

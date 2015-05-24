@@ -1,17 +1,20 @@
 {
 	"targets": [{
-		"target_name": "openzwave",
+		"target_name": "openzwave_shared",
 		"sources": [
 			"src/openzwave.cc",
+			"src/openzwave-callbacks.cc",
 			"src/openzwave-config.cc",
 			"src/openzwave-connection.cc",
 			"src/openzwave-controller.cc",
+			"src/openzwave-driver.cc",
 			"src/openzwave-network.cc",
 			"src/openzwave-nodes.cc",
 			"src/openzwave-polling.cc",
 			"src/openzwave-scenes.cc",
 			"src/openzwave-values.cc",
 			"src/utils.cc",
+			"src/v8-callbacks.cc",
 		],
 		'conditions': [
 			['OS=="linux"', {
