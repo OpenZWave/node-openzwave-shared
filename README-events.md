@@ -72,6 +72,8 @@ Check out official OpenZWave documentation on
 [ControllerState](http://www.openzwave.com/dev/classOpenZWave_1_1Driver.html#a5595393f6aac3175bb17f00cf53356a8)
 and
 [ControllerError](http://www.openzwave.com/dev/classOpenZWave_1_1Driver.html#a16d2da7b78f8eefc79ef4046d8148e7c)
+so for instance, controller state #7 (remember: 0-based arrays) is ControllerState_Completed
+which is what you should get back as a result of successful command completion.
 
 #### `.on('scan complete', function(){})`
 
