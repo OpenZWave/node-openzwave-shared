@@ -41,11 +41,11 @@ ensure the OpenZWave library and headers are installed first.
 $ sudo npm install -g openzwave-shared
 ```
 
-[Basic API usage](../blob/master/README-api.md)
+[Basic API usage](../master/README-api.md)
 
-[See list of supported EVENTS](../blob/master/README-events.md)
+[See list of supported EVENTS](../master/README-events.md)
 
-[See example usage](../blob/master/README-example.md)
+[See example usage](../master/README-example.md)
 
 
 ## License
