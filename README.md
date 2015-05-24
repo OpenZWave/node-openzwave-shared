@@ -5,22 +5,31 @@ This is a node.js add-on which wraps the [Open
 Z-Wave](https://www.openzwave.com/) library to provide access to a
 Z-Wave network from within node.js (server-side JavaScript.)
 
-It is currently able to:
-- scan a Z-Wave network and report on connected devices,
-- write values to zwave nodes
-- monitor the network for changes,
-- healing nodes and/or the network
-- perform management tasks (add/remove nodes, replace failed nodes etc)
+You can now easily control *and manage* your [ZWave](http://www.z-wave.com/) devices 
+(lights, dimmers, blinds, you name it) from within [NodeJS](https://nodejs.org/) applications.
 
-*Important notice*
+Check out the [Node-Red integration project](https://github.com/OpenZWave/node-red-contrib-openzwave)
+for an interesting use case, in which I've wired up ZWave and KNX devices working together as
+one big happy automated home.
 
-This library differs in that it links dynamically to an OpenZWave *shared library* 
+This addon is currently able to:
+- *scan* a Z-Wave network and report on connected devices,
+- *write* values to zwave nodes
+- *monitor* the network for changes,
+- *heal* nodes and/or the network
+- *perform* management tasks (add/remove nodes, replace failed nodes etc)
+
+**Important notice**
+
+This library differs in that it links dynamically to an OpenZWave **shared library**
 (in contrast to statically linking OpenZWave in the node addon). 
 Thus you need to have OpenZWave fully installed on your system (both the
 compiled library AND the development headers) before trying to install this little baby.
-This also means that its definately going to break if you upgrade your 
-OZW without rebuilding this plugin. So don't control nuclear reactors 
-with it, OK?
+
+I know this diverges from the npm paradigm, but this makes OZW upgrades easier
+This also means that you need to be careful if you upgrade your 
+OZW library: you might need to rebuild this addon, otherwise you'd might
+get api mismatch exceptions.
 
 Manually compiling OpenZwave involves the usual dance of 
 (`make && sudo make install`) OR you could try installing
