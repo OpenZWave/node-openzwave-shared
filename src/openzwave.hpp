@@ -95,19 +95,45 @@ namespace OZW {
 	
 	struct OZW : ObjectWrap {
 		static Handle<v8::Value> New(const Arguments& args);
+		// openzwave-config.cc
+		static Handle<v8::Value> SetConfigParam(const Arguments& args);
+		static Handle<v8::Value> RequestConfigParam(const Arguments& args);
+		static Handle<v8::Value> RequestAllConfigParams(const Arguments& args);
+		// openzwave-controller.cc
+		static Handle<v8::Value> HardReset(const Arguments& args);
+		static Handle<v8::Value> SoftReset(const Arguments& args);
+		static Handle<v8::Value> BeginControllerCommand(const Arguments& args);
+		static Handle<v8::Value> CancelControllerCommand(const Arguments& args);
+		// openzwave-driver.cc
 		static Handle<v8::Value> Connect(const Arguments& args);
 		static Handle<v8::Value> Disconnect(const Arguments& args);
+		// openzwave-groups.cc
+		static Handle<v8::Value> GetNumGroups(const Arguments& args);
+		static Handle<v8::Value> GetAssociations(const Arguments& args);
+		static Handle<v8::Value> GetMaxAssociations(const Arguments& args);
+		static Handle<v8::Value> GetGroupLabel(const Arguments& args);
+		static Handle<v8::Value> AddAssociation(const Arguments& args);
+		static Handle<v8::Value> RemoveAssociation(const Arguments& args);
+		// openzwave-network.cc
+		static Handle<v8::Value> TestNetworkNode(const Arguments& args);
+		static Handle<v8::Value> TestNetwork(const Arguments& args);
+		static Handle<v8::Value> HealNetworkNode(const Arguments& args);
+		static Handle<v8::Value> HealNetwork(const Arguments& args);
+		// openzwave-nodes.cc
+		static Handle<v8::Value> GetNodeNeighbors(const Arguments& args);
+		static Handle<v8::Value> RefreshNodeInfo(const Arguments& args);
+		static Handle<v8::Value> SwitchAllOn(const Arguments& args);
+		static Handle<v8::Value> SwitchAllOff(const Arguments& args);
+		// openzwave-values.cc
 		static Handle<v8::Value> SetValue(const Arguments& args);
 		static Handle<v8::Value> SetLocation(const Arguments& args);
 		static Handle<v8::Value> SetName(const Arguments& args);
+		// openzwave-polling.cc
 		static Handle<v8::Value> EnablePoll(const Arguments& args);
 		static Handle<v8::Value> DisablePoll(const Arguments& args);
 		static Handle<v8::Value> SetPollInterval(const Arguments& args);
 		static Handle<v8::Value> SetPollIntensity(const Arguments& args);
-		static Handle<v8::Value> HardReset(const Arguments& args);
-		static Handle<v8::Value> SoftReset(const Arguments& args);
-		static Handle<v8::Value> SwitchAllOn(const Arguments& args);
-		static Handle<v8::Value> SwitchAllOff(const Arguments& args);
+		// openzwave-scenes.cc
 		static Handle<v8::Value> CreateScene(const Arguments& args);
 		static Handle<v8::Value> RemoveScene(const Arguments& args);
 		static Handle<v8::Value> GetScenes(const Arguments& args);
@@ -116,16 +142,8 @@ namespace OZW {
 		static Handle<v8::Value> SceneGetValues(const Arguments& args);
 		static Handle<v8::Value> ActivateScene(const Arguments& args);
 		//
-		static Handle<v8::Value> TestNetworkNode(const Arguments& args);
-		static Handle<v8::Value> TestNetwork(const Arguments& args);
-		static Handle<v8::Value> HealNetworkNode(const Arguments& args);
-		static Handle<v8::Value> HealNetwork(const Arguments& args);
+		
 		//
-		static Handle<v8::Value> GetNodeNeighbors(const Arguments& args);
-		static Handle<v8::Value> RefreshNodeInfo(const Arguments& args);
-		static Handle<v8::Value> SetConfigParam(const Arguments& args);
-		static Handle<v8::Value> BeginControllerCommand(const Arguments& args);
-		static Handle<v8::Value> CancelControllerCommand(const Arguments& args);
 	};
 
 	// callback struct to copy data from the OZW thread to the v8 event loop: 

@@ -22,6 +22,32 @@ using namespace node;
 using namespace ::OpenZWave;
 
 namespace OZW {
+
+	/*
+	* Reset the ZWave controller chip.  A hard reset is destructive and wipes
+	* out all known configuration, a soft reset just restarts the chip.
+	*/
+	// ===================================================================
+	Handle<v8::Value> OZW::HardReset(const Arguments& args)
+	// ===================================================================
+	{
+		HandleScope scope;
+
+		OpenZWave::Manager::Get()->ResetController(homeid);
+
+		return scope.Close(Undefined());
+	}
+	
+	// ===================================================================
+	Handle<v8::Value> OZW::SoftReset(const Arguments& args)
+	// ===================================================================
+	{
+		HandleScope scope;
+
+		OpenZWave::Manager::Get()->SoftReset(homeid);
+
+		return scope.Close(Undefined());
+	}
 	
 	// ===================================================================
 	Handle<v8::Value> OZW::BeginControllerCommand(const Arguments& args) {
@@ -75,4 +101,5 @@ namespace OZW {
 		OpenZWave::Manager::Get()->CancelControllerCommand (homeid);
 		return scope.Close(Undefined());
 	}
+	
 }

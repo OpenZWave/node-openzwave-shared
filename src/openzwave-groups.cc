@@ -16,116 +16,118 @@
 */
 
 #include "openzwave.hpp"
-
 using namespace v8;
 using namespace node;
 
 namespace OZW {
 	/*
-	* Gets the neighbors for a node
+	 * Gets the number of association groups reported by this node. 
+	 * In Z-Wave, groups are numbered starting from one. For example, 
+	 * if a call to GetNumGroups returns 4, the _groupIdx value to use
+	 * in calls to GetAssociations, AddAssociation and RemoveAssociation 
+	 * will be a number between 1 and 4. 
 	*/
 	// ===================================================================
-	Handle<v8::Value> OZW::GetNodeNeighbors(const Arguments& args)
+	Handle<v8::Value> OZW::GetNumGroups(const Arguments& args)
 	// ===================================================================
 	{
 		HandleScope scope;
-		uint8* neighbors; 
 
 		uint8_t nodeid = args[0]->ToNumber()->Value();
-		uint8 numNeighbors = OpenZWave::Manager::Get()->GetNodeNeighbors(homeid, nodeid, &neighbors);
-		Local<Array> o_neighbors = Array::New(numNeighbors);
+		uint8 numGroups = OpenZWave::Manager::Get()->GetNumGroups(homeid, nodeid);
+		
+		Local<v8::Value> argv[2];
+		argv[0] = String::New("numgroups");
+		argv[1] = Integer::New(numGroups);
 
-		for (uint8 nr = 0; nr < numNeighbors; nr++) {
-			o_neighbors->Set(Integer::New(nr), Integer::New(neighbors[nr]));
+		MakeCallback(context_obj, "emit", 2, argv);
+
+		return scope.Close(Undefined());
+	}
+	
+	/*
+	 * 
+	 */
+	// ===================================================================
+	Handle<v8::Value> OZW::GetAssociations(const Arguments& args)
+	// ===================================================================
+	{
+		HandleScope scope;
+		uint8* associations;
+
+		uint8_t nodeid = args[0]->ToNumber()->Value();
+		uint8_t groupidx = args[1]->ToNumber()->Value();
+		
+		uint32 numNodes = OpenZWave::Manager::Get()->GetAssociations(
+			homeid, nodeid,	groupidx, &associations
+		);
+		
+		Local<Array> o_assocs = Array::New(numNodes);
+
+		for (uint8 nr = 0; nr < numNodes; nr++) {
+			o_assocs->Set(Integer::New(nr), Integer::New(associations[nr]));
 		}
 
 		Local<v8::Value> argv[3];
-		argv[0] = String::New("neighbors");
+		argv[0] = String::New("associations");
 		argv[1] = Integer::New(nodeid);
-		argv[2] = o_neighbors;
+		argv[2] = o_assocs;
 
 		MakeCallback(context_obj, "emit", 3, argv);
-
-		return scope.Close(Undefined());
-	}
-	
-	// ===================================================================
-	Handle<v8::Value> OZW::SwitchAllOn(const Arguments& args)
-	// ===================================================================
-	{
-		HandleScope scope;
-
-		OpenZWave::Manager::Get()->SwitchAllOn(homeid);
-
-		return scope.Close(Undefined());
-	}
-
-	// ===================================================================
-	Handle<v8::Value> OZW::SwitchAllOff(const Arguments& args)
-	// ===================================================================
-	{
-		HandleScope scope;
-
-		OpenZWave::Manager::Get()->SwitchAllOff(homeid);
-
+		
+		// The caller is responsible for freeing the array memory 
+		// with a call to delete []. 
+		delete associations;
+		
 		return scope.Close(Undefined());
 	}
 
 	/*
-	* Write a new location string to the device, if supported.
-	*/
+	 * 
+	 */
 	// ===================================================================
-	Handle<v8::Value> OZW::SetLocation(const Arguments& args)
+	Handle<v8::Value> OZW::GetMaxAssociations(const Arguments& args)
 	// ===================================================================
 	{
 		HandleScope scope;
-
-		uint8_t nodeid = args[0]->ToNumber()->Value();
-		std::string location = (*String::Utf8Value(args[1]->ToString()));
-
-		OpenZWave::Manager::Get()->SetNodeLocation(homeid, nodeid, location);
-
+// TODO		
 		return scope.Close(Undefined());
 	}
 
 	/*
-	* Write a new name string to the device, if supported.
-	*/
+	 * 
+	 */
 	// ===================================================================
-	Handle<v8::Value> OZW::SetName(const Arguments& args)
+	Handle<v8::Value> OZW::GetGroupLabel(const Arguments& args)
 	// ===================================================================
 	{
 		HandleScope scope;
-
-		uint8_t nodeid = args[0]->ToNumber()->Value();
-		std::string name = (*String::Utf8Value(args[1]->ToString()));
-
-		OpenZWave::Manager::Get()->SetNodeName(homeid, nodeid, name);
-
+// TODO		
 		return scope.Close(Undefined());
 	}
-	
+
 	/*
-	* Trigger the fetching of fixed data about a node. Causes the node's 
-	* data to be obtained from the Z-Wave network in the same way as if 
-	* it had just been added. This method would normally be called 
-	* automatically by OpenZWave, but if you know that a node has been 
-	* changed, calling this method will force a refresh of all of the 
-	* data held by the library. This can be especially useful for 
-	* devices that were asleep when the application was first run. 
-	* This is the same as the query state starting from the beginning.
-	*/
+	 * 
+	 */
 	// ===================================================================
-	Handle<v8::Value> OZW::RefreshNodeInfo(const Arguments& args)
+	Handle<v8::Value> OZW::AddAssociation(const Arguments& args)
 	// ===================================================================
 	{
 		HandleScope scope;
-		
-		uint8_t nodeid = args[0]->ToNumber()->Value();
-		
-		OpenZWave::Manager::Get()->RefreshNodeInfo(homeid, nodeid);
-		
+// TODO		
 		return scope.Close(Undefined());
 	}
-	
+
+	/*
+	 * 
+	 */
+	// ===================================================================
+	Handle<v8::Value> OZW::RemoveAssociation(const Arguments& args)
+	// ===================================================================
+	{
+		HandleScope scope;
+// TODO		
+		return scope.Close(Undefined());
+	}
+
 }

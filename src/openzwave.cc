@@ -80,12 +80,25 @@ namespace OZW {
 		Local < FunctionTemplate > t = FunctionTemplate::New(OZW::New);
 		t->InstanceTemplate()->SetInternalFieldCount(1);
 		t->SetClassName(String::New("OZW"));
+		// openzwave-config.cc
+		NODE_SET_PROTOTYPE_METHOD(t, "setConfigParam", OZW::SetConfigParam);
+		NODE_SET_PROTOTYPE_METHOD(t, "requestConfigParam", OZW::RequestConfigParam);
+		NODE_SET_PROTOTYPE_METHOD(t, "requestAllConfigParams", OZW::RequestAllConfigParams);
 		// openzwave-controller.cc
+		NODE_SET_PROTOTYPE_METHOD(t, "hardReset", OZW::HardReset);
+		NODE_SET_PROTOTYPE_METHOD(t, "softReset", OZW::SoftReset);
 		NODE_SET_PROTOTYPE_METHOD(t, "beginControllerCommand", OZW::BeginControllerCommand); // ** new
 		NODE_SET_PROTOTYPE_METHOD(t, "cancelControllerCommand", OZW::CancelControllerCommand); // ** new
 		// openzwave-driver.cc
 		NODE_SET_PROTOTYPE_METHOD(t, "connect", OZW::Connect);
 		NODE_SET_PROTOTYPE_METHOD(t, "disconnect", OZW::Disconnect);
+		// openzwave-groups.cc
+		NODE_SET_PROTOTYPE_METHOD(t, "getNumGroups", OZW::GetNumGroups);
+		NODE_SET_PROTOTYPE_METHOD(t, "getAssociations", OZW::GetAssociations);
+		NODE_SET_PROTOTYPE_METHOD(t, "getMaxAssociations", OZW::GetMaxAssociations);
+		NODE_SET_PROTOTYPE_METHOD(t, "getGroupLabel", OZW::GetGroupLabel);
+		NODE_SET_PROTOTYPE_METHOD(t, "addAssociation", OZW::AddAssociation);
+		NODE_SET_PROTOTYPE_METHOD(t, "removeAssociation", OZW::RemoveAssociation);
 		// openzwave-network.cc
 		NODE_SET_PROTOTYPE_METHOD(t, "testNetworkNode", OZW::TestNetworkNode);
 		NODE_SET_PROTOTYPE_METHOD(t, "testNetwork", OZW::TestNetwork);
@@ -105,9 +118,6 @@ namespace OZW {
 		NODE_SET_PROTOTYPE_METHOD(t, "disablePoll", OZW::EnablePoll);
 		NODE_SET_PROTOTYPE_METHOD(t, "setPollInterval",  OZW::SetPollInterval);
 		NODE_SET_PROTOTYPE_METHOD(t, "setPollIntensity",  OZW::SetPollIntensity); // ** new
-		//
-		NODE_SET_PROTOTYPE_METHOD(t, "hardReset", OZW::HardReset);
-		NODE_SET_PROTOTYPE_METHOD(t, "softReset", OZW::SoftReset);
 		// openzwave-scenes.cc
 		NODE_SET_PROTOTYPE_METHOD(t, "createScene", OZW::CreateScene);
 		NODE_SET_PROTOTYPE_METHOD(t, "removeScene", OZW::RemoveScene);
@@ -117,8 +127,6 @@ namespace OZW {
 		NODE_SET_PROTOTYPE_METHOD(t, "sceneGetValues", OZW::SceneGetValues);
 		NODE_SET_PROTOTYPE_METHOD(t, "activateScene", OZW::ActivateScene);
 		//
-		NODE_SET_PROTOTYPE_METHOD(t, "setConfigParam", OZW::SetConfigParam);
-		
 		target->Set(String::NewSymbol("Emitter"), t->GetFunction());
 		
 		/* for BeginControllerCommand

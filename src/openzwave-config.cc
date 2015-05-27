@@ -29,19 +29,66 @@ namespace OZW {
 	{
 		HandleScope scope;
 
-		uint32_t homeid = args[0]->ToNumber()->Value();
-		uint8_t nodeid = args[1]->ToNumber()->Value();
-		uint8_t param = args[2]->ToNumber()->Value();
-		int32_t value = args[3]->ToNumber()->Value();
+		uint8_t nodeid = args[0]->ToNumber()->Value();
+		uint8_t param = args[1]->ToNumber()->Value();
+		int32_t value = args[2]->ToNumber()->Value();
 
-		if (args.Length() < 5) {
+		if (args.Length() < 4) {
 			OpenZWave::Manager::Get()->SetConfigParam(homeid, nodeid, param, value);
 		}
 		else {
-			uint8_t size = args[4]->ToNumber()->Value();
+			uint8_t size = args[3]->ToNumber()->Value();
 			OpenZWave::Manager::Get()->SetConfigParam(homeid, nodeid, param, value, size);
 		}
 
 		return scope.Close(Undefined());
 	}
+	
+	/*
+ 	 * Request the value of a configurable parameter from a device. Some 
+ 	 * devices have various parameters that can be configured to control 
+ 	 * the device behaviour. These are not reported by the device over 
+ 	 * the Z-Wave network, but can usually be found in the device's user 
+ 	 * manual. 
+ 	 * This method requests the value of a parameter from the 
+ 	 * device, and then returns immediately, without waiting for a 
+ 	 * response. If the parameter index is valid for this device, and 
+ 	 * the device is awake, the value will eventually be reported via a 
+ 	 * ValueChanged notification callback. The ValueID reported in the 
+ 	 * callback will have an index set the same as _param and a command 
+ 	 * class set to the same value as returned by a call to 
+ 	 * Configuration::StaticGetCommandClassId. 
+	*/
+	// ===================================================================
+	Handle<v8::Value> OZW::RequestConfigParam(const Arguments& args)
+	// ===================================================================
+	{
+		HandleScope scope;
+		
+		uint8_t nodeid = args[0]->ToNumber()->Value();
+		uint8_t param = args[1]->ToNumber()->Value();
+		
+		OpenZWave::Manager::Get()->RequestConfigParam(homeid, nodeid, param);
+		
+		return scope.Close(Undefined());
+	}
+	
+		
+	/*
+	 * Request the values of all known configurable parameters from a 
+	 * device.
+	 * */
+	// ===================================================================
+	Handle<v8::Value> OZW::RequestAllConfigParams(const Arguments& args)
+	// ===================================================================
+	{
+		HandleScope scope;
+		
+		uint8_t nodeid = args[0]->ToNumber()->Value();
+	
+	  	OpenZWave::Manager::Get()->RequestAllConfigParams (homeid, nodeid);
+	  	
+	 	return scope.Close(Undefined());
+	}
+
 }
