@@ -104,6 +104,14 @@ namespace OZW {
 		static Handle<v8::Value> SoftReset(const Arguments& args);
 		static Handle<v8::Value> BeginControllerCommand(const Arguments& args);
 		static Handle<v8::Value> CancelControllerCommand(const Arguments& args);
+		static Handle<v8::Value> GetControllerNodeId(const Arguments& args); 
+		static Handle<v8::Value> GetSUCNodeId(const Arguments& args); 
+		static Handle<v8::Value> IsPrimaryController(const Arguments& args); 
+		static Handle<v8::Value> IsStaticUpdateController(const Arguments& args);
+		static Handle<v8::Value> IsBridgeController(const Arguments& args);
+		static Handle<v8::Value> GetLibraryVersion(const Arguments& args);
+		static Handle<v8::Value> GetLibraryTypeName(const Arguments& args);
+		static Handle<v8::Value> GetSendQueueCount(const Arguments& args);
 		// openzwave-driver.cc
 		static Handle<v8::Value> Connect(const Arguments& args);
 		static Handle<v8::Value> Disconnect(const Arguments& args);
@@ -129,10 +137,13 @@ namespace OZW {
 		static Handle<v8::Value> SetLocation(const Arguments& args);
 		static Handle<v8::Value> SetName(const Arguments& args);
 		// openzwave-polling.cc
+		static Handle<v8::Value> GetPollInterval(const Arguments& args);
+		static Handle<v8::Value> SetPollInterval(const Arguments& args);
 		static Handle<v8::Value> EnablePoll(const Arguments& args);
 		static Handle<v8::Value> DisablePoll(const Arguments& args);
-		static Handle<v8::Value> SetPollInterval(const Arguments& args);
+		static Handle<v8::Value> IsPolled(const Arguments& args);
 		static Handle<v8::Value> SetPollIntensity(const Arguments& args);
+		static Handle<v8::Value> GetPollIntensity(const Arguments& args);
 		// openzwave-scenes.cc
 		static Handle<v8::Value> CreateScene(const Arguments& args);
 		static Handle<v8::Value> RemoveScene(const Arguments& args);

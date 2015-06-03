@@ -89,6 +89,14 @@ namespace OZW {
 		NODE_SET_PROTOTYPE_METHOD(t, "softReset", OZW::SoftReset);
 		NODE_SET_PROTOTYPE_METHOD(t, "beginControllerCommand", OZW::BeginControllerCommand); // ** new
 		NODE_SET_PROTOTYPE_METHOD(t, "cancelControllerCommand", OZW::CancelControllerCommand); // ** new
+		NODE_SET_PROTOTYPE_METHOD(t, "getControllerNodeId", OZW::GetControllerNodeId); // ** new
+		NODE_SET_PROTOTYPE_METHOD(t, "getSUCNodeId", OZW::GetSUCNodeId); // ** new
+		NODE_SET_PROTOTYPE_METHOD(t, "isPrimaryController", OZW::IsPrimaryController); // ** new
+		NODE_SET_PROTOTYPE_METHOD(t, "isStaticUpdateController", OZW::IsStaticUpdateController); // ** new
+		NODE_SET_PROTOTYPE_METHOD(t, "isBridgeController", OZW::IsBridgeController); // ** new
+		NODE_SET_PROTOTYPE_METHOD(t, "getLibraryVersion", OZW::GetLibraryVersion); // ** new
+		NODE_SET_PROTOTYPE_METHOD(t, "getLibraryTypeName", OZW::GetLibraryTypeName); // ** new
+		NODE_SET_PROTOTYPE_METHOD(t, "getSendQueueCount", OZW::GetSendQueueCount);	// ** new
 		// openzwave-driver.cc
 		NODE_SET_PROTOTYPE_METHOD(t, "connect", OZW::Connect);
 		NODE_SET_PROTOTYPE_METHOD(t, "disconnect", OZW::Disconnect);
@@ -116,7 +124,10 @@ namespace OZW {
 		// openzwave-polling.cc
 		NODE_SET_PROTOTYPE_METHOD(t, "enablePoll", OZW::EnablePoll);
 		NODE_SET_PROTOTYPE_METHOD(t, "disablePoll", OZW::EnablePoll);
-		NODE_SET_PROTOTYPE_METHOD(t, "setPollInterval",  OZW::SetPollInterval);
+		NODE_SET_PROTOTYPE_METHOD(t, "isPolled",  OZW::IsPolled); // ** new
+		NODE_SET_PROTOTYPE_METHOD(t, "getPollInterval",  OZW::GetPollInterval); // ** new
+		NODE_SET_PROTOTYPE_METHOD(t, "setPollInterval",  OZW::SetPollInterval); // ** new
+		NODE_SET_PROTOTYPE_METHOD(t, "getPollIntensity",  OZW::GetPollIntensity); // ** new
 		NODE_SET_PROTOTYPE_METHOD(t, "setPollIntensity",  OZW::SetPollIntensity); // ** new
 		// openzwave-scenes.cc
 		NODE_SET_PROTOTYPE_METHOD(t, "createScene", OZW::CreateScene);

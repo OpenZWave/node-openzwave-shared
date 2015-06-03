@@ -5,7 +5,6 @@
 			"src/openzwave.cc",
 			"src/openzwave-callbacks.cc",
 			"src/openzwave-config.cc",
-			"src/openzwave-controller.cc",
 			"src/openzwave-driver.cc",
 			"src/openzwave-groups.cc",
 			"src/openzwave-network.cc",

@@ -90,7 +90,21 @@ namespace OZW {
 	// ===================================================================
 	{
 		HandleScope scope;
-// TODO		
+		
+		uint8_t nodeid = args[0]->ToNumber()->Value();
+		uint8_t groupidx = args[1]->ToNumber()->Value();
+		
+		uint8 numMaxAssoc = OpenZWave::Manager::Get()->GetMaxAssociations(
+			homeid, nodeid,	groupidx
+		);
+		
+		Local<v8::Value> argv[3];
+		argv[0] = String::New("associations");
+		argv[1] = Integer::New(nodeid);
+		argv[2] = Integer::New(numMaxAssoc);
+
+		MakeCallback(context_obj, "emit", 3, argv);
+		
 		return scope.Close(Undefined());
 	}
 
@@ -102,8 +116,15 @@ namespace OZW {
 	// ===================================================================
 	{
 		HandleScope scope;
-// TODO		
-		return scope.Close(Undefined());
+		
+		uint8_t nodeid = args[0]->ToNumber()->Value();
+		uint8_t groupidx = args[1]->ToNumber()->Value();
+
+		std::string groupLabel = OpenZWave::Manager::Get()->GetGroupLabel(
+			homeid, nodeid, groupidx
+		);
+
+		return scope.Close(String::New(groupLabel.c_str()));
 	}
 
 	/*
@@ -114,7 +135,15 @@ namespace OZW {
 	// ===================================================================
 	{
 		HandleScope scope;
-// TODO		
+		
+		uint8_t nodeid = args[0]->ToNumber()->Value();
+		uint8_t groupidx = args[1]->ToNumber()->Value();
+		uint8_t tgtnodeid = args[2]->ToNumber()->Value();
+	
+		OpenZWave::Manager::Get()->AddAssociation(
+			homeid,nodeid,groupidx,tgtnodeid
+		);
+
 		return scope.Close(Undefined());
 	}
 
@@ -126,7 +155,13 @@ namespace OZW {
 	// ===================================================================
 	{
 		HandleScope scope;
-// TODO		
+		
+		uint8_t nodeid = args[0]->ToNumber()->Value();
+		uint8_t groupidx = args[1]->ToNumber()->Value();
+		uint8_t tgtnodeid = args[2]->ToNumber()->Value();
+	
+		OpenZWave::Manager::Get()->RemoveAssociation(homeid,nodeid,groupidx,tgtnodeid);
+		
 		return scope.Close(Undefined());
 	}
 
