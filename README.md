@@ -17,11 +17,12 @@ This addon is currently able to:
 - *write* values to zwave nodes
 - *monitor* the network for changes,
 - *heal* nodes and/or the network
-- *perform* management tasks (add/remove nodes, replace failed nodes etc)
+- *perform* management tasks (add/remove nodes, replace failed nodes, manage their group associations etc)
 
 **Important notice**
 
-This library differs in that it links dynamically to an OpenZWave **shared library**
+ -*NODE 0.10.x required* - not compatible with 0.12.x due to internal Node.JS API changes
+- This library differs in that it links dynamically to an OpenZWave **shared library**
 (in contrast to statically linking OpenZWave in the node addon). 
 Thus you need to have OpenZWave fully installed on your system (both the
 compiled library AND the development headers) before trying to install this little baby.
@@ -43,8 +44,11 @@ package (libopenzwave-dev).
 
 ## Install
 
-The module currently builds only on Linux. On Linux you will need to
-ensure the OpenZWave library and headers are installed first.
+The module currently builds only on Linux (and Windows, but its untested). 
+On Linux you will need to ensure the OpenZWave library and headers are 
+installed first. 
+It should also compile in Windows, but you need to edit binding.gyp 
+to set the paths for the OpenZWave library sources and libraries.
 
 ```
 $ sudo npm install -g openzwave-shared
