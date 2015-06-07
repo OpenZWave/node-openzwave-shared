@@ -28,31 +28,25 @@ namespace OZW {
 	 * will be a number between 1 and 4. 
 	*/
 	// ===================================================================
-	Handle<v8::Value> OZW::GetNumGroups(const Arguments& args)
+	NAN_METHOD(GetNumGroups)
 	// ===================================================================
 	{
-		HandleScope scope;
+		NanScope();
 
 		uint8_t nodeid = args[0]->ToNumber()->Value();
 		uint8 numGroups = OpenZWave::Manager::Get()->GetNumGroups(homeid, nodeid);
 		
-		Local<v8::Value> argv[2];
-		argv[0] = String::New("numgroups");
-		argv[1] = Integer::New(numGroups);
-
-		MakeCallback(context_obj, "emit", 2, argv);
-
-		return scope.Close(Undefined());
+		NanReturnValue(Integer::New(numGroups));
 	}
 	
 	/*
 	 * 
 	 */
 	// ===================================================================
-	Handle<v8::Value> OZW::GetAssociations(const Arguments& args)
+	NAN_METHOD(GetAssociations)
 	// ===================================================================
 	{
-		HandleScope scope;
+		NanScope();
 		uint8* associations;
 
 		uint8_t nodeid = args[0]->ToNumber()->Value();
@@ -68,28 +62,24 @@ namespace OZW {
 			o_assocs->Set(Integer::New(nr), Integer::New(associations[nr]));
 		}
 
-		Local<v8::Value> argv[3];
-		argv[0] = String::New("associations");
-		argv[1] = Integer::New(nodeid);
-		argv[2] = o_assocs;
+		Local<v8::Value> argv[1];
+		argv[0] = o_assocs;
 
-		MakeCallback(context_obj, "emit", 3, argv);
-		
 		// The caller is responsible for freeing the array memory 
 		// with a call to delete []. 
 		delete associations;
 		
-		return scope.Close(Undefined());
+		NanReturnValue(argv);
 	}
 
 	/*
 	 * 
 	 */
 	// ===================================================================
-	Handle<v8::Value> OZW::GetMaxAssociations(const Arguments& args)
+	NAN_METHOD(GetMaxAssociations)
 	// ===================================================================
 	{
-		HandleScope scope;
+		NanScope();
 		
 		uint8_t nodeid = args[0]->ToNumber()->Value();
 		uint8_t groupidx = args[1]->ToNumber()->Value();
@@ -98,24 +88,17 @@ namespace OZW {
 			homeid, nodeid,	groupidx
 		);
 		
-		Local<v8::Value> argv[3];
-		argv[0] = String::New("associations");
-		argv[1] = Integer::New(nodeid);
-		argv[2] = Integer::New(numMaxAssoc);
-
-		MakeCallback(context_obj, "emit", 3, argv);
-		
-		return scope.Close(Undefined());
+		NanReturnValue(Integer::New(numMaxAssoc));
 	}
 
 	/*
 	 * 
 	 */
 	// ===================================================================
-	Handle<v8::Value> OZW::GetGroupLabel(const Arguments& args)
+	NAN_METHOD(GetGroupLabel)
 	// ===================================================================
 	{
-		HandleScope scope;
+		NanScope();
 		
 		uint8_t nodeid = args[0]->ToNumber()->Value();
 		uint8_t groupidx = args[1]->ToNumber()->Value();
@@ -124,17 +107,17 @@ namespace OZW {
 			homeid, nodeid, groupidx
 		);
 
-		return scope.Close(String::New(groupLabel.c_str()));
+		NanReturnValue(String::New(groupLabel.c_str()));
 	}
 
 	/*
 	 * 
 	 */
 	// ===================================================================
-	Handle<v8::Value> OZW::AddAssociation(const Arguments& args)
+	NAN_METHOD(AddAssociation)
 	// ===================================================================
 	{
-		HandleScope scope;
+		NanScope();
 		
 		uint8_t nodeid = args[0]->ToNumber()->Value();
 		uint8_t groupidx = args[1]->ToNumber()->Value();
@@ -144,17 +127,17 @@ namespace OZW {
 			homeid,nodeid,groupidx,tgtnodeid
 		);
 
-		return scope.Close(Undefined());
+		NanReturnUndefined();
 	}
 
 	/*
 	 * 
 	 */
 	// ===================================================================
-	Handle<v8::Value> OZW::RemoveAssociation(const Arguments& args)
+	NAN_METHOD(RemoveAssociation)
 	// ===================================================================
 	{
-		HandleScope scope;
+		NanScope();
 		
 		uint8_t nodeid = args[0]->ToNumber()->Value();
 		uint8_t groupidx = args[1]->ToNumber()->Value();
@@ -162,7 +145,7 @@ namespace OZW {
 	
 		OpenZWave::Manager::Get()->RemoveAssociation(homeid,nodeid,groupidx,tgtnodeid);
 		
-		return scope.Close(Undefined());
+		NanReturnUndefined();
 	}
 
 }

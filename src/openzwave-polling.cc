@@ -23,12 +23,12 @@ namespace OZW {
 
  	// Get the time period between polls of a node's state
 	// ===================================================================
-	Handle<v8::Value> OZW::GetPollInterval(const Arguments& args)
+	NAN_METHOD(GetPollInterval)
 	// ===================================================================
 	{
-		HandleScope scope;
+		NanScope();
 		uint32 i = OpenZWave::Manager::Get()->GetPollInterval();
-		return scope.Close(Integer::New(i));
+		NanReturnValue(Integer::New(i));
 	}
 	
 	/* Set the time period between polls of a node's state. Due to patent 
@@ -43,13 +43,13 @@ namespace OZW {
 	 * network does not have to cope with more than one poll per second). 
 	 */ 
 	// ===================================================================
-	Handle<v8::Value> OZW::SetPollInterval(const Arguments& args)
+	NAN_METHOD(SetPollInterval)
 	// ===================================================================
 	{
-		HandleScope scope;
+		NanScope();
 		uint8_t intervalMillisecs = args[0]->ToNumber()->Value();
 		OpenZWave::Manager::Get()->SetPollInterval (intervalMillisecs, false);
-		return scope.Close(Undefined());
+		NanReturnUndefined();
 	}
 	
 	
@@ -57,10 +57,10 @@ namespace OZW {
 	* Enable/Disable polling on a COMMAND_CLASS basis.
 	*/
 	// ===================================================================
-	Handle<v8::Value> OZW::EnablePoll(const Arguments& args)
+	NAN_METHOD(EnablePoll)
 	// ===================================================================
 	{
-		HandleScope scope;
+		NanScope();
 
 		uint8_t nodeid = args[0]->ToNumber()->Value();
 		uint8_t comclass = args[1]->ToNumber()->Value();
@@ -76,14 +76,14 @@ namespace OZW {
 			}
 		}
 
-		return scope.Close(Undefined());
+		NanReturnUndefined();
 	}
 
 	// ===================================================================
-	Handle<v8::Value> OZW::DisablePoll(const Arguments& args) 
+	NAN_METHOD(DisablePoll)
 	// ===================================================================
 	{
-		HandleScope scope;
+		NanScope();
 
 		uint8_t nodeid = args[0]->ToNumber()->Value();
 		uint8_t comclass = args[1]->ToNumber()->Value();
@@ -99,15 +99,15 @@ namespace OZW {
 			}
 		}
 
-		return scope.Close(Undefined());
+		NanReturnUndefined();
 	}
 	
 	// Determine the polling of a device's state.
 	// ===================================================================
-	Handle<v8::Value> OZW::IsPolled(const Arguments& args)
+	NAN_METHOD(IsPolled)
 	// ===================================================================
 	{
-		HandleScope scope;
+		NanScope();
 		
 		uint8_t nodeid = args[0]->ToNumber()->Value();
 		uint8_t comclass = args[1]->ToNumber()->Value();
@@ -121,19 +121,19 @@ namespace OZW {
 			for (vit = node->values.begin(); vit != node->values.end(); ++vit) {
 				if (((*vit).GetCommandClassId() == comclass) && ((*vit).GetInstance() == instance) && ((*vit).GetIndex() == index)) {
 					bool b = OpenZWave::Manager::Get()->isPolled(*vit);
-					return scope.Close(Boolean::New(b));
+					NanReturnValue(Boolean::New(b));
 				}
 			}
 		}
 		
-		return scope.Close(Undefined());
+		NanReturnUndefined();
 	}
 	
 	// ===================================================================
-	Handle<v8::Value> OZW::SetPollIntensity(const Arguments& args)
+	NAN_METHOD(SetPollIntensity)
 	// ===================================================================
 	{
-		HandleScope scope;
+		NanScope();
 		
 		uint8_t nodeid = args[0]->ToNumber()->Value();
 		uint8_t comclass = args[1]->ToNumber()->Value();
@@ -149,19 +149,19 @@ namespace OZW {
 				if (((*vit).GetCommandClassId() == comclass) && ((*vit).GetInstance() == instance) && ((*vit).GetIndex() == index)) {
 					
 					OpenZWave::Manager::Get()->SetPollIntensity (*vit, intensity);
-					return scope.Close(Undefined());
+					NanReturnUndefined();
 				}
 			}
 		}
-		return scope.Close(Undefined());
+		NanReturnUndefined();
 	}
 
  	// Get the polling intensity of a device's state. 
 	// ===================================================================
-	Handle<v8::Value> OZW::GetPollIntensity(const Arguments& args)
+	NAN_METHOD(GetPollIntensity)
 	// ===================================================================
 	{
-		HandleScope scope;
+		NanScope();
 		
 		uint8_t nodeid = args[0]->ToNumber()->Value();
 		uint8_t comclass = args[1]->ToNumber()->Value();
@@ -175,11 +175,11 @@ namespace OZW {
 			for (vit = node->values.begin(); vit != node->values.end(); ++vit) {
 				if (((*vit).GetCommandClassId() == comclass) && ((*vit).GetInstance() == instance) && ((*vit).GetIndex() == index)) {
 					uint8 i = OpenZWave::Manager::Get()->GetPollIntensity(*vit);
-					return scope.Close(Integer::New(i));
+					NanReturnValue(Integer::New(i));
 				}
 			}
 		}
 		
-		return scope.Close(Undefined());
+		NanReturnUndefined();
 	}
 }

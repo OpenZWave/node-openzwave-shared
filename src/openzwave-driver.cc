@@ -23,10 +23,10 @@ using namespace node;
 namespace OZW {
 	
 	// ===================================================================
-	Handle<v8::Value> OZW::Connect(const Arguments& args)
+	NAN_METHOD(Connect)
 	// ===================================================================
 	{
-		HandleScope scope;
+		NanScope();
 
 		std::string path = (*String::Utf8Value(args[0]->ToString()));
 
@@ -41,14 +41,14 @@ namespace OZW {
 		Handle<v8::Value> argv[1] = { String::New("connected") };
 		MakeCallback(context_obj, "emit", 1, argv);
 
-		return Undefined();
+		NanReturnUndefined();
 	}
 
 	// ===================================================================
-	Handle<v8::Value> OZW::Disconnect(const Arguments& args)
+	NAN_METHOD(Disconnect)
 	// ===================================================================
 	{
-		HandleScope scope;
+		NanScope();
 
 		std::string path = (*String::Utf8Value(args[0]->ToString()));
 
@@ -57,7 +57,7 @@ namespace OZW {
 		OpenZWave::Manager::Destroy();
 		OpenZWave::Options::Destroy();
 
-		return scope.Close(Undefined());
+		NanReturnUndefined();
 	}
 
 	/*
@@ -65,32 +65,32 @@ namespace OZW {
 	* out all known configuration, a soft reset just restarts the chip.
 	*/
 	// ===================================================================
-	Handle<v8::Value> OZW::HardReset(const Arguments& args)
+	NAN_METHOD(HardReset)
 	// ===================================================================
 	{
-		HandleScope scope;
+		NanScope();
 
 		OpenZWave::Manager::Get()->ResetController(homeid);
 
-		return scope.Close(Undefined());
+		NanReturnUndefined();
 	}
 	
 	// ===================================================================
-	Handle<v8::Value> OZW::SoftReset(const Arguments& args)
+	NAN_METHOD(SoftReset)
 	// ===================================================================
 	{
-		HandleScope scope;
+		NanScope();
 
 		OpenZWave::Manager::Get()->SoftReset(homeid);
 
-		return scope.Close(Undefined());
+		NanReturnUndefined();
 	}
 	
 	// ===================================================================
-	Handle<v8::Value> OZW::BeginControllerCommand(const Arguments& args)
+	NAN_METHOD(BeginControllerCommand)
 	// ===================================================================
 	{
-		HandleScope scope;
+		NanScope();
 		
 		std::string ctrcmd = (*String::Utf8Value(args[0]->ToString()));
 		uint8_t    nodeid1 = 0xff;
@@ -129,34 +129,34 @@ namespace OZW {
 				nodeid2	// uint8 	_arg = 0 
 			);
 		}
-		return scope.Close(Undefined());
+		NanReturnUndefined();
 	}
 	
 	// ===================================================================
-	Handle<v8::Value> OZW::CancelControllerCommand(const Arguments& args) 
+	NAN_METHOD(CancelControllerCommand)
 	// ===================================================================
 	{
-		HandleScope scope;
+		NanScope();
 		OpenZWave::Manager::Get()->CancelControllerCommand (homeid);
-		return scope.Close(Undefined());
+		NanReturnUndefined();
 	}
 	
 	// ===================================================================
-	Handle<v8::Value> OZW::GetControllerNodeId(const Arguments& args) 
+	NAN_METHOD(GetControllerNodeId)
 	// ===================================================================
 	{
-		HandleScope scope;
+		NanScope();
 	 	uint8 ctrlid = OpenZWave::Manager::Get()->GetControllerNodeId (homeid);
-	 	return scope.Close(Integer::New(ctrlid));
+	 	NanReturnValue(Integer::New(ctrlid));
 	}
 
 	// ===================================================================
-	Handle<v8::Value> OZW::GetSUCNodeId(const Arguments& args) 
+	NAN_METHOD(GetSUCNodeId)
 	// ===================================================================
 	{
-		HandleScope scope;
+		NanScope();
 	 	uint8 sucid = OpenZWave::Manager::Get()->GetSUCNodeId (homeid);
-	 	return scope.Close(Integer::New(sucid));
+	 	NanReturnValue(Integer::New(sucid));
 	}
 	 
 	/* Query if the controller is a primary controller. The primary controller 
@@ -165,12 +165,12 @@ namespace OZW {
 	 * are secondary controllers. 
 	 */
 	// ===================================================================
-	Handle<v8::Value> OZW::IsPrimaryController(const Arguments& args) 
+	NAN_METHOD(IsPrimaryController)
 	// ===================================================================
 	{
-		HandleScope scope;
+		NanScope();
 	 	bool isprimary = OpenZWave::Manager::Get()->IsPrimaryController (homeid);
-	 	return scope.Close(Boolean::New(isprimary));
+	 	NanReturnValue(Boolean::New(isprimary));
 	}
  
 	/* Query if the controller is a static update controller. A Static 
@@ -179,12 +179,12 @@ namespace OZW {
 	 * receive information about network changes. 
 	 */
 	// ===================================================================
-	Handle<v8::Value> OZW::IsStaticUpdateController(const Arguments& args) 
+	NAN_METHOD(IsStaticUpdateController)
 	// ===================================================================
 	{
-		HandleScope scope;
+		NanScope();
 	 	bool issuc = OpenZWave::Manager::Get()->IsStaticUpdateController (homeid);
-	 	return scope.Close(Boolean::New(issuc));
+	 	NanReturnValue(Boolean::New(issuc));
 	}
  
 	/* Query if the controller is using the bridge controller library. 
@@ -192,23 +192,23 @@ namespace OZW {
 	 * associated with other controllers to enable events to be passed on. 
 	 */ 
 	// ===================================================================
-	Handle<v8::Value> OZW::IsBridgeController(const Arguments& args) 
+	NAN_METHOD(IsBridgeController)
 	// ===================================================================
 	{
-		HandleScope scope;
+		NanScope();
 	 	bool isbridge = OpenZWave::Manager::Get()->IsBridgeController (homeid);
-	 	return scope.Close(Boolean::New(isbridge));
+	 	NanReturnValue(Boolean::New(isbridge));
 	}
 
  	/* Get the version of the Z-Wave API library used by a controller. 
  	 */
  	// ===================================================================
-	Handle<v8::Value> OZW::GetLibraryVersion(const Arguments& args) 
+	NAN_METHOD(GetLibraryVersion)
 	// ===================================================================
 	{
-		HandleScope scope;
+		NanScope();
 	 	std::string libver = OpenZWave::Manager::Get()->GetLibraryVersion (homeid);
-	 	return scope.Close(String::New(libver.c_str()));
+	 	NanReturnValue(String::New(libver.c_str()));
 	}
 
  	/* Get a string containing the Z-Wave API library type used by a 
@@ -227,21 +227,21 @@ namespace OZW {
  	 * use the IsBridgeController method. 
  	 */
  	// ===================================================================
-	Handle<v8::Value> OZW::GetLibraryTypeName(const Arguments& args) 
+	NAN_METHOD(GetLibraryTypeName)
 	// ===================================================================
 	{
-		HandleScope scope;
+		NanScope();
 	 	std::string libtype = OpenZWave::Manager::Get()->GetLibraryTypeName (homeid);
-	 	return scope.Close(String::New(libtype.c_str()));
+	 	NanReturnValue(String::New(libtype.c_str()));
 	}
 
 	// ===================================================================
-	Handle<v8::Value> OZW::GetSendQueueCount(const Arguments& args) 
+	NAN_METHOD(GetSendQueueCount)
 	// ===================================================================
 	{
-		HandleScope scope;
+		NanScope();
 	 	uint32 cnt = OpenZWave::Manager::Get()->GetSendQueueCount (homeid);
-	 	return scope.Close(Integer::New(cnt));
+	 	NanReturnValue(Integer::New(cnt));
 	}
 
 }

@@ -44,10 +44,10 @@ namespace OZW {
 	CommandMap* ctrlCmdNames;
 
 	// ===================================================================
-	Handle<v8::Value> OZW::New(const Arguments& args)
+	NAN_METHOD(OZW::New)
 	// ===================================================================
 	{
-		HandleScope scope;
+		NanScope();
 
 		assert(args.IsConstructCall());
 		OZW* self = new OZW();
@@ -70,16 +70,17 @@ namespace OZW {
 		OpenZWave::Options::Get()->AddOptionBool("SuppressValueRefresh", opts->Get(String::New("suppressrefresh"))->BooleanValue());
 		OpenZWave::Options::Get()->Lock();
 
-		return scope.Close(args.This());
+		NanReturnValue(args.This());
 	}
 
 	// ===================================================================
 	extern "C" void init(Handle<Object> target) {
-		HandleScope scope;
-
-		Local < FunctionTemplate > t = FunctionTemplate::New(OZW::New);
+  
+		NanScope();
+		Local < FunctionTemplate > t = NanNew<FunctionTemplate>(OZW::New);
+		t->SetClassName(NanNew("OZW"));	
 		t->InstanceTemplate()->SetInternalFieldCount(1);
-		t->SetClassName(String::New("OZW"));
+		
 		// openzwave-config.cc
 		NODE_SET_PROTOTYPE_METHOD(t, "setConfigParam", OZW::SetConfigParam);
 		NODE_SET_PROTOTYPE_METHOD(t, "requestConfigParam", OZW::RequestConfigParam);

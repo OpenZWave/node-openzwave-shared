@@ -24,10 +24,10 @@ namespace OZW {
 	* Set Config Parameters
 	*/
 	// ===================================================================
-	Handle<v8::Value> OZW::SetConfigParam(const Arguments& args)
+	NAN_METHOD(SetConfigParam)
 	// ===================================================================
 	{
-		HandleScope scope;
+		NanScope();
 
 		uint8_t nodeid = args[0]->ToNumber()->Value();
 		uint8_t param = args[1]->ToNumber()->Value();
@@ -41,7 +41,7 @@ namespace OZW {
 			OpenZWave::Manager::Get()->SetConfigParam(homeid, nodeid, param, value, size);
 		}
 
-		return scope.Close(Undefined());
+		NanReturnUndefined();
 	}
 	
 	/*
@@ -60,17 +60,17 @@ namespace OZW {
  	 * Configuration::StaticGetCommandClassId. 
 	*/
 	// ===================================================================
-	Handle<v8::Value> OZW::RequestConfigParam(const Arguments& args)
+	NAN_METHOD(RequestConfigParam)
 	// ===================================================================
 	{
-		HandleScope scope;
+		NanScope();
 		
 		uint8_t nodeid = args[0]->ToNumber()->Value();
 		uint8_t param = args[1]->ToNumber()->Value();
 		
 		OpenZWave::Manager::Get()->RequestConfigParam(homeid, nodeid, param);
 		
-		return scope.Close(Undefined());
+		NanReturnUndefined();
 	}
 	
 		
@@ -79,16 +79,16 @@ namespace OZW {
 	 * device.
 	 * */
 	// ===================================================================
-	Handle<v8::Value> OZW::RequestAllConfigParams(const Arguments& args)
+	NAN_METHOD(RequestAllConfigParams)
 	// ===================================================================
 	{
-		HandleScope scope;
+		NanScope();
 		
 		uint8_t nodeid = args[0]->ToNumber()->Value();
 	
 	  	OpenZWave::Manager::Get()->RequestAllConfigParams (homeid, nodeid);
 	  	
-	 	return scope.Close(Undefined());
+	 	NanReturnUndefined();
 	}
 
 }

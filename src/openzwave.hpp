@@ -25,6 +25,7 @@
 
 #include <node.h>
 #include <v8.h>
+#include "nan.h"
 
 #include "Manager.h"
 #include "Driver.h"
@@ -93,65 +94,65 @@ using namespace node;
 
 namespace OZW {
 	
-	struct OZW : ObjectWrap {
-		static Handle<v8::Value> New(const Arguments& args);
+	struct OZW : public ObjectWrap {
+		static NAN_METHOD(New);
 		// openzwave-config.cc
-		static Handle<v8::Value> SetConfigParam(const Arguments& args);
-		static Handle<v8::Value> RequestConfigParam(const Arguments& args);
-		static Handle<v8::Value> RequestAllConfigParams(const Arguments& args);
+		static NAN_METHOD(SetConfigParam);
+		static NAN_METHOD(RequestConfigParam);
+		static NAN_METHOD(RequestAllConfigParams);
 		// openzwave-controller.cc
-		static Handle<v8::Value> HardReset(const Arguments& args);
-		static Handle<v8::Value> SoftReset(const Arguments& args);
-		static Handle<v8::Value> BeginControllerCommand(const Arguments& args);
-		static Handle<v8::Value> CancelControllerCommand(const Arguments& args);
-		static Handle<v8::Value> GetControllerNodeId(const Arguments& args); 
-		static Handle<v8::Value> GetSUCNodeId(const Arguments& args); 
-		static Handle<v8::Value> IsPrimaryController(const Arguments& args); 
-		static Handle<v8::Value> IsStaticUpdateController(const Arguments& args);
-		static Handle<v8::Value> IsBridgeController(const Arguments& args);
-		static Handle<v8::Value> GetLibraryVersion(const Arguments& args);
-		static Handle<v8::Value> GetLibraryTypeName(const Arguments& args);
-		static Handle<v8::Value> GetSendQueueCount(const Arguments& args);
+		static NAN_METHOD(HardReset);
+		static NAN_METHOD(SoftReset);
+		static NAN_METHOD(BeginControllerCommand);
+		static NAN_METHOD(CancelControllerCommand);
+		static NAN_METHOD(GetControllerNodeId);
+		static NAN_METHOD(GetSUCNodeId);
+		static NAN_METHOD(IsPrimaryController);
+		static NAN_METHOD(IsStaticUpdateController);
+		static NAN_METHOD(IsBridgeController);
+		static NAN_METHOD(GetLibraryVersion);
+		static NAN_METHOD(GetLibraryTypeName);
+		static NAN_METHOD(GetSendQueueCount);
 		// openzwave-driver.cc
-		static Handle<v8::Value> Connect(const Arguments& args);
-		static Handle<v8::Value> Disconnect(const Arguments& args);
+		static NAN_METHOD(Connect);
+		static NAN_METHOD(Disconnect);
 		// openzwave-groups.cc
-		static Handle<v8::Value> GetNumGroups(const Arguments& args);
-		static Handle<v8::Value> GetAssociations(const Arguments& args);
-		static Handle<v8::Value> GetMaxAssociations(const Arguments& args);
-		static Handle<v8::Value> GetGroupLabel(const Arguments& args);
-		static Handle<v8::Value> AddAssociation(const Arguments& args);
-		static Handle<v8::Value> RemoveAssociation(const Arguments& args);
+		static NAN_METHOD(GetNumGroups);
+		static NAN_METHOD(GetAssociations);
+		static NAN_METHOD(GetMaxAssociations);
+		static NAN_METHOD(GetGroupLabel);
+		static NAN_METHOD(AddAssociation);
+		static NAN_METHOD(RemoveAssociation);
 		// openzwave-network.cc
-		static Handle<v8::Value> TestNetworkNode(const Arguments& args);
-		static Handle<v8::Value> TestNetwork(const Arguments& args);
-		static Handle<v8::Value> HealNetworkNode(const Arguments& args);
-		static Handle<v8::Value> HealNetwork(const Arguments& args);
+		static NAN_METHOD(TestNetworkNode);
+		static NAN_METHOD(TestNetwork);
+		static NAN_METHOD(HealNetworkNode);
+		static NAN_METHOD(HealNetwork);
 		// openzwave-nodes.cc
-		static Handle<v8::Value> GetNodeNeighbors(const Arguments& args);
-		static Handle<v8::Value> RefreshNodeInfo(const Arguments& args);
-		static Handle<v8::Value> SwitchAllOn(const Arguments& args);
-		static Handle<v8::Value> SwitchAllOff(const Arguments& args);
+		static NAN_METHOD(GetNodeNeighbors);
+		static NAN_METHOD(RefreshNodeInfo);
+		static NAN_METHOD(SwitchAllOn);
+		static NAN_METHOD(SwitchAllOff);
 		// openzwave-values.cc
-		static Handle<v8::Value> SetValue(const Arguments& args);
-		static Handle<v8::Value> SetLocation(const Arguments& args);
-		static Handle<v8::Value> SetName(const Arguments& args);
+		static NAN_METHOD(SetValue);
+		static NAN_METHOD(SetLocation);
+		static NAN_METHOD(SetName);
 		// openzwave-polling.cc
-		static Handle<v8::Value> GetPollInterval(const Arguments& args);
-		static Handle<v8::Value> SetPollInterval(const Arguments& args);
-		static Handle<v8::Value> EnablePoll(const Arguments& args);
-		static Handle<v8::Value> DisablePoll(const Arguments& args);
-		static Handle<v8::Value> IsPolled(const Arguments& args);
-		static Handle<v8::Value> SetPollIntensity(const Arguments& args);
-		static Handle<v8::Value> GetPollIntensity(const Arguments& args);
+		static NAN_METHOD(GetPollInterval);
+		static NAN_METHOD(SetPollInterval);
+		static NAN_METHOD(EnablePoll);
+		static NAN_METHOD(DisablePoll);
+		static NAN_METHOD(IsPolled);
+		static NAN_METHOD(SetPollIntensity);
+		static NAN_METHOD(GetPollIntensity);
 		// openzwave-scenes.cc
-		static Handle<v8::Value> CreateScene(const Arguments& args);
-		static Handle<v8::Value> RemoveScene(const Arguments& args);
-		static Handle<v8::Value> GetScenes(const Arguments& args);
-		static Handle<v8::Value> AddSceneValue(const Arguments& args);
-		static Handle<v8::Value> RemoveSceneValue(const Arguments& args);
-		static Handle<v8::Value> SceneGetValues(const Arguments& args);
-		static Handle<v8::Value> ActivateScene(const Arguments& args);
+		static NAN_METHOD(CreateScene);
+		static NAN_METHOD(RemoveScene);
+		static NAN_METHOD(GetScenes);
+		static NAN_METHOD(AddSceneValue);
+		static NAN_METHOD(RemoveSceneValue);
+		static NAN_METHOD(SceneGetValues);
+		static NAN_METHOD(ActivateScene);
 		//
 		
 		//

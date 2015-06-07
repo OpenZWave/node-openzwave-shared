@@ -21,6 +21,7 @@
 					"libraries": ["-lopenzwave"]
 				},
 				"include_dirs": [
+					"<!(node -p -e \"require('path').dirname(require.resolve('nan'))\")",
 					'/usr/local/include/openzwave',
 					'/usr/local/include/openzwave/value_classes',
 					'/usr/include/openzwave',

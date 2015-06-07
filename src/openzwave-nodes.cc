@@ -25,10 +25,10 @@ namespace OZW {
 	* Gets the neighbors for a node
 	*/
 	// ===================================================================
-	Handle<v8::Value> OZW::GetNodeNeighbors(const Arguments& args)
+	NAN_METHOD(GetNodeNeighbors)
 	// ===================================================================
 	{
-		HandleScope scope;
+		NanScope();
 		uint8* neighbors; 
 
 		uint8_t nodeid = args[0]->ToNumber()->Value();
@@ -39,70 +39,63 @@ namespace OZW {
 			o_neighbors->Set(Integer::New(nr), Integer::New(neighbors[nr]));
 		}
 
-		Local<v8::Value> argv[3];
-		argv[0] = String::New("neighbors");
-		argv[1] = Integer::New(nodeid);
-		argv[2] = o_neighbors;
-
-		MakeCallback(context_obj, "emit", 3, argv);
-
-		return scope.Close(Undefined());
+		NanReturnValue( o_neighbors );		
 	}
 	
 	// ===================================================================
-	Handle<v8::Value> OZW::SwitchAllOn(const Arguments& args)
+	NAN_METHOD(SwitchAllOn)
 	// ===================================================================
 	{
-		HandleScope scope;
+		NanScope();
 
 		OpenZWave::Manager::Get()->SwitchAllOn(homeid);
 
-		return scope.Close(Undefined());
+		NanReturnUndefined();
 	}
 
 	// ===================================================================
-	Handle<v8::Value> OZW::SwitchAllOff(const Arguments& args)
+	NAN_METHOD(SwitchAllOff)
 	// ===================================================================
 	{
-		HandleScope scope;
+		NanScope();
 
 		OpenZWave::Manager::Get()->SwitchAllOff(homeid);
 
-		return scope.Close(Undefined());
+		NanReturnUndefined();
 	}
 
 	/*
 	* Write a new location string to the device, if supported.
 	*/
 	// ===================================================================
-	Handle<v8::Value> OZW::SetLocation(const Arguments& args)
+	NAN_METHOD(SetLocation)
 	// ===================================================================
 	{
-		HandleScope scope;
+		NanScope();
 
 		uint8_t nodeid = args[0]->ToNumber()->Value();
 		std::string location = (*String::Utf8Value(args[1]->ToString()));
 
 		OpenZWave::Manager::Get()->SetNodeLocation(homeid, nodeid, location);
 
-		return scope.Close(Undefined());
+		NanReturnUndefined();
 	}
 
 	/*
 	* Write a new name string to the device, if supported.
 	*/
 	// ===================================================================
-	Handle<v8::Value> OZW::SetName(const Arguments& args)
+	NAN_METHOD(SetName)
 	// ===================================================================
 	{
-		HandleScope scope;
+		NanScope();
 
 		uint8_t nodeid = args[0]->ToNumber()->Value();
 		std::string name = (*String::Utf8Value(args[1]->ToString()));
 
 		OpenZWave::Manager::Get()->SetNodeName(homeid, nodeid, name);
 
-		return scope.Close(Undefined());
+		NanReturnUndefined();
 	}
 	
 	/*
@@ -116,16 +109,16 @@ namespace OZW {
 	* This is the same as the query state starting from the beginning.
 	*/
 	// ===================================================================
-	Handle<v8::Value> OZW::RefreshNodeInfo(const Arguments& args)
+	NAN_METHOD(RefreshNodeInfo)
 	// ===================================================================
 	{
-		HandleScope scope;
+		NanScope();
 		
 		uint8_t nodeid = args[0]->ToNumber()->Value();
 		
 		OpenZWave::Manager::Get()->RefreshNodeInfo(homeid, nodeid);
 		
-		return scope.Close(Undefined());
+		NanReturnUndefined();
 	}
 	
 }

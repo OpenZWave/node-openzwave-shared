@@ -21,7 +21,6 @@ This addon is currently able to:
 
 **Important notice**
 
- -*NODE 0.10.x required* - not compatible with 0.12.x due to internal Node.JS API changes
 - This library differs in that it links dynamically to an OpenZWave **shared library**
 (in contrast to statically linking OpenZWave in the node addon). 
 Thus you need to have OpenZWave fully installed on your system (both the
