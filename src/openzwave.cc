@@ -139,7 +139,7 @@ namespace OZW {
 		NODE_SET_PROTOTYPE_METHOD(t, "sceneGetValues", OZW::SceneGetValues);
 		NODE_SET_PROTOTYPE_METHOD(t, "activateScene", OZW::ActivateScene);
 		//
-		target->Set(String::NewSymbol("Emitter"), t->GetFunction());
+		target->Set(NanNew<String>("Emitter"), t->GetFunction());
 		
 		/* for BeginControllerCommand
 		 * http://openzwave.com/dev/classOpenZWave_1_1Manager.html#aa11faf40f19f0cda202d2353a60dbf7b
