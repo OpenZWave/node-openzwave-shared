@@ -38,7 +38,7 @@ namespace OZW {
 		OpenZWave::Manager::Get()->AddWatcher(ozw_watcher_callback, NULL);
 		OpenZWave::Manager::Get()->AddDriver(path);
 
-		Handle<v8::Value> argv[1] = { String::New("connected") };
+		Handle<v8::Value> argv[1] = { NanNew<String>("connected") };
 		MakeCallback(context_obj, "emit", 1, argv);
 
 		NanReturnUndefined();
@@ -208,7 +208,7 @@ namespace OZW {
 	{
 		NanScope();
 	 	std::string libver = OpenZWave::Manager::Get()->GetLibraryVersion (homeid);
-	 	NanReturnValue(String::New(libver.c_str()));
+	 	NanReturnValue(NanNew<String>(libver.c_str()));
 	}
 
  	/* Get a string containing the Z-Wave API library type used by a 
@@ -232,7 +232,7 @@ namespace OZW {
 	{
 		NanScope();
 	 	std::string libtype = OpenZWave::Manager::Get()->GetLibraryTypeName (homeid);
-	 	NanReturnValue(String::New(libtype.c_str()));
+	 	NanReturnValue(NanNew<String>(libtype.c_str()));
 	}
 
 	// ===================================================================

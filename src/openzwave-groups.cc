@@ -62,14 +62,11 @@ namespace OZW {
 			o_assocs->Set(Integer::New(nr), Integer::New(associations[nr]));
 		}
 
-		Local<v8::Value> argv[1];
-		argv[0] = o_assocs;
-
 		// The caller is responsible for freeing the array memory 
 		// with a call to delete []. 
 		delete associations;
 		
-		NanReturnValue(argv);
+		NanReturnValue(o_assocs);
 	}
 
 	/*
@@ -107,7 +104,7 @@ namespace OZW {
 			homeid, nodeid, groupidx
 		);
 
-		NanReturnValue(String::New(groupLabel.c_str()));
+		NanReturnValue(NanNew<String>(groupLabel.c_str()));
 	}
 
 	/*

@@ -73,27 +73,27 @@ namespace OZW {
 
 		sprintf(buffer, "%d-%d-%d-%d", value.GetNodeId(), value.GetCommandClassId(), value.GetInstance(), value.GetIndex());
 
-		valobj->Set(String::NewSymbol("value_id"), String::New(buffer));
+		valobj->Set(NanNew<String>("value_id"), NanNew<String>(buffer));
 
 		/*
 		* Common value types.
 		*/
-		valobj->Set(String::NewSymbol("id"), Integer::New(value.GetId()));
-		valobj->Set(String::NewSymbol("node_id"), Integer::New(value.GetNodeId()));
-		valobj->Set(String::NewSymbol("class_id"), Integer::New(value.GetCommandClassId()));
-		valobj->Set(String::NewSymbol("type"), String::New(OpenZWave::Value::GetTypeNameFromEnum(value.GetType())));
-		valobj->Set(String::NewSymbol("genre"), String::New(OpenZWave::Value::GetGenreNameFromEnum(value.GetGenre())));
-		valobj->Set(String::NewSymbol("instance"), Integer::New(value.GetInstance()));
-		valobj->Set(String::NewSymbol("index"), Integer::New(value.GetIndex()));
-		valobj->Set(String::NewSymbol("label"), String::New(OpenZWave::Manager::Get()->GetValueLabel(value).c_str()));
-		valobj->Set(String::NewSymbol("units"), String::New(OpenZWave::Manager::Get()->GetValueUnits(value).c_str()));
-		valobj->Set(String::NewSymbol("read_only"), Boolean::New(OpenZWave::Manager::Get()->IsValueReadOnly(value))->ToBoolean());
-		valobj->Set(String::NewSymbol("write_only"), Boolean::New(OpenZWave::Manager::Get()->IsValueWriteOnly(value))->ToBoolean());
-		valobj->Set(String::NewSymbol("is_polled"), Boolean::New(OpenZWave::Manager::Get()->IsValuePolled(value))->ToBoolean());
+		valobj->Set(NanNew<String>("id"), Integer::New(value.GetId()));
+		valobj->Set(NanNew<String>("node_id"), Integer::New(value.GetNodeId()));
+		valobj->Set(NanNew<String>("class_id"), Integer::New(value.GetCommandClassId()));
+		valobj->Set(NanNew<String>("type"), NanNew<String>(OpenZWave::Value::GetTypeNameFromEnum(value.GetType())));
+		valobj->Set(NanNew<String>("genre"), NanNew<String>(OpenZWave::Value::GetGenreNameFromEnum(value.GetGenre())));
+		valobj->Set(NanNew<String>("instance"), Integer::New(value.GetInstance()));
+		valobj->Set(NanNew<String>("index"), Integer::New(value.GetIndex()));
+		valobj->Set(NanNew<String>("label"), NanNew<String>(OpenZWave::Manager::Get()->GetValueLabel(value).c_str()));
+		valobj->Set(NanNew<String>("units"), NanNew<String>(OpenZWave::Manager::Get()->GetValueUnits(value).c_str()));
+		valobj->Set(NanNew<String>("read_only"), Boolean::New(OpenZWave::Manager::Get()->IsValueReadOnly(value))->ToBoolean());
+		valobj->Set(NanNew<String>("write_only"), Boolean::New(OpenZWave::Manager::Get()->IsValueWriteOnly(value))->ToBoolean());
+		valobj->Set(NanNew<String>("is_polled"), Boolean::New(OpenZWave::Manager::Get()->IsValuePolled(value))->ToBoolean());
 		// XXX: verify_changes=
 		// XXX: poll_intensity=
-		valobj->Set(String::NewSymbol("min"), Integer::New(OpenZWave::Manager::Get()->GetValueMin(value)));
-		valobj->Set(String::NewSymbol("max"), Integer::New(OpenZWave::Manager::Get()->GetValueMax(value)));
+		valobj->Set(NanNew<String>("min"), Integer::New(OpenZWave::Manager::Get()->GetValueMin(value)));
+		valobj->Set(NanNew<String>("max"), Integer::New(OpenZWave::Manager::Get()->GetValueMax(value)));
 
 		/*
 		* The value itself is type-specific.
@@ -102,25 +102,25 @@ namespace OZW {
 			case OpenZWave::ValueID::ValueType_Bool: {
 				bool val;
 				OpenZWave::Manager::Get()->GetValueAsBool(value, &val);
-				valobj->Set(String::NewSymbol("value"), Boolean::New(val)->ToBoolean());
+				valobj->Set(NanNew<String>("value"), Boolean::New(val)->ToBoolean());
 				break;
 			}
 			case OpenZWave::ValueID::ValueType_Byte: {
 				uint8_t val;
 				OpenZWave::Manager::Get()->GetValueAsByte(value, &val);
-				valobj->Set(String::NewSymbol("value"), Integer::New(val));
+				valobj->Set(NanNew<String>("value"), Integer::New(val));
 				break;
 			}
 			case OpenZWave::ValueID::ValueType_Decimal: {
 				float val;
 				OpenZWave::Manager::Get()->GetValueAsFloat(value, &val);
-				valobj->Set(String::NewSymbol("value"), Integer::New(val));
+				valobj->Set(NanNew<String>("value"), Integer::New(val));
 				break;
 			}
 			case OpenZWave::ValueID::ValueType_Int: {
 				int32_t val;
 				OpenZWave::Manager::Get()->GetValueAsInt(value, &val);
-				valobj->Set(String::NewSymbol("value"), Integer::New(val));
+				valobj->Set(NanNew<String>("value"), Integer::New(val));
 				break;
 			}
 			case OpenZWave::ValueID::ValueType_List: {
@@ -128,24 +128,24 @@ namespace OZW {
 				OpenZWave::Manager::Get()->GetValueListItems(value, &items);
 				Local < Array > values = Array::New(items.size());
 				for (unsigned i = 0; i < items.size(); i++) {
-					values->Set(Number::New(i), String::New(&items[i][0], items[i].size()));
+					values->Set(Number::New(i), NanNew<String>(&items[i][0], items[i].size()));
 				}
-				valobj->Set(String::NewSymbol("values"), values);
+				valobj->Set(NanNew<String>("values"), values);
 				std::string val;
 				OpenZWave::Manager::Get()->GetValueListSelection(value, &val);
-				valobj->Set(String::NewSymbol("value"), String::New(val.c_str()));
+				valobj->Set(NanNew<String>("value"), NanNew<String>(val.c_str()));
 				break;
 			}
 			case OpenZWave::ValueID::ValueType_Short: {
 				int16_t val;
 				OpenZWave::Manager::Get()->GetValueAsShort(value, &val);
-				valobj->Set(String::NewSymbol("value"), Integer::New(val));
+				valobj->Set(NanNew<String>("value"), Integer::New(val));
 				break;
 			}
 			case OpenZWave::ValueID::ValueType_String: {
 				std::string val;
 				OpenZWave::Manager::Get()->GetValueAsString(value, &val);
-				valobj->Set(String::NewSymbol("value"), String::New(val.c_str()));
+				valobj->Set(NanNew<String>("value"), NanNew<String>(val.c_str()));
 				break;
 			}
 			/*
@@ -176,26 +176,26 @@ namespace OZW {
 
 		sprintf(buffer, "%d-%d-%d-%d", value.GetNodeId(), value.GetCommandClassId(), value.GetInstance(), value.GetIndex());
 
-		valobj->Set(String::NewSymbol("value_id"), String::New(buffer));
+		valobj->Set(NanNew<String>("value_id"), NanNew<String>(buffer));
 
 		/*
 		* Common value types.
 		*/
-		valobj->Set(String::NewSymbol("id"), Integer::New(value.GetId()));
-		valobj->Set(String::NewSymbol("node_id"), Integer::New(value.GetNodeId()));
-		valobj->Set(String::NewSymbol("class_id"), Integer::New(value.GetCommandClassId()));
-		valobj->Set(String::NewSymbol("type"), String::New(OpenZWave::Value::GetTypeNameFromEnum(value.GetType())));
-		valobj->Set(String::NewSymbol("genre"), String::New(OpenZWave::Value::GetGenreNameFromEnum(value.GetGenre())));
-		valobj->Set(String::NewSymbol("instance"), Integer::New(value.GetInstance()));
-		valobj->Set(String::NewSymbol("index"), Integer::New(value.GetIndex()));
-		valobj->Set(String::NewSymbol("label"), String::New(OpenZWave::Manager::Get()->GetValueLabel(value).c_str()));
-		valobj->Set(String::NewSymbol("units"), String::New(OpenZWave::Manager::Get()->GetValueUnits(value).c_str()));
-		valobj->Set(String::NewSymbol("read_only"), Boolean::New(OpenZWave::Manager::Get()->IsValueReadOnly(value))->ToBoolean());
-		valobj->Set(String::NewSymbol("write_only"), Boolean::New(OpenZWave::Manager::Get()->IsValueWriteOnly(value))->ToBoolean());
+		valobj->Set(NanNew<String>("id"), Integer::New(value.GetId()));
+		valobj->Set(NanNew<String>("node_id"), Integer::New(value.GetNodeId()));
+		valobj->Set(NanNew<String>("class_id"), Integer::New(value.GetCommandClassId()));
+		valobj->Set(NanNew<String>("type"), NanNew<String>(OpenZWave::Value::GetTypeNameFromEnum(value.GetType())));
+		valobj->Set(NanNew<String>("genre"), NanNew<String>(OpenZWave::Value::GetGenreNameFromEnum(value.GetGenre())));
+		valobj->Set(NanNew<String>("instance"), Integer::New(value.GetInstance()));
+		valobj->Set(NanNew<String>("index"), Integer::New(value.GetIndex()));
+		valobj->Set(NanNew<String>("label"), NanNew<String>(OpenZWave::Manager::Get()->GetValueLabel(value).c_str()));
+		valobj->Set(NanNew<String>("units"), NanNew<String>(OpenZWave::Manager::Get()->GetValueUnits(value).c_str()));
+		valobj->Set(NanNew<String>("read_only"), Boolean::New(OpenZWave::Manager::Get()->IsValueReadOnly(value))->ToBoolean());
+		valobj->Set(NanNew<String>("write_only"), Boolean::New(OpenZWave::Manager::Get()->IsValueWriteOnly(value))->ToBoolean());
 		// XXX: verify_changes=
 		// XXX: poll_intensity=
-		valobj->Set(String::NewSymbol("min"), Integer::New(OpenZWave::Manager::Get()->GetValueMin(value)));
-		valobj->Set(String::NewSymbol("max"), Integer::New(OpenZWave::Manager::Get()->GetValueMax(value)));
+		valobj->Set(NanNew<String>("min"), Integer::New(OpenZWave::Manager::Get()->GetValueMin(value)));
+		valobj->Set(NanNew<String>("max"), Integer::New(OpenZWave::Manager::Get()->GetValueMax(value)));
 
 		/*
 		* The value itself is type-specific.
@@ -204,25 +204,25 @@ namespace OZW {
 		case OpenZWave::ValueID::ValueType_Bool: {
 			bool val;
 			OpenZWave::Manager::Get()->SceneGetValueAsBool(sceneId, value, &val);
-			valobj->Set(String::NewSymbol("value"), Boolean::New(val)->ToBoolean());
+			valobj->Set(NanNew<String>("value"), Boolean::New(val)->ToBoolean());
 			break;
 		}
 		case OpenZWave::ValueID::ValueType_Byte: {
 			uint8_t val;
 			OpenZWave::Manager::Get()->SceneGetValueAsByte(sceneId, value, &val);
-			valobj->Set(String::NewSymbol("value"), Integer::New(val));
+			valobj->Set(NanNew<String>("value"), Integer::New(val));
 			break;
 		}
 		case OpenZWave::ValueID::ValueType_Decimal: {
 			float val;
 			OpenZWave::Manager::Get()->SceneGetValueAsFloat(sceneId, value, &val);
-			valobj->Set(String::NewSymbol("value"), Integer::New(val));
+			valobj->Set(NanNew<String>("value"), Integer::New(val));
 			break;
 		}
 		case OpenZWave::ValueID::ValueType_Int: {
 			int32_t val;
 			OpenZWave::Manager::Get()->SceneGetValueAsInt(sceneId, value, &val);
-			valobj->Set(String::NewSymbol("value"), Integer::New(val));
+			valobj->Set(NanNew<String>("value"), Integer::New(val));
 			break;
 		}
 		case OpenZWave::ValueID::ValueType_List: {
@@ -230,24 +230,24 @@ namespace OZW {
 			OpenZWave::Manager::Get()->GetValueListItems(value, &items);
 			Local < Array > values = Array::New(items.size());
 			for (unsigned i = 0; i < items.size(); i++) {
-				values->Set(Number::New(i), String::New(&items[i][0], items[i].size()));
+				values->Set(Number::New(i), NanNew<String>(&items[i][0], items[i].size()));
 			}
-			valobj->Set(String::NewSymbol("values"), values);
+			valobj->Set(NanNew<String>("values"), values);
 			std::string val;
 			OpenZWave::Manager::Get()->SceneGetValueListSelection(sceneId, value, &val);
-			valobj->Set(String::NewSymbol("value"), String::New(val.c_str()));
+			valobj->Set(NanNew<String>("value"), NanNew<String>(val.c_str()));
 			break;
 		}
 		case OpenZWave::ValueID::ValueType_Short: {
 			int16_t val;
 			OpenZWave::Manager::Get()->SceneGetValueAsShort(sceneId, value, &val);
-			valobj->Set(String::NewSymbol("value"), Integer::New(val));
+			valobj->Set(NanNew<String>("value"), Integer::New(val));
 			break;
 		}
 		case OpenZWave::ValueID::ValueType_String: {
 			std::string val;
 			OpenZWave::Manager::Get()->SceneGetValueAsString(sceneId, value, &val);
-			valobj->Set(String::NewSymbol("value"), String::New(val.c_str()));
+			valobj->Set(NanNew<String>("value"), NanNew<String>(val.c_str()));
 			break;
 		}
 		default: {

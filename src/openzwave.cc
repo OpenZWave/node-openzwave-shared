@@ -54,20 +54,20 @@ namespace OZW {
 		self->Wrap(args.This());
 
 		Local < Object > opts = args[0]->ToObject();
-		std::string confpath = (*String::Utf8Value(opts->Get(String::New("modpath")->ToString())));
+		std::string confpath = (*String::Utf8Value(opts->Get(NanNew<String>("modpath")->ToString())));
 		confpath += "/../deps/open-zwave/config";
 
 		/*
 		* Options are global for all drivers and can only be set once.
 		*/
 		OpenZWave::Options::Create(confpath.c_str(), "", "");
-		OpenZWave::Options::Get()->AddOptionBool("ConsoleOutput", opts->Get(String::New("consoleoutput"))->BooleanValue());
-		OpenZWave::Options::Get()->AddOptionBool("Logging", opts->Get(String::New("logging"))->BooleanValue());
-		OpenZWave::Options::Get()->AddOptionBool("SaveConfiguration", opts->Get(String::New("saveconfig"))->BooleanValue());
-		OpenZWave::Options::Get()->AddOptionInt("DriverMaxAttempts", opts->Get(String::New("driverattempts"))->IntegerValue());
-		OpenZWave::Options::Get()->AddOptionInt("PollInterval", opts->Get(String::New("pollinterval"))->IntegerValue());
+		OpenZWave::Options::Get()->AddOptionBool("ConsoleOutput",     opts->Get(NanNew<String>("consoleoutput"))->BooleanValue());
+		OpenZWave::Options::Get()->AddOptionBool("Logging",           opts->Get(NanNew<String>("logging"))->BooleanValue());
+		OpenZWave::Options::Get()->AddOptionBool("SaveConfiguration", opts->Get(NanNew<String>("saveconfig"))->BooleanValue());
+		OpenZWave::Options::Get()->AddOptionInt("DriverMaxAttempts",  opts->Get(NanNew<String>("driverattempts"))->IntegerValue());
+		OpenZWave::Options::Get()->AddOptionInt("PollInterval",       opts->Get(NanNew<String>("pollinterval"))->IntegerValue());
 		OpenZWave::Options::Get()->AddOptionBool("IntervalBetweenPolls", true);
-		OpenZWave::Options::Get()->AddOptionBool("SuppressValueRefresh", opts->Get(String::New("suppressrefresh"))->BooleanValue());
+		OpenZWave::Options::Get()->AddOptionBool("SuppressValueRefresh", opts->Get(NanNew<String>("suppressrefresh"))->BooleanValue());
 		OpenZWave::Options::Get()->Lock();
 
 		NanReturnValue(args.This());

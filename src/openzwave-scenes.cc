@@ -73,7 +73,6 @@ namespace OZW {
 		NanScope();
 
 		uint8_t numscenes = OpenZWave::Manager::Get()->GetNumScenes();
-		Local <v8::Value> cbargs[16];
 		SceneInfo *scene;
 
 		if (numscenes != zscenes.size()) {
@@ -104,18 +103,13 @@ namespace OZW {
 			scene = *it;
 
 			Local <Object> info = Object::New();
-			info->Set(String::NewSymbol("sceneid"), Integer::New(scene->sceneid));
-			info->Set(String::NewSymbol("label"), String::New(scene->label.c_str()));
+			info->Set(NanNew<String>("sceneid"), NanNew<Integer>(scene->sceneid));
+			info->Set(NanNew<String>("label"),   NanNew<String>(scene->label.c_str()));
 
-			scenes->Set(Number::New(j++), info);
+			scenes->Set(NanNew<Number>(j++), info);
 		}
-
-		cbargs[0] = String::New("scenes list");
-		cbargs[1] = scenes;
-
-		MakeCallback(context_obj, "emit", 2, cbargs);
-
-		NanReturnUndefined();
+		
+		NanReturnValue(scenes);
 	}
 
 	// ===================================================================
@@ -244,8 +238,6 @@ namespace OZW {
 		if ((scene = get_scene_info(sceneid))) {
 			scene->values.clear();
 
-			Local <v8::Value> cbargs[16];
-
 			Local<Array> v8values = Array::New(scene->values.size());
 
 			unsigned j = 0;
@@ -256,13 +248,9 @@ namespace OZW {
 
 				v8values->Set(Number::New(j++), zwaveSceneValue2v8Value(sceneid, *vit));
 			}
-
-			cbargs[0] = String::New("scene values list");
-			cbargs[1] = v8values;
-
-			MakeCallback(context_obj, "emit", 2, cbargs);
+			NanReturnValue(v8values);
 		}
-
+		
 		NanReturnUndefined();
 	}
 
