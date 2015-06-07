@@ -113,14 +113,9 @@ namespace OZW {
 				break;
 			}
 			case OpenZWave::ValueID::ValueType_Decimal: {
-				float val;
-				OpenZWave::Manager::Get()->GetValueAsFloat(value, &val);
-				/* No Floats in node.js? REALLY? Go Go Go-Cart!!!
-				 * http://crashworks.org/if_programming_languages_were_vehicles/
-				 */
-				// valobj->Set(NanNew<String>("value"), NanNew<Float>(val));
-				valobj->Set(NanNew<String>("value"), Integer::New(val));
-				// node.js 0.12 probably wont like this
+				std::string val;
+				OpenZWave::Manager::Get()->GetValueAsString(value, &val);
+				valobj->Set(NanNew<String>("value"), NanNew<String>(val));
 				break;
 			}
 			case OpenZWave::ValueID::ValueType_Int: {
@@ -220,10 +215,9 @@ namespace OZW {
 			break;
 		}
 		case OpenZWave::ValueID::ValueType_Decimal: {
-			float val;
-			OpenZWave::Manager::Get()->SceneGetValueAsFloat(sceneId, value, &val);
-			//valobj->Set(NanNew<String>("value"), NanNew<Integer>(val));
-			valobj->Set(NanNew<String>("value"), Integer::New(val));
+			std::string val;
+			OpenZWave::Manager::Get()->SceneGetValueAsString(sceneId, value, &val);
+			valobj->Set(NanNew<String>("value"), NanNew<String>(val));
 			break;
 		}
 		case OpenZWave::ValueID::ValueType_Int: {

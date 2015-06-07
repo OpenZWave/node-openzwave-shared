@@ -20,7 +20,9 @@
     "openzwave"
   ],
   "author": "Elias Karakoulakis <elias.karakoulakis@gmail.com>",
-  "contributors": [ "Jonathan Perkin <jonathan@perkin.org.uk> (http://www.perkin.org.uk/)" ],
+  "contributors": [ 
+	"Jonathan Perkin <jonathan@perkin.org.uk> (http://www.perkin.org.uk/)" 
+  ],
   "licenses": [
     {
       "type": "ISC",
