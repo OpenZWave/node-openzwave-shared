@@ -147,7 +147,7 @@ namespace OZW {
 	{
 		NanScope();
 	 	uint8 ctrlid = OpenZWave::Manager::Get()->GetControllerNodeId (homeid);
-	 	NanReturnValue(Integer::New(ctrlid));
+	 	NanReturnValue(NanNew<Integer>(ctrlid));
 	}
 
 	// ===================================================================
@@ -156,7 +156,7 @@ namespace OZW {
 	{
 		NanScope();
 	 	uint8 sucid = OpenZWave::Manager::Get()->GetSUCNodeId (homeid);
-	 	NanReturnValue(Integer::New(sucid));
+	 	NanReturnValue(NanNew<Integer>(sucid));
 	}
 	 
 	/* Query if the controller is a primary controller. The primary controller 
@@ -170,7 +170,7 @@ namespace OZW {
 	{
 		NanScope();
 	 	bool isprimary = OpenZWave::Manager::Get()->IsPrimaryController (homeid);
-	 	NanReturnValue(Boolean::New(isprimary));
+	 	NanReturnValue(NanNew<Boolean>(isprimary));
 	}
  
 	/* Query if the controller is a static update controller. A Static 
@@ -184,7 +184,7 @@ namespace OZW {
 	{
 		NanScope();
 	 	bool issuc = OpenZWave::Manager::Get()->IsStaticUpdateController (homeid);
-	 	NanReturnValue(Boolean::New(issuc));
+	 	NanReturnValue(NanNew<Boolean>(issuc));
 	}
  
 	/* Query if the controller is using the bridge controller library. 
@@ -197,7 +197,7 @@ namespace OZW {
 	{
 		NanScope();
 	 	bool isbridge = OpenZWave::Manager::Get()->IsBridgeController (homeid);
-	 	NanReturnValue(Boolean::New(isbridge));
+	 	NanReturnValue(NanNew<Boolean>(isbridge));
 	}
 
  	/* Get the version of the Z-Wave API library used by a controller. 
@@ -241,7 +241,7 @@ namespace OZW {
 	{
 		NanScope();
 	 	uint32 cnt = OpenZWave::Manager::Get()->GetSendQueueCount (homeid);
-	 	NanReturnValue(Integer::New(cnt));
+	 	NanReturnValue(NanNew<Integer>(cnt));
 	}
 
 }

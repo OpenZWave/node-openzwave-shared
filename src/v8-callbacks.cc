@@ -34,12 +34,12 @@ namespace OZW {
 		switch (notif->type) {
 			case OpenZWave::Notification::Type_DriverReady:
 				homeid = notif->homeid;
-				args[0] = String::New("driver ready");
-				args[1] = Integer::New(homeid);
+				args[0] = NanNew<String>("driver ready");
+				args[1] = NanNew<Integer>(homeid);
 				MakeCallback(context_obj, "emit", 2, args);
 				break;
 			case OpenZWave::Notification::Type_DriverFailed:
-				args[0] = String::New("driver failed");
+				args[0] = NanNew<String>("driver failed");
 				MakeCallback(context_obj, "emit", 1, args);
 				break;
 				/*
@@ -60,8 +60,8 @@ namespace OZW {
 					mutex::scoped_lock sl(znodes_mutex);
 					znodes.push_back(node);
 				}
-				args[0] = String::New("node added");
-				args[1] = Integer::New(notif->nodeid);
+				args[0] = NanNew<String>("node added");
+				args[1] = NanNew<Integer>(notif->nodeid);
 				MakeCallback(context_obj, "emit", 2, args);
 				break;
 				/*
@@ -72,16 +72,16 @@ namespace OZW {
 				break;
 			case OpenZWave::Notification::Type_NodeNaming: {
 				Local < Object > info = Object::New();
-				info->Set(NanNew<String>("manufacturer"), String::New(OpenZWave::Manager::Get()->GetNodeManufacturerName(notif->homeid, notif->nodeid).c_str()));
-				info->Set(NanNew<String>("manufacturerid"), String::New(OpenZWave::Manager::Get()->GetNodeManufacturerId(notif->homeid, notif->nodeid).c_str()));
-				info->Set(NanNew<String>("product"), String::New(OpenZWave::Manager::Get()->GetNodeProductName(notif->homeid, notif->nodeid).c_str()));
-				info->Set(NanNew<String>("producttype"), String::New(OpenZWave::Manager::Get()->GetNodeProductType(notif->homeid, notif->nodeid).c_str()));
-				info->Set(NanNew<String>("productid"), String::New(OpenZWave::Manager::Get()->GetNodeProductId(notif->homeid, notif->nodeid).c_str()));
-				info->Set(NanNew<String>("type"), String::New(OpenZWave::Manager::Get()->GetNodeType(notif->homeid, notif->nodeid).c_str()));
-				info->Set(NanNew<String>("name"), String::New(OpenZWave::Manager::Get()->GetNodeName(notif->homeid, notif->nodeid).c_str()));
-				info->Set(NanNew<String>("loc"), String::New(OpenZWave::Manager::Get()->GetNodeLocation(notif->homeid, notif->nodeid).c_str()));
-				args[0] = String::New("node naming");
-				args[1] = Integer::New(notif->nodeid);
+				info->Set(NanNew<String>("manufacturer"), NanNew<String>(OpenZWave::Manager::Get()->GetNodeManufacturerName(notif->homeid, notif->nodeid).c_str()));
+				info->Set(NanNew<String>("manufacturerid"), NanNew<String>(OpenZWave::Manager::Get()->GetNodeManufacturerId(notif->homeid, notif->nodeid).c_str()));
+				info->Set(NanNew<String>("product"), NanNew<String>(OpenZWave::Manager::Get()->GetNodeProductName(notif->homeid, notif->nodeid).c_str()));
+				info->Set(NanNew<String>("producttype"), NanNew<String>(OpenZWave::Manager::Get()->GetNodeProductType(notif->homeid, notif->nodeid).c_str()));
+				info->Set(NanNew<String>("productid"), NanNew<String>(OpenZWave::Manager::Get()->GetNodeProductId(notif->homeid, notif->nodeid).c_str()));
+				info->Set(NanNew<String>("type"), NanNew<String>(OpenZWave::Manager::Get()->GetNodeType(notif->homeid, notif->nodeid).c_str()));
+				info->Set(NanNew<String>("name"), NanNew<String>(OpenZWave::Manager::Get()->GetNodeName(notif->homeid, notif->nodeid).c_str()));
+				info->Set(NanNew<String>("loc"), NanNew<String>(OpenZWave::Manager::Get()->GetNodeLocation(notif->homeid, notif->nodeid).c_str()));
+				args[0] = NanNew<String>("node naming");
+				args[1] = NanNew<Integer>(notif->nodeid);
 				args[2] = info;
 				MakeCallback(context_obj, "emit", 3, args);
 				break;
@@ -102,9 +102,9 @@ namespace OZW {
 					node->values.push_back(value);
 				}
 
-				args[0] = String::New("value added");
-				args[1] = Integer::New(notif->nodeid);
-				args[2] = Integer::New(value.GetCommandClassId());
+				args[0] = NanNew<String>("value added");
+				args[1] = NanNew<Integer>(notif->nodeid);
+				args[2] = NanNew<Integer>(value.GetCommandClassId());
 				args[3] = valobj;
 				MakeCallback(context_obj, "emit", 4, args);
 				break;
@@ -113,9 +113,9 @@ namespace OZW {
 				OpenZWave::ValueID value = notif->values.front();
 				Local<Object> valobj = zwaveValue2v8Value(value);
 
-				args[0] = String::New("value changed");
-				args[1] = Integer::New(notif->nodeid);
-				args[2] = Integer::New(value.GetCommandClassId());
+				args[0] = NanNew<String>("value changed");
+				args[1] = NanNew<Integer>(notif->nodeid);
+				args[2] = NanNew<Integer>(value.GetCommandClassId());
 				args[3] = valobj;
 				MakeCallback(context_obj, "emit", 4, args);
 				break;
@@ -124,9 +124,9 @@ namespace OZW {
 				OpenZWave::ValueID value = notif->values.front();
 				Local<Object> valobj = zwaveValue2v8Value(value);
 
-				args[0] = String::New("value refreshed");
-				args[1] = Integer::New(notif->nodeid);
-				args[2] = Integer::New(value.GetCommandClassId());
+				args[0] = NanNew<String>("value refreshed");
+				args[1] = NanNew<Integer>(notif->nodeid);
+				args[2] = NanNew<Integer>(value.GetCommandClassId());
 				args[3] = valobj;
 				MakeCallback(context_obj, "emit", 4, args);
 				break;
@@ -142,11 +142,11 @@ namespace OZW {
 						}
 					}
 				}
-				args[0] = String::New("value removed");
-				args[1] = Integer::New(notif->nodeid);
-				args[2] = Integer::New(value.GetCommandClassId());
-				args[3] = Integer::New(value.GetInstance());
-				args[4] = Integer::New(value.GetIndex());
+				args[0] = NanNew<String>("value removed");
+				args[1] = NanNew<Integer>(notif->nodeid);
+				args[2] = NanNew<Integer>(value.GetCommandClassId());
+				args[3] = NanNew<Integer>(value.GetInstance());
+				args[4] = NanNew<Integer>(value.GetIndex());
 				MakeCallback(context_obj, "emit", 5, args);
 				break;
 			}
@@ -155,16 +155,16 @@ namespace OZW {
 			 */
 			case OpenZWave::Notification::Type_EssentialNodeQueriesComplete: {
 				Local < Object > info = Object::New();
-				info->Set(NanNew<String>("manufacturer"), String::New(OpenZWave::Manager::Get()->GetNodeManufacturerName(notif->homeid, notif->nodeid).c_str()));
-				info->Set(NanNew<String>("manufacturerid"), String::New(OpenZWave::Manager::Get()->GetNodeManufacturerId(notif->homeid, notif->nodeid).c_str()));
-				info->Set(NanNew<String>("product"), String::New(OpenZWave::Manager::Get()->GetNodeProductName(notif->homeid, notif->nodeid).c_str()));
-				info->Set(NanNew<String>("producttype"), String::New(OpenZWave::Manager::Get()->GetNodeProductType(notif->homeid, notif->nodeid).c_str()));
-				info->Set(NanNew<String>("productid"), String::New(OpenZWave::Manager::Get()->GetNodeProductId(notif->homeid, notif->nodeid).c_str()));
-				info->Set(NanNew<String>("type"), String::New(OpenZWave::Manager::Get()->GetNodeType(notif->homeid, notif->nodeid).c_str()));
-				info->Set(NanNew<String>("name"), String::New(OpenZWave::Manager::Get()->GetNodeName(notif->homeid, notif->nodeid).c_str()));
-				info->Set(NanNew<String>("loc"), String::New(OpenZWave::Manager::Get()->GetNodeLocation(notif->homeid, notif->nodeid).c_str()));
-				args[0] = String::New("node available");
-				args[1] = Integer::New(notif->nodeid);
+				info->Set(NanNew<String>("manufacturer"), NanNew<String>(OpenZWave::Manager::Get()->GetNodeManufacturerName(notif->homeid, notif->nodeid).c_str()));
+				info->Set(NanNew<String>("manufacturerid"), NanNew<String>(OpenZWave::Manager::Get()->GetNodeManufacturerId(notif->homeid, notif->nodeid).c_str()));
+				info->Set(NanNew<String>("product"), NanNew<String>(OpenZWave::Manager::Get()->GetNodeProductName(notif->homeid, notif->nodeid).c_str()));
+				info->Set(NanNew<String>("producttype"), NanNew<String>(OpenZWave::Manager::Get()->GetNodeProductType(notif->homeid, notif->nodeid).c_str()));
+				info->Set(NanNew<String>("productid"), NanNew<String>(OpenZWave::Manager::Get()->GetNodeProductId(notif->homeid, notif->nodeid).c_str()));
+				info->Set(NanNew<String>("type"), NanNew<String>(OpenZWave::Manager::Get()->GetNodeType(notif->homeid, notif->nodeid).c_str()));
+				info->Set(NanNew<String>("name"), NanNew<String>(OpenZWave::Manager::Get()->GetNodeName(notif->homeid, notif->nodeid).c_str()));
+				info->Set(NanNew<String>("loc"), NanNew<String>(OpenZWave::Manager::Get()->GetNodeLocation(notif->homeid, notif->nodeid).c_str()));
+				args[0] = NanNew<String>("node available");
+				args[1] = NanNew<Integer>(notif->nodeid);
 				args[2] = info;
 				MakeCallback(context_obj, "emit", 3, args);
 				break;
@@ -174,16 +174,16 @@ namespace OZW {
 			*/
 			case OpenZWave::Notification::Type_NodeQueriesComplete: {
 				Local < Object > info = Object::New();
-				info->Set(NanNew<String>("manufacturer"), String::New(OpenZWave::Manager::Get()->GetNodeManufacturerName(notif->homeid, notif->nodeid).c_str()));
-				info->Set(NanNew<String>("manufacturerid"), String::New(OpenZWave::Manager::Get()->GetNodeManufacturerId(notif->homeid, notif->nodeid).c_str()));
-				info->Set(NanNew<String>("product"), String::New(OpenZWave::Manager::Get()->GetNodeProductName(notif->homeid, notif->nodeid).c_str()));
-				info->Set(NanNew<String>("producttype"), String::New(OpenZWave::Manager::Get()->GetNodeProductType(notif->homeid, notif->nodeid).c_str()));
-				info->Set(NanNew<String>("productid"), String::New(OpenZWave::Manager::Get()->GetNodeProductId(notif->homeid, notif->nodeid).c_str()));
-				info->Set(NanNew<String>("type"), String::New(OpenZWave::Manager::Get()->GetNodeType(notif->homeid, notif->nodeid).c_str()));
-				info->Set(NanNew<String>("name"), String::New(OpenZWave::Manager::Get()->GetNodeName(notif->homeid, notif->nodeid).c_str()));
-				info->Set(NanNew<String>("loc"), String::New(OpenZWave::Manager::Get()->GetNodeLocation(notif->homeid, notif->nodeid).c_str()));
-				args[0] = String::New("node ready");
-				args[1] = Integer::New(notif->nodeid);
+				info->Set(NanNew<String>("manufacturer"), NanNew<String>(OpenZWave::Manager::Get()->GetNodeManufacturerName(notif->homeid, notif->nodeid).c_str()));
+				info->Set(NanNew<String>("manufacturerid"), NanNew<String>(OpenZWave::Manager::Get()->GetNodeManufacturerId(notif->homeid, notif->nodeid).c_str()));
+				info->Set(NanNew<String>("product"), NanNew<String>(OpenZWave::Manager::Get()->GetNodeProductName(notif->homeid, notif->nodeid).c_str()));
+				info->Set(NanNew<String>("producttype"), NanNew<String>(OpenZWave::Manager::Get()->GetNodeProductType(notif->homeid, notif->nodeid).c_str()));
+				info->Set(NanNew<String>("productid"), NanNew<String>(OpenZWave::Manager::Get()->GetNodeProductId(notif->homeid, notif->nodeid).c_str()));
+				info->Set(NanNew<String>("type"), NanNew<String>(OpenZWave::Manager::Get()->GetNodeType(notif->homeid, notif->nodeid).c_str()));
+				info->Set(NanNew<String>("name"), NanNew<String>(OpenZWave::Manager::Get()->GetNodeName(notif->homeid, notif->nodeid).c_str()));
+				info->Set(NanNew<String>("loc"), NanNew<String>(OpenZWave::Manager::Get()->GetNodeLocation(notif->homeid, notif->nodeid).c_str()));
+				args[0] = NanNew<String>("node ready");
+				args[1] = NanNew<Integer>(notif->nodeid);
 				args[2] = info;
 				MakeCallback(context_obj, "emit", 3, args);
 				break;
@@ -195,27 +195,27 @@ namespace OZW {
 			case OpenZWave::Notification::Type_AwakeNodesQueried:
 			case OpenZWave::Notification::Type_AllNodesQueried:
 			case OpenZWave::Notification::Type_AllNodesQueriedSomeDead:
-				args[0] = String::New("scan complete");
+				args[0] = NanNew<String>("scan complete");
 				MakeCallback(context_obj, "emit", 1, args);
 				break;
 			case OpenZWave::Notification::Type_NodeEvent: {
-				args[0] = String::New("node event");
-				args[1] = Integer::New(notif->nodeid);
-				args[2] = Integer::New(notif->event);
+				args[0] = NanNew<String>("node event");
+				args[1] = NanNew<Integer>(notif->nodeid);
+				args[2] = NanNew<Integer>(notif->event);
 				MakeCallback(context_obj, "emit", 3, args);
 				break;
 			}
 			case OpenZWave::Notification::Type_SceneEvent:{
-				args[0] = String::New("scene event");
-				args[1] = Integer::New(notif->nodeid);
-				args[2] = Integer::New(notif->sceneid);
+				args[0] = NanNew<String>("scene event");
+				args[1] = NanNew<Integer>(notif->nodeid);
+				args[2] = NanNew<Integer>(notif->sceneid);
 				MakeCallback(context_obj, "emit", 3, args);
 				break;
 			}
 			case OpenZWave::Notification::Type_Notification:
-				args[0] = String::New("notification");
-				args[1] = Integer::New(notif->nodeid);
-				args[2] = Integer::New(notif->notification);
+				args[0] = NanNew<String>("notification");
+				args[1] = NanNew<Integer>(notif->nodeid);
+				args[2] = NanNew<Integer>(notif->notification);
 				MakeCallback(context_obj, "emit", 3, args);
 				break;
 			case OpenZWave::Notification::Type_Group:
@@ -240,9 +240,9 @@ namespace OZW {
 	// ===================================================================
 	{
 		Local < v8::Value > args[16];
-		args[0] = String::New("controller command");
-		args[1] = Integer::New(notif->state);
-		args[2] = Integer::New(notif->err);
+		args[0] = NanNew<String>("controller command");
+		args[1] = NanNew<Integer>(notif->state);
+		args[2] = NanNew<Integer>(notif->err);
 		MakeCallback(context_obj, "emit", 3, args);
 	}
 	

@@ -36,7 +36,7 @@ namespace OZW {
 		uint8_t nodeid = args[0]->ToNumber()->Value();
 		uint8 numGroups = OpenZWave::Manager::Get()->GetNumGroups(homeid, nodeid);
 		
-		NanReturnValue(Integer::New(numGroups));
+		NanReturnValue(NanNew<Integer>(numGroups));
 	}
 	
 	/*
@@ -56,10 +56,10 @@ namespace OZW {
 			homeid, nodeid,	groupidx, &associations
 		);
 		
-		Local<Array> o_assocs = Array::New(numNodes);
+		Local<Array> o_assocs = NanNew<Array>(numNodes);
 
 		for (uint8 nr = 0; nr < numNodes; nr++) {
-			o_assocs->Set(Integer::New(nr), Integer::New(associations[nr]));
+			o_assocs->Set(NanNew<Integer>(nr), NanNew<Integer>(associations[nr]));
 		}
 
 		// The caller is responsible for freeing the array memory 
@@ -85,7 +85,7 @@ namespace OZW {
 			homeid, nodeid,	groupidx
 		);
 		
-		NanReturnValue(Integer::New(numMaxAssoc));
+		NanReturnValue(NanNew<Integer>(numMaxAssoc));
 	}
 
 	/*

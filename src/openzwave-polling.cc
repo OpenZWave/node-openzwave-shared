@@ -28,7 +28,7 @@ namespace OZW {
 	{
 		NanScope();
 		uint32 i = OpenZWave::Manager::Get()->GetPollInterval();
-		NanReturnValue(Integer::New(i));
+		NanReturnValue(NanNew<Integer>(i));
 	}
 	
 	/* Set the time period between polls of a node's state. Due to patent 
@@ -121,7 +121,7 @@ namespace OZW {
 			for (vit = node->values.begin(); vit != node->values.end(); ++vit) {
 				if (((*vit).GetCommandClassId() == comclass) && ((*vit).GetInstance() == instance) && ((*vit).GetIndex() == index)) {
 					bool b = OpenZWave::Manager::Get()->isPolled(*vit);
-					NanReturnValue(Boolean::New(b));
+					NanReturnValue(NanNew<Boolean>(b));
 				}
 			}
 		}
@@ -175,7 +175,7 @@ namespace OZW {
 			for (vit = node->values.begin(); vit != node->values.end(); ++vit) {
 				if (((*vit).GetCommandClassId() == comclass) && ((*vit).GetInstance() == instance) && ((*vit).GetIndex() == index)) {
 					uint8 i = OpenZWave::Manager::Get()->GetPollIntensity(*vit);
-					NanReturnValue(Integer::New(i));
+					NanReturnValue(NanNew<Integer>(i));
 				}
 			}
 		}

@@ -33,10 +33,10 @@ namespace OZW {
 
 		uint8_t nodeid = args[0]->ToNumber()->Value();
 		uint8 numNeighbors = OpenZWave::Manager::Get()->GetNodeNeighbors(homeid, nodeid, &neighbors);
-		Local<Array> o_neighbors = Array::New(numNeighbors);
+		Local<Array> o_neighbors = NanNew<Array>(numNeighbors);
 
 		for (uint8 nr = 0; nr < numNeighbors; nr++) {
-			o_neighbors->Set(Integer::New(nr), Integer::New(neighbors[nr]));
+			o_neighbors->Set(NanNew<Integer>(nr), NanNew<Integer>(neighbors[nr]));
 		}
 
 		NanReturnValue( o_neighbors );		

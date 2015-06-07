@@ -95,7 +95,7 @@ namespace OZW {
 			}
 		}
 
-		Local<Array> scenes = Array::New(zscenes.size());
+		Local<Array> scenes = NanNew<Array>(zscenes.size());
 		std::list<SceneInfo *>::iterator it;
 		unsigned j = 0;
 
@@ -238,7 +238,7 @@ namespace OZW {
 		if ((scene = get_scene_info(sceneid))) {
 			scene->values.clear();
 
-			Local<Array> v8values = Array::New(scene->values.size());
+			Local<Array> v8values = NanNew<Array>(scene->values.size());
 
 			unsigned j = 0;
 
