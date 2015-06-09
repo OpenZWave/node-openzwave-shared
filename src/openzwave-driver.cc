@@ -38,8 +38,10 @@ namespace OZW {
 		OpenZWave::Manager::Get()->AddWatcher(ozw_watcher_callback, NULL);
 		OpenZWave::Manager::Get()->AddDriver(path);
 
-		Handle<v8::Value> argv[1] = { NanNew<String>("connected") };
-		MakeCallback(context_obj, "emit", 1, argv);
+		Local<Function> cb = args[0].As<Function>();
+		const unsigned argc = 1;
+		Local<Value> argv[argc] = { NanNew("connected") };
+		NanMakeCallback(NanGetCurrentContext()->Global(), cb, argc, argv);
 
 		NanReturnUndefined();
 	}

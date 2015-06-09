@@ -19,9 +19,79 @@
 
 using namespace v8;
 using namespace node;
+using namespace OpenZWave;
 
 namespace OZW {
+	
 	/*
+	* OpenZWave callback, registered in Driver::AddWatcher.
+	* Just push onto queue and trigger the handler
+	* in v8 land.
+	*/
+	// ===================================================================
+	void ozw_watcher_callback(OpenZWave::Notification const *cb, void *ctx)
+	// ===================================================================
+	{
+		NotifInfo *notif = new NotifInfo();
+		
+		notif->type = cb->GetType();
+		notif->homeid = cb->GetHomeId();
+		notif->nodeid = cb->GetNodeId();
+		notif->values.push_front(cb->GetValueID());
+		// its not a ControllerState notification: set to -1
+		notif->state = (OpenZWave::Driver::ControllerState) -1;
+		/*
+		* Some values are only set on particular notifications, and
+		* assertions in openzwave prevent us from trying to fetch them
+		* unconditionally.
+		*/
+		switch (notif->type) {
+			case OpenZWave::Notification::Type_Group:
+				notif->groupidx = cb->GetGroupIdx();
+				break;
+			case OpenZWave::Notification::Type_NodeEvent:
+				notif->event = cb->GetEvent();
+				break;
+			case OpenZWave::Notification::Type_CreateButton:
+			case OpenZWave::Notification::Type_DeleteButton:
+			case OpenZWave::Notification::Type_ButtonOn:
+			case OpenZWave::Notification::Type_ButtonOff:
+				notif->buttonid = cb->GetButtonId();
+				break;
+			case OpenZWave::Notification::Type_SceneEvent:
+				notif->sceneid = cb->GetSceneId();
+				break;
+			case OpenZWave::Notification::Type_Notification:
+				notif->notification = cb->GetNotification();
+				break;
+		}
+
+		{
+			mutex::scoped_lock sl(zqueue_mutex);
+			zqueue.push(notif);
+		}
+		uv_async_send(&async);
+	}
+	
+	/*
+	* OpenZWave callback, registered in Manager::BeginControllerCommand.
+	* Just push onto queue and trigger the handler in v8 land.
+	*/
+	// ===================================================================
+	void ozw_ctrlcmd_callback(Driver::ControllerState _state, Driver::ControllerError _err, void *context )
+	// ===================================================================
+	{
+		NotifInfo *notif = new NotifInfo();
+		notif->state = _state;
+		notif->err   = _err;
+		{
+			mutex::scoped_lock sl(zqueue_mutex);
+			zqueue.push(notif);
+		}
+		uv_async_send(&async);
+	}
+	
+		/*
 	 * handle normal OpenZWave notifications
 	 */ 
 	// ===================================================================
@@ -267,4 +337,5 @@ namespace OZW {
 			zqueue.pop();
 		}
 	}
+
 }
