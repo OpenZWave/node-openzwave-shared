@@ -52,22 +52,8 @@ namespace OZW {
 		return NULL;
 	}
 
-	std::string* printAllArgs(const Arguments& args) {
-		std::cout << "PRINTING ALL ARGS: ";
-
-		std::string* stringArray = new std::string[args.Length()];
-
-		for (int i = 0; i < args.Length(); i++){
-			std::string tempString(*v8::String::Utf8Value(args[i]));
-			stringArray[i] = tempString;
-			std::cout << tempString << ";";
-		}
-
-		return stringArray;
-	}
-
 	Local<Object> zwaveValue2v8Value(OpenZWave::ValueID value) {
-		Local <Object> valobj = Object::New();
+		Local <Object> valobj = NanNew<Object>();
 
 		char buffer[15];
 
@@ -128,8 +114,8 @@ namespace OZW {
 				std::vector < std::string > items;
 				OpenZWave::Manager::Get()->GetValueListItems(value, &items);
 				Local < Array > values = NanNew<Array>(items.size());
-				for (unsigned i = 0; i < items.size(); i++) {
-					values->Set(Number::New(i), NanNew<String>(&items[i][0], items[i].size()));
+				for (unsigned int i = 0; i < items.size(); i++) {
+					values->Set(NanNew<Integer>(i), NanNew<String>(&items[i][0], items[i].size()));
 				}
 				valobj->Set(NanNew<String>("values"), values);
 				std::string val;
@@ -171,7 +157,7 @@ namespace OZW {
 	}
 
 	Local<Object> zwaveSceneValue2v8Value(uint8 sceneId, OpenZWave::ValueID value) {
-		Local <Object> valobj = Object::New();
+		Local <Object> valobj = NanNew<Object>();
 
 		char buffer[15];
 
@@ -231,7 +217,7 @@ namespace OZW {
 			OpenZWave::Manager::Get()->GetValueListItems(value, &items);
 			Local < Array > values = NanNew<Array>(items.size());
 			for (unsigned i = 0; i < items.size(); i++) {
-				values->Set(Number::New(i), NanNew<String>(&items[i][0], items[i].size()));
+				values->Set(NanNew<Integer>(i), NanNew<String>(&items[i][0], items[i].size()));
 			}
 			valobj->Set(NanNew<String>("values"), values);
 			std::string val;

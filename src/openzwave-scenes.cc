@@ -102,11 +102,11 @@ namespace OZW {
 		for (it = zscenes.begin(); it != zscenes.end(); ++it) {
 			scene = *it;
 
-			Local <Object> info = Object::New();
+			Local <Object> info = NanNew<Object>();
 			info->Set(NanNew<String>("sceneid"), NanNew<Integer>(scene->sceneid));
 			info->Set(NanNew<String>("label"),   NanNew<String>(scene->label.c_str()));
 
-			scenes->Set(NanNew<Number>(j++), info);
+			scenes->Set(NanNew<Integer>(j++), info);
 		}
 		
 		NanReturnValue(scenes);
@@ -246,7 +246,7 @@ namespace OZW {
 				mutex::scoped_lock sl(zscenes_mutex);
 				scene->values.push_back(*vit);
 
-				v8values->Set(Number::New(j++), zwaveSceneValue2v8Value(sceneid, *vit));
+				v8values->Set(NanNew<Integer>(j++), zwaveSceneValue2v8Value(sceneid, *vit));
 			}
 			NanReturnValue(v8values);
 		}

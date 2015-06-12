@@ -32,7 +32,7 @@ namespace OZW {
 
 		uv_async_init(uv_default_loop(), &async, async_cb_handler);
 
-		context_obj = Persistent < Object > ::New(args.This());
+		NanAssignPersistent(context_obj, args.This());
 
 		OpenZWave::Manager::Create();
 		OpenZWave::Manager::Get()->AddWatcher(ozw_watcher_callback, NULL);

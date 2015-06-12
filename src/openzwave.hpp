@@ -225,6 +225,7 @@ namespace OZW {
 		void *ctx);
 		
 	// v8 asynchronous callback handler
+	void async_cb_handler(uv_async_t *handle);
 	void async_cb_handler(uv_async_t *handle, int status);
 	//
 	
