@@ -44,7 +44,7 @@ namespace OZW {
 	CommandMap* ctrlCmdNames;
 
 	// ===================================================================
-	NAN_METHOD(OZW::New)
+	NAN_METHOD(OZW::OZW::New)
 	// ===================================================================
 	{
 		NanScope();

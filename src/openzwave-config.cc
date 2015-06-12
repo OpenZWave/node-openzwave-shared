@@ -24,7 +24,7 @@ namespace OZW {
 	* Set Config Parameters
 	*/
 	// ===================================================================
-	NAN_METHOD(SetConfigParam)
+	NAN_METHOD(OZW::SetConfigParam)
 	// ===================================================================
 	{
 		NanScope();
@@ -60,7 +60,7 @@ namespace OZW {
  	 * Configuration::StaticGetCommandClassId. 
 	*/
 	// ===================================================================
-	NAN_METHOD(RequestConfigParam)
+	NAN_METHOD(OZW::RequestConfigParam)
 	// ===================================================================
 	{
 		NanScope();
@@ -79,7 +79,7 @@ namespace OZW {
 	 * device.
 	 * */
 	// ===================================================================
-	NAN_METHOD(RequestAllConfigParams)
+	NAN_METHOD(OZW::RequestAllConfigParams)
 	// ===================================================================
 	{
 		NanScope();

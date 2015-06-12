@@ -23,7 +23,7 @@ using namespace node;
 namespace OZW {
 	
 	// ===================================================================
-	NAN_METHOD(Connect)
+	NAN_METHOD(OZW::Connect)
 	// ===================================================================
 	{
 		NanScope();
@@ -47,7 +47,7 @@ namespace OZW {
 	}
 
 	// ===================================================================
-	NAN_METHOD(Disconnect)
+	NAN_METHOD(OZW::Disconnect)
 	// ===================================================================
 	{
 		NanScope();
@@ -67,7 +67,7 @@ namespace OZW {
 	* out all known configuration, a soft reset just restarts the chip.
 	*/
 	// ===================================================================
-	NAN_METHOD(HardReset)
+	NAN_METHOD(OZW::HardReset)
 	// ===================================================================
 	{
 		NanScope();
@@ -78,7 +78,7 @@ namespace OZW {
 	}
 	
 	// ===================================================================
-	NAN_METHOD(SoftReset)
+	NAN_METHOD(OZW::SoftReset)
 	// ===================================================================
 	{
 		NanScope();
@@ -89,7 +89,7 @@ namespace OZW {
 	}
 	
 	// ===================================================================
-	NAN_METHOD(BeginControllerCommand)
+	NAN_METHOD(OZW::BeginControllerCommand)
 	// ===================================================================
 	{
 		NanScope();
@@ -135,7 +135,7 @@ namespace OZW {
 	}
 	
 	// ===================================================================
-	NAN_METHOD(CancelControllerCommand)
+	NAN_METHOD(OZW::CancelControllerCommand)
 	// ===================================================================
 	{
 		NanScope();
@@ -144,7 +144,7 @@ namespace OZW {
 	}
 	
 	// ===================================================================
-	NAN_METHOD(GetControllerNodeId)
+	NAN_METHOD(OZW::GetControllerNodeId)
 	// ===================================================================
 	{
 		NanScope();
@@ -153,7 +153,7 @@ namespace OZW {
 	}
 
 	// ===================================================================
-	NAN_METHOD(GetSUCNodeId)
+	NAN_METHOD(OZW::GetSUCNodeId)
 	// ===================================================================
 	{
 		NanScope();
@@ -167,7 +167,7 @@ namespace OZW {
 	 * are secondary controllers. 
 	 */
 	// ===================================================================
-	NAN_METHOD(IsPrimaryController)
+	NAN_METHOD(OZW::IsPrimaryController)
 	// ===================================================================
 	{
 		NanScope();
@@ -181,7 +181,7 @@ namespace OZW {
 	 * receive information about network changes. 
 	 */
 	// ===================================================================
-	NAN_METHOD(IsStaticUpdateController)
+	NAN_METHOD(OZW::IsStaticUpdateController)
 	// ===================================================================
 	{
 		NanScope();
@@ -194,7 +194,7 @@ namespace OZW {
 	 * associated with other controllers to enable events to be passed on. 
 	 */ 
 	// ===================================================================
-	NAN_METHOD(IsBridgeController)
+	NAN_METHOD(OZW::IsBridgeController)
 	// ===================================================================
 	{
 		NanScope();
@@ -205,7 +205,7 @@ namespace OZW {
  	/* Get the version of the Z-Wave API library used by a controller. 
  	 */
  	// ===================================================================
-	NAN_METHOD(GetLibraryVersion)
+	NAN_METHOD(OZW::GetLibraryVersion)
 	// ===================================================================
 	{
 		NanScope();
@@ -229,7 +229,7 @@ namespace OZW {
  	 * use the IsBridgeController method. 
  	 */
  	// ===================================================================
-	NAN_METHOD(GetLibraryTypeName)
+	NAN_METHOD(OZW::GetLibraryTypeName)
 	// ===================================================================
 	{
 		NanScope();
@@ -238,7 +238,7 @@ namespace OZW {
 	}
 
 	// ===================================================================
-	NAN_METHOD(GetSendQueueCount)
+	NAN_METHOD(OZW::GetSendQueueCount)
 	// ===================================================================
 	{
 		NanScope();

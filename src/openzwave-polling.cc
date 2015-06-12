@@ -23,7 +23,7 @@ namespace OZW {
 
  	// Get the time period between polls of a node's state
 	// ===================================================================
-	NAN_METHOD(GetPollInterval)
+	NAN_METHOD(OZW::GetPollInterval)
 	// ===================================================================
 	{
 		NanScope();
@@ -43,7 +43,7 @@ namespace OZW {
 	 * network does not have to cope with more than one poll per second). 
 	 */ 
 	// ===================================================================
-	NAN_METHOD(SetPollInterval)
+	NAN_METHOD(OZW::SetPollInterval)
 	// ===================================================================
 	{
 		NanScope();
@@ -57,7 +57,7 @@ namespace OZW {
 	* Enable/Disable polling on a COMMAND_CLASS basis.
 	*/
 	// ===================================================================
-	NAN_METHOD(EnablePoll)
+	NAN_METHOD(OZW::EnablePoll)
 	// ===================================================================
 	{
 		NanScope();
@@ -80,7 +80,7 @@ namespace OZW {
 	}
 
 	// ===================================================================
-	NAN_METHOD(DisablePoll)
+	NAN_METHOD(OZW::DisablePoll)
 	// ===================================================================
 	{
 		NanScope();
@@ -104,7 +104,7 @@ namespace OZW {
 	
 	// Determine the polling of a device's state.
 	// ===================================================================
-	NAN_METHOD(IsPolled)
+	NAN_METHOD(OZW::IsPolled)
 	// ===================================================================
 	{
 		NanScope();
@@ -130,7 +130,7 @@ namespace OZW {
 	}
 	
 	// ===================================================================
-	NAN_METHOD(SetPollIntensity)
+	NAN_METHOD(OZW::SetPollIntensity)
 	// ===================================================================
 	{
 		NanScope();
@@ -158,7 +158,7 @@ namespace OZW {
 
  	// Get the polling intensity of a device's state. 
 	// ===================================================================
-	NAN_METHOD(GetPollIntensity)
+	NAN_METHOD(OZW::GetPollIntensity)
 	// ===================================================================
 	{
 		NanScope();

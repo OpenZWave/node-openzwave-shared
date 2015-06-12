@@ -25,7 +25,7 @@ namespace OZW {
 	* Gets the neighbors for a node
 	*/
 	// ===================================================================
-	NAN_METHOD(GetNodeNeighbors)
+	NAN_METHOD(OZW::GetNodeNeighbors)
 	// ===================================================================
 	{
 		NanScope();
@@ -43,7 +43,7 @@ namespace OZW {
 	}
 	
 	// ===================================================================
-	NAN_METHOD(SwitchAllOn)
+	NAN_METHOD(OZW::SwitchAllOn)
 	// ===================================================================
 	{
 		NanScope();
@@ -54,7 +54,7 @@ namespace OZW {
 	}
 
 	// ===================================================================
-	NAN_METHOD(SwitchAllOff)
+	NAN_METHOD(OZW::SwitchAllOff)
 	// ===================================================================
 	{
 		NanScope();
@@ -68,7 +68,7 @@ namespace OZW {
 	* Write a new location string to the device, if supported.
 	*/
 	// ===================================================================
-	NAN_METHOD(SetLocation)
+	NAN_METHOD(OZW::SetLocation)
 	// ===================================================================
 	{
 		NanScope();
@@ -85,7 +85,7 @@ namespace OZW {
 	* Write a new name string to the device, if supported.
 	*/
 	// ===================================================================
-	NAN_METHOD(SetName)
+	NAN_METHOD(OZW::SetName)
 	// ===================================================================
 	{
 		NanScope();
@@ -109,7 +109,7 @@ namespace OZW {
 	* This is the same as the query state starting from the beginning.
 	*/
 	// ===================================================================
-	NAN_METHOD(RefreshNodeInfo)
+	NAN_METHOD(OZW::RefreshNodeInfo)
 	// ===================================================================
 	{
 		NanScope();

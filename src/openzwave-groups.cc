@@ -28,7 +28,7 @@ namespace OZW {
 	 * will be a number between 1 and 4. 
 	*/
 	// ===================================================================
-	NAN_METHOD(GetNumGroups)
+	NAN_METHOD(OZW::GetNumGroups)
 	// ===================================================================
 	{
 		NanScope();
@@ -43,7 +43,7 @@ namespace OZW {
 	 * 
 	 */
 	// ===================================================================
-	NAN_METHOD(GetAssociations)
+	NAN_METHOD(OZW::GetAssociations)
 	// ===================================================================
 	{
 		NanScope();
@@ -73,7 +73,7 @@ namespace OZW {
 	 * 
 	 */
 	// ===================================================================
-	NAN_METHOD(GetMaxAssociations)
+	NAN_METHOD(OZW::GetMaxAssociations)
 	// ===================================================================
 	{
 		NanScope();
@@ -92,7 +92,7 @@ namespace OZW {
 	 * 
 	 */
 	// ===================================================================
-	NAN_METHOD(GetGroupLabel)
+	NAN_METHOD(OZW::GetGroupLabel)
 	// ===================================================================
 	{
 		NanScope();
@@ -111,7 +111,7 @@ namespace OZW {
 	 * 
 	 */
 	// ===================================================================
-	NAN_METHOD(AddAssociation)
+	NAN_METHOD(OZW::AddAssociation)
 	// ===================================================================
 	{
 		NanScope();
@@ -131,7 +131,7 @@ namespace OZW {
 	 * 
 	 */
 	// ===================================================================
-	NAN_METHOD(RemoveAssociation)
+	NAN_METHOD(OZW::RemoveAssociation)
 	// ===================================================================
 	{
 		NanScope();

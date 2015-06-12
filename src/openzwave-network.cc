@@ -26,7 +26,7 @@ namespace OZW {
 	* for testing network reliability.
 	*/
 	// ===================================================================
-	NAN_METHOD(TestNetworkNode)
+	NAN_METHOD(OZW::TestNetworkNode)
 	// ===================================================================
 	{
 		NanScope();
@@ -44,7 +44,7 @@ namespace OZW {
 	* network for testing network reliability.
 	*/
 	// ===================================================================
-	NAN_METHOD(TestNetwork)
+	NAN_METHOD(OZW::TestNetwork)
 	// ===================================================================
 	{
 		NanScope();
@@ -60,7 +60,7 @@ namespace OZW {
 	* Heal network node by requesting the node rediscover their neighbors.
 	*/
 	// ===================================================================
-	NAN_METHOD(HealNetworkNode)
+	NAN_METHOD(OZW::HealNetworkNode)
 	// ===================================================================
 	{
 		NanScope();
@@ -79,7 +79,7 @@ namespace OZW {
 	* Can take a while on larger networks.
 	*/
 	// ===================================================================
-	NAN_METHOD(HealNetwork)
+	NAN_METHOD(OZW::HealNetwork)
 	// ===================================================================
 	{
 		NanScope();
