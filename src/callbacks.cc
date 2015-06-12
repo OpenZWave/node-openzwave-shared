@@ -289,11 +289,11 @@ namespace OZW {
 				MakeCallback(context_obj, "emit", 3, args);
 				break;
 			case OpenZWave::Notification::Type_Group:
-				// TODO:
 				/* The associations for the node have changed. The 
 				 * application should rebuild any group information it 
 				 * holds about the node.
 				 */
+// todo
 				break;
 				/*
 				* Send unhandled events to stderr so we can monitor them if

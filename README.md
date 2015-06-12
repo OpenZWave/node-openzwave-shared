@@ -36,14 +36,14 @@ get api mismatch exceptions.
 
 - The Node.js C++ API has changed dramatically between 0.10.x and 0.12.x
 thus I'm using [the Native Abstractions for Node library] (https://www.npmjs.com/package/nan) 
-to get this node addon to compile and run across all known versions. 
+to get this node addon to compile and run across all _currently_ known versions. 
 
 Manually compiling OpenZwave involves the usual dance of 
 (`make && sudo make install`) OR you could try installing
 a precompiled package (eg for Raspbian it should be like
 `sudo apt-get install libopenzwave-dev`). Precompiled packages 
 for various Linux flavours and architectures can be downloaded
-from http://old.openzwave.com/snapshots/.
+from http://old.openzwave.com/snapshots/
 
 Be sure to install BOTH the binary (libopenzwave-x.y) AND the development
 package (libopenzwave-dev).
@@ -69,7 +69,7 @@ $ sudo npm install -g openzwave-shared
 
 ## License
 
-The [Open Z-Wave](https://code.google.com/p/open-zwave/) library that this
+The [Open Z-Wave](https://www.openzwave.com/) library that this
 module heavily relies upon is licensed under the GPLv3.
 
 Everything else (all the bits that I have written) is under the vastly more
