@@ -199,8 +199,7 @@ namespace OZW {
 				args[1] = NanNew<Integer>(notif->nodeid);
 				args[2] = NanNew<Integer>(value.GetCommandClassId());
 				args[3] = valobj;
-				emit_cb->Call(3, args);
-				emit_cb->Call(4, args);;
+				emit_cb->Call(4, args);
 				break;
 			}
 			case OpenZWave::Notification::Type_ValueRemoved: {
@@ -219,7 +218,7 @@ namespace OZW {
 				args[2] = NanNew<Integer>(value.GetCommandClassId());
 				args[3] = NanNew<Integer>(value.GetInstance());
 				args[4] = NanNew<Integer>(value.GetIndex());
-				emit_cb->Call(5, args);;
+				emit_cb->Call(5, args);
 				break;
 			}
 			/*
@@ -238,7 +237,7 @@ namespace OZW {
 				args[0] = NanNew<String>("node available");
 				args[1] = NanNew<Integer>(notif->nodeid);
 				args[2] = info;
-				emit_cb->Call(3, args);;
+				emit_cb->Call(3, args);
 				break;
 			}
 			/*
@@ -257,7 +256,7 @@ namespace OZW {
 				args[0] = NanNew<String>("node ready");
 				args[1] = NanNew<Integer>(notif->nodeid);
 				args[2] = info;
-				emit_cb->Call(3, args);;
+				emit_cb->Call(3, args);
 				break;
 			}
 			/*
@@ -268,20 +267,20 @@ namespace OZW {
 			case OpenZWave::Notification::Type_AllNodesQueried:
 			case OpenZWave::Notification::Type_AllNodesQueriedSomeDead:
 				args[0] = NanNew<String>("scan complete");
-				emit_cb->Call(1, args);;
+				emit_cb->Call(1, args);
 				break;
 			case OpenZWave::Notification::Type_NodeEvent: {
 				args[0] = NanNew<String>("node event");
 				args[1] = NanNew<Integer>(notif->nodeid);
 				args[2] = NanNew<Integer>(notif->event);
-				emit_cb->Call(3, args);;
+				emit_cb->Call(3, args);
 				break;
 			}
 			case OpenZWave::Notification::Type_SceneEvent:{
 				args[0] = NanNew<String>("scene event");
 				args[1] = NanNew<Integer>(notif->nodeid);
 				args[2] = NanNew<Integer>(notif->sceneid);
-				emit_cb->Call(3, args);;
+				emit_cb->Call(3, args);
 				break;
 			}
 			case OpenZWave::Notification::Type_Notification:
