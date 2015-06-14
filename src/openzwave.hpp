@@ -189,8 +189,7 @@ namespace OZW {
 	/*  
 	 */
 	extern uv_async_t 		async;
-	extern Persistent<Object> context_obj;
-	
+
 	/*
 	* Message passing queue between OpenZWave callback and v8 async handler.
 	*/
@@ -227,6 +226,9 @@ namespace OZW {
 	// v8 asynchronous callback handler
 	void async_cb_handler(uv_async_t *handle);
 	void async_cb_handler(uv_async_t *handle, int status);
+	
+	//extern Handle<Object>	context_obj;
+	extern NanCallback *emit_cb;
 	//
 	
 	// map of controller command names to enum values

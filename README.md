@@ -35,7 +35,7 @@ OZW library: you might need to rebuild this addon, otherwise you'd might
 get api mismatch exceptions.
 
 - The Node.js C++ API has changed dramatically between 0.10.x and 0.12.x
-thus I'm using [the Native Abstractions for Node library] (https://www.npmjs.com/package/nan) 
+thus I'm using [the Native Abstractions for Node library] (https://github.com/nodejs/nan) 
 to get this node addon to compile and run across all _currently_ known versions. 
 
 Manually compiling OpenZwave involves the usual dance of 

@@ -91,7 +91,7 @@ namespace OZW {
 		uv_async_send(&async);
 	}
 	
-		/*
+	/*
 	 * handle normal OpenZWave notifications
 	 */ 
 	// ===================================================================
@@ -99,20 +99,19 @@ namespace OZW {
 	// ===================================================================
 	{
 		NodeInfo *node;
-		
+				
 		Local < v8::Value > args[16];
+		
 		switch (notif->type) {
 			case OpenZWave::Notification::Type_DriverReady:
 				homeid = notif->homeid;
 				args[0] = NanNew<String>("driver ready");
-				args[1] = NanNew<Integer>(homeid);
-				NanMakeCallback(NanGetCurrentContext()->Global(), "emit", 2, args);
-				//NanMakeCallback(NanGetCurrentContext()->Global(), "emit", 2, args);;
+				args[1] = NanNew<Integer>(homeid);	
+				emit_cb->Call(2, args);
 				break;
 			case OpenZWave::Notification::Type_DriverFailed:
 				args[0] = NanNew<String>("driver failed");
-				NanMakeCallback(NanGetCurrentContext()->Global(), "emit", 1, args);
-				//NanMakeCallback(NanGetCurrentContext()->Global(), "emit", 1, args);;
+				emit_cb->Call(1, args);
 				break;
 				/*
 				* NodeNew is triggered when a node is discovered which is not
@@ -134,7 +133,7 @@ namespace OZW {
 				}
 				args[0] = NanNew<String>("node added");
 				args[1] = NanNew<Integer>(notif->nodeid);
-				NanMakeCallback(NanGetCurrentContext()->Global(), "emit", 2, args);;
+				emit_cb->Call(2, args);
 				break;
 				/*
 				* Ignore intermediate notifications about a node status, we
@@ -155,7 +154,7 @@ namespace OZW {
 				args[0] = NanNew<String>("node naming");
 				args[1] = NanNew<Integer>(notif->nodeid);
 				args[2] = info;
-				NanMakeCallback(NanGetCurrentContext()->Global(), "emit", 3, args);;
+				emit_cb->Call(3, args);
 				break;
 			}
 			// TODO: these should be supported correctly.
@@ -178,7 +177,7 @@ namespace OZW {
 				args[1] = NanNew<Integer>(notif->nodeid);
 				args[2] = NanNew<Integer>(value.GetCommandClassId());
 				args[3] = valobj;
-				NanMakeCallback(NanGetCurrentContext()->Global(), "emit", 4, args);;
+				emit_cb->Call(4, args);
 				break;
 			}
 			case OpenZWave::Notification::Type_ValueChanged: {
@@ -189,7 +188,7 @@ namespace OZW {
 				args[1] = NanNew<Integer>(notif->nodeid);
 				args[2] = NanNew<Integer>(value.GetCommandClassId());
 				args[3] = valobj;
-				NanMakeCallback(NanGetCurrentContext()->Global(), "emit", 4, args);;
+				emit_cb->Call(4, args);
 				break;
 			}
 			case OpenZWave::Notification::Type_ValueRefreshed: {
@@ -200,7 +199,8 @@ namespace OZW {
 				args[1] = NanNew<Integer>(notif->nodeid);
 				args[2] = NanNew<Integer>(value.GetCommandClassId());
 				args[3] = valobj;
-				NanMakeCallback(NanGetCurrentContext()->Global(), "emit", 4, args);;
+				emit_cb->Call(3, args);
+				emit_cb->Call(4, args);;
 				break;
 			}
 			case OpenZWave::Notification::Type_ValueRemoved: {
@@ -219,7 +219,7 @@ namespace OZW {
 				args[2] = NanNew<Integer>(value.GetCommandClassId());
 				args[3] = NanNew<Integer>(value.GetInstance());
 				args[4] = NanNew<Integer>(value.GetIndex());
-				NanMakeCallback(NanGetCurrentContext()->Global(), "emit", 5, args);;
+				emit_cb->Call(5, args);;
 				break;
 			}
 			/*
@@ -238,7 +238,7 @@ namespace OZW {
 				args[0] = NanNew<String>("node available");
 				args[1] = NanNew<Integer>(notif->nodeid);
 				args[2] = info;
-				NanMakeCallback(NanGetCurrentContext()->Global(), "emit", 3, args);;
+				emit_cb->Call(3, args);;
 				break;
 			}
 			/*
@@ -257,7 +257,7 @@ namespace OZW {
 				args[0] = NanNew<String>("node ready");
 				args[1] = NanNew<Integer>(notif->nodeid);
 				args[2] = info;
-				NanMakeCallback(NanGetCurrentContext()->Global(), "emit", 3, args);;
+				emit_cb->Call(3, args);;
 				break;
 			}
 			/*
@@ -268,27 +268,27 @@ namespace OZW {
 			case OpenZWave::Notification::Type_AllNodesQueried:
 			case OpenZWave::Notification::Type_AllNodesQueriedSomeDead:
 				args[0] = NanNew<String>("scan complete");
-				NanMakeCallback(NanGetCurrentContext()->Global(), "emit", 1, args);;
+				emit_cb->Call(1, args);;
 				break;
 			case OpenZWave::Notification::Type_NodeEvent: {
 				args[0] = NanNew<String>("node event");
 				args[1] = NanNew<Integer>(notif->nodeid);
 				args[2] = NanNew<Integer>(notif->event);
-				NanMakeCallback(NanGetCurrentContext()->Global(), "emit", 3, args);;
+				emit_cb->Call(3, args);;
 				break;
 			}
 			case OpenZWave::Notification::Type_SceneEvent:{
 				args[0] = NanNew<String>("scene event");
 				args[1] = NanNew<Integer>(notif->nodeid);
 				args[2] = NanNew<Integer>(notif->sceneid);
-				NanMakeCallback(NanGetCurrentContext()->Global(), "emit", 3, args);;
+				emit_cb->Call(3, args);;
 				break;
 			}
 			case OpenZWave::Notification::Type_Notification:
 				args[0] = NanNew<String>("notification");
 				args[1] = NanNew<Integer>(notif->nodeid);
 				args[2] = NanNew<Integer>(notif->notification);
-				NanMakeCallback(NanGetCurrentContext()->Global(), "emit", 3, args);;
+				emit_cb->Call(3, args);
 				break;
 			case OpenZWave::Notification::Type_Group:
 				/* The associations for the node have changed. The 
@@ -315,7 +315,8 @@ namespace OZW {
 		args[0] = NanNew<String>("controller command");
 		args[1] = NanNew<Integer>(notif->state);
 		args[2] = NanNew<Integer>(notif->err);
-		NanMakeCallback(NanGetCurrentContext()->Global(), "emit", 3, args);
+		//
+		emit_cb->Call(3, args);
 	}
 	
 	/*

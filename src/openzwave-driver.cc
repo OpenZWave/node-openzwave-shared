@@ -32,16 +32,20 @@ namespace OZW {
 
 		uv_async_init(uv_default_loop(), &async, async_cb_handler);
 
-		NanAssignPersistent(context_obj, args.This());
+		Local<Function> callbackHandle = args.This()
+			->Get(NanNew<String>("emit"))
+			.As<Function>();
+		emit_cb = new NanCallback(callbackHandle);
 
+		// std::cout << "~~~~ emit_cb:" << emit_cb << " isEmpty? " << emit_cb->IsEmpty() << "\n";
+		
 		OpenZWave::Manager::Create();
 		OpenZWave::Manager::Get()->AddWatcher(ozw_watcher_callback, NULL);
 		OpenZWave::Manager::Get()->AddDriver(path);
 
-		Local<Function> cb = args[0].As<Function>();
-		const unsigned argc = 1;
-		Local<Value> argv[argc] = { NanNew("connected") };
-		NanMakeCallback(NanGetCurrentContext()->Global(), cb, argc, argv);
+		Local < v8::Value > cbargs[16];
+		cbargs[0] = NanNew<String>("connected");
+		emit_cb->Call(1, cbargs);
 
 		NanReturnUndefined();
 	}
@@ -59,6 +63,8 @@ namespace OZW {
 		OpenZWave::Manager::Destroy();
 		OpenZWave::Options::Destroy();
 
+		delete emit_cb;
+		
 		NanReturnUndefined();
 	}
 

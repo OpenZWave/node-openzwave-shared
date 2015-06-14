@@ -22,18 +22,17 @@ using namespace node;
 
 namespace OZW {
 
-	uv_async_t async;
-	Persistent<Object> context_obj;
+	//
+	uv_async_t 		async;
 
-	/*
-	* Message passing queue between OpenZWave callback and v8 async handler.
-	*/
+	// 
+	NanCallback *emit_cb;
+	
+	// Message passing queue between OpenZWave callback and v8 async handler.
 	mutex 		zqueue_mutex;
 	std::queue<NotifInfo *> zqueue;
 
-	/*
-	* Node state.
-	*/
+	// Node state.
 	mutex 		znodes_mutex;
 	std::list<NodeInfo *> znodes;
 
