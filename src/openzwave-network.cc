@@ -26,17 +26,17 @@ namespace OZW {
 	* for testing network reliability.
 	*/
 	// ===================================================================
-	Handle<v8::Value> OZW::TestNetworkNode(const Arguments& args)
+	NAN_METHOD(OZW::TestNetworkNode)
 	// ===================================================================
 	{
-		HandleScope scope;
+		NanScope();
 
 		uint8_t nodeid = args[0]->ToNumber()->Value();
 		uint8_t nummsg = args[1]->ToBoolean()->Value();
 
 		OpenZWave::Manager::Get()->TestNetworkNode(homeid, nodeid, nummsg);
 
-		return scope.Close(Undefined());
+		NanReturnUndefined();
 	}
 
 	/*
@@ -44,33 +44,33 @@ namespace OZW {
 	* network for testing network reliability.
 	*/
 	// ===================================================================
-	Handle<v8::Value> OZW::TestNetwork(const Arguments& args)
+	NAN_METHOD(OZW::TestNetwork)
 	// ===================================================================
 	{
-		HandleScope scope;
+		NanScope();
 		
 		uint8_t nummsg = args[0]->ToNumber()->Value();
 		
 		OpenZWave::Manager::Get()->HealNetwork(homeid, nummsg);
 		
-		return scope.Close(Undefined());
+		NanReturnUndefined();
 	}
 	
 	/*
 	* Heal network node by requesting the node rediscover their neighbors.
 	*/
 	// ===================================================================
-	Handle<v8::Value> OZW::HealNetworkNode(const Arguments& args)
+	NAN_METHOD(OZW::HealNetworkNode)
 	// ===================================================================
 	{
-		HandleScope scope;
+		NanScope();
 
 		uint8_t nodeid = args[0]->ToNumber()->Value();
 		uint8_t doRR = args[1]->ToBoolean()->Value();
 
 		OpenZWave::Manager::Get()->HealNetworkNode(homeid, nodeid, doRR);
 
-		return scope.Close(Undefined());
+		NanReturnUndefined();
 	}
 
 	/*
@@ -79,14 +79,14 @@ namespace OZW {
 	* Can take a while on larger networks.
 	*/
 	// ===================================================================
-	Handle<v8::Value> OZW::HealNetwork(const Arguments& args)
+	NAN_METHOD(OZW::HealNetwork)
 	// ===================================================================
 	{
-		HandleScope scope;
+		NanScope();
 
 		bool doRR = true;
 		OpenZWave::Manager::Get()->HealNetwork(homeid, doRR);
 
-		return scope.Close(Undefined());
+		NanReturnUndefined();
 	}
 }

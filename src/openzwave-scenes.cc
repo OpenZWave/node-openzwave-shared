@@ -24,10 +24,10 @@ namespace OZW {
 	
 	/* OpenZWave scene management functions */
 	// ===================================================================
-	Handle<v8::Value> OZW::CreateScene(const Arguments& args) 
+	NAN_METHOD(OZW::CreateScene)
 	// ===================================================================
 	{
-		HandleScope scope;
+		NanScope();
 
 		std::string label = (*String::Utf8Value(args[0]->ToString()));
 
@@ -44,14 +44,14 @@ namespace OZW {
 			zscenes.push_back(scene);
 		}
 
-		return scope.Close(Undefined());
+		NanReturnUndefined();
 	}
 
 	// ===================================================================
-	Handle<v8::Value> OZW::RemoveScene(const Arguments& args)
+	NAN_METHOD(OZW::RemoveScene)
 	// ===================================================================
 	{
-		HandleScope scope;
+		NanScope();
 
 		uint8_t sceneid = args[0]->ToNumber()->Value();
 
@@ -63,17 +63,16 @@ namespace OZW {
 			zscenes.remove(scene);
 		}
 
-		return scope.Close(Undefined());
+		NanReturnUndefined();
 	}
 
 	// ===================================================================
-	Handle<v8::Value> OZW::GetScenes(const Arguments& args)
+	NAN_METHOD(OZW::GetScenes)
 	// ===================================================================
 	{
-		HandleScope scope;
+		NanScope();
 
 		uint8_t numscenes = OpenZWave::Manager::Get()->GetNumScenes();
-		Local <v8::Value> cbargs[16];
 		SceneInfo *scene;
 
 		if (numscenes != zscenes.size()) {
@@ -96,33 +95,28 @@ namespace OZW {
 			}
 		}
 
-		Local<Array> scenes = Array::New(zscenes.size());
+		Local<Array> scenes = NanNew<Array>(zscenes.size());
 		std::list<SceneInfo *>::iterator it;
 		unsigned j = 0;
 
 		for (it = zscenes.begin(); it != zscenes.end(); ++it) {
 			scene = *it;
 
-			Local <Object> info = Object::New();
-			info->Set(String::NewSymbol("sceneid"), Integer::New(scene->sceneid));
-			info->Set(String::NewSymbol("label"), String::New(scene->label.c_str()));
+			Local <Object> info = NanNew<Object>();
+			info->Set(NanNew<String>("sceneid"), NanNew<Integer>(scene->sceneid));
+			info->Set(NanNew<String>("label"),   NanNew<String>(scene->label.c_str()));
 
-			scenes->Set(Number::New(j++), info);
+			scenes->Set(NanNew<Integer>(j++), info);
 		}
-
-		cbargs[0] = String::New("scenes list");
-		cbargs[1] = scenes;
-
-		MakeCallback(context_obj, "emit", 2, cbargs);
-
-		return scope.Close(Undefined());
+		
+		NanReturnValue(scenes);
 	}
 
 	// ===================================================================
-	Handle<v8::Value> OZW::AddSceneValue(const Arguments& args)
+	NAN_METHOD(OZW::AddSceneValue)
 	// ===================================================================
 	{
-		HandleScope scope;
+		NanScope();
 
 		uint8_t sceneid = args[0]->ToNumber()->Value();
 		uint8_t nodeid = args[1]->ToNumber()->Value();
@@ -194,14 +188,14 @@ namespace OZW {
 			}
 		}
 
-		return scope.Close(Undefined());
+		NanReturnUndefined();
 	}
 
 	// ===================================================================
-	Handle<v8::Value> OZW::RemoveSceneValue(const Arguments& args)
+	NAN_METHOD(OZW::RemoveSceneValue)
 	// ===================================================================
 	{
-		HandleScope scope;
+		NanScope();
 
 		uint8_t sceneid = args[0]->ToNumber()->Value();
 		uint8_t nodeid = args[1]->ToNumber()->Value();
@@ -223,14 +217,14 @@ namespace OZW {
 			}
 		}
 
-		return scope.Close(Undefined());
+		NanReturnUndefined();
 	}
 
 	// ===================================================================
-	Handle<v8::Value> OZW::SceneGetValues(const Arguments& args)
+	NAN_METHOD(OZW::SceneGetValues)
 	// ===================================================================
 	{
-		HandleScope scope;
+		NanScope();
 
 		uint8_t sceneid = args[0]->ToNumber()->Value();
 
@@ -244,9 +238,7 @@ namespace OZW {
 		if ((scene = get_scene_info(sceneid))) {
 			scene->values.clear();
 
-			Local <v8::Value> cbargs[16];
-
-			Local<Array> v8values = Array::New(scene->values.size());
+			Local<Array> v8values = NanNew<Array>(scene->values.size());
 
 			unsigned j = 0;
 
@@ -254,23 +246,19 @@ namespace OZW {
 				mutex::scoped_lock sl(zscenes_mutex);
 				scene->values.push_back(*vit);
 
-				v8values->Set(Number::New(j++), zwaveSceneValue2v8Value(sceneid, *vit));
+				v8values->Set(NanNew<Integer>(j++), zwaveSceneValue2v8Value(sceneid, *vit));
 			}
-
-			cbargs[0] = String::New("scene values list");
-			cbargs[1] = v8values;
-
-			MakeCallback(context_obj, "emit", 2, cbargs);
+			NanReturnValue(v8values);
 		}
-
-		return scope.Close(Undefined());
+		
+		NanReturnUndefined();
 	}
 
 	// ===================================================================
-	Handle<v8::Value> OZW::ActivateScene(const Arguments& args)
+	NAN_METHOD(OZW::ActivateScene)
 	// ===================================================================
 	{
-		HandleScope scope;
+		NanScope();
 
 		uint8_t sceneid = args[0]->ToNumber()->Value();
 
@@ -280,6 +268,6 @@ namespace OZW {
 			OpenZWave::Manager::Get()->ActivateScene(sceneid);
 		}
 
-		return scope.Close(Undefined());
+		NanReturnUndefined();
 	}
 }

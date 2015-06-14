@@ -1,0 +1,6 @@
+
+node-gyp --target=0.10.25 configure
+node-gyp --target=0.10.25 build
+
+node-gyp --target=0.12.4 configure
+node-gyp --target=0.12.4 build

@@ -1,8 +1,11 @@
 {
   "name": "openzwave-shared",
-  "version": "0.1.1",
+  "version": "1.0.0",
   "description": "Node.JS bindings for OpenZWave including the long-missing management functions",
   "main": "./lib/openzwave-shared.js",
+  "dependencies" : {
+     "nan" : ">=0.3.1"
+  },
   "scripts": {
     "test": "node test.js",
     "install": "node-gyp rebuild"
@@ -12,14 +15,14 @@
     "url": "git://github.com/OpenZWave/node-openzwave-shared.git"
   },
   "keywords": [
-    "zwave",
-    "z-wave",
-    "home",
-    "automation",
+    "zwave", "z-wave",
+    "home automation",
     "openzwave"
   ],
   "author": "Elias Karakoulakis <elias.karakoulakis@gmail.com>",
-  "contributors": [ "Jonathan Perkin <jonathan@perkin.org.uk> (http://www.perkin.org.uk/)" ],
+  "contributors": [ 
+	"Jonathan Perkin <jonathan@perkin.org.uk> (http://www.perkin.org.uk/)" 
+  ],
   "licenses": [
     {
       "type": "ISC",

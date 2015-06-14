@@ -28,31 +28,25 @@ namespace OZW {
 	 * will be a number between 1 and 4. 
 	*/
 	// ===================================================================
-	Handle<v8::Value> OZW::GetNumGroups(const Arguments& args)
+	NAN_METHOD(OZW::GetNumGroups)
 	// ===================================================================
 	{
-		HandleScope scope;
+		NanScope();
 
 		uint8_t nodeid = args[0]->ToNumber()->Value();
 		uint8 numGroups = OpenZWave::Manager::Get()->GetNumGroups(homeid, nodeid);
 		
-		Local<v8::Value> argv[2];
-		argv[0] = String::New("numgroups");
-		argv[1] = Integer::New(numGroups);
-
-		MakeCallback(context_obj, "emit", 2, argv);
-
-		return scope.Close(Undefined());
+		NanReturnValue(NanNew<Integer>(numGroups));
 	}
 	
 	/*
 	 * 
 	 */
 	// ===================================================================
-	Handle<v8::Value> OZW::GetAssociations(const Arguments& args)
+	NAN_METHOD(OZW::GetAssociations)
 	// ===================================================================
 	{
-		HandleScope scope;
+		NanScope();
 		uint8* associations;
 
 		uint8_t nodeid = args[0]->ToNumber()->Value();
@@ -62,34 +56,27 @@ namespace OZW {
 			homeid, nodeid,	groupidx, &associations
 		);
 		
-		Local<Array> o_assocs = Array::New(numNodes);
+		Local<Array> o_assocs = NanNew<Array>(numNodes);
 
 		for (uint8 nr = 0; nr < numNodes; nr++) {
-			o_assocs->Set(Integer::New(nr), Integer::New(associations[nr]));
+			o_assocs->Set(NanNew<Integer>(nr), NanNew<Integer>(associations[nr]));
 		}
 
-		Local<v8::Value> argv[3];
-		argv[0] = String::New("associations");
-		argv[1] = Integer::New(nodeid);
-		argv[2] = o_assocs;
-
-		MakeCallback(context_obj, "emit", 3, argv);
-		
 		// The caller is responsible for freeing the array memory 
 		// with a call to delete []. 
 		delete associations;
 		
-		return scope.Close(Undefined());
+		NanReturnValue(o_assocs);
 	}
 
 	/*
 	 * 
 	 */
 	// ===================================================================
-	Handle<v8::Value> OZW::GetMaxAssociations(const Arguments& args)
+	NAN_METHOD(OZW::GetMaxAssociations)
 	// ===================================================================
 	{
-		HandleScope scope;
+		NanScope();
 		
 		uint8_t nodeid = args[0]->ToNumber()->Value();
 		uint8_t groupidx = args[1]->ToNumber()->Value();
@@ -98,24 +85,17 @@ namespace OZW {
 			homeid, nodeid,	groupidx
 		);
 		
-		Local<v8::Value> argv[3];
-		argv[0] = String::New("associations");
-		argv[1] = Integer::New(nodeid);
-		argv[2] = Integer::New(numMaxAssoc);
-
-		MakeCallback(context_obj, "emit", 3, argv);
-		
-		return scope.Close(Undefined());
+		NanReturnValue(NanNew<Integer>(numMaxAssoc));
 	}
 
 	/*
 	 * 
 	 */
 	// ===================================================================
-	Handle<v8::Value> OZW::GetGroupLabel(const Arguments& args)
+	NAN_METHOD(OZW::GetGroupLabel)
 	// ===================================================================
 	{
-		HandleScope scope;
+		NanScope();
 		
 		uint8_t nodeid = args[0]->ToNumber()->Value();
 		uint8_t groupidx = args[1]->ToNumber()->Value();
@@ -124,17 +104,17 @@ namespace OZW {
 			homeid, nodeid, groupidx
 		);
 
-		return scope.Close(String::New(groupLabel.c_str()));
+		NanReturnValue(NanNew<String>(groupLabel.c_str()));
 	}
 
 	/*
 	 * 
 	 */
 	// ===================================================================
-	Handle<v8::Value> OZW::AddAssociation(const Arguments& args)
+	NAN_METHOD(OZW::AddAssociation)
 	// ===================================================================
 	{
-		HandleScope scope;
+		NanScope();
 		
 		uint8_t nodeid = args[0]->ToNumber()->Value();
 		uint8_t groupidx = args[1]->ToNumber()->Value();
@@ -144,17 +124,17 @@ namespace OZW {
 			homeid,nodeid,groupidx,tgtnodeid
 		);
 
-		return scope.Close(Undefined());
+		NanReturnUndefined();
 	}
 
 	/*
 	 * 
 	 */
 	// ===================================================================
-	Handle<v8::Value> OZW::RemoveAssociation(const Arguments& args)
+	NAN_METHOD(OZW::RemoveAssociation)
 	// ===================================================================
 	{
-		HandleScope scope;
+		NanScope();
 		
 		uint8_t nodeid = args[0]->ToNumber()->Value();
 		uint8_t groupidx = args[1]->ToNumber()->Value();
@@ -162,7 +142,7 @@ namespace OZW {
 	
 		OpenZWave::Manager::Get()->RemoveAssociation(homeid,nodeid,groupidx,tgtnodeid);
 		
-		return scope.Close(Undefined());
+		NanReturnUndefined();
 	}
 
 }

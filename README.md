@@ -1,7 +1,7 @@
 node-openzwave-shared
 =====================
 
-This is a node.js add-on which wraps the [Open
+This is a node.js add-on for node 0.10.x *and* 0.12.x which wraps the [Open
 Z-Wave](https://www.openzwave.com/) library to provide access to a
 Z-Wave network from within node.js (server-side JavaScript.)
 
@@ -21,23 +21,29 @@ This addon is currently able to:
 
 **Important notice**
 
- -*NODE 0.10.x required* - not compatible with 0.12.x due to internal Node.JS API changes
-- This library differs in that it links dynamically to an OpenZWave **shared library**
-(in contrast to statically linking OpenZWave in the node addon). 
+- This library differs in that it links *dynamically* to an OpenZWave **shared 
+library** by means of your system dynamic linker. This is  in contrast to 
+*statically* linking OpenZWave in the node.js addon. 
 Thus you need to have OpenZWave fully installed on your system (both the
 compiled library AND the development headers) before trying to install this little baby.
-
-I know this diverges from the npm paradigm, but this makes OZW upgrades easier
+I know this diverges from the dominant npm paradigm, but with the shared lib approach:
+  - compilation / installation is a lot faster and
+  - OZW minor upgrades / bugfixes are way lot easier.
+  
 This also means that you need to be careful if you upgrade your 
 OZW library: you might need to rebuild this addon, otherwise you'd might
 get api mismatch exceptions.
+
+- The Node.js C++ API has changed dramatically between 0.10.x and 0.12.x
+thus I'm using [the Native Abstractions for Node library] (https://github.com/nodejs/nan) 
+to get this node addon to compile and run across all _currently_ known versions. 
 
 Manually compiling OpenZwave involves the usual dance of 
 (`make && sudo make install`) OR you could try installing
 a precompiled package (eg for Raspbian it should be like
 `sudo apt-get install libopenzwave-dev`). Precompiled packages 
 for various Linux flavours and architectures can be downloaded
-from http://old.openzwave.com/snapshots/.
+from http://old.openzwave.com/snapshots/
 
 Be sure to install BOTH the binary (libopenzwave-x.y) AND the development
 package (libopenzwave-dev).
@@ -63,7 +69,7 @@ $ sudo npm install -g openzwave-shared
 
 ## License
 
-The [Open Z-Wave](https://code.google.com/p/open-zwave/) library that this
+The [Open Z-Wave](https://www.openzwave.com/) library that this
 module heavily relies upon is licensed under the GPLv3.
 
 Everything else (all the bits that I have written) is under the vastly more

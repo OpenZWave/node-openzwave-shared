@@ -3,7 +3,6 @@
 		"target_name": "openzwave_shared",
 		"sources": [
 			"src/openzwave.cc",
-			"src/openzwave-callbacks.cc",
 			"src/openzwave-config.cc",
 			"src/openzwave-driver.cc",
 			"src/openzwave-groups.cc",
@@ -13,7 +12,7 @@
 			"src/openzwave-scenes.cc",
 			"src/openzwave-values.cc",
 			"src/utils.cc",
-			"src/v8-callbacks.cc",
+			"src/callbacks.cc",
 		],
 		'conditions': [
 			['OS=="linux"', {
@@ -21,6 +20,7 @@
 					"libraries": ["-lopenzwave"]
 				},
 				"include_dirs": [
+					"<!(node -p -e \"require('path').dirname(require.resolve('nan'))\")",
 					'/usr/local/include/openzwave',
 					'/usr/local/include/openzwave/value_classes',
 					'/usr/include/openzwave',

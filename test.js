@@ -2,14 +2,19 @@
  * OpenZWave test program.
  */
 
-var OpenZWave = require('./lib/openzwave.js');
+var OpenZWave = require('./lib/openzwave-shared.js');
 
 var zwave = new OpenZWave('/dev/ttyUSB0', {
 	saveconfig: true,
 });
 var nodes = [];
 
+zwave.on('connected', function(homeid) {
+	console.log('=================== CONNECTED! ====================');
+});
+
 zwave.on('driver ready', function(homeid) {
+	console.log('=================== DRIVER READY! ====================');
 	console.log('scanning homeid=0x%s...', homeid.toString(16));
 });
 
@@ -20,6 +25,7 @@ zwave.on('driver failed', function() {
 });
 
 zwave.on('node added', function(nodeid) {
+	console.log('=================== NODE ADDED! ====================');
 	nodes[nodeid] = {
 		manufacturer: '',
 		manufacturerid: '',

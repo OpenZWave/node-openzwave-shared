@@ -22,18 +22,17 @@ using namespace node;
 
 namespace OZW {
 
-	uv_async_t async;
-	Persistent<Object> context_obj;
+	//
+	uv_async_t 		async;
 
-	/*
-	* Message passing queue between OpenZWave callback and v8 async handler.
-	*/
+	// 
+	NanCallback *emit_cb;
+	
+	// Message passing queue between OpenZWave callback and v8 async handler.
 	mutex 		zqueue_mutex;
 	std::queue<NotifInfo *> zqueue;
 
-	/*
-	* Node state.
-	*/
+	// Node state.
 	mutex 		znodes_mutex;
 	std::list<NodeInfo *> znodes;
 
@@ -44,42 +43,43 @@ namespace OZW {
 	CommandMap* ctrlCmdNames;
 
 	// ===================================================================
-	Handle<v8::Value> OZW::New(const Arguments& args)
+	NAN_METHOD(OZW::OZW::New)
 	// ===================================================================
 	{
-		HandleScope scope;
+		NanScope();
 
 		assert(args.IsConstructCall());
 		OZW* self = new OZW();
 		self->Wrap(args.This());
 
 		Local < Object > opts = args[0]->ToObject();
-		std::string confpath = (*String::Utf8Value(opts->Get(String::New("modpath")->ToString())));
+		std::string confpath = (*String::Utf8Value(opts->Get(NanNew<String>("modpath")->ToString())));
 		confpath += "/../deps/open-zwave/config";
 
 		/*
 		* Options are global for all drivers and can only be set once.
 		*/
 		OpenZWave::Options::Create(confpath.c_str(), "", "");
-		OpenZWave::Options::Get()->AddOptionBool("ConsoleOutput", opts->Get(String::New("consoleoutput"))->BooleanValue());
-		OpenZWave::Options::Get()->AddOptionBool("Logging", opts->Get(String::New("logging"))->BooleanValue());
-		OpenZWave::Options::Get()->AddOptionBool("SaveConfiguration", opts->Get(String::New("saveconfig"))->BooleanValue());
-		OpenZWave::Options::Get()->AddOptionInt("DriverMaxAttempts", opts->Get(String::New("driverattempts"))->IntegerValue());
-		OpenZWave::Options::Get()->AddOptionInt("PollInterval", opts->Get(String::New("pollinterval"))->IntegerValue());
+		OpenZWave::Options::Get()->AddOptionBool("ConsoleOutput",     opts->Get(NanNew<String>("consoleoutput"))->BooleanValue());
+		OpenZWave::Options::Get()->AddOptionBool("Logging",           opts->Get(NanNew<String>("logging"))->BooleanValue());
+		OpenZWave::Options::Get()->AddOptionBool("SaveConfiguration", opts->Get(NanNew<String>("saveconfig"))->BooleanValue());
+		OpenZWave::Options::Get()->AddOptionInt("DriverMaxAttempts",  opts->Get(NanNew<String>("driverattempts"))->IntegerValue());
+		OpenZWave::Options::Get()->AddOptionInt("PollInterval",       opts->Get(NanNew<String>("pollinterval"))->IntegerValue());
 		OpenZWave::Options::Get()->AddOptionBool("IntervalBetweenPolls", true);
-		OpenZWave::Options::Get()->AddOptionBool("SuppressValueRefresh", opts->Get(String::New("suppressrefresh"))->BooleanValue());
+		OpenZWave::Options::Get()->AddOptionBool("SuppressValueRefresh", opts->Get(NanNew<String>("suppressrefresh"))->BooleanValue());
 		OpenZWave::Options::Get()->Lock();
 
-		return scope.Close(args.This());
+		NanReturnValue(args.This());
 	}
 
 	// ===================================================================
 	extern "C" void init(Handle<Object> target) {
-		HandleScope scope;
-
-		Local < FunctionTemplate > t = FunctionTemplate::New(OZW::New);
+  
+		NanScope();
+		Local < FunctionTemplate > t = NanNew<FunctionTemplate>(OZW::New);
+		t->SetClassName(NanNew("OZW"));	
 		t->InstanceTemplate()->SetInternalFieldCount(1);
-		t->SetClassName(String::New("OZW"));
+		
 		// openzwave-config.cc
 		NODE_SET_PROTOTYPE_METHOD(t, "setConfigParam", OZW::SetConfigParam);
 		NODE_SET_PROTOTYPE_METHOD(t, "requestConfigParam", OZW::RequestConfigParam);
@@ -138,7 +138,7 @@ namespace OZW {
 		NODE_SET_PROTOTYPE_METHOD(t, "sceneGetValues", OZW::SceneGetValues);
 		NODE_SET_PROTOTYPE_METHOD(t, "activateScene", OZW::ActivateScene);
 		//
-		target->Set(String::NewSymbol("Emitter"), t->GetFunction());
+		target->Set(NanNew<String>("Emitter"), t->GetFunction());
 		
 		/* for BeginControllerCommand
 		 * http://openzwave.com/dev/classOpenZWave_1_1Manager.html#aa11faf40f19f0cda202d2353a60dbf7b

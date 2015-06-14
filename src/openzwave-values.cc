@@ -25,10 +25,10 @@ namespace OZW {
 	* Generic value set.
 	*/
 	// =================================================================
-	Handle<v8::Value> OZW::SetValue(const Arguments& args)
+	NAN_METHOD(OZW::SetValue)
 	// =================================================================
 	{
-		HandleScope scope;
+		NanScope();
 
 		uint8_t nodeid = args[0]->ToNumber()->Value();
 		uint8_t comclass = args[1]->ToNumber()->Value();
@@ -92,6 +92,6 @@ namespace OZW {
 			}
 		}
 
-		return scope.Close(Undefined());
+		NanReturnUndefined();
 	}
 }
