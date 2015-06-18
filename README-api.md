@@ -57,14 +57,14 @@ zwave.setValue(3, 37, 1, 0, false); // node 3: turn off (the hard way)
 zwave.setValue(nodeid, commandclass, instance, index, value);
 ```
 
-This is useful for multi-instance devices, such as the Fibaro FGS-221 eg:
+This is most useful for multi-instance devices, such as the Fibaro FGS-221 eg:
 ```js
 zwave.setValue(8, 37, 1, 0, true); // node 8: turn on 1st relay
 zwave.setValue(8, 37, 1, 0, false);// node 8: turn off 1st relay
 zwave.setValue(8, 37, 2, 0, true); // node 8: turn on 2nd relay
 zwave.setValue(8, 37, 2, 0, false);// node 8: turn off 2nd relay
 ```
-
+Useful documentation on [command classes can be found on MiCasaVerde website](http://wiki.micasaverde.com/index.php/ZWave_Command_Classes)
 
 Writing to device metadata (stored on the device itself):
 
@@ -78,39 +78,85 @@ Polling a device for changes (not all devices require this):
 ```js
 zwave.enablePoll(nodeid, commandclass);
 zwave.disablePoll(nodeid, commandclass);
-zwave.setPollInterval(nodeid http://www.openzwave.com/dev/classOpenZWave_1_1Manager.html#ac7032ff3978d645b6dcd3284a8055207
+zwave.setPollInterval(nodeid, 
+zwave.getPollInterval();
+zwave.isPolled();
+zwave.setPollIntensity();
+zwave.getPollIntensity();
 ```
 
-Reset the controller.  Calling `hardReset` will clear any associations, so use
+Association groups management:
+```js
+zwave.getNumGroups(nodeid);
+zwave.getGroupLabel(nodeid, group);
+zwave.getAssociations(nodeid, group);
+zwave.getMaxAssociations(nodeid, group);
+zwave.addAssociation(nodeid, group, target_nodeid); 
+zwave.removeAssociation(nodeid, group, target_nodeid);
+```
+
+Resetting the controller.  Calling `hardReset` will clear any associations, so use
 carefully:
 
 ```js
+zwave.hardReset();      // destructive! will wipe out all known configuration
+zwave.softReset();      // non-destructive, just resets the chip
 ```
 
 Scenes control:
 ```js
-createScene
-removeScene
-getScenes
-addSceneValue
-removeSceneValue
-sceneGetValues
-activateScene
+zwave.createScene(label); 	// create a scene and assign a label, return its numeric id.
+zwave.removeScene(sceneId); // perform #GRExit
+zwave.getScenes();			// get all scenes as an array
+// add a zwave value to a scene
+zwave.addSceneValue(sceneId, nodeId, commandclass, instance, index);
+// remove a zwave value from a scene
+zwave.removeSceneValue(sceneId, nodeId, commandclass, instance, index);
+zwave.sceneGetValues(sceneId); // return array of values associated with this scene
+zwave.activateScene(sceneId);  // The Show Must Go On...
 ```
 
 ZWave network management:
 ```js
 zwave.hardReset();      // destructive! will wipe out all configuration stored in the chip
 zwave.softReset();      // non-destructive, just resets the chip
-zwave.healNetworkNode (nodeId, doRR);
+zwave.healNetworkNode(nodeId, doReturnRoutes=false);
 zwave.healNetwork();   // guru meditation
 zwave.getNeighbors();
+zwave.refreshNodeInfo(nodeid); 
 ```
 
-ZWave controller commands: (*work in progress!!!*)
+ZWave controller commands:
 ```js
-zwave.beginControllerCommand( "command", node1_id, node2_id );
-zwave,cancelControllerCommand();
+// begin an async controller command on node1:
+zwave.beginControllerCommand( "command name", highPower = false, node1_id, node2_id = null);  
+// cancel controller command in progress 
+zwave.cancelControllerCommand(); 
+// returns controller's node id
+zwave.getControllerNodeId();
+// returns static update controller node id
+zwave.getSUCNodeId();
+// is the OZW-managed controller the primary controller for this zwave network?
+zwave.isPrimaryController();
+// Query if the controller is a static update controller.
+zwave.isStaticUpdateController();
+// Query if the controller is using the bridge controller library.
+zwave.isBridgeController();
+// Get the version of the Z-Wave API library used by a controller.
+zwave.getLibraryVersion();
+// Get a string containing the Z-Wave API library type used by a controller
+zwave.getLibraryTypeName();
+// 
+zwave.getSendQueueCount();
 ```
-command can be "AddDevice", "RemoveDevice", "ReplaceFailedNode" etc.
-see http://www.openzwave.com/dev/classOpenZWave_1_1Driver.html#ac1a7f80c64bd9e5147be468b7b5a40d9 for a list of controller commands
+
+command can be "AddDevice", "RemoveDevice", "ReplaceFailedNode" etc. See
+[full list of controller commands in OpenZWave documentation](http://www.openzwave.com/dev/classOpenZWave_1_1Driver.html#ac1a7f80c64bd9e5147be468b7b5a40d9)
+
+Configuration commands:
+```js
+zwave.requestAllConfigParams(nodeId);
+zwave.requestConfigParam(nodeId, paramId);
+zwave.setConfigParam(nodeId, paramId, paramValue, <sizeof paramValue>);
+
+```
