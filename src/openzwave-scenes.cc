@@ -44,7 +44,7 @@ namespace OZW {
 			zscenes.push_back(scene);
 		}
 
-		NanReturnUndefined();
+		NanReturnValue(NanNew< Integer >(sceneid));
 	}
 
 	// ===================================================================

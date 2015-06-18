@@ -157,13 +157,25 @@ namespace OZW {
 				emit_cb->Call(3, args);
 				break;
 			}
-			// TODO: these should be supported correctly.
 			case OpenZWave::Notification::Type_PollingEnabled:
-			case OpenZWave::Notification::Type_PollingDisabled:
+				if ((node = get_node_info(notif->nodeid))) {
+					node->polled = true;
+					args[0] = NanNew<String>("polling enabled");
+					args[1] = NanNew<Integer>(notif->nodeid);
+					emit_cb->Call(2, args);
+				}
 				break;
-				/*
-				* Node values.
-				*/
+			case OpenZWave::Notification::Type_PollingDisabled:
+				if ((node = get_node_info(notif->nodeid))) {
+					node->polled = false;
+					args[0] = NanNew<String>("polling disabled");
+					args[1] = NanNew<Integer>(notif->nodeid);
+					emit_cb->Call(2, args);
+				}
+				break;
+			/*
+			* Node values.
+			*/
 			case OpenZWave::Notification::Type_ValueAdded: {
 				OpenZWave::ValueID value = notif->values.front();
 				Local<Object> valobj = zwaveValue2v8Value(value);

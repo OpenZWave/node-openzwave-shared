@@ -84,7 +84,7 @@ namespace OZW {
 	{
 		NanScope();
 
-		bool doRR = true;
+		bool doRR = args[0]->ToBoolean()->Value();
 		OpenZWave::Manager::Get()->HealNetwork(homeid, doRR);
 
 		NanReturnUndefined();
