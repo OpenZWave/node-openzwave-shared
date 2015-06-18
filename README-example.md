@@ -97,34 +97,56 @@ zwave.on('node ready', function(nodeid, nodeinfo) {
 	}
 });
 
-zwave.on('notification', function(nodeid, notif) {
-	switch (notif) {
-	case 0:
-		console.log('node%d: message complete', nodeid);
-		break;
-	case 1:
-		console.log('node%d: timeout', nodeid);
-		break;
-	case 2:
-		console.log('node%d: nop', nodeid);
-		break;
-	case 3:
-		console.log('node%d: node awake', nodeid);
-		break;
-	case 4:
-		console.log('node%d: node sleep', nodeid);
-		break;
-	case 5:
-		console.log('node%d: node dead', nodeid);
-		break;
-	case 6:
-		console.log('node%d: node alive', nodeid);
-		break;
-        }
+zwave.on('polling enabled', function(nodeid) {
+	console.log('node%d: polling ENABLED', nodeid);
+});
+zwave.on('polling disabled', function(nodeid) {
+	console.log('node%d: polling DISABLED', nodeid);
 });
 
+var notificationCodes = {
+	0: 'message complete',
+	1: 'timeout',
+	2: 'nop',
+	3: 'node awake',
+	4: 'node sleep',
+	5: 'node dead (Undead Undead Undead)',
+	6: 'node alive',
+};
+zwave.on('notification', function(nodeid, notif) {
+	console.log('node%d: %s', nodeid, notificationCodes[notif]);
+});
+
+var ctrlState = {
+	0: 'No command in progress',
+	1: 'The command is starting',
+	2: 'The command was cancelled',
+	3: 'Command invocation had error(s) and was aborted',
+	4: 'Controller is waiting for a user action',
+	5: 'Controller command is on a sleep queue wait for device',
+	6: 'The controller is communicating with the other device to carry out the command',
+	7: 'The command has completed successfully',
+	8: 'The command has failed',
+	9: 'The controller thinks the node is OK',
+	10: 'The controller thinks the node has failed',
+};
+var ctrlError = {
+	0: 'No error',
+	1: 'ButtonNotFound',
+	2: 'NodeNotFound',
+	3: 'NotBridge',
+	4: 'NotSUC',
+	5: 'NotSecondary',
+	6: 'NotPrimary',
+	7: 'IsPrimary',
+	8: 'NotFound',
+	9: 'Busy',
+	10: 'Failed',
+	11: 'Disabled',
+	12: 'Overflow',
+}
 zwave.on('controller command', function (state, error) {
-	console.log('controller command feedback: state:%d error:%d', state, error);
+	console.log('controller command feedback: state:%d error:%d', ctrlState[state], ctrlError[error]);
 });
 
 zwave.on('scan complete', function() {
