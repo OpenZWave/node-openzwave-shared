@@ -50,7 +50,10 @@ cd /<project directory>
 ```
 npm install openzwave-shared
 ```
-
+#### Copy options.xml to project directory
+```
+cp /usr/local/etc/openzwave/options.xml options.xml
+```
 #### You can test node-openzwave-shared
 ```
 wget https://raw.githubusercontent.com/OpenZWave/node-openzwave-shared/master/test2.js
