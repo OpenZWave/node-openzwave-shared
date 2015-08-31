@@ -115,8 +115,8 @@ namespace OZW {
 		// openzwave-nodes.cc
 		NODE_SET_PROTOTYPE_METHOD(t, "setLocation", OZW::SetLocation);
 		NODE_SET_PROTOTYPE_METHOD(t, "setName", OZW::SetName);
-		NODE_SET_PROTOTYPE_METHOD(t, "setNodeOn", OZW::SetValue);
-		NODE_SET_PROTOTYPE_METHOD(t, "setNodeOff", OZW::SetValue);
+		NODE_SET_PROTOTYPE_METHOD(t, "setNodeOn", OZW::SetNodeOn);
+		NODE_SET_PROTOTYPE_METHOD(t, "setNodeOff", OZW::SetNodeOff);
 		NODE_SET_PROTOTYPE_METHOD(t, "switchAllOn", OZW::SwitchAllOn);
 		NODE_SET_PROTOTYPE_METHOD(t, "switchAllOff", OZW::SwitchAllOff);
 		NODE_SET_PROTOTYPE_METHOD(t, "getNodeNeighbors", OZW::GetNodeNeighbors);
