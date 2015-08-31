@@ -150,10 +150,39 @@ zwave.getLibraryTypeName();
 zwave.getSendQueueCount();
 ```
 
-command can be "AddDevice", "RemoveDevice", "ReplaceFailedNode" etc. See
-[full list of controller commands in OpenZWave documentation](http://www.openzwave.com/dev/classOpenZWave_1_1Driver.html#ac1a7f80c64bd9e5147be468b7b5a40d9)
+### Controller commands
+**BeginControllerCommand** is the most powerful command in the OpenZWave API, as it allows for performing management functions on the ZWave network.
 
-Configuration commands:
+    - The first argument is the command name, and its the only mandatory arg ,which can be any of the following:
+    
+```
+["AddDevice"]
+["CreateNewPrimary"]
+["ReceiveConfiguration"]
+["RemoveDevice"]
+["RemoveFailedNode"]
+["HasNodeFailed"]
+["ReplaceFailedNode"]
+["TransferPrimaryRole"]
+["RequestNetworkUpdate"]
+["RequestNodeNeighborUpdate"]
+["AssignReturnRoute"]
+["DeleteAllReturnRoutes"]
+["SendNodeInformation"]
+["ReplicationSend"]
+["CreateButton"]
+["DeleteButton"]
+```
+
+
+    - The second argument is a boolean ("highpower") - should be true/false
+    - The third argument is the first ZWave node to be passed to the command (if applicable for the command)
+    - The fourth argument is the second ZWave node to be passed to the command
+
+For a full description of what of these controller commands mean, please see
+[the official OpenZWave documentation](http://www.openzwave.com/dev/classOpenZWave_1_1Driver.html#ac1a7f80c64bd9e5147be468b7b5a40d9)
+
+### Configuration commands:
 ```js
 zwave.requestAllConfigParams(nodeId);
 zwave.requestConfigParam(nodeId, paramId);

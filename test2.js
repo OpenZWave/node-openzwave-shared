@@ -111,7 +111,8 @@ zwave.on('notification', function(nodeid, notif) {
 
 zwave.on('scan complete', function() {
     console.log('scan complete, hit ^C to finish.');
-    zwave.beginControllerCommand('SendNodeInformation', 5);
+    // Add a new device to the ZWave controller
+    zwave.beginControllerCommand('AddDevice', true);
 });
 
 zwave.on('controller command', function(r,s) {
