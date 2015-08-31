@@ -42,6 +42,30 @@ namespace OZW {
 		NanReturnValue( o_neighbors );		
 	}
 	
+	// =================================================================
+	NAN_METHOD(OZW::SetNodeOn)
+	// =================================================================
+	{
+		NanScope();
+
+		uint8_t nodeid = args[0]->ToNumber()->Value();
+		OpenZWave::Manager::Get()->SetNodeOn(homeid, nodeid);
+		
+		NanReturnUndefined();
+	}
+	
+	// =================================================================
+	NAN_METHOD(OZW::SetNodeOff)
+	// =================================================================
+	{
+		NanScope();
+
+		uint8_t nodeid = args[0]->ToNumber()->Value();
+		OpenZWave::Manager::Get()->SetNodeOff(homeid, nodeid);
+		
+		NanReturnUndefined();
+	}
+	
 	// ===================================================================
 	NAN_METHOD(OZW::SwitchAllOn)
 	// ===================================================================

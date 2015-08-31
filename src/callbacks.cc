@@ -98,6 +98,8 @@ namespace OZW {
 	void handleNotification(NotifInfo *notif) 
 	// ===================================================================
 	{
+		NanScope();
+		
 		NodeInfo *node;
 				
 		Local < v8::Value > args[16];
@@ -322,6 +324,7 @@ namespace OZW {
 	void handleControllerCommand(NotifInfo *notif) 
 	// ===================================================================
 	{
+		NanScope();
 		Local < v8::Value > args[16];
 		args[0] = NanNew<String>("controller command");
 		args[1] = NanNew<Integer>(notif->state);
