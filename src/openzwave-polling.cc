@@ -47,7 +47,7 @@ namespace OZW {
 	// ===================================================================
 	{
 		NanScope();
-		uint8_t intervalMillisecs = args[0]->ToNumber()->Value();
+		uint32_t intervalMillisecs = args[0]->ToNumber()->Value();
 		OpenZWave::Manager::Get()->SetPollInterval (intervalMillisecs, false);
 		NanReturnUndefined();
 	}

@@ -125,7 +125,7 @@ namespace OZW {
 		NODE_SET_PROTOTYPE_METHOD(t, "setValue", OZW::SetValue);
 		// openzwave-polling.cc
 		NODE_SET_PROTOTYPE_METHOD(t, "enablePoll", OZW::EnablePoll);
-		NODE_SET_PROTOTYPE_METHOD(t, "disablePoll", OZW::EnablePoll);
+		NODE_SET_PROTOTYPE_METHOD(t, "disablePoll", OZW::DisablePoll);
 		NODE_SET_PROTOTYPE_METHOD(t, "isPolled",  OZW::IsPolled); // ** new
 		NODE_SET_PROTOTYPE_METHOD(t, "getPollInterval",  OZW::GetPollInterval); // ** new
 		NODE_SET_PROTOTYPE_METHOD(t, "setPollInterval",  OZW::SetPollInterval); // ** new
