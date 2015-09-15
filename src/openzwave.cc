@@ -120,7 +120,30 @@ namespace OZW {
 		NODE_SET_PROTOTYPE_METHOD(t, "switchAllOn", OZW::SwitchAllOn);
 		NODE_SET_PROTOTYPE_METHOD(t, "switchAllOff", OZW::SwitchAllOff);
 		NODE_SET_PROTOTYPE_METHOD(t, "getNodeNeighbors", OZW::GetNodeNeighbors);
-		NODE_SET_PROTOTYPE_METHOD(t, "refreshNodeInfo", OZW::RefreshNodeInfo); // ** new
+		NODE_SET_PROTOTYPE_METHOD(t, "refreshNodeInfo", OZW::RefreshNodeInfo);
+		NODE_SET_PROTOTYPE_METHOD(t, "getNodeManufacturerName", OZW::GetNodeManufacturerName); // ** new
+		NODE_SET_PROTOTYPE_METHOD(t, "requestNodeState", OZW::RequestNodeState); // ** new
+		NODE_SET_PROTOTYPE_METHOD(t, "requestNodeDynamic", OZW::RequestNodeDynamic); // ** new
+		NODE_SET_PROTOTYPE_METHOD(t, "isNodeListeningDevice", OZW::IsNodeListeningDevice); // ** new
+		NODE_SET_PROTOTYPE_METHOD(t, "isNodeFrequentListeningDevice", OZW::IsNodeFrequentListeningDevice); // ** new
+		NODE_SET_PROTOTYPE_METHOD(t, "isNodeBeamingDevice", OZW::IsNodeBeamingDevice); // ** new
+		NODE_SET_PROTOTYPE_METHOD(t, "isNodeRoutingDevice", OZW::IsNodeRoutingDevice); // ** new
+		NODE_SET_PROTOTYPE_METHOD(t, "isNodeSecurityDevice", OZW::IsNodeSecurityDevice); // ** new
+		NODE_SET_PROTOTYPE_METHOD(t, "getNodeMaxBaudRate", OZW::GetNodeMaxBaudRate); // ** new
+		NODE_SET_PROTOTYPE_METHOD(t, "getNodeVersion", OZW::GetNodeVersion); // ** new
+		NODE_SET_PROTOTYPE_METHOD(t, "getNodeSecurity", OZW::GetNodeSecurity); // ** new
+		NODE_SET_PROTOTYPE_METHOD(t, "getNodeBasic", OZW::GetNodeBasic); // ** new
+		NODE_SET_PROTOTYPE_METHOD(t, "getNodeGeneric", OZW::GetNodeGeneric); // ** new
+		NODE_SET_PROTOTYPE_METHOD(t, "getNodeSpecific", OZW::GetNodeSpecific); // ** new
+		NODE_SET_PROTOTYPE_METHOD(t, "getNodeType", OZW::GetNodeType); // ** new
+		NODE_SET_PROTOTYPE_METHOD(t, "getNodeProductName", OZW::GetNodeProductName); // ** new
+		NODE_SET_PROTOTYPE_METHOD(t, "getNodeName", OZW::GetNodeName); // ** new
+		NODE_SET_PROTOTYPE_METHOD(t, "getNodeLocation", OZW::GetNodeLocation); // ** new
+		NODE_SET_PROTOTYPE_METHOD(t, "getNodeManufacturerId", OZW::GetNodeManufacturerId); // ** new
+		NODE_SET_PROTOTYPE_METHOD(t, "getNodeProductType", OZW::GetNodeProductType); // ** new
+		NODE_SET_PROTOTYPE_METHOD(t, "getNodeProductId", OZW::GetNodeProductId); // ** new
+		NODE_SET_PROTOTYPE_METHOD(t, "setNodeManufacturerName", OZW::SetNodeManufacturerName); // ** new
+		NODE_SET_PROTOTYPE_METHOD(t, "setNodeProductName", OZW::SetNodeProductName); // ** new
 		// openzwave-values.cc
 		NODE_SET_PROTOTYPE_METHOD(t, "setValue", OZW::SetValue);
 		// openzwave-polling.cc
