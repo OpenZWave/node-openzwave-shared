@@ -28,12 +28,12 @@ namespace OZW {
 	NAN_METHOD(OZW::SetValue)
 	// =================================================================
 	{
-		NanScope();
+		Nan::HandleScope();
 
-		uint8_t nodeid = args[0]->ToNumber()->Value();
-		uint8_t comclass = args[1]->ToNumber()->Value();
-		uint8_t instance = args[2]->ToNumber()->Value();
-		uint8_t index = args[3]->ToNumber()->Value();
+		uint8_t nodeid = info[0]->ToNumber()->Value();
+		uint8_t comclass = info[1]->ToNumber()->Value();
+		uint8_t instance = info[2]->ToNumber()->Value();
+		uint8_t index = info[3]->ToNumber()->Value();
 
 		NodeInfo *node;
 		std::list<OpenZWave::ValueID>::iterator vit;
@@ -44,37 +44,37 @@ namespace OZW {
 
 					switch ((*vit).GetType()) {
 						case OpenZWave::ValueID::ValueType_Bool: {
-							bool val = args[4]->ToBoolean()->Value();
+							bool val = info[4]->ToBoolean()->Value();
 							OpenZWave::Manager::Get()->SetValue(*vit, val);
 							break;
 						}
 						case OpenZWave::ValueID::ValueType_Byte: {
-							uint8_t val = args[4]->ToInteger()->Value();
+							uint8_t val = info[4]->ToInteger()->Value();
 							OpenZWave::Manager::Get()->SetValue(*vit, val);
 							break;
 						}
 						case OpenZWave::ValueID::ValueType_Decimal: {
-							float val = args[4]->ToNumber()->NumberValue();
+							float val = info[4]->ToNumber()->NumberValue();
 							OpenZWave::Manager::Get()->SetValue(*vit, val);
 							break;
 						}
 						case OpenZWave::ValueID::ValueType_Int: {
-							int32_t val = args[4]->ToInteger()->Value();
+							int32_t val = info[4]->ToInteger()->Value();
 							OpenZWave::Manager::Get()->SetValue(*vit, val);
 							break;
 						}
 						case OpenZWave::ValueID::ValueType_List: {
-							std::string val = (*String::Utf8Value(args[4]->ToString()));
+							std::string val = (*String::Utf8Value(info[4]->ToString()));
 							OpenZWave::Manager::Get()->SetValue(*vit, val);
 							break;
 						}
 						case OpenZWave::ValueID::ValueType_Short: {
-							int16_t val = args[4]->ToInteger()->Value();
+							int16_t val = info[4]->ToInteger()->Value();
 							OpenZWave::Manager::Get()->SetValue(*vit, val);
 							break;
 						}
 						case OpenZWave::ValueID::ValueType_String: {
-							std::string val = (*String::Utf8Value(args[4]->ToString()));
+							std::string val = (*String::Utf8Value(info[4]->ToString()));
 							OpenZWave::Manager::Get()->SetValue(*vit, val);
 							break;
 						}
@@ -92,6 +92,6 @@ namespace OZW {
 			}
 		}
 
-		NanReturnUndefined();
+		
 	}
 }

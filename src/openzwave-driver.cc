@@ -26,16 +26,18 @@ namespace OZW {
 	NAN_METHOD(OZW::Connect)
 	// ===================================================================
 	{
-		NanScope();
+		Nan::HandleScope();
 
-		std::string path = (*String::Utf8Value(args[0]->ToString()));
+		std::string path = (*String::Utf8Value(info[0]->ToString()));
 
 		uv_async_init(uv_default_loop(), &async, async_cb_handler);
 
-		Local<Function> callbackHandle = args.This()
-			->Get(NanNew<String>("emit"))
-			.As<Function>();
-		emit_cb = new NanCallback(callbackHandle);
+		Local<Function> callbackHandle = Nan::Get( info.This(),
+			Nan::New<String>("emit").ToLocalChecked()
+		).ToLocalChecked()
+		 .As<Function>();
+		 
+		emit_cb = new Nan::Callback(callbackHandle);
 
 		// std::cout << "~~~~ emit_cb:" << emit_cb << " isEmpty? " << emit_cb->IsEmpty() << "\n";
 		
@@ -43,20 +45,20 @@ namespace OZW {
 		OpenZWave::Manager::Get()->AddWatcher(ozw_watcher_callback, NULL);
 		OpenZWave::Manager::Get()->AddDriver(path);
 
-		Local < v8::Value > cbargs[16];
-		cbargs[0] = NanNew<String>("connected");
-		emit_cb->Call(1, cbargs);
+		Local < v8::Value > cbinfo[16];
+		cbinfo[0] = Nan::New<String>("connected").ToLocalChecked();
+		emit_cb->Call(1, cbinfo);
 
-		NanReturnUndefined();
+		
 	}
 
 	// ===================================================================
 	NAN_METHOD(OZW::Disconnect)
 	// ===================================================================
 	{
-		NanScope();
+		Nan::HandleScope();
 
-		std::string path = (*String::Utf8Value(args[0]->ToString()));
+		std::string path = (*String::Utf8Value(info[0]->ToString()));
 
 		OpenZWave::Manager::Get()->RemoveDriver(path);
 		OpenZWave::Manager::Get()->RemoveWatcher(ozw_watcher_callback, NULL);
@@ -65,7 +67,7 @@ namespace OZW {
 
 		delete emit_cb;
 		
-		NanReturnUndefined();
+		
 	}
 
 	/*
@@ -76,40 +78,40 @@ namespace OZW {
 	NAN_METHOD(OZW::HardReset)
 	// ===================================================================
 	{
-		NanScope();
+		Nan::HandleScope();
 
 		OpenZWave::Manager::Get()->ResetController(homeid);
 
-		NanReturnUndefined();
+		
 	}
 	
 	// ===================================================================
 	NAN_METHOD(OZW::SoftReset)
 	// ===================================================================
 	{
-		NanScope();
+		Nan::HandleScope();
 
 		OpenZWave::Manager::Get()->SoftReset(homeid);
 
-		NanReturnUndefined();
+		
 	}
 	
 	// ===================================================================
 	NAN_METHOD(OZW::BeginControllerCommand)
 	// ===================================================================
 	{
-		NanScope();
+		Nan::HandleScope();
 		
-		std::string ctrcmd = (*String::Utf8Value(args[0]->ToString()));
+		std::string ctrcmd = (*String::Utf8Value(info[0]->ToString()));
 		uint8_t    nodeid1 = 0xff;
 		uint8_t    nodeid2 = 0;
 		bool highpower = false;
-		if (args.Length() > 1) {
-			highpower = args[1]->ToBoolean()->Value();
-			if (args.Length() > 2) {
-				nodeid1 = args[2]->ToNumber()->Value();
-				if (args.Length() > 3) {
-					nodeid2 = args[3]->ToNumber()->Value();
+		if (info.Length() > 1) {
+			highpower = info[1]->ToBoolean()->Value();
+			if (info.Length() > 2) {
+				nodeid1 = info[2]->ToNumber()->Value();
+				if (info.Length() > 3) {
+					nodeid2 = info[3]->ToNumber()->Value();
 				}
 			}
 		}
@@ -137,34 +139,38 @@ namespace OZW {
 				nodeid2	// uint8 	_arg = 0 
 			);
 		}
-		NanReturnUndefined();
+		
 	}
 	
 	// ===================================================================
 	NAN_METHOD(OZW::CancelControllerCommand)
 	// ===================================================================
 	{
-		NanScope();
+		Nan::HandleScope();
 		OpenZWave::Manager::Get()->CancelControllerCommand (homeid);
-		NanReturnUndefined();
+		
 	}
 	
 	// ===================================================================
 	NAN_METHOD(OZW::GetControllerNodeId)
 	// ===================================================================
 	{
-		NanScope();
+		Nan::HandleScope();
 	 	uint8 ctrlid = OpenZWave::Manager::Get()->GetControllerNodeId (homeid);
-	 	NanReturnValue(NanNew<Integer>(ctrlid));
+	 	info.GetReturnValue().Set(
+			Nan::New<Integer>(ctrlid)
+		);
 	}
 
 	// ===================================================================
 	NAN_METHOD(OZW::GetSUCNodeId)
 	// ===================================================================
 	{
-		NanScope();
+		Nan::HandleScope();
 	 	uint8 sucid = OpenZWave::Manager::Get()->GetSUCNodeId (homeid);
-	 	NanReturnValue(NanNew<Integer>(sucid));
+	 	info.GetReturnValue().Set(
+			Nan::New<Integer>(sucid)
+		);
 	}
 	 
 	/* Query if the controller is a primary controller. The primary controller 
@@ -176,9 +182,9 @@ namespace OZW {
 	NAN_METHOD(OZW::IsPrimaryController)
 	// ===================================================================
 	{
-		NanScope();
+		Nan::HandleScope();
 	 	bool isprimary = OpenZWave::Manager::Get()->IsPrimaryController (homeid);
-	 	NanReturnValue(NanNew<Boolean>(isprimary));
+	 	info.GetReturnValue().Set(Nan::New<Boolean>(isprimary));
 	}
  
 	/* Query if the controller is a static update controller. A Static 
@@ -190,9 +196,9 @@ namespace OZW {
 	NAN_METHOD(OZW::IsStaticUpdateController)
 	// ===================================================================
 	{
-		NanScope();
+		Nan::HandleScope();
 	 	bool issuc = OpenZWave::Manager::Get()->IsStaticUpdateController (homeid);
-	 	NanReturnValue(NanNew<Boolean>(issuc));
+	 	info.GetReturnValue().Set(Nan::New<Boolean>(issuc));
 	}
  
 	/* Query if the controller is using the bridge controller library. 
@@ -203,9 +209,9 @@ namespace OZW {
 	NAN_METHOD(OZW::IsBridgeController)
 	// ===================================================================
 	{
-		NanScope();
+		Nan::HandleScope();
 	 	bool isbridge = OpenZWave::Manager::Get()->IsBridgeController (homeid);
-	 	NanReturnValue(NanNew<Boolean>(isbridge));
+	 	info.GetReturnValue().Set(Nan::New<Boolean>(isbridge));
 	}
 
  	/* Get the version of the Z-Wave API library used by a controller. 
@@ -214,9 +220,13 @@ namespace OZW {
 	NAN_METHOD(OZW::GetLibraryVersion)
 	// ===================================================================
 	{
-		NanScope();
+		Nan::HandleScope();
 	 	std::string libver = OpenZWave::Manager::Get()->GetLibraryVersion (homeid);
-	 	NanReturnValue(NanNew<String>(libver.c_str()));
+	 	info.GetReturnValue().Set(
+			Nan::New<String>(
+				libver.c_str()
+			).ToLocalChecked()
+		);
 	}
 
  	/* Get a string containing the Z-Wave API library type used by a 
@@ -238,18 +248,22 @@ namespace OZW {
 	NAN_METHOD(OZW::GetLibraryTypeName)
 	// ===================================================================
 	{
-		NanScope();
+		Nan::HandleScope();
 	 	std::string libtype = OpenZWave::Manager::Get()->GetLibraryTypeName (homeid);
-	 	NanReturnValue(NanNew<String>(libtype.c_str()));
+	 	info.GetReturnValue().Set(
+			Nan::New<String>(
+				libtype.c_str()
+			).ToLocalChecked()
+		);
 	}
 
 	// ===================================================================
 	NAN_METHOD(OZW::GetSendQueueCount)
 	// ===================================================================
 	{
-		NanScope();
+		Nan::HandleScope();
 	 	uint32 cnt = OpenZWave::Manager::Get()->GetSendQueueCount (homeid);
-	 	NanReturnValue(NanNew<Integer>(cnt));
+	 	info.GetReturnValue().Set(Nan::New<Integer>(cnt));
 	}
 
 }

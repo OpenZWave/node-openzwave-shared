@@ -1,10 +1,10 @@
 {
   "name": "openzwave-shared",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Node.JS bindings for OpenZWave including the long-missing management functions",
   "main": "./lib/openzwave-shared.js",
   "dependencies" : {
-     "nan" : "~1.9.0"
+     "nan" : "~2.0.9"
   },
   "scripts": {
     "test": "node test.js",

@@ -27,9 +27,9 @@ namespace OZW {
 	NAN_METHOD(OZW::CreateScene)
 	// ===================================================================
 	{
-		NanScope();
+		Nan::HandleScope();
 
-		std::string label = (*String::Utf8Value(args[0]->ToString()));
+		std::string label = (*String::Utf8Value(info[0]->ToString()));
 
 		SceneInfo *scene;
 
@@ -44,16 +44,16 @@ namespace OZW {
 			zscenes.push_back(scene);
 		}
 
-		NanReturnValue(NanNew< Integer >(sceneid));
+		info.GetReturnValue().Set(Nan::New< Integer >(sceneid));
 	}
 
 	// ===================================================================
 	NAN_METHOD(OZW::RemoveScene)
 	// ===================================================================
 	{
-		NanScope();
+		Nan::HandleScope();
 
-		uint8_t sceneid = args[0]->ToNumber()->Value();
+		uint8_t sceneid = info[0]->ToNumber()->Value();
 
 		SceneInfo *scene;
 
@@ -63,14 +63,14 @@ namespace OZW {
 			zscenes.remove(scene);
 		}
 
-		NanReturnUndefined();
+		
 	}
 
 	// ===================================================================
 	NAN_METHOD(OZW::GetScenes)
 	// ===================================================================
 	{
-		NanScope();
+		Nan::HandleScope();
 
 		uint8_t numscenes = OpenZWave::Manager::Get()->GetNumScenes();
 		SceneInfo *scene;
@@ -95,34 +95,40 @@ namespace OZW {
 			}
 		}
 
-		Local<Array> scenes = NanNew<Array>(zscenes.size());
+		Local<Array> scenes = Nan::New<Array>(zscenes.size());
 		std::list<SceneInfo *>::iterator it;
 		unsigned j = 0;
 
 		for (it = zscenes.begin(); it != zscenes.end(); ++it) {
 			scene = *it;
 
-			Local <Object> info = NanNew<Object>();
-			info->Set(NanNew<String>("sceneid"), NanNew<Integer>(scene->sceneid));
-			info->Set(NanNew<String>("label"),   NanNew<String>(scene->label.c_str()));
+			Local <Object> info = Nan::New<Object>();
+			info->Set(
+				Nan::New<String>("sceneid").ToLocalChecked(), 
+				Nan::New<Integer>(scene->sceneid)
+			);
+			info->Set(
+				Nan::New<String>("label").ToLocalChecked(),   
+				Nan::New<String>(scene->label.c_str()).ToLocalChecked()
+			);
 
-			scenes->Set(NanNew<Integer>(j++), info);
+			scenes->Set(Nan::New<Integer>(j++), info);
 		}
 		
-		NanReturnValue(scenes);
+		info.GetReturnValue().Set(scenes);
 	}
 
 	// ===================================================================
 	NAN_METHOD(OZW::AddSceneValue)
 	// ===================================================================
 	{
-		NanScope();
+		Nan::HandleScope();
 
-		uint8_t sceneid = args[0]->ToNumber()->Value();
-		uint8_t nodeid = args[1]->ToNumber()->Value();
-		uint8_t comclass = args[2]->ToNumber()->Value();
-		uint8_t instance = args[3]->ToNumber()->Value();
-		uint8_t index = args[4]->ToNumber()->Value();
+		uint8_t sceneid = info[0]->ToNumber()->Value();
+		uint8_t nodeid = info[1]->ToNumber()->Value();
+		uint8_t comclass = info[2]->ToNumber()->Value();
+		uint8_t instance = info[3]->ToNumber()->Value();
+		uint8_t index = info[4]->ToNumber()->Value();
 
 		NodeInfo *node;
 		std::list<OpenZWave::ValueID>::iterator vit;
@@ -134,43 +140,43 @@ namespace OZW {
 					switch ((*vit).GetType()) {
 						case OpenZWave::ValueID::ValueType_Bool: {
 							//bool val; OpenZWave::Manager::Get()->GetValueAsBool(*vit, &val);
-							bool val = args[5]->ToBoolean()->Value();
+							bool val = info[5]->ToBoolean()->Value();
 							OpenZWave::Manager::Get()->AddSceneValue(sceneid, *vit, val);
 							break;
 						}
 						case OpenZWave::ValueID::ValueType_Byte: {
 							//uint8_t val; OpenZWave::Manager::Get()->GetValueAsByte(*vit, &val);
-							uint8_t val = args[5]->ToInteger()->Value();
+							uint8_t val = info[5]->ToInteger()->Value();
 							OpenZWave::Manager::Get()->AddSceneValue(sceneid, *vit, val);
 							break;
 						}
 						case OpenZWave::ValueID::ValueType_Decimal: {
 							//float val; OpenZWave::Manager::Get()->GetValueAsFloat(*vit, &val);
-							float val = args[5]->ToNumber()->NumberValue();
+							float val = info[5]->ToNumber()->NumberValue();
 							OpenZWave::Manager::Get()->AddSceneValue(sceneid, *vit, val);
 							break;
 						}
 						case OpenZWave::ValueID::ValueType_Int: {
 							//int32_t val; OpenZWave::Manager::Get()->GetValueAsInt(*vit, &val);
-							int32_t val = args[5]->ToInteger()->Value();
+							int32_t val = info[5]->ToInteger()->Value();
 							OpenZWave::Manager::Get()->AddSceneValue(sceneid, *vit, val);
 							break;
 						}
 						case OpenZWave::ValueID::ValueType_List: {
 							//std::string val; OpenZWave::Manager::Get()->GetValueListSelection(*vit, &val);
-							std::string val = (*String::Utf8Value(args[5]->ToString()));
+							std::string val = (*String::Utf8Value(info[5]->ToString()));
 							OpenZWave::Manager::Get()->AddSceneValue(sceneid, *vit, val);
 							break;
 						}
 						case OpenZWave::ValueID::ValueType_Short: {
 							//int16_t val; OpenZWave::Manager::Get()->GetValueAsShort(*vit, &val);
-							int16_t val = args[5]->ToInteger()->Value();
+							int16_t val = info[5]->ToInteger()->Value();
 							OpenZWave::Manager::Get()->AddSceneValue(sceneid, *vit, val);
 							break;
 						}
 						case OpenZWave::ValueID::ValueType_String: {
 							//std::string val; OpenZWave::Manager::Get()->GetValueAsString(*vit, &val);
-							std::string val = (*String::Utf8Value(args[5]->ToString()));
+							std::string val = (*String::Utf8Value(info[5]->ToString()));
 							OpenZWave::Manager::Get()->AddSceneValue(sceneid, *vit, val);
 							break;
 						}
@@ -188,20 +194,20 @@ namespace OZW {
 			}
 		}
 
-		NanReturnUndefined();
+		
 	}
 
 	// ===================================================================
 	NAN_METHOD(OZW::RemoveSceneValue)
 	// ===================================================================
 	{
-		NanScope();
+		Nan::HandleScope();
 
-		uint8_t sceneid = args[0]->ToNumber()->Value();
-		uint8_t nodeid = args[1]->ToNumber()->Value();
-		uint8_t comclass = args[2]->ToNumber()->Value();
-		uint8_t instance = args[3]->ToNumber()->Value();
-		uint8_t index = args[4]->ToNumber()->Value();
+		uint8_t sceneid = info[0]->ToNumber()->Value();
+		uint8_t nodeid = info[1]->ToNumber()->Value();
+		uint8_t comclass = info[2]->ToNumber()->Value();
+		uint8_t instance = info[3]->ToNumber()->Value();
+		uint8_t index = info[4]->ToNumber()->Value();
 
 		SceneInfo *scene;
 
@@ -217,16 +223,16 @@ namespace OZW {
 			}
 		}
 
-		NanReturnUndefined();
+		
 	}
 
 	// ===================================================================
 	NAN_METHOD(OZW::SceneGetValues)
 	// ===================================================================
 	{
-		NanScope();
+		Nan::HandleScope();
 
-		uint8_t sceneid = args[0]->ToNumber()->Value();
+		uint8_t sceneid = info[0]->ToNumber()->Value();
 
 		std::vector<OpenZWave::ValueID> values;
 		std::vector<OpenZWave::ValueID>::iterator vit;
@@ -238,7 +244,7 @@ namespace OZW {
 		if ((scene = get_scene_info(sceneid))) {
 			scene->values.clear();
 
-			Local<Array> v8values = NanNew<Array>(scene->values.size());
+			Local<Array> v8values = Nan::New<Array>(scene->values.size());
 
 			unsigned j = 0;
 
@@ -246,21 +252,21 @@ namespace OZW {
 				mutex::scoped_lock sl(zscenes_mutex);
 				scene->values.push_back(*vit);
 
-				v8values->Set(NanNew<Integer>(j++), zwaveSceneValue2v8Value(sceneid, *vit));
+				v8values->Set(Nan::New<Integer>(j++), zwaveSceneValue2v8Value(sceneid, *vit));
 			}
-			NanReturnValue(v8values);
+			info.GetReturnValue().Set(v8values);
 		}
 		
-		NanReturnUndefined();
+		
 	}
 
 	// ===================================================================
 	NAN_METHOD(OZW::ActivateScene)
 	// ===================================================================
 	{
-		NanScope();
+		Nan::HandleScope();
 
-		uint8_t sceneid = args[0]->ToNumber()->Value();
+		uint8_t sceneid = info[0]->ToNumber()->Value();
 
 		SceneInfo *scene;
 
@@ -268,6 +274,6 @@ namespace OZW {
 			OpenZWave::Manager::Get()->ActivateScene(sceneid);
 		}
 
-		NanReturnUndefined();
+		
 	}
 }

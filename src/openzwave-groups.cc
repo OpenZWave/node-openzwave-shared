@@ -31,12 +31,12 @@ namespace OZW {
 	NAN_METHOD(OZW::GetNumGroups)
 	// ===================================================================
 	{
-		NanScope();
+		Nan::HandleScope();
 
-		uint8_t nodeid = args[0]->ToNumber()->Value();
+		uint8_t nodeid = info[0]->ToNumber()->Value();
 		uint8 numGroups = OpenZWave::Manager::Get()->GetNumGroups(homeid, nodeid);
 		
-		NanReturnValue(NanNew<Integer>(numGroups));
+		info.GetReturnValue().Set(Nan::New<Integer>(numGroups));
 	}
 	
 	/*
@@ -46,27 +46,27 @@ namespace OZW {
 	NAN_METHOD(OZW::GetAssociations)
 	// ===================================================================
 	{
-		NanScope();
+		Nan::HandleScope();
 		uint8* associations;
 
-		uint8_t nodeid = args[0]->ToNumber()->Value();
-		uint8_t groupidx = args[1]->ToNumber()->Value();
+		uint8_t nodeid = info[0]->ToNumber()->Value();
+		uint8_t groupidx = info[1]->ToNumber()->Value();
 		
 		uint32 numNodes = OpenZWave::Manager::Get()->GetAssociations(
 			homeid, nodeid,	groupidx, &associations
 		);
 		
-		Local<Array> o_assocs = NanNew<Array>(numNodes);
+		Local<Array> o_assocs = Nan::New<Array>(numNodes);
 
 		for (uint8 nr = 0; nr < numNodes; nr++) {
-			o_assocs->Set(NanNew<Integer>(nr), NanNew<Integer>(associations[nr]));
+			o_assocs->Set(Nan::New<Integer>(nr), Nan::New<Integer>(associations[nr]));
 		}
 
 		// The caller is responsible for freeing the array memory 
 		// with a call to delete []. 
 		delete associations;
 		
-		NanReturnValue(o_assocs);
+		info.GetReturnValue().Set(o_assocs);
 	}
 
 	/*
@@ -76,16 +76,16 @@ namespace OZW {
 	NAN_METHOD(OZW::GetMaxAssociations)
 	// ===================================================================
 	{
-		NanScope();
+		Nan::HandleScope();
 		
-		uint8_t nodeid = args[0]->ToNumber()->Value();
-		uint8_t groupidx = args[1]->ToNumber()->Value();
+		uint8_t nodeid = info[0]->ToNumber()->Value();
+		uint8_t groupidx = info[1]->ToNumber()->Value();
 		
 		uint8 numMaxAssoc = OpenZWave::Manager::Get()->GetMaxAssociations(
 			homeid, nodeid,	groupidx
 		);
 		
-		NanReturnValue(NanNew<Integer>(numMaxAssoc));
+		info.GetReturnValue().Set(Nan::New<Integer>(numMaxAssoc));
 	}
 
 	/*
@@ -95,16 +95,19 @@ namespace OZW {
 	NAN_METHOD(OZW::GetGroupLabel)
 	// ===================================================================
 	{
-		NanScope();
+		Nan::HandleScope();
 		
-		uint8_t nodeid = args[0]->ToNumber()->Value();
-		uint8_t groupidx = args[1]->ToNumber()->Value();
+		uint8_t nodeid = info[0]->ToNumber()->Value();
+		uint8_t groupidx = info[1]->ToNumber()->Value();
 
 		std::string groupLabel = OpenZWave::Manager::Get()->GetGroupLabel(
 			homeid, nodeid, groupidx
 		);
 
-		NanReturnValue(NanNew<String>(groupLabel.c_str()));
+		info.GetReturnValue().Set(
+			Nan::New<String>(groupLabel.c_str())
+							.ToLocalChecked()
+		);
 	}
 
 	/*
@@ -114,17 +117,17 @@ namespace OZW {
 	NAN_METHOD(OZW::AddAssociation)
 	// ===================================================================
 	{
-		NanScope();
+		Nan::HandleScope();
 		
-		uint8_t nodeid = args[0]->ToNumber()->Value();
-		uint8_t groupidx = args[1]->ToNumber()->Value();
-		uint8_t tgtnodeid = args[2]->ToNumber()->Value();
+		uint8_t nodeid = info[0]->ToNumber()->Value();
+		uint8_t groupidx = info[1]->ToNumber()->Value();
+		uint8_t tgtnodeid = info[2]->ToNumber()->Value();
 	
 		OpenZWave::Manager::Get()->AddAssociation(
 			homeid,nodeid,groupidx,tgtnodeid
 		);
 
-		NanReturnUndefined();
+		
 	}
 
 	/*
@@ -134,15 +137,15 @@ namespace OZW {
 	NAN_METHOD(OZW::RemoveAssociation)
 	// ===================================================================
 	{
-		NanScope();
+		Nan::HandleScope();
 		
-		uint8_t nodeid = args[0]->ToNumber()->Value();
-		uint8_t groupidx = args[1]->ToNumber()->Value();
-		uint8_t tgtnodeid = args[2]->ToNumber()->Value();
+		uint8_t nodeid = info[0]->ToNumber()->Value();
+		uint8_t groupidx = info[1]->ToNumber()->Value();
+		uint8_t tgtnodeid = info[2]->ToNumber()->Value();
 	
 		OpenZWave::Manager::Get()->RemoveAssociation(homeid,nodeid,groupidx,tgtnodeid);
 		
-		NanReturnUndefined();
+		
 	}
 
 }

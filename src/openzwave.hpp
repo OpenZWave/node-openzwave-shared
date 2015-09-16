@@ -230,7 +230,7 @@ namespace OZW {
 	void async_cb_handler(uv_async_t *handle, int status);
 	
 	//extern Handle<Object>	context_obj;
-	extern NanCallback *emit_cb;
+	extern Nan::Callback *emit_cb;
 	//
 	
 	// map of controller command names to enum values

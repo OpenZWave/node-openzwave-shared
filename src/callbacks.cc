@@ -34,7 +34,7 @@ namespace OZW {
 	{
 		NotifInfo *notif = new NotifInfo();
 		
-		notif->type = cb->GetType();
+		notif->type   = cb->GetType();
 		notif->homeid = cb->GetHomeId();
 		notif->nodeid = cb->GetNodeId();
 		notif->values.push_front(cb->GetValueID());
@@ -98,22 +98,22 @@ namespace OZW {
 	void handleNotification(NotifInfo *notif) 
 	// ===================================================================
 	{
-		NanScope();
+		Nan::HandleScope();
 		
 		NodeInfo *node;
 				
-		Local < v8::Value > args[16];
+		Local < v8::Value > emitinfo[16];
 		
 		switch (notif->type) {
 			case OpenZWave::Notification::Type_DriverReady:
 				homeid = notif->homeid;
-				args[0] = NanNew<String>("driver ready");
-				args[1] = NanNew<Integer>(homeid);	
-				emit_cb->Call(2, args);
+				emitinfo[0] = Nan::New<String>("driver ready").ToLocalChecked();
+				emitinfo[1] = Nan::New<Integer>(homeid);	
+				emit_cb->Call(2, emitinfo);
 				break;
 			case OpenZWave::Notification::Type_DriverFailed:
-				args[0] = NanNew<String>("driver failed");
-				emit_cb->Call(1, args);
+				emitinfo[0] = Nan::New<String>("driver failed").ToLocalChecked();
+				emit_cb->Call(1, emitinfo);
 				break;
 				/*
 				* NodeNew is triggered when a node is discovered which is not
@@ -133,9 +133,9 @@ namespace OZW {
 					mutex::scoped_lock sl(znodes_mutex);
 					znodes.push_back(node);
 				}
-				args[0] = NanNew<String>("node added");
-				args[1] = NanNew<Integer>(notif->nodeid);
-				emit_cb->Call(2, args);
+				emitinfo[0] = Nan::New<String>("node added").ToLocalChecked();
+				emitinfo[1] = Nan::New<Integer>(notif->nodeid);
+				emit_cb->Call(2, emitinfo);
 				break;
 				/*
 				* Ignore intermediate notifications about a node status, we
@@ -144,35 +144,67 @@ namespace OZW {
 			case OpenZWave::Notification::Type_NodeProtocolInfo:
 				break;
 			case OpenZWave::Notification::Type_NodeNaming: {
-				Local < Object > info = NanNew<Object>();
-				info->Set(NanNew<String>("manufacturer"), NanNew<String>(OpenZWave::Manager::Get()->GetNodeManufacturerName(notif->homeid, notif->nodeid).c_str()));
-				info->Set(NanNew<String>("manufacturerid"), NanNew<String>(OpenZWave::Manager::Get()->GetNodeManufacturerId(notif->homeid, notif->nodeid).c_str()));
-				info->Set(NanNew<String>("product"), NanNew<String>(OpenZWave::Manager::Get()->GetNodeProductName(notif->homeid, notif->nodeid).c_str()));
-				info->Set(NanNew<String>("producttype"), NanNew<String>(OpenZWave::Manager::Get()->GetNodeProductType(notif->homeid, notif->nodeid).c_str()));
-				info->Set(NanNew<String>("productid"), NanNew<String>(OpenZWave::Manager::Get()->GetNodeProductId(notif->homeid, notif->nodeid).c_str()));
-				info->Set(NanNew<String>("type"), NanNew<String>(OpenZWave::Manager::Get()->GetNodeType(notif->homeid, notif->nodeid).c_str()));
-				info->Set(NanNew<String>("name"), NanNew<String>(OpenZWave::Manager::Get()->GetNodeName(notif->homeid, notif->nodeid).c_str()));
-				info->Set(NanNew<String>("loc"), NanNew<String>(OpenZWave::Manager::Get()->GetNodeLocation(notif->homeid, notif->nodeid).c_str()));
-				args[0] = NanNew<String>("node naming");
-				args[1] = NanNew<Integer>(notif->nodeid);
-				args[2] = info;
-				emit_cb->Call(3, args);
+				Local < Object > cbinfo = Nan::New<Object>();
+				Nan::Set(cbinfo, 
+					Nan::New<String>("manufacturer").ToLocalChecked(), 
+					Nan::New<String>(
+						OpenZWave::Manager::Get()->GetNodeManufacturerName(
+							notif->homeid, notif->nodeid).c_str()).ToLocalChecked());
+				Nan::Set(cbinfo, 
+					Nan::New<String>("manufacturerid").ToLocalChecked(), 
+					Nan::New<String>(
+						OpenZWave::Manager::Get()->GetNodeManufacturerId(
+							notif->homeid, notif->nodeid).c_str()).ToLocalChecked());
+				Nan::Set(cbinfo, 
+					Nan::New<String>("product").ToLocalChecked(), 
+					Nan::New<String>(
+						OpenZWave::Manager::Get()->GetNodeProductName(
+							notif->homeid, notif->nodeid).c_str()).ToLocalChecked());
+				Nan::Set(cbinfo, 
+					Nan::New<String>("producttype").ToLocalChecked(), 
+					Nan::New<String>(
+						OpenZWave::Manager::Get()->GetNodeProductType(
+							notif->homeid, notif->nodeid).c_str()).ToLocalChecked());
+				Nan::Set(cbinfo, 
+					Nan::New<String>("productid").ToLocalChecked(), 
+					Nan::New<String>(
+						OpenZWave::Manager::Get()->GetNodeProductId(
+							notif->homeid, notif->nodeid).c_str()).ToLocalChecked());
+				Nan::Set(cbinfo, 
+					Nan::New<String>("type").ToLocalChecked(), 
+					Nan::New<String>(
+						OpenZWave::Manager::Get()->GetNodeType(
+							notif->homeid, notif->nodeid).c_str()).ToLocalChecked());
+				Nan::Set(cbinfo, 
+					Nan::New<String>("name").ToLocalChecked(), 
+					Nan::New<String>(
+						OpenZWave::Manager::Get()->GetNodeName(
+							notif->homeid, notif->nodeid).c_str()).ToLocalChecked());
+				Nan::Set(cbinfo, 
+					Nan::New<String>("loc").ToLocalChecked(), 
+					Nan::New<String>(
+						OpenZWave::Manager::Get()->GetNodeLocation(
+							notif->homeid, notif->nodeid).c_str()).ToLocalChecked());
+				emitinfo[0] = Nan::New<String>("node naming").ToLocalChecked();
+				emitinfo[1] = Nan::New<Integer>(notif->nodeid);
+				emitinfo[2] = cbinfo;
+				emit_cb->Call(3, emitinfo);
 				break;
 			}
 			case OpenZWave::Notification::Type_PollingEnabled:
 				if ((node = get_node_info(notif->nodeid))) {
 					node->polled = true;
-					args[0] = NanNew<String>("polling enabled");
-					args[1] = NanNew<Integer>(notif->nodeid);
-					emit_cb->Call(2, args);
+					emitinfo[0] = Nan::New<String>("polling enabled").ToLocalChecked();
+					emitinfo[1] = Nan::New<Integer>(notif->nodeid);
+					emit_cb->Call(2, emitinfo);
 				}
 				break;
 			case OpenZWave::Notification::Type_PollingDisabled:
 				if ((node = get_node_info(notif->nodeid))) {
 					node->polled = false;
-					args[0] = NanNew<String>("polling disabled");
-					args[1] = NanNew<Integer>(notif->nodeid);
-					emit_cb->Call(2, args);
+					emitinfo[0] = Nan::New<String>("polling disabled").ToLocalChecked();
+					emitinfo[1] = Nan::New<Integer>(notif->nodeid);
+					emit_cb->Call(2, emitinfo);
 				}
 				break;
 			/*
@@ -186,34 +218,34 @@ namespace OZW {
 					mutex::scoped_lock sl(znodes_mutex);
 					node->values.push_back(value);
 				}
-
-				args[0] = NanNew<String>("value added");
-				args[1] = NanNew<Integer>(notif->nodeid);
-				args[2] = NanNew<Integer>(value.GetCommandClassId());
-				args[3] = valobj;
-				emit_cb->Call(4, args);
+				
+				emitinfo[0] = Nan::New<String>("value added").ToLocalChecked();
+				emitinfo[1] = Nan::New<Integer>(notif->nodeid);
+				emitinfo[2] = Nan::New<Integer>(value.GetCommandClassId());
+				emitinfo[3] = valobj;
+				emit_cb->Call(4, emitinfo);
 				break;
 			}
 			case OpenZWave::Notification::Type_ValueChanged: {
 				OpenZWave::ValueID value = notif->values.front();
 				Local<Object> valobj = zwaveValue2v8Value(value);
 
-				args[0] = NanNew<String>("value changed");
-				args[1] = NanNew<Integer>(notif->nodeid);
-				args[2] = NanNew<Integer>(value.GetCommandClassId());
-				args[3] = valobj;
-				emit_cb->Call(4, args);
+				emitinfo[0] = Nan::New<String>("value changed").ToLocalChecked();
+				emitinfo[1] = Nan::New<Integer>(notif->nodeid);
+				emitinfo[2] = Nan::New<Integer>(value.GetCommandClassId());
+				emitinfo[3] = valobj;
+				emit_cb->Call(4, emitinfo);
 				break;
 			}
 			case OpenZWave::Notification::Type_ValueRefreshed: {
 				OpenZWave::ValueID value = notif->values.front();
 				Local<Object> valobj = zwaveValue2v8Value(value);
 
-				args[0] = NanNew<String>("value refreshed");
-				args[1] = NanNew<Integer>(notif->nodeid);
-				args[2] = NanNew<Integer>(value.GetCommandClassId());
-				args[3] = valobj;
-				emit_cb->Call(4, args);
+				emitinfo[0] = Nan::New<String>("value refreshed").ToLocalChecked();
+				emitinfo[1] = Nan::New<Integer>(notif->nodeid);
+				emitinfo[2] = Nan::New<Integer>(value.GetCommandClassId());
+				emitinfo[3] = valobj;
+				emit_cb->Call(4, emitinfo);
 				break;
 			}
 			case OpenZWave::Notification::Type_ValueRemoved: {
@@ -227,50 +259,114 @@ namespace OZW {
 						}
 					}
 				}
-				args[0] = NanNew<String>("value removed");
-				args[1] = NanNew<Integer>(notif->nodeid);
-				args[2] = NanNew<Integer>(value.GetCommandClassId());
-				args[3] = NanNew<Integer>(value.GetInstance());
-				args[4] = NanNew<Integer>(value.GetIndex());
-				emit_cb->Call(5, args);
+				emitinfo[0] = Nan::New<String>("value removed").ToLocalChecked();
+				emitinfo[1] = Nan::New<Integer>(notif->nodeid);
+				emitinfo[2] = Nan::New<Integer>(value.GetCommandClassId());
+				emitinfo[3] = Nan::New<Integer>(value.GetInstance());
+				emitinfo[4] = Nan::New<Integer>(value.GetIndex());
+				emit_cb->Call(5, emitinfo);
 				break;
 			}
 			/*
 			 *Now node can accept commands.
 			 */
 			case OpenZWave::Notification::Type_EssentialNodeQueriesComplete: {
-				Local < Object > info = NanNew<Object>();
-				info->Set(NanNew<String>("manufacturer"), NanNew<String>(OpenZWave::Manager::Get()->GetNodeManufacturerName(notif->homeid, notif->nodeid).c_str()));
-				info->Set(NanNew<String>("manufacturerid"), NanNew<String>(OpenZWave::Manager::Get()->GetNodeManufacturerId(notif->homeid, notif->nodeid).c_str()));
-				info->Set(NanNew<String>("product"), NanNew<String>(OpenZWave::Manager::Get()->GetNodeProductName(notif->homeid, notif->nodeid).c_str()));
-				info->Set(NanNew<String>("producttype"), NanNew<String>(OpenZWave::Manager::Get()->GetNodeProductType(notif->homeid, notif->nodeid).c_str()));
-				info->Set(NanNew<String>("productid"), NanNew<String>(OpenZWave::Manager::Get()->GetNodeProductId(notif->homeid, notif->nodeid).c_str()));
-				info->Set(NanNew<String>("type"), NanNew<String>(OpenZWave::Manager::Get()->GetNodeType(notif->homeid, notif->nodeid).c_str()));
-				info->Set(NanNew<String>("name"), NanNew<String>(OpenZWave::Manager::Get()->GetNodeName(notif->homeid, notif->nodeid).c_str()));
-				info->Set(NanNew<String>("loc"), NanNew<String>(OpenZWave::Manager::Get()->GetNodeLocation(notif->homeid, notif->nodeid).c_str()));
-				args[0] = NanNew<String>("node available");
-				args[1] = NanNew<Integer>(notif->nodeid);
-				args[2] = info;
-				emit_cb->Call(3, args);
+				Local < Object > cbinfo = Nan::New<Object>();
+				Nan::Set(cbinfo, 
+					Nan::New<String>("manufacturer").ToLocalChecked(), 
+					Nan::New<String>(
+						OpenZWave::Manager::Get()->GetNodeManufacturerName(
+							notif->homeid, notif->nodeid).c_str()).ToLocalChecked());
+				Nan::Set(cbinfo, 
+					Nan::New<String>("manufacturerid").ToLocalChecked(), 
+					Nan::New<String>(
+						OpenZWave::Manager::Get()->GetNodeManufacturerId(
+							notif->homeid, notif->nodeid).c_str()).ToLocalChecked());
+				Nan::Set(cbinfo, 
+					Nan::New<String>("product").ToLocalChecked(), 
+					Nan::New<String>(
+						OpenZWave::Manager::Get()->GetNodeProductName(
+							notif->homeid, notif->nodeid).c_str()).ToLocalChecked());
+				Nan::Set(cbinfo, 
+					Nan::New<String>("producttype").ToLocalChecked(),
+					Nan::New<String>(
+						OpenZWave::Manager::Get()->GetNodeProductType(
+							notif->homeid, notif->nodeid).c_str()).ToLocalChecked());
+				Nan::Set(cbinfo, 
+					Nan::New<String>("productid").ToLocalChecked(), 
+					Nan::New<String>(
+						OpenZWave::Manager::Get()->GetNodeProductId(
+							notif->homeid, notif->nodeid).c_str()).ToLocalChecked());
+				Nan::Set(cbinfo, 
+					Nan::New<String>("type").ToLocalChecked(), 
+					Nan::New<String>(
+						OpenZWave::Manager::Get()->GetNodeType(
+							notif->homeid, notif->nodeid).c_str()).ToLocalChecked());
+				Nan::Set(cbinfo, 
+					Nan::New<String>("name").ToLocalChecked(), 
+					Nan::New<String>(
+						OpenZWave::Manager::Get()->GetNodeName(
+							notif->homeid, notif->nodeid).c_str()).ToLocalChecked());
+				Nan::Set(cbinfo, 
+					Nan::New<String>("loc").ToLocalChecked(), 
+					Nan::New<String>(
+						OpenZWave::Manager::Get()->GetNodeLocation(
+							notif->homeid, notif->nodeid).c_str()).ToLocalChecked());
+				emitinfo[0] = Nan::New<String>("node available").ToLocalChecked();
+				emitinfo[1] = Nan::New<Integer>(notif->nodeid);
+				emitinfo[2] = cbinfo;
+				emit_cb->Call(3, emitinfo);
 				break;
 			}
 			/*
 			* The node is now fully ready for operation.
 			*/
 			case OpenZWave::Notification::Type_NodeQueriesComplete: {
-				Local < Object > info = NanNew<Object>();
-				info->Set(NanNew<String>("manufacturer"), NanNew<String>(OpenZWave::Manager::Get()->GetNodeManufacturerName(notif->homeid, notif->nodeid).c_str()));
-				info->Set(NanNew<String>("manufacturerid"), NanNew<String>(OpenZWave::Manager::Get()->GetNodeManufacturerId(notif->homeid, notif->nodeid).c_str()));
-				info->Set(NanNew<String>("product"), NanNew<String>(OpenZWave::Manager::Get()->GetNodeProductName(notif->homeid, notif->nodeid).c_str()));
-				info->Set(NanNew<String>("producttype"), NanNew<String>(OpenZWave::Manager::Get()->GetNodeProductType(notif->homeid, notif->nodeid).c_str()));
-				info->Set(NanNew<String>("productid"), NanNew<String>(OpenZWave::Manager::Get()->GetNodeProductId(notif->homeid, notif->nodeid).c_str()));
-				info->Set(NanNew<String>("type"), NanNew<String>(OpenZWave::Manager::Get()->GetNodeType(notif->homeid, notif->nodeid).c_str()));
-				info->Set(NanNew<String>("name"), NanNew<String>(OpenZWave::Manager::Get()->GetNodeName(notif->homeid, notif->nodeid).c_str()));
-				info->Set(NanNew<String>("loc"), NanNew<String>(OpenZWave::Manager::Get()->GetNodeLocation(notif->homeid, notif->nodeid).c_str()));
-				args[0] = NanNew<String>("node ready");
-				args[1] = NanNew<Integer>(notif->nodeid);
-				args[2] = info;
-				emit_cb->Call(3, args);
+				Local < Object > cbinfo = Nan::New<Object>();
+				Nan::Set(cbinfo, 
+					Nan::New<String>("manufacturer").ToLocalChecked(), 
+					Nan::New<String>(
+						OpenZWave::Manager::Get()->GetNodeManufacturerName(
+							notif->homeid, notif->nodeid).c_str()).ToLocalChecked());
+				Nan::Set(cbinfo, 
+					Nan::New<String>("manufacturerid").ToLocalChecked(), 
+					Nan::New<String>(
+						OpenZWave::Manager::Get()->GetNodeManufacturerId(
+							notif->homeid, notif->nodeid).c_str()).ToLocalChecked());
+				Nan::Set(cbinfo, 
+					Nan::New<String>("product").ToLocalChecked(), 
+					Nan::New<String>(
+						OpenZWave::Manager::Get()->GetNodeProductName(
+							notif->homeid, notif->nodeid).c_str()).ToLocalChecked());
+				Nan::Set(cbinfo,
+					Nan::New<String>("producttype").ToLocalChecked(), 
+					Nan::New<String>(
+						OpenZWave::Manager::Get()->GetNodeProductType(
+							notif->homeid, notif->nodeid).c_str()).ToLocalChecked());
+				Nan::Set(cbinfo, 
+					Nan::New<String>("productid").ToLocalChecked(), 
+					Nan::New<String>(
+						OpenZWave::Manager::Get()->GetNodeProductId(
+							notif->homeid, notif->nodeid).c_str()).ToLocalChecked());
+				Nan::Set(cbinfo, 
+					Nan::New<String>("type").ToLocalChecked(), 
+					Nan::New<String>(
+						OpenZWave::Manager::Get()->GetNodeType(
+							notif->homeid, notif->nodeid).c_str()).ToLocalChecked());
+				Nan::Set(cbinfo, 
+					Nan::New<String>("name").ToLocalChecked(), 
+					Nan::New<String>(
+						OpenZWave::Manager::Get()->GetNodeName(
+							notif->homeid, notif->nodeid).c_str()).ToLocalChecked());
+				Nan::Set(cbinfo, 
+					Nan::New<String>("loc").ToLocalChecked(), 
+					Nan::New<String>(
+						OpenZWave::Manager::Get()->GetNodeLocation(
+							notif->homeid, notif->nodeid).c_str()).ToLocalChecked());
+				emitinfo[0] = Nan::New<String>("node ready").ToLocalChecked();
+				emitinfo[1] = Nan::New<Integer>(notif->nodeid);
+				emitinfo[2] = cbinfo;
+				emit_cb->Call(3, emitinfo);
 				break;
 			}
 			/*
@@ -280,28 +376,28 @@ namespace OZW {
 			case OpenZWave::Notification::Type_AwakeNodesQueried:
 			case OpenZWave::Notification::Type_AllNodesQueried:
 			case OpenZWave::Notification::Type_AllNodesQueriedSomeDead:
-				args[0] = NanNew<String>("scan complete");
-				emit_cb->Call(1, args);
+				emitinfo[0] = Nan::New<String>("scan complete").ToLocalChecked();
+				emit_cb->Call(1, emitinfo);
 				break;
 			case OpenZWave::Notification::Type_NodeEvent: {
-				args[0] = NanNew<String>("node event");
-				args[1] = NanNew<Integer>(notif->nodeid);
-				args[2] = NanNew<Integer>(notif->event);
-				emit_cb->Call(3, args);
+				emitinfo[0] = Nan::New<String>("node event").ToLocalChecked();
+				emitinfo[1] = Nan::New<Integer>(notif->nodeid);
+				emitinfo[2] = Nan::New<Integer>(notif->event);
+				emit_cb->Call(3, emitinfo);
 				break;
 			}
 			case OpenZWave::Notification::Type_SceneEvent:{
-				args[0] = NanNew<String>("scene event");
-				args[1] = NanNew<Integer>(notif->nodeid);
-				args[2] = NanNew<Integer>(notif->sceneid);
-				emit_cb->Call(3, args);
+				emitinfo[0] = Nan::New<String>("scene event").ToLocalChecked();
+				emitinfo[1] = Nan::New<Integer>(notif->nodeid);
+				emitinfo[2] = Nan::New<Integer>(notif->sceneid);
+				emit_cb->Call(3, emitinfo);
 				break;
 			}
 			case OpenZWave::Notification::Type_Notification:
-				args[0] = NanNew<String>("notification");
-				args[1] = NanNew<Integer>(notif->nodeid);
-				args[2] = NanNew<Integer>(notif->notification);
-				emit_cb->Call(3, args);
+				emitinfo[0] = Nan::New<String>("notification").ToLocalChecked();
+				emitinfo[1] = Nan::New<Integer>(notif->nodeid);
+				emitinfo[2] = Nan::New<Integer>(notif->notification);
+				emit_cb->Call(3, emitinfo);
 				break;
 			case OpenZWave::Notification::Type_Group:
 				/* The associations for the node have changed. The 
@@ -324,13 +420,13 @@ namespace OZW {
 	void handleControllerCommand(NotifInfo *notif) 
 	// ===================================================================
 	{
-		NanScope();
-		Local < v8::Value > args[16];
-		args[0] = NanNew<String>("controller command");
-		args[1] = NanNew<Integer>(notif->state);
-		args[2] = NanNew<Integer>(notif->err);
+		Nan::HandleScope();
+		Local < v8::Value > info[16];
+		info[0] = Nan::New<String>("controller command").ToLocalChecked();
+		info[1] = Nan::New<Integer>(notif->state);
+		info[2] = Nan::New<Integer>(notif->err);
 		//
-		emit_cb->Call(3, args);
+		emit_cb->Call(3, info);
 	}
 	
 	/*

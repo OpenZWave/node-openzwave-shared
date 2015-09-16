@@ -27,21 +27,20 @@ namespace OZW {
 	NAN_METHOD(OZW::SetConfigParam)
 	// ===================================================================
 	{
-		NanScope();
+		Nan::HandleScope();
 
-		uint8_t nodeid = args[0]->ToNumber()->Value();
-		uint8_t param = args[1]->ToNumber()->Value();
-		int32_t value = args[2]->ToNumber()->Value();
+		uint8_t nodeid = info[0]->ToNumber()->Value();
+		uint8_t param = info[1]->ToNumber()->Value();
+		int32_t value = info[2]->ToNumber()->Value();
 
-		if (args.Length() < 4) {
+		if (info.Length() < 4) {
 			OpenZWave::Manager::Get()->SetConfigParam(homeid, nodeid, param, value);
 		}
 		else {
-			uint8_t size = args[3]->ToNumber()->Value();
+			uint8_t size = info[3]->ToNumber()->Value();
 			OpenZWave::Manager::Get()->SetConfigParam(homeid, nodeid, param, value, size);
 		}
 
-		NanReturnUndefined();
 	}
 	
 	/*
@@ -63,14 +62,13 @@ namespace OZW {
 	NAN_METHOD(OZW::RequestConfigParam)
 	// ===================================================================
 	{
-		NanScope();
+		Nan::HandleScope();
 		
-		uint8_t nodeid = args[0]->ToNumber()->Value();
-		uint8_t param = args[1]->ToNumber()->Value();
+		uint8_t nodeid = info[0]->ToNumber()->Value();
+		uint8_t param = info[1]->ToNumber()->Value();
 		
 		OpenZWave::Manager::Get()->RequestConfigParam(homeid, nodeid, param);
 		
-		NanReturnUndefined();
 	}
 	
 		
@@ -82,13 +80,12 @@ namespace OZW {
 	NAN_METHOD(OZW::RequestAllConfigParams)
 	// ===================================================================
 	{
-		NanScope();
+		Nan::HandleScope();
 		
-		uint8_t nodeid = args[0]->ToNumber()->Value();
+		uint8_t nodeid = info[0]->ToNumber()->Value();
 	
 	  	OpenZWave::Manager::Get()->RequestAllConfigParams (homeid, nodeid);
 	  	
-	 	NanReturnUndefined();
 	}
 
 }

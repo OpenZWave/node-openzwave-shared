@@ -28,64 +28,64 @@ namespace OZW {
 	NAN_METHOD(OZW::GetNodeNeighbors)
 	// ===================================================================
 	{
-		NanScope();
+		Nan::HandleScope();
 		uint8* neighbors; 
 
-		uint8_t nodeid = args[0]->ToNumber()->Value();
+		uint8_t nodeid = info[0]->ToNumber()->Value();
 		uint8 numNeighbors = OpenZWave::Manager::Get()->GetNodeNeighbors(homeid, nodeid, &neighbors);
-		Local<Array> o_neighbors = NanNew<Array>(numNeighbors);
+		Local<Array> o_neighbors = Nan::New<Array>(numNeighbors);
 
 		for (uint8 nr = 0; nr < numNeighbors; nr++) {
-			o_neighbors->Set(NanNew<Integer>(nr), NanNew<Integer>(neighbors[nr]));
+			o_neighbors->Set(Nan::New<Integer>(nr), Nan::New<Integer>(neighbors[nr]));
 		}
 
-		NanReturnValue( o_neighbors );		
+		info.GetReturnValue().Set( o_neighbors );		
 	}
 	
 	// =================================================================
 	NAN_METHOD(OZW::SetNodeOn)
 	// =================================================================
 	{
-		NanScope();
+		Nan::HandleScope();
 
-		uint8_t nodeid = args[0]->ToNumber()->Value();
+		uint8_t nodeid = info[0]->ToNumber()->Value();
 		OpenZWave::Manager::Get()->SetNodeOn(homeid, nodeid);
 		
-		NanReturnUndefined();
+		
 	}
 	
 	// =================================================================
 	NAN_METHOD(OZW::SetNodeOff)
 	// =================================================================
 	{
-		NanScope();
+		Nan::HandleScope();
 
-		uint8_t nodeid = args[0]->ToNumber()->Value();
+		uint8_t nodeid = info[0]->ToNumber()->Value();
 		OpenZWave::Manager::Get()->SetNodeOff(homeid, nodeid);
 		
-		NanReturnUndefined();
+		
 	}
 	
 	// ===================================================================
 	NAN_METHOD(OZW::SwitchAllOn)
 	// ===================================================================
 	{
-		NanScope();
+		Nan::HandleScope();
 
 		OpenZWave::Manager::Get()->SwitchAllOn(homeid);
 
-		NanReturnUndefined();
+		
 	}
 
 	// ===================================================================
 	NAN_METHOD(OZW::SwitchAllOff)
 	// ===================================================================
 	{
-		NanScope();
+		Nan::HandleScope();
 
 		OpenZWave::Manager::Get()->SwitchAllOff(homeid);
 
-		NanReturnUndefined();
+		
 	}
 
 	/*
@@ -95,14 +95,14 @@ namespace OZW {
 	NAN_METHOD(OZW::SetLocation)
 	// ===================================================================
 	{
-		NanScope();
+		Nan::HandleScope();
 
-		uint8_t nodeid = args[0]->ToNumber()->Value();
-		std::string location = (*String::Utf8Value(args[1]->ToString()));
+		uint8_t nodeid = info[0]->ToNumber()->Value();
+		std::string location = (*String::Utf8Value(info[1]->ToString()));
 
 		OpenZWave::Manager::Get()->SetNodeLocation(homeid, nodeid, location);
 
-		NanReturnUndefined();
+		
 	}
 
 	/*
@@ -112,14 +112,14 @@ namespace OZW {
 	NAN_METHOD(OZW::SetName)
 	// ===================================================================
 	{
-		NanScope();
+		Nan::HandleScope();
 
-		uint8_t nodeid = args[0]->ToNumber()->Value();
-		std::string name = (*String::Utf8Value(args[1]->ToString()));
+		uint8_t nodeid = info[0]->ToNumber()->Value();
+		std::string name = (*String::Utf8Value(info[1]->ToString()));
 
 		OpenZWave::Manager::Get()->SetNodeName(homeid, nodeid, name);
 
-		NanReturnUndefined();
+		
 	}
 	
 	/*
@@ -136,13 +136,13 @@ namespace OZW {
 	NAN_METHOD(OZW::RefreshNodeInfo)
 	// ===================================================================
 	{
-		NanScope();
+		Nan::HandleScope();
 		
-		uint8_t nodeid = args[0]->ToNumber()->Value();
+		uint8_t nodeid = info[0]->ToNumber()->Value();
 		
 		OpenZWave::Manager::Get()->RefreshNodeInfo(homeid, nodeid);
 		
-		NanReturnUndefined();
+		
 	}
 	
 }

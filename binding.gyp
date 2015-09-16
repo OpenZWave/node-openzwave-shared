@@ -12,7 +12,7 @@
 			"src/openzwave-scenes.cc",
 			"src/openzwave-values.cc",
 			"src/utils.cc",
-			"src/callbacks.cc",
+			"src/callbacks.cc", 
 		],
 		'conditions': [
 			['OS=="linux"', {
