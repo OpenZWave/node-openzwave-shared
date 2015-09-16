@@ -38,8 +38,9 @@ namespace OZW {
 		for (uint8 nr = 0; nr < numNeighbors; nr++) {
 			o_neighbors->Set(Nan::New<Integer>(nr), Nan::New<Integer>(neighbors[nr]));
 		}
+		delete[] neighbors;
 
-		info.GetReturnValue().Set( o_neighbors );		
+		info.GetReturnValue().Set( o_neighbors );	
 	}
 	
 	// =================================================================
@@ -143,6 +144,257 @@ namespace OZW {
 		OpenZWave::Manager::Get()->RefreshNodeInfo(homeid, nodeid);
 		
 		
+	}
+
+	NAN_METHOD(OZW::GetNodeManufacturerName)
+	{
+		Nan::HandleScope();
+
+		uint8_t nodeid = info[0]->ToNumber()->Value();
+
+		std::string result = OpenZWave::Manager::Get()->GetNodeManufacturerName(homeid, nodeid);
+
+		info.GetReturnValue().Set(Nan::New<String>(result.c_str()).ToLocalChecked());
+	}
+	
+	NAN_METHOD(OZW::RequestNodeState)
+	{
+		Nan::HandleScope();
+
+		uint8_t nodeid = info[0]->ToNumber()->Value();
+
+		bool result = OpenZWave::Manager::Get()->RequestNodeState(homeid, nodeid);
+
+		info.GetReturnValue().Set(Nan::New<Boolean>(result));
+	}
+
+	NAN_METHOD(OZW::RequestNodeDynamic)
+	{
+		Nan::HandleScope();
+
+		uint8_t nodeid = info[0]->ToNumber()->Value();
+
+		bool result = OpenZWave::Manager::Get()->RequestNodeDynamic(homeid, nodeid);
+
+		info.GetReturnValue().Set(Nan::New<Boolean>(result));
+	}
+
+	NAN_METHOD(OZW::IsNodeListeningDevice)
+	{
+		Nan::HandleScope();
+
+		uint8_t nodeid = info[0]->ToNumber()->Value();
+
+		bool result = OpenZWave::Manager::Get()->IsNodeListeningDevice(homeid, nodeid);
+
+		info.GetReturnValue().Set(Nan::New<Boolean>(result));
+	}
+
+	NAN_METHOD(OZW::IsNodeFrequentListeningDevice)
+	{
+		Nan::HandleScope();
+
+		uint8_t nodeid = info[0]->ToNumber()->Value();
+
+		bool result = OpenZWave::Manager::Get()->IsNodeFrequentListeningDevice(homeid, nodeid);
+
+		info.GetReturnValue().Set(Nan::New<Boolean>(result));
+	}
+
+	NAN_METHOD(OZW::IsNodeBeamingDevice)
+	{
+		Nan::HandleScope();
+
+		uint8_t nodeid = info[0]->ToNumber()->Value();
+
+		bool result = OpenZWave::Manager::Get()->IsNodeBeamingDevice(homeid, nodeid);
+
+		info.GetReturnValue().Set(Nan::New<Boolean>(result));
+	}
+
+	NAN_METHOD(OZW::IsNodeRoutingDevice)
+	{
+		Nan::HandleScope();
+
+		uint8_t nodeid = info[0]->ToNumber()->Value();
+
+		bool result = OpenZWave::Manager::Get()->IsNodeRoutingDevice(homeid, nodeid);
+
+		info.GetReturnValue().Set(Nan::New<Boolean>(result));
+	}
+
+	NAN_METHOD(OZW::IsNodeSecurityDevice)
+	{
+		Nan::HandleScope();
+
+		uint8_t nodeid = info[0]->ToNumber()->Value();
+
+		bool result = OpenZWave::Manager::Get()->IsNodeSecurityDevice(homeid, nodeid);
+
+		info.GetReturnValue().Set(Nan::New<Boolean>(result));
+	}
+
+	NAN_METHOD(OZW::GetNodeMaxBaudRate)
+	{
+		Nan::HandleScope();
+
+		uint8_t nodeid = info[0]->ToNumber()->Value();
+
+		uint32_t result = OpenZWave::Manager::Get()->GetNodeMaxBaudRate(homeid, nodeid);
+
+		info.GetReturnValue().Set(Nan::New<Uint32>(result));
+	}
+
+	NAN_METHOD(OZW::GetNodeVersion)
+	{
+		Nan::HandleScope();
+
+		uint8_t nodeid = info[0]->ToNumber()->Value();
+
+		uint8_t result = OpenZWave::Manager::Get()->GetNodeVersion(homeid, nodeid);
+
+		info.GetReturnValue().Set(Nan::New<Integer>(result));
+	} 
+
+	NAN_METHOD(OZW::GetNodeSecurity)
+	{
+		Nan::HandleScope();
+
+		uint8_t nodeid = info[0]->ToNumber()->Value();
+
+		uint8_t result = OpenZWave::Manager::Get()->GetNodeSecurity(homeid, nodeid);
+
+		info.GetReturnValue().Set(Nan::New<Integer>(result));
+	} 
+
+	NAN_METHOD(OZW::GetNodeBasic)
+	{
+		Nan::HandleScope();
+
+		uint8_t nodeid = info[0]->ToNumber()->Value();
+
+		uint8_t result = OpenZWave::Manager::Get()->GetNodeBasic(homeid, nodeid);
+
+		info.GetReturnValue().Set(Nan::New<Integer>(result));
+	} 
+
+	NAN_METHOD(OZW::GetNodeGeneric)
+	{
+		Nan::HandleScope();
+
+		uint8_t nodeid = info[0]->ToNumber()->Value();
+
+		uint8_t result = OpenZWave::Manager::Get()->GetNodeGeneric(homeid, nodeid);
+
+		info.GetReturnValue().Set(Nan::New<Integer>(result));
+	} 
+
+	NAN_METHOD(OZW::GetNodeSpecific)
+	{
+		Nan::HandleScope();
+
+		uint8_t nodeid = info[0]->ToNumber()->Value();
+
+		uint8_t result = OpenZWave::Manager::Get()->GetNodeSpecific(homeid, nodeid);
+
+		info.GetReturnValue().Set(Nan::New<Integer>(result));
+	}
+
+	NAN_METHOD(OZW::GetNodeType)
+	{
+		Nan::HandleScope();
+
+		uint8_t nodeid = info[0]->ToNumber()->Value();
+
+		std::string result = OpenZWave::Manager::Get()->GetNodeType(homeid, nodeid);
+
+		info.GetReturnValue().Set(Nan::New<String>(result.c_str()).ToLocalChecked());
+	}
+
+	NAN_METHOD(OZW::GetNodeProductName)
+	{
+		Nan::HandleScope();
+
+		uint8_t nodeid = info[0]->ToNumber()->Value();
+
+		std::string result = OpenZWave::Manager::Get()->GetNodeProductName(homeid, nodeid);
+
+		info.GetReturnValue().Set(Nan::New<String>(result.c_str()).ToLocalChecked());
+	}
+
+	NAN_METHOD(OZW::GetNodeName)
+	{
+		Nan::HandleScope();
+
+		uint8_t nodeid = info[0]->ToNumber()->Value();
+
+		std::string result = OpenZWave::Manager::Get()->GetNodeName(homeid, nodeid);
+
+		info.GetReturnValue().Set(Nan::New<String>(result.c_str()).ToLocalChecked());
+	}
+
+	NAN_METHOD(OZW::GetNodeLocation)
+	{
+		Nan::HandleScope();
+
+		uint8_t nodeid = info[0]->ToNumber()->Value();
+
+		std::string result = OpenZWave::Manager::Get()->GetNodeLocation(homeid, nodeid);
+
+		info.GetReturnValue().Set(Nan::New<String>(result.c_str()).ToLocalChecked());
+	}
+
+	NAN_METHOD(OZW::GetNodeManufacturerId)
+	{
+		Nan::HandleScope();
+
+		uint8_t nodeid = info[0]->ToNumber()->Value();
+
+		std::string result = OpenZWave::Manager::Get()->GetNodeManufacturerId(homeid, nodeid);
+
+		info.GetReturnValue().Set(Nan::New<String>(result.c_str()).ToLocalChecked());
+	}
+
+	NAN_METHOD(OZW::GetNodeProductType)
+	{
+		Nan::HandleScope();
+
+		uint8_t nodeid = info[0]->ToNumber()->Value();
+
+		std::string result = OpenZWave::Manager::Get()->GetNodeProductType(homeid, nodeid);
+
+		info.GetReturnValue().Set(Nan::New<String>(result.c_str()).ToLocalChecked());
+	}
+
+	NAN_METHOD(OZW::GetNodeProductId)
+	{
+		Nan::HandleScope();
+
+		uint8_t nodeid = info[0]->ToNumber()->Value();
+
+		std::string result = OpenZWave::Manager::Get()->GetNodeProductId(homeid, nodeid);
+
+		info.GetReturnValue().Set(Nan::New<String>(result.c_str()).ToLocalChecked());
+	}
+
+	NAN_METHOD(OZW::SetNodeManufacturerName)
+	{
+		Nan::HandleScope();
+
+		uint8_t nodeid = info[0]->ToNumber()->Value();
+		std::string name = (*String::Utf8Value(info[1]->ToString()));
+
+		OpenZWave::Manager::Get()->SetNodeManufacturerName(homeid, nodeid, name);
+	}
+
+	NAN_METHOD(OZW::SetNodeProductName)
+	{
+		Nan::HandleScope();
+
+		uint8_t nodeid = info[0]->ToNumber()->Value();
+		std::string name = (*String::Utf8Value(info[1]->ToString()));
+
+		OpenZWave::Manager::Get()->SetNodeProductName(homeid, nodeid, name);
 	}
 	
 }

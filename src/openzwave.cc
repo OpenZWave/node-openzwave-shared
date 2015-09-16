@@ -131,11 +131,34 @@ namespace OZW {
 		Nan::SetPrototypeMethod(t, "switchAllOff", OZW::SwitchAllOff);
 		Nan::SetPrototypeMethod(t, "getNodeNeighbors", OZW::GetNodeNeighbors);
 		Nan::SetPrototypeMethod(t, "refreshNodeInfo", OZW::RefreshNodeInfo); // ** new
+		Nan::SetPrototypeMethod(t, "getNodeManufacturerName", OZW::GetNodeManufacturerName); // ** new
+		Nan::SetPrototypeMethod(t, "requestNodeState", OZW::RequestNodeState); // ** new
+		Nan::SetPrototypeMethod(t, "requestNodeDynamic", OZW::RequestNodeDynamic); // ** new
+		Nan::SetPrototypeMethod(t, "isNodeListeningDevice", OZW::IsNodeListeningDevice); // ** new
+		Nan::SetPrototypeMethod(t, "isNodeFrequentListeningDevice", OZW::IsNodeFrequentListeningDevice); // ** new
+		Nan::SetPrototypeMethod(t, "isNodeBeamingDevice", OZW::IsNodeBeamingDevice); // ** new
+		Nan::SetPrototypeMethod(t, "isNodeRoutingDevice", OZW::IsNodeRoutingDevice); // ** new
+		Nan::SetPrototypeMethod(t, "isNodeSecurityDevice", OZW::IsNodeSecurityDevice); // ** new
+		Nan::SetPrototypeMethod(t, "getNodeMaxBaudRate", OZW::GetNodeMaxBaudRate); // ** new
+		Nan::SetPrototypeMethod(t, "getNodeVersion", OZW::GetNodeVersion); // ** new
+		Nan::SetPrototypeMethod(t, "getNodeSecurity", OZW::GetNodeSecurity); // ** new
+		Nan::SetPrototypeMethod(t, "getNodeBasic", OZW::GetNodeBasic); // ** new
+		Nan::SetPrototypeMethod(t, "getNodeGeneric", OZW::GetNodeGeneric); // ** new
+		Nan::SetPrototypeMethod(t, "getNodeSpecific", OZW::GetNodeSpecific); // ** new
+		Nan::SetPrototypeMethod(t, "getNodeType", OZW::GetNodeType); // ** new
+		Nan::SetPrototypeMethod(t, "getNodeProductName", OZW::GetNodeProductName); // ** new
+		Nan::SetPrototypeMethod(t, "getNodeName", OZW::GetNodeName); // ** new
+		Nan::SetPrototypeMethod(t, "getNodeLocation", OZW::GetNodeLocation); // ** new
+		Nan::SetPrototypeMethod(t, "getNodeManufacturerId", OZW::GetNodeManufacturerId); // ** new
+		Nan::SetPrototypeMethod(t, "getNodeProductType", OZW::GetNodeProductType); // ** new
+		Nan::SetPrototypeMethod(t, "getNodeProductId", OZW::GetNodeProductId); // ** new
+		Nan::SetPrototypeMethod(t, "setNodeManufacturerName", OZW::SetNodeManufacturerName); // ** new
+		Nan::SetPrototypeMethod(t, "setNodeProductName", OZW::SetNodeProductName); // ** new
 		// openzwave-values.cc
 		Nan::SetPrototypeMethod(t, "setValue", OZW::SetValue);
 		// openzwave-polling.cc
 		Nan::SetPrototypeMethod(t, "enablePoll", OZW::EnablePoll);
-		Nan::SetPrototypeMethod(t, "disablePoll", OZW::EnablePoll);
+		Nan::SetPrototypeMethod(t, "disablePoll", OZW::DisablePoll);
 		Nan::SetPrototypeMethod(t, "isPolled",  OZW::IsPolled); // ** new
 		Nan::SetPrototypeMethod(t, "getPollInterval",  OZW::GetPollInterval); // ** new
 		Nan::SetPrototypeMethod(t, "setPollInterval",  OZW::SetPollInterval); // ** new
