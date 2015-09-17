@@ -160,29 +160,6 @@ namespace OZW {
 		static NAN_METHOD(SetNodeProductName);
 		static NAN_METHOD(SetNodeOn);
 		static NAN_METHOD(SetNodeOff);
-		static NAN_METHOD(RequestNodeState);
-		static NAN_METHOD(RequestNodeDynamic);
-		static NAN_METHOD(IsNodeListeningDevice);
-		static NAN_METHOD(IsNodeFrequentListeningDevice);
-		static NAN_METHOD(IsNodeBeamingDevice);
-		static NAN_METHOD(IsNodeRoutingDevice);
-		static NAN_METHOD(IsNodeSecurityDevice);
-		static NAN_METHOD(GetNodeMaxBaudRate);
-		static NAN_METHOD(GetNodeVersion);
-		static NAN_METHOD(GetNodeSecurity);
-		static NAN_METHOD(GetNodeBasic);
-		static NAN_METHOD(GetNodeGeneric);
-		static NAN_METHOD(GetNodeSpecific);
-		static NAN_METHOD(GetNodeType);
-		static NAN_METHOD(GetNodeManufacturerName);
-		static NAN_METHOD(GetNodeProductName);
-		static NAN_METHOD(GetNodeName);
-		static NAN_METHOD(GetNodeLocation);
-		static NAN_METHOD(GetNodeManufacturerId);
-		static NAN_METHOD(GetNodeProductType);
-		static NAN_METHOD(GetNodeProductId);
-		static NAN_METHOD(SetNodeManufacturerName);
-		static NAN_METHOD(SetNodeProductName);
 		// openzwave-values.cc
 		static NAN_METHOD(SetValue);
 		// openzwave-polling.cc
@@ -201,9 +178,6 @@ namespace OZW {
 		static NAN_METHOD(RemoveSceneValue);
 		static NAN_METHOD(SceneGetValues);
 		static NAN_METHOD(ActivateScene);
-		//
-		
-		//
 	};
 
 	// callback struct to copy data from the OZW thread to the v8 event loop: 
