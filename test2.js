@@ -1,5 +1,14 @@
-var OpenZWave = require('openzwave-shared');
-var zwave = new OpenZWave('/dev/ttyUSB0');
+var ZWave = require('./lib/openzwave-shared.js');
+var zwave = new ZWave({
+	modpath: __dirname,
+	consoleoutput: false,
+	logging: false,
+	saveconfig: false,
+	driverattempts: 3,
+	pollinterval: 500,
+	suppressrefresh: true,
+});
+
 var nodes = [];
 
 zwave.on('driver ready', function(homeid) {
@@ -110,7 +119,7 @@ zwave.on('notification', function(nodeid, notif) {
 });
 
 zwave.on('scan complete', function() {
-    console.log('scan complete, hit ^C to finish.');
+    console.log('====> scan complete, hit ^C to finish.');
     // Add a new device to the ZWave controller
     zwave.beginControllerCommand('AddDevice', true);
 });
@@ -119,7 +128,7 @@ zwave.on('controller command', function(r,s) {
     console.log('controller commmand feedback: r=%d, s=%d',r,s);
 });
 
-zwave.connect();
+zwave.connect('/dev/ttyUSB0');
 
 process.on('SIGINT', function() {
     console.log('disconnecting...');

@@ -16,6 +16,7 @@
 */
 
 #include "openzwave.hpp"
+#include <algorithm>
 
 using namespace v8;
 using namespace node;
@@ -41,7 +42,7 @@ namespace OZW {
 
 	uint32_t homeid;
 	CommandMap* ctrlCmdNames;
-
+	
 	// ===================================================================
 	NAN_METHOD(OZW::OZW::New)
 	// ===================================================================
@@ -52,33 +53,30 @@ namespace OZW {
 		OZW* self = new OZW();
 		self->Wrap(info.This());
 
-		Local < Object > opts = info[0]->ToObject();
-		std::string confpath = *v8::String::Utf8Value(Nan::Get(opts, Nan::New<String>("modpath").ToLocalChecked()).ToLocalChecked());
-
-		confpath += "/../deps/open-zwave/config";
-
 		/*
 		* Options are global for all drivers and can only be set once.
-		* BTW: what a nightmare....
 		*/
-
+		Local < Object > opts     = info[0]->ToObject();
+		std::string confpath = *v8::String::Utf8Value(
+			Nan::Get(opts, Nan::New<String>("modpath").ToLocalChecked()).ToLocalChecked());
+		confpath += "/../deps/open-zwave/config";
 		OpenZWave::Options::Create(confpath.c_str(), "", "");
-		OpenZWave::Options::Get()->AddOptionBool("ConsoleOutput",
+		OpenZWave::Options* ozwopt = OpenZWave::Options::Get();
+		ozwopt->AddOptionBool("ConsoleOutput", 
 			Nan::Get(opts, Nan::New<String>("consoleoutput").ToLocalChecked()).ToLocalChecked()->ToBoolean()->Value());
-		OpenZWave::Options::Get()->AddOptionBool("Logging",
-			Nan::Get(opts, Nan::New<String>("logging")      .ToLocalChecked()).ToLocalChecked()->ToBoolean()->Value());
-		OpenZWave::Options::Get()->AddOptionBool("SaveConfiguration",
-			Nan::Get(opts, Nan::New<String>("saveconfig")   .ToLocalChecked()).ToLocalChecked()->ToBoolean()->Value());
-		OpenZWave::Options::Get()->AddOptionInt("DriverMaxAttempts",
-			Nan::Get(opts, Nan::New<String>("driverattempts").ToLocalChecked()).ToLocalChecked()->ToInteger()->Value());
-		OpenZWave::Options::Get()->AddOptionInt("PollInterval",
-			Nan::Get(opts, Nan::New<String>("pollinterval") .ToLocalChecked()).ToLocalChecked()->ToInteger()->Value());
-		OpenZWave::Options::Get()->AddOptionBool("IntervalBetweenPolls", true);
-		OpenZWave::Options::Get()->AddOptionBool("SuppressValueRefresh",
-			Nan::Get(opts, Nan::New<String>("suppressrefresh").ToLocalChecked()).ToLocalChecked()->ToBoolean()->Value());
-
-		OpenZWave::Options::Get()->Lock();
-
+		ozwopt->AddOptionBool("Logging",
+			Nan::Get(opts, Nan::New<String>("logging").ToLocalChecked()).ToLocalChecked()->ToBoolean()->Value());
+		ozwopt->AddOptionBool("SaveConfiguration",
+			Nan::Get(opts, Nan::New<String>("saveconfiguration").ToLocalChecked()).ToLocalChecked()->ToBoolean()->Value());
+		ozwopt->AddOptionBool("SuppressValueRefresh",
+			Nan::Get(opts, Nan::New<String>("suppressvaluerefresh").ToLocalChecked()).ToLocalChecked()->ToBoolean()->Value());
+		ozwopt->AddOptionInt("DriverMaxAttempts",
+			Nan::Get(opts, Nan::New<String>("drivermaxattempts").ToLocalChecked()).ToLocalChecked()->ToInteger()->Value());
+		ozwopt->AddOptionInt("PollInterval",
+			Nan::Get(opts, Nan::New<String>("pollinterval").ToLocalChecked()).ToLocalChecked()->ToInteger()->Value());
+		ozwopt->AddOptionBool("IntervalBetweenPolls", true);
+		ozwopt->Lock();
+		//
 		info.GetReturnValue().Set(info.This());
 	}
 
@@ -87,9 +85,10 @@ namespace OZW {
   
 		Nan::HandleScope();
 		Local < FunctionTemplate > t = Nan::New<FunctionTemplate>(OZW::New);
-		t->SetClassName(Nan::New("OZW").ToLocalChecked());	
+		t->SetClassName(Nan::New("OZW").ToLocalChecked());
 		t->InstanceTemplate()->SetInternalFieldCount(1);
-		
+		Local < Value > ee = Nan::Get(Nan::GetCurrentContext()->Global(), Nan::New<String>("EventEmitter").ToLocalChecked()).ToLocalChecked();
+		Nan::SetTemplate(t, "ee", ee);
 		// openzwave-config.cc
 		Nan::SetPrototypeMethod(t, "setConfigParam", OZW::SetConfigParam);
 		Nan::SetPrototypeMethod(t, "requestConfigParam", OZW::RequestConfigParam);

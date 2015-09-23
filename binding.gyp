@@ -26,7 +26,7 @@
 					'/usr/include/openzwave',
 					'/usr/include/openzwave/value_classes',
 				],
-				"cflags": [ "-Wno-ignored-qualifiers" ],
+				"cflags": [ "-Wno-ignored-qualifiers -Wno-write-strings" ],
 			}],
 			['OS=="win"', {
 				"include_dirs": [ 

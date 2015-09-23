@@ -1,164 +1,149 @@
 ## Example
 
 The test program below connects to a Z-Wave network, scans for all nodes and
-values, and prints out information about the network.  It will then continue to
-scan for changes until the user hits `^C`.
+values, and prints out information about the network.  
+**When the network has become ready**, the library will call 'scan complete' 
+and the script will then issue a *beginControllerCommand* 
+to the driver so as to add a new node to the ZWave network. 
+Remember to hit `^C` to end the script.
 
 ```js
-/*
- * OpenZWave test program.
- */
-
-var OpenZWave = require('openzwave-shared');
-
-var zwave = new OpenZWave('/dev/ttyUSB0', {
-	saveconfig: true,
+var ZWave = require('./lib/openzwave-shared.js');
+var zwave = new ZWave({
+	modpath: __dirname,
+	consoleoutput: false,
+	logging: false,
+	saveconfig: false,
+	driverattempts: 3,
+	pollinterval: 500,
+	suppressrefresh: true,
 });
+
 var nodes = [];
 
 zwave.on('driver ready', function(homeid) {
-	console.log('scanning homeid=0x%s...', homeid.toString(16));
+    console.log('scanning homeid=0x%s...', homeid.toString(16));
 });
 
 zwave.on('driver failed', function() {
-	console.log('failed to start driver');
-	zwave.disconnect();
-	process.exit();
+    console.log('failed to start driver');
+    zwave.disconnect();
+    process.exit();
 });
 
 zwave.on('node added', function(nodeid) {
-	nodes[nodeid] = {
-		manufacturer: '',
-		manufacturerid: '',
-		product: '',
-		producttype: '',
-		productid: '',
-		type: '',
-		name: '',
-		loc: '',
-		classes: {},
-		ready: false,
-	};
+    nodes[nodeid] = {
+        manufacturer: '',
+        manufacturerid: '',
+        product: '',
+        producttype: '',
+        productid: '',
+        type: '',
+        name: '',
+        loc: '',
+        classes: {},
+        ready: false,
+    };
 });
 
 zwave.on('value added', function(nodeid, comclass, value) {
-	if (!nodes[nodeid]['classes'][comclass])
-		nodes[nodeid]['classes'][comclass] = {};
-	nodes[nodeid]['classes'][comclass][value.index] = value;
+    if (!nodes[nodeid]['classes'][comclass])
+        nodes[nodeid]['classes'][comclass] = {};
+    nodes[nodeid]['classes'][comclass][value.index] = value;
 });
 
 zwave.on('value changed', function(nodeid, comclass, value) {
-	if (nodes[nodeid]['ready']) {
-		console.log('node%d: changed: %d:%s:%s->%s', nodeid, comclass,
-			    value['label'],
-			    nodes[nodeid]['classes'][comclass][value.index]['value'],
-			    value['value']);
-	}
-	nodes[nodeid]['classes'][comclass][value.index] = value;
+    if (nodes[nodeid]['ready']) {
+        console.log('node%d: changed: %d:%s:%s->%s', nodeid, comclass,
+                value['label'],
+                nodes[nodeid]['classes'][comclass][value.index]['value'],
+                value['value']);
+    }
+    nodes[nodeid]['classes'][comclass][value.index] = value;
 });
 
 zwave.on('value removed', function(nodeid, comclass, index) {
-	if (nodes[nodeid]['classes'][comclass] &&
-	    nodes[nodeid]['classes'][comclass][index])
-		delete nodes[nodeid]['classes'][comclass][index];
+    if (nodes[nodeid]['classes'][comclass] &&
+        nodes[nodeid]['classes'][comclass][index])
+        delete nodes[nodeid]['classes'][comclass][index];
 });
 
 zwave.on('node ready', function(nodeid, nodeinfo) {
-	nodes[nodeid]['manufacturer'] = nodeinfo.manufacturer;
-	nodes[nodeid]['manufacturerid'] = nodeinfo.manufacturerid;
-	nodes[nodeid]['product'] = nodeinfo.product;
-	nodes[nodeid]['producttype'] = nodeinfo.producttype;
-	nodes[nodeid]['productid'] = nodeinfo.productid;
-	nodes[nodeid]['type'] = nodeinfo.type;
-	nodes[nodeid]['name'] = nodeinfo.name;
-	nodes[nodeid]['loc'] = nodeinfo.loc;
-	nodes[nodeid]['ready'] = true;
-	console.log('node%d: %s, %s', nodeid,
-		    nodeinfo.manufacturer ? nodeinfo.manufacturer
-					  : 'id=' + nodeinfo.manufacturerid,
-		    nodeinfo.product ? nodeinfo.product
-				     : 'product=' + nodeinfo.productid +
-				       ', type=' + nodeinfo.producttype);
-	console.log('node%d: name="%s", type="%s", location="%s"', nodeid,
-		    nodeinfo.name,
-		    nodeinfo.type,
-		    nodeinfo.loc);
-	for (comclass in nodes[nodeid]['classes']) {
-		switch (comclass) {
-		case 0x25: // COMMAND_CLASS_SWITCH_BINARY
-		case 0x26: // COMMAND_CLASS_SWITCH_MULTILEVEL
-			zwave.enablePoll(nodeid, comclass);
-			break;
-		}
-		var values = nodes[nodeid]['classes'][comclass];
-		console.log('node%d: class %d', nodeid, comclass);
-		for (idx in values)
-			console.log('node%d:   %s=%s', nodeid, values[idx]['label'], values[idx]['value']);
-	}
+    nodes[nodeid]['manufacturer'] = nodeinfo.manufacturer;
+    nodes[nodeid]['manufacturerid'] = nodeinfo.manufacturerid;
+    nodes[nodeid]['product'] = nodeinfo.product;
+    nodes[nodeid]['producttype'] = nodeinfo.producttype;
+    nodes[nodeid]['productid'] = nodeinfo.productid;
+    nodes[nodeid]['type'] = nodeinfo.type;
+    nodes[nodeid]['name'] = nodeinfo.name;
+    nodes[nodeid]['loc'] = nodeinfo.loc;
+    nodes[nodeid]['ready'] = true;
+    console.log('node%d: %s, %s', nodeid,
+            nodeinfo.manufacturer ? nodeinfo.manufacturer
+                      : 'id=' + nodeinfo.manufacturerid,
+            nodeinfo.product ? nodeinfo.product
+                     : 'product=' + nodeinfo.productid +
+                       ', type=' + nodeinfo.producttype);
+    console.log('node%d: name="%s", type="%s", location="%s"', nodeid,
+            nodeinfo.name,
+            nodeinfo.type,
+            nodeinfo.loc);
+    for (comclass in nodes[nodeid]['classes']) {
+        switch (comclass) {
+        case 0x25: // COMMAND_CLASS_SWITCH_BINARY
+        case 0x26: // COMMAND_CLASS_SWITCH_MULTILEVEL
+            zwave.enablePoll(nodeid, comclass);
+            break;
+        }
+        var values = nodes[nodeid]['classes'][comclass];
+        console.log('node%d: class %d', nodeid, comclass);
+        for (idx in values)
+            console.log('node%d:   %s=%s', nodeid, values[idx]['label'], values[idx]['value']);
+    }
 });
 
-zwave.on('polling enabled', function(nodeid) {
-	console.log('node%d: polling ENABLED', nodeid);
-});
-zwave.on('polling disabled', function(nodeid) {
-	console.log('node%d: polling DISABLED', nodeid);
-});
-
-var notificationCodes = {
-	0: 'message complete',
-	1: 'timeout',
-	2: 'nop',
-	3: 'node awake',
-	4: 'node sleep',
-	5: 'node dead (Undead Undead Undead)',
-	6: 'node alive',
-};
 zwave.on('notification', function(nodeid, notif) {
-	console.log('node%d: %s', nodeid, notificationCodes[notif]);
-});
-
-var ctrlState = {
-	0: 'No command in progress',
-	1: 'The command is starting',
-	2: 'The command was cancelled',
-	3: 'Command invocation had error(s) and was aborted',
-	4: 'Controller is waiting for a user action',
-	5: 'Controller command is on a sleep queue wait for device',
-	6: 'The controller is communicating with the other device to carry out the command',
-	7: 'The command has completed successfully',
-	8: 'The command has failed',
-	9: 'The controller thinks the node is OK',
-	10: 'The controller thinks the node has failed',
-};
-var ctrlError = {
-	0: 'No error',
-	1: 'ButtonNotFound',
-	2: 'NodeNotFound',
-	3: 'NotBridge',
-	4: 'NotSUC',
-	5: 'NotSecondary',
-	6: 'NotPrimary',
-	7: 'IsPrimary',
-	8: 'NotFound',
-	9: 'Busy',
-	10: 'Failed',
-	11: 'Disabled',
-	12: 'Overflow',
-}
-zwave.on('controller command', function (state, error) {
-	console.log('controller command feedback: state:%d error:%d', ctrlState[state], ctrlError[error]);
+    switch (notif) {
+    case 0:
+        console.log('node%d: message complete', nodeid);
+        break;
+    case 1:
+        console.log('node%d: timeout', nodeid);
+        break;
+    case 2:
+        console.log('node%d: nop', nodeid);
+        break;
+    case 3:
+        console.log('node%d: node awake', nodeid);
+        break;
+    case 4:
+        console.log('node%d: node sleep', nodeid);
+        break;
+    case 5:
+        console.log('node%d: node dead', nodeid);
+        break;
+    case 6:
+        console.log('node%d: node alive', nodeid);
+        break;
+        }
 });
 
 zwave.on('scan complete', function() {
-	console.log('scan complete, hit ^C to finish.');
+    console.log('====> scan complete, hit ^C to finish.');
+    // Add a new device to the ZWave controller
+    zwave.beginControllerCommand('AddDevice', true);
 });
 
-zwave.connect();
+zwave.on('controller command', function(r,s) {
+    console.log('controller commmand feedback: r=%d, s=%d',r,s);
+});
+
+zwave.connect('/dev/ttyUSB0');
 
 process.on('SIGINT', function() {
-	console.log('disconnecting...');
-	zwave.disconnect();
-	process.exit();
+    console.log('disconnecting...');
+    zwave.disconnect();
+    process.exit();
 });
 ```
 

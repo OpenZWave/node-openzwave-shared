@@ -39,7 +39,7 @@ namespace OZW {
 		 
 		emit_cb = new Nan::Callback(callbackHandle);
 
-		// std::cout << "~~~~ emit_cb:" << emit_cb << " isEmpty? " << emit_cb->IsEmpty() << "\n";
+		std::cout << "~~~~ emit_cb:" << emit_cb << " isEmpty? " << emit_cb->IsEmpty() << "\n";
 		
 		OpenZWave::Manager::Create();
 		OpenZWave::Manager::Get()->AddWatcher(ozw_watcher_callback, NULL);
@@ -101,7 +101,7 @@ namespace OZW {
 	// ===================================================================
 	{
 		Nan::HandleScope();
-		
+
 		std::string ctrcmd = (*String::Utf8Value(info[0]->ToString()));
 		uint8_t    nodeid1 = 0xff;
 		uint8_t    nodeid2 = 0;
@@ -115,6 +115,7 @@ namespace OZW {
 				}
 			}
 		}
+		//
 		CommandMap::const_iterator search = (*ctrlCmdNames).find(ctrcmd);
 		if(search != (*ctrlCmdNames).end()) {
 			/*
@@ -139,7 +140,6 @@ namespace OZW {
 				nodeid2	// uint8 	_arg = 0 
 			);
 		}
-		
 	}
 	
 	// ===================================================================
