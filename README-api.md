@@ -1,18 +1,10 @@
 ## API
 
-Start by loading the addon and creating a new instance, specifying a path to
-the USB device:
+Start by loading the addon and creating a new instance, specifying the options as shown below:
 
 ```js
 var OZW = require('openzwave-shared');
-var zwave = new OZW('/dev/ttyUSB0');
-```
-
-An optional object can be passed at creation time to alter the behavior of the
-ZWave module.  The options currently supported and their defaults are:
-
-```js
-var zwave = new OZW('/dev/ttyUSB0', {
+var zwave = new OZW({
         logging: false,           // enable logging to OZW_Log.txt
         consoleoutput: false,     // copy logging to the console
         saveconfig: false,        // write an XML network layout
@@ -31,8 +23,8 @@ specific events to correctly map the network.
 Connecting to the network:
 
 ```js
-zwave.connect();     // initialise and start a new driver.
-zwave.disconnect();  // disconnect from the current connection
+zwave.connect('/dev/ttyUSB0');  // initialise and start a new driver for a USB ZWave controller
+zwave.disconnect('dev/ttyUSB0');// disconnect from the current connection
 ```
 
 Modifying device state:
