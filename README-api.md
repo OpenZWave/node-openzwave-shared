@@ -27,14 +27,20 @@ specific events to correctly map the network.
 ### Functions
 
 Connecting to the network:
-
 ```js
 zwave.connect('/dev/ttyUSB0');  // initialise and start a new driver for a USB ZWave controller
 zwave.disconnect('dev/ttyUSB0');// disconnect from the current connection
 ```
+**Important notice**: the connect() call is asynchronous following the 
+node/v8 javascript paradigm.  This means that connect() will yield
+control to your script *immediately*, but the underlying OpenZWave C++ 
+library will *not be ready yet* to accept commands. 
+In fact, it can take some time (from a few seconds to a couple of 
+minutes!) to set up its internal data structures. So, be sure to 
+register a "scan complete" callback, and after it gets called, you can 
+safely start issuing commands to your ZWave devices.
 
 Modifying device state:
-
 ```js
 /*
  * Set a multi-level device to the specified level (between 0-99).
@@ -46,13 +52,13 @@ zwave.setLevel(5, 50); // node 5: dim to 50%
  */
 zwave.setNodeOn(3); // node 3: switch ON
 zwave.setNodeOff(3);// node 3: switch OFF
-zwave.setValue(3, 37, 1, 0, true); // node 3: turn on (the hard way)
-zwave.setValue(3, 37, 1, 0, false); // node 3: turn off (the hard way)
 
 /*
  * Set arbitrary values.
  */
 zwave.setValue(nodeid, commandclass, instance, index, value);
+zwave.setValue(3,      37,           1,        0,     true); // node 3: turn on (the hard way)
+zwave.setValue(3,      37,           1,        0,    false); // node 3: turn off (the hard way)
 ```
 
 This is most useful for multi-instance devices, such as the Fibaro FGS-221 eg:
@@ -65,14 +71,12 @@ zwave.setValue(8, 37, 2, 0, false);// node 8: turn off 2nd relay
 Useful documentation on [command classes can be found on MiCasaVerde website](http://wiki.micasaverde.com/index.php/ZWave_Command_Classes)
 
 Writing to device metadata (stored on the device itself):
-
 ```js
 zwave.setLocation(nodeid, location);    // arbitrary location string
 zwave.setName(nodeid, name);            // arbitrary name string
 ```
 
 Polling a device for changes (not all devices require this):
-
 ```js
 zwave.enablePoll(nodeid, commandclass);
 zwave.disablePoll(nodeid, commandclass);
@@ -95,7 +99,6 @@ zwave.removeAssociation(nodeid, group, target_nodeid);
 
 Resetting the controller.  Calling `hardReset` will clear any associations, so use
 carefully:
-
 ```js
 zwave.hardReset();      // destructive! will wipe out all known configuration
 zwave.softReset();      // non-destructive, just resets the chip
@@ -185,5 +188,4 @@ For a full description of what of these controller commands mean, please see
 zwave.requestAllConfigParams(nodeId);
 zwave.requestConfigParam(nodeId, paramId);
 zwave.setConfigParam(nodeId, paramId, paramValue, <sizeof paramValue>);
-
 ```
