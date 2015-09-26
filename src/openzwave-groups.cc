@@ -31,7 +31,7 @@ namespace OZW {
 	NAN_METHOD(OZW::GetNumGroups)
 	// ===================================================================
 	{
-		Nan::HandleScope();
+		Nan::HandleScope scope();
 
 		uint8_t nodeid = info[0]->ToNumber()->Value();
 		uint8 numGroups = OpenZWave::Manager::Get()->GetNumGroups(homeid, nodeid);
@@ -46,7 +46,8 @@ namespace OZW {
 	NAN_METHOD(OZW::GetAssociations)
 	// ===================================================================
 	{
-		Nan::HandleScope();
+		Nan::HandleScope scope();
+		
 		uint8* associations;
 
 		uint8_t nodeid = info[0]->ToNumber()->Value();
@@ -76,7 +77,7 @@ namespace OZW {
 	NAN_METHOD(OZW::GetMaxAssociations)
 	// ===================================================================
 	{
-		Nan::HandleScope();
+		Nan::HandleScope scope();
 		
 		uint8_t nodeid = info[0]->ToNumber()->Value();
 		uint8_t groupidx = info[1]->ToNumber()->Value();
@@ -95,7 +96,7 @@ namespace OZW {
 	NAN_METHOD(OZW::GetGroupLabel)
 	// ===================================================================
 	{
-		Nan::HandleScope();
+		Nan::HandleScope scope();
 		
 		uint8_t nodeid = info[0]->ToNumber()->Value();
 		uint8_t groupidx = info[1]->ToNumber()->Value();
@@ -117,7 +118,7 @@ namespace OZW {
 	NAN_METHOD(OZW::AddAssociation)
 	// ===================================================================
 	{
-		Nan::HandleScope();
+		Nan::HandleScope scope();
 		
 		uint8_t nodeid = info[0]->ToNumber()->Value();
 		uint8_t groupidx = info[1]->ToNumber()->Value();
@@ -126,8 +127,6 @@ namespace OZW {
 		OpenZWave::Manager::Get()->AddAssociation(
 			homeid,nodeid,groupidx,tgtnodeid
 		);
-
-		
 	}
 
 	/*
@@ -137,15 +136,13 @@ namespace OZW {
 	NAN_METHOD(OZW::RemoveAssociation)
 	// ===================================================================
 	{
-		Nan::HandleScope();
+		Nan::HandleScope scope();
 		
 		uint8_t nodeid = info[0]->ToNumber()->Value();
 		uint8_t groupidx = info[1]->ToNumber()->Value();
 		uint8_t tgtnodeid = info[2]->ToNumber()->Value();
 	
 		OpenZWave::Manager::Get()->RemoveAssociation(homeid,nodeid,groupidx,tgtnodeid);
-		
-		
 	}
 
 }

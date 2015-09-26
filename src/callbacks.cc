@@ -25,8 +25,7 @@ namespace OZW {
 	
 	/*
 	* OpenZWave callback, registered in Driver::AddWatcher.
-	* Just push onto queue and trigger the handler
-	* in v8 land.
+	* Just push onto queue and trigger the handler in v8 land.
 	*/
 	// ===================================================================
 	void ozw_watcher_callback(OpenZWave::Notification const *cb, void *ctx)
@@ -98,7 +97,7 @@ namespace OZW {
 	void handleNotification(NotifInfo *notif) 
 	// ===================================================================
 	{
-		Nan::HandleScope();
+		Nan::HandleScope scope();
 		
 		NodeInfo *node;
 				
@@ -420,7 +419,8 @@ namespace OZW {
 	void handleControllerCommand(NotifInfo *notif) 
 	// ===================================================================
 	{
-		Nan::HandleScope();
+		Nan::HandleScope scope();
+		
 		Local < v8::Value > info[16];
 		info[0] = Nan::New<String>("controller command").ToLocalChecked();
 		info[1] = Nan::New<Integer>(notif->state);

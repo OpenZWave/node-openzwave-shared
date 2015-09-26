@@ -1,13 +1,5 @@
 var ZWave = require('./lib/openzwave-shared.js');
-var zwave = new ZWave({
-	modpath: __dirname,
-	consoleoutput: false,
-	logging: false,
-	saveconfig: false,
-	driverattempts: 3,
-	pollinterval: 500,
-	suppressrefresh: true,
-});
+var zwave = new ZWave();
 
 var nodes = [];
 

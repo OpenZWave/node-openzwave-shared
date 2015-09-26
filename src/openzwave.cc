@@ -42,48 +42,84 @@ namespace OZW {
 
 	uint32_t homeid;
 	CommandMap* ctrlCmdNames;
+	std::string modulepath;
 	
 	// ===================================================================
 	NAN_METHOD(OZW::OZW::New)
 	// ===================================================================
 	{
-		Nan::HandleScope();
+		Nan::HandleScope scope;
 
 		assert(info.IsConstructCall());
 		OZW* self = new OZW();
 		self->Wrap(info.This());
 
-		/*
-		* Options are global for all drivers and can only be set once.
-		*/
-		Local < Object > opts     = info[0]->ToObject();
-		std::string confpath = *v8::String::Utf8Value(
-			Nan::Get(opts, Nan::New<String>("modpath").ToLocalChecked()).ToLocalChecked());
-		confpath += "/../deps/open-zwave/config";
-		OpenZWave::Options::Create(confpath.c_str(), "", "");
+		// scan for OpenZWave options.xml in the nodeJS module's '/config' subdirectory
+		modulepath.append("/../../config");
+		OpenZWave::Options::Create(modulepath, "", "");
 		OpenZWave::Options* ozwopt = OpenZWave::Options::Get();
-		ozwopt->AddOptionBool("ConsoleOutput", 
-			Nan::Get(opts, Nan::New<String>("consoleoutput").ToLocalChecked()).ToLocalChecked()->ToBoolean()->Value());
-		ozwopt->AddOptionBool("Logging",
-			Nan::Get(opts, Nan::New<String>("logging").ToLocalChecked()).ToLocalChecked()->ToBoolean()->Value());
-		ozwopt->AddOptionBool("SaveConfiguration",
-			Nan::Get(opts, Nan::New<String>("saveconfiguration").ToLocalChecked()).ToLocalChecked()->ToBoolean()->Value());
-		ozwopt->AddOptionBool("SuppressValueRefresh",
-			Nan::Get(opts, Nan::New<String>("suppressvaluerefresh").ToLocalChecked()).ToLocalChecked()->ToBoolean()->Value());
-		ozwopt->AddOptionInt("DriverMaxAttempts",
-			Nan::Get(opts, Nan::New<String>("drivermaxattempts").ToLocalChecked()).ToLocalChecked()->ToInteger()->Value());
-		ozwopt->AddOptionInt("PollInterval",
-			Nan::Get(opts, Nan::New<String>("pollinterval").ToLocalChecked()).ToLocalChecked()->ToInteger()->Value());
-		ozwopt->AddOptionBool("IntervalBetweenPolls", true);
+		
+		// Options are global for all drivers and can only be set once.
+		if (info.Length() > 0) {
+			Local < Object > opts     = info[0]->ToObject();
+			Local<Array> property_names = Nan::GetOwnPropertyNames(opts).ToLocalChecked();		
+			for (unsigned int i = 0; i < property_names->Length(); ++i) {
+				Local<Value> key     = property_names->Get(i);
+				std::string  keyname = *v8::String::Utf8Value(key);
+				Local<Value> argval  = Nan::Get(opts, key).ToLocalChecked();
+				switch(ozwopt->GetOptionType(keyname)) {
+				case OpenZWave::Options::OptionType_Invalid:
+					std::cerr << "openzwave.cc: invalid OpenZWave option: " << keyname << "\n";
+					break;
+				case OpenZWave::Options::OptionType_Bool:
+					ozwopt->AddOptionBool  (keyname, argval->ToBoolean()->Value());
+					break;
+				case OpenZWave::Options::OptionType_Int:
+					ozwopt->AddOptionInt   (keyname, argval->ToInteger()->Value());
+					break;
+				case OpenZWave::Options::OptionType_String:
+					std::string optionval = *v8::String::Utf8Value(argval);
+					ozwopt->AddOptionString(keyname, optionval, true);
+					break;
+				}
+			}
+		}
 		ozwopt->Lock();
 		//
 		info.GetReturnValue().Set(info.This());
 	}
 
 	// ===================================================================
-	extern "C" void init(Handle<Object> target) {
+	extern "C" void init(Handle<Object> target, Handle<Object> module) {
   
-		Nan::HandleScope();
+		Nan::HandleScope scope();
+		
+		std::string modulefilename = std::string(*v8::String::Utf8Value( 
+			Nan::Get(module, 
+				Nan::New("filename").ToLocalChecked()
+			).ToLocalChecked()
+		));
+/*
+   		Local<Function> require = Nan::Get( module,
+			Nan::New<String>("require").ToLocalChecked()
+		).ToLocalChecked().As<Function>();
+        
+		Local<Value> requireArgs[] = {String::New("path")};
+		Local<Object> requireModule = require->Call(Object::New(), 1, requireArgs).As<Object>();
+		Local<Function> dirname = Nan::Get( requireModule,
+			Nan::New<String>("dirname").ToLocalChecked()
+		).ToLocalChecked().As<Function>();
+		
+		Local<Value> dirnameArgs[] = {modulefilename};
+		Local<String> moduleDirname = dirname->Call(requireModule, 1, dirnameArgs).As<String>();
+*/
+		std::size_t found = modulefilename.find_last_of("/\\");
+		if (found > 0) {
+			//std::cout << " path: " << modulefilename.substr(0,found) << '\n';
+			//std::cout << " file: " << modulefilename.substr(found+1) << '\n';
+			modulepath.assign(modulefilename.substr(0,found));
+		}
+		
 		Local < FunctionTemplate > t = Nan::New<FunctionTemplate>(OZW::New);
 		t->SetClassName(Nan::New("OZW").ToLocalChecked());
 		t->InstanceTemplate()->SetInternalFieldCount(1);

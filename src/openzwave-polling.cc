@@ -26,7 +26,7 @@ namespace OZW {
 	NAN_METHOD(OZW::GetPollInterval)
 	// ===================================================================
 	{
-		Nan::HandleScope();
+		Nan::HandleScope scope();
 		uint32 i = OpenZWave::Manager::Get()->GetPollInterval();
 		info.GetReturnValue().Set(Nan::New<Integer>(i));
 	}
@@ -46,7 +46,7 @@ namespace OZW {
 	NAN_METHOD(OZW::SetPollInterval)
 	// ===================================================================
 	{
-		Nan::HandleScope();
+		Nan::HandleScope scope();
 		
 		uint32_t intervalMillisecs = info[0]->ToNumber()->Value();
 		OpenZWave::Manager::Get()->SetPollInterval (intervalMillisecs, false);
@@ -60,7 +60,7 @@ namespace OZW {
 	NAN_METHOD(OZW::EnablePoll)
 	// ===================================================================
 	{
-		Nan::HandleScope();
+		Nan::HandleScope scope();
 
 		uint8_t nodeid = info[0]->ToNumber()->Value();
 		uint8_t comclass = info[1]->ToNumber()->Value();
@@ -75,15 +75,13 @@ namespace OZW {
 				}
 			}
 		}
-
-		
 	}
 
 	// ===================================================================
 	NAN_METHOD(OZW::DisablePoll)
 	// ===================================================================
 	{
-		Nan::HandleScope();
+		Nan::HandleScope scope();
 
 		uint8_t nodeid = info[0]->ToNumber()->Value();
 		uint8_t comclass = info[1]->ToNumber()->Value();
@@ -98,8 +96,6 @@ namespace OZW {
 				}
 			}
 		}
-
-		
 	}
 	
 	// Determine the polling of a device's state.
@@ -107,7 +103,7 @@ namespace OZW {
 	NAN_METHOD(OZW::IsPolled)
 	// ===================================================================
 	{
-		Nan::HandleScope();
+		Nan::HandleScope scope();
 		
 		uint8_t nodeid = info[0]->ToNumber()->Value();
 		uint8_t comclass = info[1]->ToNumber()->Value();
@@ -125,15 +121,13 @@ namespace OZW {
 				}
 			}
 		}
-		
-		
 	}
 	
 	// ===================================================================
 	NAN_METHOD(OZW::SetPollIntensity)
 	// ===================================================================
 	{
-		Nan::HandleScope();
+		Nan::HandleScope scope();
 		
 		uint8_t nodeid = info[0]->ToNumber()->Value();
 		uint8_t comclass = info[1]->ToNumber()->Value();
@@ -153,7 +147,6 @@ namespace OZW {
 				}
 			}
 		}
-		
 	}
 
  	// Get the polling intensity of a device's state. 
@@ -161,7 +154,7 @@ namespace OZW {
 	NAN_METHOD(OZW::GetPollIntensity)
 	// ===================================================================
 	{
-		Nan::HandleScope();
+		Nan::HandleScope scope();
 		
 		uint8_t nodeid = info[0]->ToNumber()->Value();
 		uint8_t comclass = info[1]->ToNumber()->Value();
@@ -179,7 +172,5 @@ namespace OZW {
 				}
 			}
 		}
-		
-		
 	}
 }

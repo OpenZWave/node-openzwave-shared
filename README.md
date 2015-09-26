@@ -1,9 +1,10 @@
 node-openzwave-shared
 =====================
 
-This is a node.js add-on for node 0.10.x *and* 0.12.x which wraps the [Open
+This is a node.js add-on for node 0.10.x *and* 0.12.x (and possibly
+even for NodeJS's 3 and 4, with the help of NAN), which wraps the [Open
 Z-Wave](https://www.openzwave.com/) library to provide access to a
-Z-Wave network from within node.js (server-side JavaScript.)
+Z-Wave network from within node.js (server-side JavaScript.) 
 
 You can now easily control *and manage* your [ZWave](http://www.z-wave.com/) devices
 (lights, dimmers, blinds, you name it) from within [NodeJS](https://nodejs.org/) applications.
@@ -21,22 +22,20 @@ This addon is currently able to:
 
 **Important notice**
 
-- This library differs in that it links *dynamically* to an OpenZWave **shared
-library** by means of your system dynamic linker. This is  in contrast to
-*statically* linking OpenZWave in the node.js addon.
+This library differs from its [ancestor library](https://github.com/jperkin/node-openzwave) 
+in that it links *dynamically* to an OpenZWave **shared library** 
+by means of your system dynamic linker. This is  in contrast to
+*statically* linking OpenZWave as part of the node.js addon.
+
 Thus you need to have OpenZWave fully installed on your system (both the
 compiled library AND the development headers) before trying to install this little baby.
 I know this diverges from the dominant npm paradigm, but with the shared lib approach:
   - compilation / installation is a lot faster and
-  - OZW minor upgrades / bugfixes are way lot easier.
+  - OZW *minor* upgrades / bugfixes are way lot easier.
 
 This also means that you need to be careful if you upgrade your
 OZW library: you might need to rebuild this addon, otherwise you'd might
 get api mismatch exceptions.
-
-- The Node.js C++ API has changed dramatically between 0.10.x and 0.12.x
-thus I'm using [the Native Abstractions for Node library] (https://github.com/nodejs/nan)
-to get this node addon to compile and run across all _currently_ known versions.
 
 ## Install
 
@@ -54,6 +53,9 @@ from [the OpenZWave snapshots repository](http://old.openzwave.com/snapshots/)
 **Be sure to install BOTH the binary (libopenzwave-x.y) AND the development
 package (libopenzwave-dev).**
 
+**Node.JS >= 3.0 users**: please send me reports if the addon works or breaks. 
+I've had very bad experience with the NodeJS API quicksand already, and NAN 
+appears to not be able to keep up. The NodeJS API is truly a wizard's tribute to Ctrl+Z.
 
 It should also compile in Windows, but you need to edit binding.gyp
 to set the paths for the OpenZWave library sources and libraries.
@@ -77,5 +79,5 @@ $ sudo npm install -g openzwave-shared
 The [Open Z-Wave](https://www.openzwave.com/) library that this
 module heavily relies upon is licensed under the GPLv3.
 
-Everything else (all the bits that I have written) is under the vastly more
-sensible ISC license.
+Everything else (all the bits that I and Jonathan have written) 
+is under the vastly more sensible ISC license.

@@ -27,7 +27,7 @@ namespace OZW {
 	NAN_METHOD(OZW::SetConfigParam)
 	// ===================================================================
 	{
-		Nan::HandleScope();
+		Nan::HandleScope scope();
 
 		uint8_t nodeid = info[0]->ToNumber()->Value();
 		uint8_t param = info[1]->ToNumber()->Value();
@@ -40,7 +40,6 @@ namespace OZW {
 			uint8_t size = info[3]->ToNumber()->Value();
 			OpenZWave::Manager::Get()->SetConfigParam(homeid, nodeid, param, value, size);
 		}
-
 	}
 	
 	/*
@@ -62,13 +61,12 @@ namespace OZW {
 	NAN_METHOD(OZW::RequestConfigParam)
 	// ===================================================================
 	{
-		Nan::HandleScope();
+		Nan::HandleScope scope();
 		
 		uint8_t nodeid = info[0]->ToNumber()->Value();
 		uint8_t param = info[1]->ToNumber()->Value();
 		
 		OpenZWave::Manager::Get()->RequestConfigParam(homeid, nodeid, param);
-		
 	}
 	
 		
@@ -80,12 +78,11 @@ namespace OZW {
 	NAN_METHOD(OZW::RequestAllConfigParams)
 	// ===================================================================
 	{
-		Nan::HandleScope();
+		Nan::HandleScope scope();
 		
 		uint8_t nodeid = info[0]->ToNumber()->Value();
 	
 	  	OpenZWave::Manager::Get()->RequestAllConfigParams (homeid, nodeid);
-	  	
 	}
 
 }

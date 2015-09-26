@@ -1,18 +1,24 @@
 ## API
 
-Start by loading the addon and creating a new instance, specifying the options as shown below:
-
+Start by loading the addon with `require`: 
 ```js
 var OZW = require('openzwave-shared');
+```
+and then create a new instance of the addon:
+```js
+var zwave = new OZW();
+```
+You can also pass in an optional object specifying any desired option overrides:
+```js
 var zwave = new OZW({
-        logging: false,           // enable logging to OZW_Log.txt
-        consoleoutput: false,     // copy logging to the console
-        saveconfig: false,        // write an XML network layout
-        driverattempts: 3,        // try this many times before giving up
-        pollinterval: 500,        // interval between polls in milliseconds
-        suppressrefresh: true,    // do not send updates if nothing changed
+	Logging: false,		// disable file logging (OZWLog.txt)
+    ConsoleOutput: true // enable console logging
 });
 ```
+The default options are specified in `config/options.xml`. Please refer 
+[to the full list of OpenZWave options](https://github.com/OpenZWave/open-zwave/wiki/Config-Options)
+for all the available options. If, for instance, you're using security devices 
+(e.g. door locks) then you should specify an encryption key.
 
 The rest of the API is split into Functions and Events.  Messages from the
 Z-Wave network are handled by `EventEmitter`, and you will need to listen for

@@ -4,8 +4,13 @@
 
 var OpenZWave = require('./lib/openzwave-shared.js');
 
-var zwave = new OpenZWave('/dev/ttyUSB0', {
-	saveconfig: true,
+var zwave = new OpenZWave({
+	ConsoleOutput: false,
+	Logging: false,
+	SaveConfiguration: false,
+	DriverMaxAttempts: 3,
+	PollInterval: 500,
+	SuppressValueRefresh: true,
 });
 var nodes = [];
 
@@ -126,7 +131,7 @@ zwave.on('scan complete', function() {
 	console.log('scan complete, hit ^C to finish.');
 });
 
-zwave.connect();
+zwave.connect('/dev/ttyUSB0');
 
 process.on('SIGINT', function() {
 	console.log('disconnecting...');
