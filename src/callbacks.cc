@@ -97,7 +97,7 @@ namespace OZW {
 	void handleNotification(NotifInfo *notif) 
 	// ===================================================================
 	{
-		Nan::HandleScope scope();
+		Nan::HandleScope scope;
 		
 		NodeInfo *node;
 				
@@ -419,7 +419,7 @@ namespace OZW {
 	void handleControllerCommand(NotifInfo *notif) 
 	// ===================================================================
 	{
-		Nan::HandleScope scope();
+		Nan::HandleScope scope;
 		
 		Local < v8::Value > info[16];
 		info[0] = Nan::New<String>("controller command").ToLocalChecked();

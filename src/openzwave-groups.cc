@@ -31,7 +31,7 @@ namespace OZW {
 	NAN_METHOD(OZW::GetNumGroups)
 	// ===================================================================
 	{
-		Nan::HandleScope scope();
+		Nan::HandleScope scope;
 
 		uint8_t nodeid = info[0]->ToNumber()->Value();
 		uint8 numGroups = OpenZWave::Manager::Get()->GetNumGroups(homeid, nodeid);
@@ -46,7 +46,7 @@ namespace OZW {
 	NAN_METHOD(OZW::GetAssociations)
 	// ===================================================================
 	{
-		Nan::HandleScope scope();
+		Nan::HandleScope scope;
 		
 		uint8* associations;
 
@@ -77,7 +77,7 @@ namespace OZW {
 	NAN_METHOD(OZW::GetMaxAssociations)
 	// ===================================================================
 	{
-		Nan::HandleScope scope();
+		Nan::HandleScope scope;
 		
 		uint8_t nodeid = info[0]->ToNumber()->Value();
 		uint8_t groupidx = info[1]->ToNumber()->Value();
@@ -96,7 +96,7 @@ namespace OZW {
 	NAN_METHOD(OZW::GetGroupLabel)
 	// ===================================================================
 	{
-		Nan::HandleScope scope();
+		Nan::HandleScope scope;
 		
 		uint8_t nodeid = info[0]->ToNumber()->Value();
 		uint8_t groupidx = info[1]->ToNumber()->Value();
@@ -118,7 +118,7 @@ namespace OZW {
 	NAN_METHOD(OZW::AddAssociation)
 	// ===================================================================
 	{
-		Nan::HandleScope scope();
+		Nan::HandleScope scope;
 		
 		uint8_t nodeid = info[0]->ToNumber()->Value();
 		uint8_t groupidx = info[1]->ToNumber()->Value();
@@ -136,7 +136,7 @@ namespace OZW {
 	NAN_METHOD(OZW::RemoveAssociation)
 	// ===================================================================
 	{
-		Nan::HandleScope scope();
+		Nan::HandleScope scope;
 		
 		uint8_t nodeid = info[0]->ToNumber()->Value();
 		uint8_t groupidx = info[1]->ToNumber()->Value();

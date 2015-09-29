@@ -26,7 +26,7 @@ namespace OZW {
 	NAN_METHOD(OZW::GetPollInterval)
 	// ===================================================================
 	{
-		Nan::HandleScope scope();
+		Nan::HandleScope scope;
 		uint32 i = OpenZWave::Manager::Get()->GetPollInterval();
 		info.GetReturnValue().Set(Nan::New<Integer>(i));
 	}
@@ -46,7 +46,7 @@ namespace OZW {
 	NAN_METHOD(OZW::SetPollInterval)
 	// ===================================================================
 	{
-		Nan::HandleScope scope();
+		Nan::HandleScope scope;
 		
 		uint32_t intervalMillisecs = info[0]->ToNumber()->Value();
 		OpenZWave::Manager::Get()->SetPollInterval (intervalMillisecs, false);
@@ -60,7 +60,7 @@ namespace OZW {
 	NAN_METHOD(OZW::EnablePoll)
 	// ===================================================================
 	{
-		Nan::HandleScope scope();
+		Nan::HandleScope scope;
 
 		uint8_t nodeid = info[0]->ToNumber()->Value();
 		uint8_t comclass = info[1]->ToNumber()->Value();
@@ -81,7 +81,7 @@ namespace OZW {
 	NAN_METHOD(OZW::DisablePoll)
 	// ===================================================================
 	{
-		Nan::HandleScope scope();
+		Nan::HandleScope scope;
 
 		uint8_t nodeid = info[0]->ToNumber()->Value();
 		uint8_t comclass = info[1]->ToNumber()->Value();
@@ -103,7 +103,7 @@ namespace OZW {
 	NAN_METHOD(OZW::IsPolled)
 	// ===================================================================
 	{
-		Nan::HandleScope scope();
+		Nan::HandleScope scope;
 		
 		uint8_t nodeid = info[0]->ToNumber()->Value();
 		uint8_t comclass = info[1]->ToNumber()->Value();
@@ -127,7 +127,7 @@ namespace OZW {
 	NAN_METHOD(OZW::SetPollIntensity)
 	// ===================================================================
 	{
-		Nan::HandleScope scope();
+		Nan::HandleScope scope;
 		
 		uint8_t nodeid = info[0]->ToNumber()->Value();
 		uint8_t comclass = info[1]->ToNumber()->Value();
@@ -154,7 +154,7 @@ namespace OZW {
 	NAN_METHOD(OZW::GetPollIntensity)
 	// ===================================================================
 	{
-		Nan::HandleScope scope();
+		Nan::HandleScope scope;
 		
 		uint8_t nodeid = info[0]->ToNumber()->Value();
 		uint8_t comclass = info[1]->ToNumber()->Value();

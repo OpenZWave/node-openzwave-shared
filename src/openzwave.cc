@@ -92,7 +92,7 @@ namespace OZW {
 	// ===================================================================
 	extern "C" void init(Handle<Object> target, Handle<Object> module) {
   
-		Nan::HandleScope scope();
+		Nan::HandleScope scope;
 		
 		std::string modulefilename = std::string(*v8::String::Utf8Value( 
 			Nan::Get(module, 

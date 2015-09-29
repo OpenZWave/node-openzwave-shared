@@ -26,7 +26,7 @@ namespace OZW {
 	NAN_METHOD(OZW::Connect)
 	// ===================================================================
 	{
-		Nan::HandleScope scope();
+		Nan::HandleScope scope;
 
 		std::string path = (*String::Utf8Value(info[0]->ToString()));
 
@@ -54,7 +54,7 @@ namespace OZW {
 	NAN_METHOD(OZW::Disconnect)
 	// ===================================================================
 	{
-		Nan::HandleScope scope();
+		Nan::HandleScope scope;
 
 		std::string path = (*String::Utf8Value(info[0]->ToString()));
 
@@ -74,7 +74,7 @@ namespace OZW {
 	NAN_METHOD(OZW::HardReset)
 	// ===================================================================
 	{
-		Nan::HandleScope scope();
+		Nan::HandleScope scope;
 
 		OpenZWave::Manager::Get()->ResetController(homeid);
 	}
@@ -83,7 +83,7 @@ namespace OZW {
 	NAN_METHOD(OZW::SoftReset)
 	// ===================================================================
 	{
-		Nan::HandleScope scope();
+		Nan::HandleScope scope;
 
 		OpenZWave::Manager::Get()->SoftReset(homeid);
 	}
@@ -92,7 +92,7 @@ namespace OZW {
 	NAN_METHOD(OZW::BeginControllerCommand)
 	// ===================================================================
 	{
-		Nan::HandleScope scope();
+		Nan::HandleScope scope;
 
 		std::string ctrcmd = (*String::Utf8Value(info[0]->ToString()));
 		uint8_t    nodeid1 = 0xff;
@@ -138,7 +138,7 @@ namespace OZW {
 	NAN_METHOD(OZW::CancelControllerCommand)
 	// ===================================================================
 	{
-		Nan::HandleScope scope();
+		Nan::HandleScope scope;
 		
 		OpenZWave::Manager::Get()->CancelControllerCommand (homeid);
 	}
@@ -147,7 +147,7 @@ namespace OZW {
 	NAN_METHOD(OZW::GetControllerNodeId)
 	// ===================================================================
 	{
-		Nan::HandleScope scope();
+		Nan::HandleScope scope;
 		
 	 	uint8 ctrlid = OpenZWave::Manager::Get()->GetControllerNodeId (homeid);
 	 	info.GetReturnValue().Set(
@@ -159,7 +159,7 @@ namespace OZW {
 	NAN_METHOD(OZW::GetSUCNodeId)
 	// ===================================================================
 	{
-		Nan::HandleScope scope();
+		Nan::HandleScope scope;
 		
 	 	uint8 sucid = OpenZWave::Manager::Get()->GetSUCNodeId (homeid);
 	 	info.GetReturnValue().Set(
@@ -176,7 +176,7 @@ namespace OZW {
 	NAN_METHOD(OZW::IsPrimaryController)
 	// ===================================================================
 	{
-		Nan::HandleScope scope();
+		Nan::HandleScope scope;
 		
 	 	bool isprimary = OpenZWave::Manager::Get()->IsPrimaryController (homeid);
 	 	info.GetReturnValue().Set(Nan::New<Boolean>(isprimary));
@@ -191,7 +191,7 @@ namespace OZW {
 	NAN_METHOD(OZW::IsStaticUpdateController)
 	// ===================================================================
 	{
-		Nan::HandleScope scope();
+		Nan::HandleScope scope;
 		
 	 	bool issuc = OpenZWave::Manager::Get()->IsStaticUpdateController (homeid);
 	 	info.GetReturnValue().Set(Nan::New<Boolean>(issuc));
@@ -205,7 +205,7 @@ namespace OZW {
 	NAN_METHOD(OZW::IsBridgeController)
 	// ===================================================================
 	{
-		Nan::HandleScope scope();
+		Nan::HandleScope scope;
 		
 	 	bool isbridge = OpenZWave::Manager::Get()->IsBridgeController (homeid);
 	 	info.GetReturnValue().Set(Nan::New<Boolean>(isbridge));
@@ -217,7 +217,7 @@ namespace OZW {
 	NAN_METHOD(OZW::GetLibraryVersion)
 	// ===================================================================
 	{
-		Nan::HandleScope scope();
+		Nan::HandleScope scope;
 		
 	 	std::string libver = OpenZWave::Manager::Get()->GetLibraryVersion (homeid);
 	 	info.GetReturnValue().Set(
@@ -246,7 +246,7 @@ namespace OZW {
 	NAN_METHOD(OZW::GetLibraryTypeName)
 	// ===================================================================
 	{
-		Nan::HandleScope scope();
+		Nan::HandleScope scope;
 		
 	 	std::string libtype = OpenZWave::Manager::Get()->GetLibraryTypeName (homeid);
 	 	info.GetReturnValue().Set(
@@ -260,7 +260,7 @@ namespace OZW {
 	NAN_METHOD(OZW::GetSendQueueCount)
 	// ===================================================================
 	{
-		Nan::HandleScope scope();
+		Nan::HandleScope scope;
 		
 	 	uint32 cnt = OpenZWave::Manager::Get()->GetSendQueueCount (homeid);
 	 	info.GetReturnValue().Set(Nan::New<Integer>(cnt));

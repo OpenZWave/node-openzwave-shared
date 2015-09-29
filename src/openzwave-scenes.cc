@@ -27,7 +27,7 @@ namespace OZW {
 	NAN_METHOD(OZW::CreateScene)
 	// ===================================================================
 	{
-		Nan::HandleScope scope();
+		Nan::HandleScope scope;
 
 		std::string label = (*String::Utf8Value(info[0]->ToString()));
 
@@ -51,7 +51,7 @@ namespace OZW {
 	NAN_METHOD(OZW::RemoveScene)
 	// ===================================================================
 	{
-		Nan::HandleScope scope();
+		Nan::HandleScope scope;
 
 		uint8_t sceneid = info[0]->ToNumber()->Value();
 
@@ -68,7 +68,7 @@ namespace OZW {
 	NAN_METHOD(OZW::GetScenes)
 	// ===================================================================
 	{
-		Nan::HandleScope scope();
+		Nan::HandleScope scope;
 
 		uint8_t numscenes = OpenZWave::Manager::Get()->GetNumScenes();
 		SceneInfo *scene;
@@ -120,7 +120,7 @@ namespace OZW {
 	NAN_METHOD(OZW::AddSceneValue)
 	// ===================================================================
 	{
-		Nan::HandleScope scope();
+		Nan::HandleScope scope;
 
 		uint8_t sceneid = info[0]->ToNumber()->Value();
 		uint8_t nodeid = info[1]->ToNumber()->Value();
@@ -197,7 +197,7 @@ namespace OZW {
 	NAN_METHOD(OZW::RemoveSceneValue)
 	// ===================================================================
 	{
-		Nan::HandleScope scope();
+		Nan::HandleScope scope;
 
 		uint8_t sceneid = info[0]->ToNumber()->Value();
 		uint8_t nodeid = info[1]->ToNumber()->Value();
@@ -224,7 +224,7 @@ namespace OZW {
 	NAN_METHOD(OZW::SceneGetValues)
 	// ===================================================================
 	{
-		Nan::HandleScope scope();
+		Nan::HandleScope scope;
 
 		uint8_t sceneid = info[0]->ToNumber()->Value();
 
@@ -256,7 +256,7 @@ namespace OZW {
 	NAN_METHOD(OZW::ActivateScene)
 	// ===================================================================
 	{
-		Nan::HandleScope scope();
+		Nan::HandleScope scope;
 
 		uint8_t sceneid = info[0]->ToNumber()->Value();
 

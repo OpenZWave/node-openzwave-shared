@@ -28,7 +28,7 @@ namespace OZW {
 	NAN_METHOD(OZW::GetNodeNeighbors)
 	// ===================================================================
 	{
-		Nan::HandleScope scope();
+		Nan::HandleScope scope;
 		uint8* neighbors; 
 
 		uint8_t nodeid = info[0]->ToNumber()->Value();
@@ -47,7 +47,7 @@ namespace OZW {
 	NAN_METHOD(OZW::SetNodeOn)
 	// =================================================================
 	{
-		Nan::HandleScope scope();
+		Nan::HandleScope scope;
 
 		uint8_t nodeid = info[0]->ToNumber()->Value();
 		OpenZWave::Manager::Get()->SetNodeOn(homeid, nodeid);
@@ -59,7 +59,7 @@ namespace OZW {
 	NAN_METHOD(OZW::SetNodeOff)
 	// =================================================================
 	{
-		Nan::HandleScope scope();
+		Nan::HandleScope scope;
 
 		uint8_t nodeid = info[0]->ToNumber()->Value();
 		OpenZWave::Manager::Get()->SetNodeOff(homeid, nodeid);
@@ -71,7 +71,7 @@ namespace OZW {
 	NAN_METHOD(OZW::SwitchAllOn)
 	// ===================================================================
 	{
-		Nan::HandleScope scope();
+		Nan::HandleScope scope;
 
 		OpenZWave::Manager::Get()->SwitchAllOn(homeid);
 
@@ -82,7 +82,7 @@ namespace OZW {
 	NAN_METHOD(OZW::SwitchAllOff)
 	// ===================================================================
 	{
-		Nan::HandleScope scope();
+		Nan::HandleScope scope;
 
 		OpenZWave::Manager::Get()->SwitchAllOff(homeid);
 
@@ -96,7 +96,7 @@ namespace OZW {
 	NAN_METHOD(OZW::SetLocation)
 	// ===================================================================
 	{
-		Nan::HandleScope scope();
+		Nan::HandleScope scope;
 
 		uint8_t nodeid = info[0]->ToNumber()->Value();
 		std::string location = (*String::Utf8Value(info[1]->ToString()));
@@ -113,7 +113,7 @@ namespace OZW {
 	NAN_METHOD(OZW::SetName)
 	// ===================================================================
 	{
-		Nan::HandleScope scope();
+		Nan::HandleScope scope;
 
 		uint8_t nodeid = info[0]->ToNumber()->Value();
 		std::string name = (*String::Utf8Value(info[1]->ToString()));
@@ -137,7 +137,7 @@ namespace OZW {
 	NAN_METHOD(OZW::RefreshNodeInfo)
 	// ===================================================================
 	{
-		Nan::HandleScope scope();
+		Nan::HandleScope scope;
 		
 		uint8_t nodeid = info[0]->ToNumber()->Value();
 		
@@ -151,7 +151,7 @@ namespace OZW {
 	NAN_METHOD(OZW::GetNodeManufacturerName)
 	// ===================================================================
 	{
-		Nan::HandleScope scope();
+		Nan::HandleScope scope;
 
 		uint8_t nodeid = info[0]->ToNumber()->Value();
 
@@ -167,7 +167,7 @@ namespace OZW {
 	NAN_METHOD(OZW::RequestNodeState)
 	// ===================================================================
 	{
-		Nan::HandleScope scope();
+		Nan::HandleScope scope;
 
 		uint8_t nodeid = info[0]->ToNumber()->Value();
 
@@ -183,7 +183,7 @@ namespace OZW {
 	NAN_METHOD(OZW::RequestNodeDynamic)
 	// ===================================================================
 	{
-		Nan::HandleScope scope();
+		Nan::HandleScope scope;
 
 		uint8_t nodeid = info[0]->ToNumber()->Value();
 
@@ -199,7 +199,7 @@ namespace OZW {
 	NAN_METHOD(OZW::IsNodeListeningDevice)
 	// ===================================================================
 	{
-		Nan::HandleScope scope();
+		Nan::HandleScope scope;
 
 		uint8_t nodeid = info[0]->ToNumber()->Value();
 
@@ -215,7 +215,7 @@ namespace OZW {
 	NAN_METHOD(OZW::IsNodeFrequentListeningDevice)
 	// ===================================================================
 	{
-		Nan::HandleScope scope();
+		Nan::HandleScope scope;
 
 		uint8_t nodeid = info[0]->ToNumber()->Value();
 
@@ -231,7 +231,7 @@ namespace OZW {
 	NAN_METHOD(OZW::IsNodeBeamingDevice)
 	// ===================================================================
 	{
-		Nan::HandleScope scope();
+		Nan::HandleScope scope;
 
 		uint8_t nodeid = info[0]->ToNumber()->Value();
 
@@ -247,7 +247,7 @@ namespace OZW {
 	NAN_METHOD(OZW::IsNodeRoutingDevice)
 	// ===================================================================
 	{
-		Nan::HandleScope scope();
+		Nan::HandleScope scope;
 
 		uint8_t nodeid = info[0]->ToNumber()->Value();
 
@@ -263,7 +263,7 @@ namespace OZW {
 	NAN_METHOD(OZW::IsNodeSecurityDevice)
 	// ===================================================================
 	{
-		Nan::HandleScope scope();
+		Nan::HandleScope scope;
 
 		uint8_t nodeid = info[0]->ToNumber()->Value();
 
@@ -279,7 +279,7 @@ namespace OZW {
 	NAN_METHOD(OZW::GetNodeMaxBaudRate)
 	// ===================================================================
 	{
-		Nan::HandleScope scope();
+		Nan::HandleScope scope;
 
 		uint8_t nodeid = info[0]->ToNumber()->Value();
 
@@ -295,7 +295,7 @@ namespace OZW {
 	NAN_METHOD(OZW::GetNodeVersion)
 	// ===================================================================
 	{
-		Nan::HandleScope scope();
+		Nan::HandleScope scope;
 
 		uint8_t nodeid = info[0]->ToNumber()->Value();
 
@@ -311,7 +311,7 @@ namespace OZW {
 	NAN_METHOD(OZW::GetNodeSecurity)
 	// ===================================================================
 	{
-		Nan::HandleScope scope();
+		Nan::HandleScope scope;
 
 		uint8_t nodeid = info[0]->ToNumber()->Value();
 
@@ -327,7 +327,7 @@ namespace OZW {
 	NAN_METHOD(OZW::GetNodeBasic)
 	// ===================================================================
 	{
-		Nan::HandleScope scope();
+		Nan::HandleScope scope;
 
 		uint8_t nodeid = info[0]->ToNumber()->Value();
 
@@ -343,7 +343,7 @@ namespace OZW {
 	NAN_METHOD(OZW::GetNodeGeneric)
 	// ===================================================================
 	{
-		Nan::HandleScope scope();
+		Nan::HandleScope scope;
 
 		uint8_t nodeid = info[0]->ToNumber()->Value();
 
@@ -359,7 +359,7 @@ namespace OZW {
 	NAN_METHOD(OZW::GetNodeSpecific)
 	// ===================================================================
 	{
-		Nan::HandleScope scope();
+		Nan::HandleScope scope;
 
 		uint8_t nodeid = info[0]->ToNumber()->Value();
 
@@ -375,7 +375,7 @@ namespace OZW {
 	NAN_METHOD(OZW::GetNodeType)
 	// ===================================================================
 	{
-		Nan::HandleScope scope();
+		Nan::HandleScope scope;
 
 		uint8_t nodeid = info[0]->ToNumber()->Value();
 
@@ -391,7 +391,7 @@ namespace OZW {
 	NAN_METHOD(OZW::GetNodeProductName)
 	// ===================================================================
 	{
-		Nan::HandleScope scope();
+		Nan::HandleScope scope;
 
 		uint8_t nodeid = info[0]->ToNumber()->Value();
 
@@ -407,7 +407,7 @@ namespace OZW {
 	NAN_METHOD(OZW::GetNodeName)
 	// ===================================================================
 	{
-		Nan::HandleScope scope();
+		Nan::HandleScope scope;
 
 		uint8_t nodeid = info[0]->ToNumber()->Value();
 
@@ -423,7 +423,7 @@ namespace OZW {
 	NAN_METHOD(OZW::GetNodeLocation)
 	// ===================================================================
 	{
-		Nan::HandleScope scope();
+		Nan::HandleScope scope;
 
 		uint8_t nodeid = info[0]->ToNumber()->Value();
 
@@ -439,7 +439,7 @@ namespace OZW {
 	NAN_METHOD(OZW::GetNodeManufacturerId)
 	// ===================================================================
 	{
-		Nan::HandleScope scope();
+		Nan::HandleScope scope;
 
 		uint8_t nodeid = info[0]->ToNumber()->Value();
 
@@ -455,7 +455,7 @@ namespace OZW {
 	NAN_METHOD(OZW::GetNodeProductType)
 	// ===================================================================
 	{
-		Nan::HandleScope scope();
+		Nan::HandleScope scope;
 
 		uint8_t nodeid = info[0]->ToNumber()->Value();
 
@@ -471,7 +471,7 @@ namespace OZW {
 	NAN_METHOD(OZW::GetNodeProductId)
 	// ===================================================================
 	{
-		Nan::HandleScope scope();
+		Nan::HandleScope scope;
 
 		uint8_t nodeid = info[0]->ToNumber()->Value();
 
@@ -487,7 +487,7 @@ namespace OZW {
 	NAN_METHOD(OZW::SetNodeManufacturerName)
 	// ===================================================================
 	{
-		Nan::HandleScope scope();
+		Nan::HandleScope scope;
 
 		uint8_t nodeid = info[0]->ToNumber()->Value();
 		std::string name = (*String::Utf8Value(info[1]->ToString()));
@@ -502,7 +502,7 @@ namespace OZW {
 	NAN_METHOD(OZW::SetNodeProductName)
 	// ===================================================================
 	{
-		Nan::HandleScope scope();
+		Nan::HandleScope scope;
 
 		uint8_t nodeid = info[0]->ToNumber()->Value();
 		std::string name = (*String::Utf8Value(info[1]->ToString()));

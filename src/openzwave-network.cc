@@ -29,7 +29,7 @@ namespace OZW {
 	NAN_METHOD(OZW::TestNetworkNode)
 	// ===================================================================
 	{
-		Nan::HandleScope scope();
+		Nan::HandleScope scope;
 
 		uint8_t nodeid = info[0]->ToNumber()->Value();
 		uint8_t nummsg = info[1]->ToBoolean()->Value();
@@ -45,7 +45,7 @@ namespace OZW {
 	NAN_METHOD(OZW::TestNetwork)
 	// ===================================================================
 	{
-		Nan::HandleScope scope();
+		Nan::HandleScope scope;
 		
 		uint8_t nummsg = info[0]->ToNumber()->Value();
 		
@@ -59,7 +59,7 @@ namespace OZW {
 	NAN_METHOD(OZW::HealNetworkNode)
 	// ===================================================================
 	{
-		Nan::HandleScope scope();
+		Nan::HandleScope scope;
 
 		uint8_t nodeid = info[0]->ToNumber()->Value();
 		uint8_t doRR = info[1]->ToBoolean()->Value();
@@ -76,7 +76,7 @@ namespace OZW {
 	NAN_METHOD(OZW::HealNetwork)
 	// ===================================================================
 	{
-		Nan::HandleScope scope();
+		Nan::HandleScope scope;
 
 		bool doRR = info[0]->ToBoolean()->Value();
 		OpenZWave::Manager::Get()->HealNetwork(homeid, doRR);

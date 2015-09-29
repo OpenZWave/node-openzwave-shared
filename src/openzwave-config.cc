@@ -27,7 +27,7 @@ namespace OZW {
 	NAN_METHOD(OZW::SetConfigParam)
 	// ===================================================================
 	{
-		Nan::HandleScope scope();
+		Nan::HandleScope scope;
 
 		uint8_t nodeid = info[0]->ToNumber()->Value();
 		uint8_t param = info[1]->ToNumber()->Value();
@@ -61,7 +61,7 @@ namespace OZW {
 	NAN_METHOD(OZW::RequestConfigParam)
 	// ===================================================================
 	{
-		Nan::HandleScope scope();
+		Nan::HandleScope scope;
 		
 		uint8_t nodeid = info[0]->ToNumber()->Value();
 		uint8_t param = info[1]->ToNumber()->Value();
@@ -78,7 +78,7 @@ namespace OZW {
 	NAN_METHOD(OZW::RequestAllConfigParams)
 	// ===================================================================
 	{
-		Nan::HandleScope scope();
+		Nan::HandleScope scope;
 		
 		uint8_t nodeid = info[0]->ToNumber()->Value();
 	

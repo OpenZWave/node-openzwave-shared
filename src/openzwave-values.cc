@@ -28,7 +28,7 @@ namespace OZW {
 	NAN_METHOD(OZW::SetValue)
 	// =================================================================
 	{
-		Nan::HandleScope scope();
+		Nan::HandleScope scope;
 
 		uint8_t nodeid = info[0]->ToNumber()->Value();
 		uint8_t comclass = info[1]->ToNumber()->Value();
