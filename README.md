@@ -44,14 +44,17 @@ On Linux you will need to ensure the OpenZWave library and headers are
 installed first.
 
 - Manually compiling OpenZwave involves the usual dance of
-  - downloading its source tarball
-  - compiling it and installing on your system (`make && sudo make install`)
+  - downloading its [source package](https://github.com/OpenZWave/open-zwave/archive/master.zip)
+  - unpacking it (`unzip`)
+  - compiling it (`make`), and finally
+  - installing on your system (`sudo make install`)
 
-- You could also install OpenZWave via a precompiled package that's suitable for your Linux distribution.
-Precompiled packages for various Linux flavours and architectures can be downloaded
+- If you're afraid of compilers, you could also install OpenZWave via 
+ready to use packages for your O/S. Precompiled packages for various
+Linux flavours and architectures can be downloaded
 from [the OpenZWave snapshots repository](http://old.openzwave.com/snapshots/)
-**Be sure to install BOTH the binary (libopenzwave-x.y) AND the development
-package (libopenzwave-dev).**
+**Be sure to download and install BOTH the binary (libopenzwave1.0) 
+AND the development package (libopenzwave1.0-dev).**
 
 **Node.JS >= 3.0 users**: please send me reports if the addon works or breaks. 
 I've had very bad experience with the NodeJS API quicksand already, and NAN 
