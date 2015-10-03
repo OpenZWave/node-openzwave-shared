@@ -1,18 +1,22 @@
 var ZWave = require('./lib/openzwave-shared.js');
-var zwave = new ZWave();
+var zwave = new ZWave({
+    Logging: true,     // disable file logging (OZWLog.txt)
+    ConsoleOutput: true // enable console logging	
+});
+console.log("$$$" + zwave.on + " : " + typeof zwave.on);
 
 var nodes = [];
-
+console.log("0");
 zwave.on('driver ready', function(homeid) {
     console.log('scanning homeid=0x%s...', homeid.toString(16));
 });
-
+console.log("1");
 zwave.on('driver failed', function() {
     console.log('failed to start driver');
     zwave.disconnect();
     process.exit();
 });
-
+console.log("2");
 zwave.on('node added', function(nodeid) {
     nodes[nodeid] = {
         manufacturer: '',
@@ -120,7 +124,9 @@ zwave.on('controller command', function(r,s) {
     console.log('controller commmand feedback: r=%d, s=%d',r,s);
 });
 
+console.log("before");
 zwave.connect('/dev/ttyUSB0');
+console.log("after");
 
 process.on('SIGINT', function() {
     console.log('disconnecting...');

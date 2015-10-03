@@ -86,6 +86,23 @@ namespace OZW {
 		}
 		ozwopt->Lock();
 		//
+		// ee = new EventEmitter
+		Local < Object > EventEmitter = Nan::Get( info.This(),
+			Nan::New<String>("EventEmitter").ToLocalChecked()
+		).ToLocalChecked().As<Object>();
+		Local<Object> ee =  Nan::CallAsConstructor(EventEmitter, 0, 0).ToLocalChecked().As<Object>();
+		Local<Array>  ee_props = Nan::GetPropertyNames(ee).ToLocalChecked();		
+		for (unsigned int i = 0; i < ee_props->Length(); ++i) {
+			Local<Value> key = ee_props->Get(i);
+			Local<Value> val = Nan::Get(ee, key).ToLocalChecked();
+			if (val->IsFunction()) {
+				Local<Function> eefunc = val.As<Function>();
+				std::cout << "copying : " << *v8::String::Utf8Value(key) << "\n";
+				Nan::Set(info.This(), key, eefunc);
+			}
+		}
+		// t->PrototypeTemplate()->Set("emit",
+		
 		info.GetReturnValue().Set(info.This());
 	}
 
@@ -111,25 +128,22 @@ namespace OZW {
 			Nan::New<String>("require").ToLocalChecked()
 		).ToLocalChecked().As<Function>();
         
-        // require(events)
+        // require('events')
 		Local<Value> requireArgs[1] = {Nan::New<String>("events").ToLocalChecked()};
 		Local<Object> eventsModule  =  Nan::CallAsConstructor(
 			require, 1, requireArgs
 		).ToLocalChecked().As<Object>();
 		
-		// require(events).EventEmitter
-		Local < Object > EventEmitter = Nan::Get(eventsModule,
+		// require('events').EventEmitter
+		Local < Object > EventEmitter = Nan::Get( eventsModule,
 			Nan::New<String>("EventEmitter").ToLocalChecked()
 		).ToLocalChecked().As<Object>();
 		assert(EventEmitter->IsFunction());
 		
-		// ee = new EventEmitter
-		Local<Object> ee =  Nan::CallAsConstructor(EventEmitter, 0, 0).ToLocalChecked().As<Object>();
-
-		// create new v8::FunctionTemplate and encapsulate the EventEmitter object
+		// create new v8::FunctionTemplate and encapsulate the EventEmitter function
 		Local < FunctionTemplate > t = Nan::New<FunctionTemplate>(OZW::New);
 		t->InstanceTemplate()->SetInternalFieldCount(1);
-		Nan::SetPrototypeTemplate(t, "ee", ee);
+		Nan::SetPrototypeTemplate(t, "EventEmitter", EventEmitter);
 		
 		// openzwave-config.cc
 		Nan::SetPrototypeMethod(t, "setConfigParam", OZW::SetConfigParam);
