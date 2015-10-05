@@ -77,7 +77,7 @@ $ sudo npm install -g openzwave-shared
 ## License
 
 The [Open Z-Wave](https://www.openzwave.com/) library that this
-module heavily relies upon is licensed under the GPLv3.
+module heavily relies upon is licensed under the Lesser GPLv3.
 
 Everything else (all the bits that I and Jonathan have written) 
 is under the vastly more sensible ISC license.

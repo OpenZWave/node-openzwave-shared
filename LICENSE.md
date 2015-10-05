@@ -1,6 +1,6 @@
 ## Licenses
 
-This software uses OpenZWave (GPLv3) but comes with 
+This software uses OpenZWave (LGPLv3): 
 
 ### OpenZWave
     
@@ -24,7 +24,7 @@ This software uses OpenZWave (GPLv3) but comes with
 You can find full copies of the GPL licenses under OpenZWave's 
 installation directory.
 
-### node-openzwave
+### node-openzwave and node-openzwave-shared 
 
 Everything else is licensed under the ISC license:
 

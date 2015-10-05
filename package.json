@@ -1,6 +1,6 @@
 {
   "name": "openzwave-shared",
-  "version": "1.0.9",
+  "version": "1.1",
   "description": "Node.JS bindings for OpenZWave including the long-missing management functions",
   "main": "./lib/openzwave-shared.js",
   "dependencies" : {
@@ -21,7 +21,8 @@
   ],
   "author": "Elias Karakoulakis <elias.karakoulakis@gmail.com>",
   "contributors": [ 
-	"Jonathan Perkin <jonathan@perkin.org.uk> (http://www.perkin.org.uk/)" 
+	"Jonathan Perkin <jonathan@perkin.org.uk> (http://www.perkin.org.uk/)" ,
+	"Thibaut CONSTANT"
   ],
   "licenses": [
     {
@@ -29,8 +30,8 @@
       "url": "http://opensource.org/licenses/ISC"
     },
     {
-      "type": "GPLv3",
-      "url": "http://opensource.org/licenses/GPL-3.0"
+      "type": "LGPLv3",
+      "url": "http://www.gnu.org/licenses/lgpl-3.0.html"
     }
   ],
   "gypfile": true
