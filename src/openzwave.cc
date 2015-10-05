@@ -99,20 +99,6 @@ namespace OZW {
 				Nan::New("filename").ToLocalChecked()
 			).ToLocalChecked()
 		));
-/*
-   		Local<Function> require = Nan::Get( module,
-			Nan::New<String>("require").ToLocalChecked()
-		).ToLocalChecked().As<Function>();
-        
-		Local<Value> requireArgs[] = {String::New("path")};
-		Local<Object> requireModule = require->Call(Object::New(), 1, requireArgs).As<Object>();
-		Local<Function> dirname = Nan::Get( requireModule,
-			Nan::New<String>("dirname").ToLocalChecked()
-		).ToLocalChecked().As<Function>();
-		
-		Local<Value> dirnameArgs[] = {modulefilename};
-		Local<String> moduleDirname = dirname->Call(requireModule, 1, dirnameArgs).As<String>();
-*/
 		std::size_t found = modulefilename.find_last_of("/\\");
 		if (found > 0) {
 			//std::cout << " path: " << modulefilename.substr(0,found) << '\n';
@@ -123,8 +109,7 @@ namespace OZW {
 		Local < FunctionTemplate > t = Nan::New<FunctionTemplate>(OZW::New);
 		t->SetClassName(Nan::New("OZW").ToLocalChecked());
 		t->InstanceTemplate()->SetInternalFieldCount(1);
-		Local < Value > ee = Nan::Get(Nan::GetCurrentContext()->Global(), Nan::New<String>("EventEmitter").ToLocalChecked()).ToLocalChecked();
-		Nan::SetTemplate(t, "ee", ee);
+
 		// openzwave-config.cc
 		Nan::SetPrototypeMethod(t, "setConfigParam", OZW::SetConfigParam);
 		Nan::SetPrototypeMethod(t, "requestConfigParam", OZW::RequestConfigParam);

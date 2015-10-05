@@ -1,5 +1,7 @@
 var ZWave = require('./lib/openzwave-shared.js');
-var zwave = new ZWave();
+var zwave = new ZWave({
+	ConsoleOutput: true
+});
 
 var nodes = [];
 
