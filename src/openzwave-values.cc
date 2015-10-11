@@ -1,7 +1,7 @@
 /*
 * Copyright (c) 2013 Jonathan Perkin <jonathan@perkin.org.uk>
 * Copyright (c) 2015 Elias Karakoulakis <elias.karakoulakis@gmail.com>
-* 
+*
 * Permission to use, copy, modify, and distribute this software for any
 * purpose with or without fee is hereby granted, provided that the above
 * copyright notice and this permission notice appear in all copies.
@@ -30,10 +30,10 @@ namespace OZW {
 	{
 		Nan::HandleScope scope;
 
-		uint8_t nodeid = info[0]->ToNumber()->Value();
-		uint8_t comclass = info[1]->ToNumber()->Value();
-		uint8_t instance = info[2]->ToNumber()->Value();
-		uint8_t index = info[3]->ToNumber()->Value();
+		uint8 nodeid = info[0]->ToNumber()->Value();
+		uint8 comclass = info[1]->ToNumber()->Value();
+		uint8 instance = info[2]->ToNumber()->Value();
+		uint8 index = info[3]->ToNumber()->Value();
 
 		NodeInfo *node;
 		std::list<OpenZWave::ValueID>::iterator vit;
@@ -49,7 +49,7 @@ namespace OZW {
 							break;
 						}
 						case OpenZWave::ValueID::ValueType_Byte: {
-							uint8_t val = info[4]->ToInteger()->Value();
+							uint8 val = info[4]->ToInteger()->Value();
 							OpenZWave::Manager::Get()->SetValue(*vit, val);
 							break;
 						}
@@ -59,7 +59,7 @@ namespace OZW {
 							break;
 						}
 						case OpenZWave::ValueID::ValueType_Int: {
-							int32_t val = info[4]->ToInteger()->Value();
+							int32 val = info[4]->ToInteger()->Value();
 							OpenZWave::Manager::Get()->SetValue(*vit, val);
 							break;
 						}
@@ -69,7 +69,7 @@ namespace OZW {
 							break;
 						}
 						case OpenZWave::ValueID::ValueType_Short: {
-							int16_t val = info[4]->ToInteger()->Value();
+							int16 val = info[4]->ToInteger()->Value();
 							OpenZWave::Manager::Get()->SetValue(*vit, val);
 							break;
 						}

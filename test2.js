@@ -1,6 +1,6 @@
 var ZWave = require('./lib/openzwave-shared.js');
 var zwave = new ZWave({
-	ConsoleOutput: true
+	ConsoleOutput: false
 });
 
 var nodes = [];
@@ -114,12 +114,12 @@ zwave.on('notification', function(nodeid, notif) {
 
 zwave.on('scan complete', function() {
     console.log('====> scan complete, hit ^C to finish.');
-    // Add a new device to the ZWave controller
-//    zwave.beginControllerCommand('AddDevice', true);
+    // set dimmer node 5 to 50%
+    zwave.setValue(5,38,1,0,50);
 });
 
-zwave.on('controller command', function(r,s) {
-    console.log('controller commmand feedback: r=%d, s=%d',r,s);
+zwave.on('controller command', function(n,rv,st) {
+    console.log('controller commmand feedback: node==%d, retval=%d, state=%d',n,rv,st);
 });
 
 zwave.connect('/dev/ttyUSB0');

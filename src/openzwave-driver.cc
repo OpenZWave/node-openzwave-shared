@@ -1,7 +1,7 @@
 /*
 * Copyright (c) 2013 Jonathan Perkin <jonathan@perkin.org.uk>
 * Copyright (c) 2015 Elias Karakoulakis <elias.karakoulakis@gmail.com>
-* 
+*
 * Permission to use, copy, modify, and distribute this software for any
 * purpose with or without fee is hereby granted, provided that the above
 * copyright notice and this permission notice appear in all copies.
@@ -21,7 +21,7 @@ using namespace v8;
 using namespace node;
 
 namespace OZW {
-	
+
 	// ===================================================================
 	NAN_METHOD(OZW::Connect)
 	// ===================================================================
@@ -36,18 +36,22 @@ namespace OZW {
 			Nan::New<String>("emit").ToLocalChecked()
 		).ToLocalChecked()
 		 .As<Function>();
-		 
+
 		emit_cb = new Nan::Callback(callbackHandle);
 
 		//std::cout << "~~~~ emit_cb:" << emit_cb << " isEmpty? " << emit_cb->IsEmpty() << "\n";
-		
+
 		OpenZWave::Manager::Create();
-		OpenZWave::Manager::Get()->AddWatcher(ozw_watcher_callback, NULL);
-		OpenZWave::Manager::Get()->AddDriver(path);
+		OpenZWave::Manager* mgr = OpenZWave::Manager::Get();
+    mgr->AddWatcher(ozw_watcher_callback, NULL);
+		mgr->AddDriver(path);
+    std::string version(OpenZWave::Manager::getVersionAsString());
 
 		Local < v8::Value > cbinfo[16];
 		cbinfo[0] = Nan::New<String>("connected").ToLocalChecked();
-		emit_cb->Call(1, cbinfo);
+		cbinfo[1] = Nan::New<String>(version).ToLocalChecked();
+
+		emit_cb->Call(2, cbinfo);
 	}
 
 	// ===================================================================
@@ -78,7 +82,7 @@ namespace OZW {
 
 		OpenZWave::Manager::Get()->ResetController(homeid);
 	}
-	
+
 	// ===================================================================
 	NAN_METHOD(OZW::SoftReset)
 	// ===================================================================
@@ -87,68 +91,14 @@ namespace OZW {
 
 		OpenZWave::Manager::Get()->SoftReset(homeid);
 	}
-	
-	// ===================================================================
-	NAN_METHOD(OZW::BeginControllerCommand)
-	// ===================================================================
-	{
-		Nan::HandleScope scope;
 
-		std::string ctrcmd = (*String::Utf8Value(info[0]->ToString()));
-		uint8_t    nodeid1 = 0xff;
-		uint8_t    nodeid2 = 0;
-		bool highpower = false;
-		if (info.Length() > 1) {
-			highpower = info[1]->ToBoolean()->Value();
-			if (info.Length() > 2) {
-				nodeid1 = info[2]->ToNumber()->Value();
-				if (info.Length() > 3) {
-					nodeid2 = info[3]->ToNumber()->Value();
-				}
-			}
-		}
-		//
-		CommandMap::const_iterator search = (*ctrlCmdNames).find(ctrcmd);
-		if(search != (*ctrlCmdNames).end()) {
-			/*
-			 * BeginControllerCommand
-			 * http://openzwave.com/dev/classOpenZWave_1_1Manager.html#aa11faf40f19f0cda202d2353a60dbf7b
-			 * 
-			_homeId		The Home ID of the Z-Wave controller.
-			_command	The command to be sent to the controller.
-			_callback	pointer to a function that will be called at various stages during the command process to notify the user of progress or to request actions on the user's part. Defaults to NULL.
-			_context	pointer to user defined data that will be passed into to the callback function. Defaults to NULL.
-			_highPower	used only with the AddDevice, AddController, RemoveDevice and RemoveController commands. Usually when adding or removing devices, the controller operates at low power so that the controller must be physically close to the device for security reasons. If _highPower is true, the controller will operate at normal power levels instead. Defaults to false.
-			_nodeId	is the node ID used by the command if necessary.
-			_arg	is an optional argument, usually another node ID, that is used by the command.
-			* */
-			OpenZWave::Manager::Get()->BeginControllerCommand (
-				homeid,
-				search->second, // _command
-				ozw_ctrlcmd_callback, // _callback
-				NULL, 	// void * 	_context = NULL,
-				highpower,	// bool 	_highPower = false,
-				nodeid1,// uint8 	_nodeId = 0xff,
-				nodeid2	// uint8 	_arg = 0 
-			);
-		}
-	}
-	
-	// ===================================================================
-	NAN_METHOD(OZW::CancelControllerCommand)
-	// ===================================================================
-	{
-		Nan::HandleScope scope;
-		
-		OpenZWave::Manager::Get()->CancelControllerCommand (homeid);
-	}
-	
+
 	// ===================================================================
 	NAN_METHOD(OZW::GetControllerNodeId)
 	// ===================================================================
 	{
 		Nan::HandleScope scope;
-		
+
 	 	uint8 ctrlid = OpenZWave::Manager::Get()->GetControllerNodeId (homeid);
 	 	info.GetReturnValue().Set(
 			Nan::New<Integer>(ctrlid)
@@ -160,65 +110,65 @@ namespace OZW {
 	// ===================================================================
 	{
 		Nan::HandleScope scope;
-		
+
 	 	uint8 sucid = OpenZWave::Manager::Get()->GetSUCNodeId (homeid);
 	 	info.GetReturnValue().Set(
 			Nan::New<Integer>(sucid)
 		);
 	}
-	 
-	/* Query if the controller is a primary controller. The primary controller 
-	 * is the main device used to configure and control a Z-Wave network. 
-	 * There can only be one primary controller - all other controllers 
-	 * are secondary controllers. 
+
+	/* Query if the controller is a primary controller. The primary controller
+	 * is the main device used to configure and control a Z-Wave network.
+	 * There can only be one primary controller - all other controllers
+	 * are secondary controllers.
 	 */
 	// ===================================================================
 	NAN_METHOD(OZW::IsPrimaryController)
 	// ===================================================================
 	{
 		Nan::HandleScope scope;
-		
+
 	 	bool isprimary = OpenZWave::Manager::Get()->IsPrimaryController (homeid);
 	 	info.GetReturnValue().Set(Nan::New<Boolean>(isprimary));
 	}
- 
-	/* Query if the controller is a static update controller. A Static 
-	 * Update Controller (SUC) is a controller that must never be moved 
-	 * in normal operation and which can be used by other nodes to 
-	 * receive information about network changes. 
+
+	/* Query if the controller is a static update controller. A Static
+	 * Update Controller (SUC) is a controller that must never be moved
+	 * in normal operation and which can be used by other nodes to
+	 * receive information about network changes.
 	 */
 	// ===================================================================
 	NAN_METHOD(OZW::IsStaticUpdateController)
 	// ===================================================================
 	{
 		Nan::HandleScope scope;
-		
+
 	 	bool issuc = OpenZWave::Manager::Get()->IsStaticUpdateController (homeid);
 	 	info.GetReturnValue().Set(Nan::New<Boolean>(issuc));
 	}
- 
-	/* Query if the controller is using the bridge controller library. 
-	 * A bridge controller is able to create virtual nodes that can be 
-	 * associated with other controllers to enable events to be passed on. 
-	 */ 
+
+	/* Query if the controller is using the bridge controller library.
+	 * A bridge controller is able to create virtual nodes that can be
+	 * associated with other controllers to enable events to be passed on.
+	 */
 	// ===================================================================
 	NAN_METHOD(OZW::IsBridgeController)
 	// ===================================================================
 	{
 		Nan::HandleScope scope;
-		
+
 	 	bool isbridge = OpenZWave::Manager::Get()->IsBridgeController (homeid);
 	 	info.GetReturnValue().Set(Nan::New<Boolean>(isbridge));
 	}
 
- 	/* Get the version of the Z-Wave API library used by a controller. 
+ 	/* Get the version of the Z-Wave API library used by a controller.
  	 */
  	// ===================================================================
 	NAN_METHOD(OZW::GetLibraryVersion)
 	// ===================================================================
 	{
 		Nan::HandleScope scope;
-		
+
 	 	std::string libver = OpenZWave::Manager::Get()->GetLibraryVersion (homeid);
 	 	info.GetReturnValue().Set(
 			Nan::New<String>(
@@ -227,27 +177,27 @@ namespace OZW {
 		);
 	}
 
- 	/* Get a string containing the Z-Wave API library type used by a 
- 	 * controller. The possible library types are: 
+ 	/* Get a string containing the Z-Wave API library type used by a
+ 	 * controller. The possible library types are:
  	 * 	Static Controller
- 	 * 	Controller	
+ 	 * 	Controller
  	 * 	Enhanced Slave
  	 * Slave
  	 * Installer
  	 * Routing Slave
  	 * Bridge Controller
- 	 * Device Under Test 
- 	 * 
- 	 * The controller should never return a slave library type. For a 
- 	 * more efficient test of whether a controller is a Bridge Controller, 
- 	 * use the IsBridgeController method. 
+ 	 * Device Under Test
+ 	 *
+ 	 * The controller should never return a slave library type. For a
+ 	 * more efficient test of whether a controller is a Bridge Controller,
+ 	 * use the IsBridgeController method.
  	 */
  	// ===================================================================
 	NAN_METHOD(OZW::GetLibraryTypeName)
 	// ===================================================================
 	{
 		Nan::HandleScope scope;
-		
+
 	 	std::string libtype = OpenZWave::Manager::Get()->GetLibraryTypeName (homeid);
 	 	info.GetReturnValue().Set(
 			Nan::New<String>(
@@ -261,7 +211,7 @@ namespace OZW {
 	// ===================================================================
 	{
 		Nan::HandleScope scope;
-		
+
 	 	uint32 cnt = OpenZWave::Manager::Get()->GetSendQueueCount (homeid);
 	 	info.GetReturnValue().Set(Nan::New<Integer>(cnt));
 	}

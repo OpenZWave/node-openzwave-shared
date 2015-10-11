@@ -1,7 +1,7 @@
 /*
 * Copyright (c) 2013 Jonathan Perkin <jonathan@perkin.org.uk>
 * Copyright (c) 2015 Elias Karakoulakis <elias.karakoulakis@gmail.com>
-* 
+*
 * Permission to use, copy, modify, and distribute this software for any
 * purpose with or without fee is hereby granted, provided that the above
 * copyright notice and this permission notice appear in all copies.
@@ -22,7 +22,7 @@ using namespace node;
 
 namespace OZW {
 	/*
-	* Test network node. Sends a series of messages to a network node 
+	* Test network node. Sends a series of messages to a network node
 	* for testing network reliability.
 	*/
 	// ===================================================================
@@ -30,15 +30,13 @@ namespace OZW {
 	// ===================================================================
 	{
 		Nan::HandleScope scope;
-
-		uint8_t nodeid = info[0]->ToNumber()->Value();
-		uint8_t nummsg = info[1]->ToBoolean()->Value();
-
+		uint8 nodeid = info[0]->ToNumber()->Value();
+		uint8 nummsg = (info.Length() > 1) ? info[1]->ToNumber()->Value() : 1;
 		OpenZWave::Manager::Get()->TestNetworkNode(homeid, nodeid, nummsg);
 	}
 
 	/*
-	* Test network. Sends a series of messages to every node on the 
+	* Test network. Sends a series of messages to every node on the
 	* network for testing network reliability.
 	*/
 	// ===================================================================
@@ -46,12 +44,10 @@ namespace OZW {
 	// ===================================================================
 	{
 		Nan::HandleScope scope;
-		
-		uint8_t nummsg = info[0]->ToNumber()->Value();
-		
+  	uint8 nummsg = (info.Length() > 0) ? info[0]->ToNumber()->Value() : 1;
 		OpenZWave::Manager::Get()->HealNetwork(homeid, nummsg);
 	}
-	
+
 	/*
 	* Heal network node by requesting the node rediscover their neighbors.
 	*/
@@ -60,10 +56,8 @@ namespace OZW {
 	// ===================================================================
 	{
 		Nan::HandleScope scope;
-
-		uint8_t nodeid = info[0]->ToNumber()->Value();
-		uint8_t doRR = info[1]->ToBoolean()->Value();
-
+		uint8 nodeid = info[0]->ToNumber()->Value();
+		uint8 doRR = info[1]->ToBoolean()->Value();
 		OpenZWave::Manager::Get()->HealNetworkNode(homeid, nodeid, doRR);
 	}
 
@@ -77,7 +71,6 @@ namespace OZW {
 	// ===================================================================
 	{
 		Nan::HandleScope scope;
-
 		bool doRR = info[0]->ToBoolean()->Value();
 		OpenZWave::Manager::Get()->HealNetwork(homeid, doRR);
 	}

@@ -1,6 +1,6 @@
 ## API
 
-Start by loading the addon with `require`: 
+Start by loading the addon with `require`:
 ```js
 var OZW = require('openzwave-shared');
 ```
@@ -15,9 +15,9 @@ var zwave = new OZW({
     ConsoleOutput: true // enable console logging
 });
 ```
-The default options are specified in `config/options.xml`. Please refer 
+The default options are specified in `config/options.xml`. Please refer
 [to the full list of OpenZWave options](https://github.com/OpenZWave/open-zwave/wiki/Config-Options)
-for all the available options. If, for instance, you're using security devices 
+for all the available options. If, for instance, you're using security devices
 (e.g. door locks) then you should specify an encryption key.
 
 The rest of the API is split into Functions and Events.  Messages from the
@@ -28,24 +28,27 @@ specific events to correctly map the network.
 
 Connecting to the network:
 ```js
-zwave.connect('/dev/ttyUSB0');  // initialise and start a new driver for a USB ZWave controller
+zwave.connect('/dev/ttyUSB0');  // connect to a USB ZWave controller
 zwave.disconnect('dev/ttyUSB0');// disconnect from the current connection
 ```
-**Important notice**: the connect() call is asynchronous following the 
+**Important notice**: the connect() call is asynchronous following the
 node/v8 javascript paradigm.  This means that connect() will yield
-control to your script *immediately*, but the underlying OpenZWave C++ 
-library will *not be ready yet* to accept commands. 
-In fact, it can take some time (from a few seconds to a couple of 
-minutes!) to set up its internal data structures. So, be sure to 
-register a "scan complete" callback, and after it gets called, you can 
-safely start issuing commands to your ZWave devices.
+control to your script *immediately*, but the underlying OpenZWave C++
+library will *not be ready yet* to accept commands.
+In fact, it can take some time (from a few seconds to a couple of
+minutes!) to scan the ZWave network and set up itsdata structures.
+So, be sure to register a "scan complete" callback, and after it gets called,
+you can safely start issuing commands to your ZWave devices.
 
 Modifying device state:
 ```js
 /*
- * Set a multi-level device to the specified level (between 0-99).
+ * Set arbitrary values.
  */
-zwave.setLevel(5, 50); // node 5: dim to 50%
+zwave.setValue(nodeid, commandclass, instance, index, value);
+zwave.setValue(3,      37,           1,        0,     true); // node 3: turn on
+zwave.setValue(3,      37,           1,        0,     false); // node 3: turn off
+zwave.setValue(5,      38,           1,        0,     50); // dimmer 5: set to 50%
 
 /*
  * Turn a binary switch on/off.
@@ -54,14 +57,18 @@ zwave.setNodeOn(3); // node 3: switch ON
 zwave.setNodeOff(3);// node 3: switch OFF
 
 /*
- * Set arbitrary values.
+ * Set a multi-level device to the specified level (between 0-99).
+ * See warning below
  */
-zwave.setValue(nodeid, commandclass, instance, index, value);
-zwave.setValue(3,      37,           1,        0,     true); // node 3: turn on (the hard way)
-zwave.setValue(3,      37,           1,        0,    false); // node 3: turn off (the hard way)
+zwave.setLevel(5, 50); // node 5: dim to 50%
 ```
 
-This is most useful for multi-instance devices, such as the Fibaro FGS-221 eg:
+*WARNING: setNodeOn/Off/Level _don't work reliably with all devices_*, as they are
+mere aliases to the BASIC command class. Not all devices support this. Please
+consult your device's manual to see if it supports this command class.
+The 'standard' way to control your devices is by `setValue` which is also the
+_only_ way to control multi-instance devices, such as the Fibaro FGS-221
+(double in-wall 2x1,5kw relay) for example:
 ```js
 zwave.setValue(8, 37, 1, 0, true); // node 8: turn on 1st relay
 zwave.setValue(8, 37, 1, 0, false);// node 8: turn off 1st relay
@@ -72,15 +79,15 @@ Useful documentation on [command classes can be found on MiCasaVerde website](ht
 
 Writing to device metadata (stored on the device itself):
 ```js
-zwave.setLocation(nodeid, location);    // arbitrary location string
-zwave.setName(nodeid, name);            // arbitrary name string
+zwave.setNodeLocation(nodeid, location);    // arbitrary location string
+zwave.setNodeName(nodeid, name);            // arbitrary name string
 ```
 
 Polling a device for changes (not all devices require this):
 ```js
-zwave.enablePoll(nodeid, commandclass);
+zwave.enablePoll(nodeid, commandclass, intensity);
 zwave.disablePoll(nodeid, commandclass);
-zwave.setPollInterval(nodeid, 
+zwave.setPollInterval(nodeid, )
 zwave.getPollInterval();
 zwave.isPolled();
 zwave.setPollIntensity();
@@ -93,7 +100,7 @@ zwave.getNumGroups(nodeid);
 zwave.getGroupLabel(nodeid, group);
 zwave.getAssociations(nodeid, group);
 zwave.getMaxAssociations(nodeid, group);
-zwave.addAssociation(nodeid, group, target_nodeid); 
+zwave.addAssociation(nodeid, group, target_nodeid);
 zwave.removeAssociation(nodeid, group, target_nodeid);
 ```
 
@@ -117,22 +124,20 @@ zwave.sceneGetValues(sceneId); // return array of values associated with this sc
 zwave.activateScene(sceneId);  // The Show Must Go On...
 ```
 
-ZWave network management:
+ZWave network commands:
 ```js
-zwave.hardReset();      // destructive! will wipe out all configuration stored in the chip
-zwave.softReset();      // non-destructive, just resets the chip
 zwave.healNetworkNode(nodeId, doReturnRoutes=false);
 zwave.healNetwork();   // guru meditation
 zwave.getNeighbors();
-zwave.refreshNodeInfo(nodeid); 
+zwave.refreshNodeInfo(nodeid);
 ```
 
 ZWave controller commands:
 ```js
 // begin an async controller command on node1:
 zwave.beginControllerCommand( "command name", highPower = false, node1_id, node2_id = null);  
-// cancel controller command in progress 
-zwave.cancelControllerCommand(); 
+// cancel controller command in progress
+zwave.cancelControllerCommand();
 // returns controller's node id
 zwave.getControllerNodeId();
 // returns static update controller node id
@@ -147,41 +152,10 @@ zwave.isBridgeController();
 zwave.getLibraryVersion();
 // Get a string containing the Z-Wave API library type used by a controller
 zwave.getLibraryTypeName();
-// 
+//
 zwave.getSendQueueCount();
 ```
 
-### Controller commands
-**BeginControllerCommand** is the most powerful command in the OpenZWave API, as it allows for performing management functions on the ZWave network.
-
-    - The first argument is the command name, and its the only mandatory arg ,which can be any of the following:
-    
-```
-["AddDevice"]
-["CreateNewPrimary"]
-["ReceiveConfiguration"]
-["RemoveDevice"]
-["RemoveFailedNode"]
-["HasNodeFailed"]
-["ReplaceFailedNode"]
-["TransferPrimaryRole"]
-["RequestNetworkUpdate"]
-["RequestNodeNeighborUpdate"]
-["AssignReturnRoute"]
-["DeleteAllReturnRoutes"]
-["SendNodeInformation"]
-["ReplicationSend"]
-["CreateButton"]
-["DeleteButton"]
-```
-
-
-    - The second argument is a boolean ("highpower") - should be true/false
-    - The third argument is the first ZWave node to be passed to the command (if applicable for the command)
-    - The fourth argument is the second ZWave node to be passed to the command
-
-For a full description of what of these controller commands mean, please see
-[the official OpenZWave documentation](http://www.openzwave.com/dev/classOpenZWave_1_1Driver.html#ac1a7f80c64bd9e5147be468b7b5a40d9)
 
 ### Configuration commands:
 ```js
