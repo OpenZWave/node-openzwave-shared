@@ -1,7 +1,7 @@
 /*
 * Copyright (c) 2013 Jonathan Perkin <jonathan@perkin.org.uk>
 * Copyright (c) 2015 Elias Karakoulakis <elias.karakoulakis@gmail.com>
-* 
+*
 * Permission to use, copy, modify, and distribute this software for any
 * purpose with or without fee is hereby granted, provided that the above
 * copyright notice and this permission notice appear in all copies.
@@ -34,7 +34,8 @@
 #include "Options.h"
 #include "Value.h"
 
-#define stringify( name ) # name
+#define stringify( x ) stringify_literal( x )
+#define stringify_literal( x ) # x
 
 #ifdef WIN32
 class mutex
@@ -93,7 +94,7 @@ using namespace v8;
 using namespace node;
 
 namespace OZW {
-	
+
 	struct OZW : public ObjectWrap {
 		static NAN_METHOD(New);
 		// openzwave-config.cc
@@ -103,8 +104,6 @@ namespace OZW {
 		// openzwave-controller.cc
 		static NAN_METHOD(HardReset);
 		static NAN_METHOD(SoftReset);
-		static NAN_METHOD(BeginControllerCommand);
-		static NAN_METHOD(CancelControllerCommand);
 		static NAN_METHOD(GetControllerNodeId);
 		static NAN_METHOD(GetSUCNodeId);
 		static NAN_METHOD(IsPrimaryController);
@@ -123,6 +122,27 @@ namespace OZW {
 		static NAN_METHOD(GetGroupLabel);
 		static NAN_METHOD(AddAssociation);
 		static NAN_METHOD(RemoveAssociation);
+#if OPENZWAVE_SECURITY == 1
+		static NAN_METHOD(AddNode);
+		static NAN_METHOD(RemoveNode);
+		static NAN_METHOD(RemoveFailedNode);
+		static NAN_METHOD(HasNodeFailed);
+		static NAN_METHOD(AssignReturnRoute);
+		static NAN_METHOD(RequestNodeNeighborUpdate);
+		static NAN_METHOD(DeleteAllReturnRoutes);
+		static NAN_METHOD(SendNodeInformation);
+		static NAN_METHOD(CreateNewPrimary);
+		static NAN_METHOD(ReceiveConfiguration);
+		static NAN_METHOD(ReplaceFailedNode);
+		static NAN_METHOD(TransferPrimaryRole);
+		static NAN_METHOD(RequestNetworkUpdate);
+		static NAN_METHOD(ReplicationSend);
+		static NAN_METHOD(CreateButton);
+		static NAN_METHOD(DeleteButton);
+#else
+		static NAN_METHOD(BeginControllerCommand);
+		static NAN_METHOD(CancelControllerCommand);
+#endif
 		// openzwave-network.cc
 		static NAN_METHOD(TestNetworkNode);
 		static NAN_METHOD(TestNetwork);
@@ -134,7 +154,7 @@ namespace OZW {
 		static NAN_METHOD(SetNodeLevel);
 		static NAN_METHOD(SwitchAllOn);
 		static NAN_METHOD(SwitchAllOff);
-		// 
+		//
 		static NAN_METHOD(RefreshNodeInfo);
 		static NAN_METHOD(RequestNodeState);
 		static NAN_METHOD(RequestNodeDynamic);
@@ -159,7 +179,7 @@ namespace OZW {
 		static NAN_METHOD(GetNodeBasic);
 		static NAN_METHOD(GetNodeGeneric);
 		static NAN_METHOD(GetNodeSpecific);
-		static NAN_METHOD(GetNodeType);		
+		static NAN_METHOD(GetNodeType);
 		static NAN_METHOD(GetNodeManufacturerId);
 		static NAN_METHOD(GetNodeProductType);
 		static NAN_METHOD(GetNodeProductId);
@@ -184,35 +204,33 @@ namespace OZW {
 		static NAN_METHOD(ActivateScene);
 	};
 
-	// callback struct to copy data from the OZW thread to the v8 event loop: 
+	// callback struct to copy data from the OZW thread to the v8 event loop:
 	typedef struct {
-		uint32_t type;
-		uint32_t homeid;
-		uint8_t nodeid;
-		uint8_t groupidx;
-		uint8_t event;
-		uint8_t buttonid;
-		uint8_t sceneid;
-		uint8_t notification;
+		uint32 type;
+		uint32 homeid;
+		uint8 nodeid;
+		uint8 groupidx;
+		uint8 event;
+		uint8 buttonid;
+		uint8 sceneid;
+		uint8 notification;
 		std::list<OpenZWave::ValueID> values;
-		OpenZWave::Driver::ControllerState state;
-		OpenZWave::Driver::ControllerError err;
 	} NotifInfo;
-	
+
 	typedef struct {
-		uint32_t homeid;
-		uint8_t nodeid;
-		bool polled;
+		uint32 homeid;
+		uint8  nodeid;
+		bool   polled;
 		std::list<OpenZWave::ValueID> values;
 	} NodeInfo;
 
 	typedef struct {
-		uint32_t sceneid;
+		uint32      sceneid;
 		std::string label;
 		std::list<OpenZWave::ValueID> values;
 	} SceneInfo;
-	
-	/*  
+
+	/*
 	 */
 	extern uv_async_t 		async;
 
@@ -230,37 +248,37 @@ namespace OZW {
 
 	extern mutex zscenes_mutex;
 	extern std::list<SceneInfo *> zscenes;
-	
+
 	// our ZWave Home ID
-	extern uint32_t homeid;
+	extern uint32 homeid;
 
 	Local<Object> zwaveValue2v8Value(OpenZWave::ValueID value);
 	Local<Object> zwaveSceneValue2v8Value(uint8 sceneId, OpenZWave::ValueID value);
-	
-	NodeInfo *get_node_info(uint8_t nodeid);
-	SceneInfo *get_scene_info(uint8_t sceneid);
-	
+
+	NodeInfo  *get_node_info(uint8 nodeid);
+	SceneInfo *get_scene_info(uint8 sceneid);
+
 	// OpenZWave callbacks
 	void ozw_watcher_callback(
-		OpenZWave::Notification const *cb, 
+		OpenZWave::Notification const *cb,
 		void *ctx);
 	void ozw_ctrlcmd_callback(
-		OpenZWave::Driver::ControllerState _state, 
-		OpenZWave::Driver::ControllerError _err, 
+		OpenZWave::Driver::ControllerState _state,
+		OpenZWave::Driver::ControllerError _err,
 		void *ctx);
-		
+
 	// v8 asynchronous callback handler
 	void async_cb_handler(uv_async_t *handle);
 	void async_cb_handler(uv_async_t *handle, int status);
-	
+
 	//extern Handle<Object>	context_obj;
 	extern Nan::Callback *emit_cb;
 	//
-	
+
 	// map of controller command names to enum values
 	typedef ::std::tr1::unordered_map <std::string, OpenZWave::Driver::ControllerCommand> CommandMap;
 	extern CommandMap* ctrlCmdNames;
-	
+
 }
 
 #endif // __OPENZWAVE_HPP_INCLUDED__

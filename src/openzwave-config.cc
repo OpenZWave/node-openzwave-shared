@@ -1,7 +1,7 @@
 /*
 * Copyright (c) 2013 Jonathan Perkin <jonathan@perkin.org.uk>
 * Copyright (c) 2015 Elias Karakoulakis <elias.karakoulakis@gmail.com>
-* 
+*
 * Permission to use, copy, modify, and distribute this software for any
 * purpose with or without fee is hereby granted, provided that the above
 * copyright notice and this permission notice appear in all copies.
@@ -29,49 +29,49 @@ namespace OZW {
 	{
 		Nan::HandleScope scope;
 
-		uint8_t nodeid = info[0]->ToNumber()->Value();
-		uint8_t param = info[1]->ToNumber()->Value();
-		int32_t value = info[2]->ToNumber()->Value();
+		uint8 nodeid = info[0]->ToNumber()->Value();
+		uint8 param  = info[1]->ToNumber()->Value();
+		int32 value  = info[2]->ToNumber()->Value();
 
 		if (info.Length() < 4) {
 			OpenZWave::Manager::Get()->SetConfigParam(homeid, nodeid, param, value);
 		}
 		else {
-			uint8_t size = info[3]->ToNumber()->Value();
+			uint8 size = info[3]->ToNumber()->Value();
 			OpenZWave::Manager::Get()->SetConfigParam(homeid, nodeid, param, value, size);
 		}
 	}
-	
+
 	/*
- 	 * Request the value of a configurable parameter from a device. Some 
- 	 * devices have various parameters that can be configured to control 
- 	 * the device behaviour. These are not reported by the device over 
- 	 * the Z-Wave network, but can usually be found in the device's user 
- 	 * manual. 
- 	 * This method requests the value of a parameter from the 
- 	 * device, and then returns immediately, without waiting for a 
- 	 * response. If the parameter index is valid for this device, and 
- 	 * the device is awake, the value will eventually be reported via a 
- 	 * ValueChanged notification callback. The ValueID reported in the 
- 	 * callback will have an index set the same as _param and a command 
- 	 * class set to the same value as returned by a call to 
- 	 * Configuration::StaticGetCommandClassId. 
+ 	 * Request the value of a configurable parameter from a device. Some
+ 	 * devices have various parameters that can be configured to control
+ 	 * the device behaviour. These are not reported by the device over
+ 	 * the Z-Wave network, but can usually be found in the device's user
+ 	 * manual.
+ 	 * This method requests the value of a parameter from the
+ 	 * device, and then returns immediately, without waiting for a
+ 	 * response. If the parameter index is valid for this device, and
+ 	 * the device is awake, the value will eventually be reported via a
+ 	 * ValueChanged notification callback. The ValueID reported in the
+ 	 * callback will have an index set the same as _param and a command
+ 	 * class set to the same value as returned by a call to
+ 	 * Configuration::StaticGetCommandClassId.
 	*/
 	// ===================================================================
 	NAN_METHOD(OZW::RequestConfigParam)
 	// ===================================================================
 	{
 		Nan::HandleScope scope;
-		
-		uint8_t nodeid = info[0]->ToNumber()->Value();
-		uint8_t param = info[1]->ToNumber()->Value();
-		
+
+		uint8 nodeid = info[0]->ToNumber()->Value();
+		uint8 param = info[1]->ToNumber()->Value();
+
 		OpenZWave::Manager::Get()->RequestConfigParam(homeid, nodeid, param);
 	}
-	
-		
+
+
 	/*
-	 * Request the values of all known configurable parameters from a 
+	 * Request the values of all known configurable parameters from a
 	 * device.
 	 * */
 	// ===================================================================
@@ -79,9 +79,9 @@ namespace OZW {
 	// ===================================================================
 	{
 		Nan::HandleScope scope;
-		
-		uint8_t nodeid = info[0]->ToNumber()->Value();
-	
+
+		uint8 nodeid = info[0]->ToNumber()->Value();
+
 	  	OpenZWave::Manager::Get()->RequestAllConfigParams (homeid, nodeid);
 	}
 

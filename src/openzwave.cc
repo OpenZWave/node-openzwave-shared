@@ -1,7 +1,7 @@
 /*
 * Copyright (c) 2013 Jonathan Perkin <jonathan@perkin.org.uk>
 * Copyright (c) 2015 Elias Karakoulakis <elias.karakoulakis@gmail.com>
-* 
+*
 * Permission to use, copy, modify, and distribute this software for any
 * purpose with or without fee is hereby granted, provided that the above
 * copyright notice and this permission notice appear in all copies.
@@ -26,9 +26,9 @@ namespace OZW {
 	//
 	uv_async_t 		async;
 
-	// 
+	//
 	Nan::Callback *emit_cb;
-	
+
 	// Message passing queue between OpenZWave callback and v8 async handler.
 	mutex 		            zqueue_mutex;
 	std::queue<NotifInfo *> zqueue;
@@ -40,72 +40,38 @@ namespace OZW {
 	mutex zscenes_mutex;
 	std::list<SceneInfo *> zscenes;
 
-	uint32_t homeid;
+	uint32      homeid;
 	CommandMap* ctrlCmdNames;
-	std::string modulepath;
-	
-	// ===================================================================
-	NAN_METHOD(OZW::OZW::New)
-	// ===================================================================
-	{
-		Nan::HandleScope scope;
 
-		assert(info.IsConstructCall());
-		OZW* self = new OZW();
-		self->Wrap(info.This());
+	std::string ozw_userpath;
 
-		// scan for OpenZWave options.xml in the nodeJS module's '/config' subdirectory
-		modulepath.append("/../../config");
-		OpenZWave::Options::Create(modulepath, "", "");
-		OpenZWave::Options* ozwopt = OpenZWave::Options::Get();
-		
-		// Options are global for all drivers and can only be set once.
-		if (info.Length() > 0) {
-			Local < Object > opts     = info[0]->ToObject();
-			Local<Array> property_names = Nan::GetOwnPropertyNames(opts).ToLocalChecked();		
-			for (unsigned int i = 0; i < property_names->Length(); ++i) {
-				Local<Value> key     = property_names->Get(i);
-				std::string  keyname = *v8::String::Utf8Value(key);
-				Local<Value> argval  = Nan::Get(opts, key).ToLocalChecked();
-				switch(ozwopt->GetOptionType(keyname)) {
-				case OpenZWave::Options::OptionType_Invalid:
-					std::cerr << "openzwave.cc: invalid OpenZWave option: " << keyname << "\n";
-					break;
-				case OpenZWave::Options::OptionType_Bool:
-					ozwopt->AddOptionBool  (keyname, argval->ToBoolean()->Value());
-					break;
-				case OpenZWave::Options::OptionType_Int:
-					ozwopt->AddOptionInt   (keyname, argval->ToInteger()->Value());
-					break;
-				case OpenZWave::Options::OptionType_String:
-					std::string optionval = *v8::String::Utf8Value(argval);
-					ozwopt->AddOptionString(keyname, optionval, true);
-					break;
-				}
-			}
-		}
-		ozwopt->Lock();
-		//
-		info.GetReturnValue().Set(info.This());
-	}
+	#ifdef OPENZWAVE_ETC
+	const std::string ozw_config_path  = stringify( OPENZWAVE_ETC );
+	#else
+	const std::string ozw_config_path  = "/usr/local/etc/openzwave";
+	#endif
 
 	// ===================================================================
 	extern "C" void init(Handle<Object> target, Handle<Object> module) {
-  
+
 		Nan::HandleScope scope;
-		
-		std::string modulefilename = std::string(*v8::String::Utf8Value( 
-			Nan::Get(module, 
-				Nan::New("filename").ToLocalChecked()
-			).ToLocalChecked()
+
+    // get the user config directory
+		std::string modulefilename = std::string(*v8::String::Utf8Value(
+			Nan::Get(module,
+          Nan::New("filename").ToLocalChecked()
+		  ).ToLocalChecked()
 		));
 		std::size_t found = modulefilename.find_last_of("/\\");
 		if (found > 0) {
 			//std::cout << " path: " << modulefilename.substr(0,found) << '\n';
 			//std::cout << " file: " << modulefilename.substr(found+1) << '\n';
-			modulepath.assign(modulefilename.substr(0,found));
-		}
-		
+			ozw_userpath.assign(modulefilename.substr(0,found));
+    } else {
+      ozw_userpath.assign(modulefilename);
+    }
+		ozw_userpath.append("/../../");
+
 		Local < FunctionTemplate > t = Nan::New<FunctionTemplate>(OZW::New);
 		t->SetClassName(Nan::New("OZW").ToLocalChecked());
 		t->InstanceTemplate()->SetInternalFieldCount(1);
@@ -117,8 +83,6 @@ namespace OZW {
 		// openzwave-controller.cc
 		Nan::SetPrototypeMethod(t, "hardReset", OZW::HardReset);
 		Nan::SetPrototypeMethod(t, "softReset", OZW::SoftReset);
-		Nan::SetPrototypeMethod(t, "beginControllerCommand", OZW::BeginControllerCommand); // ** new
-		Nan::SetPrototypeMethod(t, "cancelControllerCommand", OZW::CancelControllerCommand); // ** new
 		Nan::SetPrototypeMethod(t, "getControllerNodeId", OZW::GetControllerNodeId); // ** new
 		Nan::SetPrototypeMethod(t, "getSUCNodeId", OZW::GetSUCNodeId); // ** new
 		Nan::SetPrototypeMethod(t, "isPrimaryController", OZW::IsPrimaryController); // ** new
@@ -137,6 +101,28 @@ namespace OZW {
 		Nan::SetPrototypeMethod(t, "getGroupLabel", OZW::GetGroupLabel);
 		Nan::SetPrototypeMethod(t, "addAssociation", OZW::AddAssociation);
 		Nan::SetPrototypeMethod(t, "removeAssociation", OZW::RemoveAssociation);
+		// openzwave-management.cc
+#if OPENZWAVE_SECURITY == 1
+		Nan::SetPrototypeMethod(t, "addNode", OZW::AddNode);
+	  Nan::SetPrototypeMethod(t, "removeNode", OZW::RemoveNode);
+	  Nan::SetPrototypeMethod(t, "removeFailedNode", OZW::RemoveFailedNode);
+	  Nan::SetPrototypeMethod(t, "hasNodeFailed", OZW::HasNodeFailed);
+	  Nan::SetPrototypeMethod(t, "requestNodeNeighborUpdate", OZW::RequestNodeNeighborUpdate);
+	  Nan::SetPrototypeMethod(t, "assignReturnRoute", OZW::AssignReturnRoute);
+	  Nan::SetPrototypeMethod(t, "deleteAllReturnRoutes", OZW::DeleteAllReturnRoutes);
+	  Nan::SetPrototypeMethod(t, "sendNodeInformation", OZW::SendNodeInformation);
+	  Nan::SetPrototypeMethod(t, "createNewPrimary", OZW::CreateNewPrimary);
+	  Nan::SetPrototypeMethod(t, "receiveConfiguration", OZW::ReceiveConfiguration);
+	  Nan::SetPrototypeMethod(t, "replaceFailedNode", OZW::ReplaceFailedNode);
+	  Nan::SetPrototypeMethod(t, "transferPrimaryRole", OZW::TransferPrimaryRole);
+	  Nan::SetPrototypeMethod(t, "requestNetworkUpdate", OZW::RequestNetworkUpdate);
+	  Nan::SetPrototypeMethod(t, "replicationSend", OZW::ReplicationSend);
+	  Nan::SetPrototypeMethod(t, "createButton", OZW::CreateButton);
+	  Nan::SetPrototypeMethod(t, "deleteButton", OZW::DeleteButton);
+#else
+		Nan::SetPrototypeMethod(t, "beginControllerCommand", OZW::BeginControllerCommand);
+		Nan::SetPrototypeMethod(t, "cancelControllerCommand", OZW::CancelControllerCommand);
+#endif
 		// openzwave-network.cc
 		Nan::SetPrototypeMethod(t, "testNetworkNode", OZW::TestNetworkNode);
 		Nan::SetPrototypeMethod(t, "testNetwork", OZW::TestNetwork);
@@ -155,10 +141,10 @@ namespace OZW {
 		// getter-setter pairs
 		Nan::SetPrototypeMethod(t, "getNodeLocation", OZW::GetNodeLocation); // ** new
 		Nan::SetPrototypeMethod(t, "setNodeLocation", OZW::SetNodeLocation);
-		Nan::SetPrototypeMethod(t, "getNodeName", OZW::GetNodeName); 
+		Nan::SetPrototypeMethod(t, "getNodeName", OZW::GetNodeName);
 		Nan::SetPrototypeMethod(t, "setNodeName", OZW::SetNodeName);
 		Nan::SetPrototypeMethod(t, "getNodeManufacturerName", OZW::GetNodeManufacturerName); // ** new
-		Nan::SetPrototypeMethod(t, "setNodeManufacturerName", OZW::SetNodeManufacturerName); // ** new		
+		Nan::SetPrototypeMethod(t, "setNodeManufacturerName", OZW::SetNodeManufacturerName); // ** new
 		Nan::SetPrototypeMethod(t, "getNodeProductName", OZW::GetNodeProductName); // ** new
 		Nan::SetPrototypeMethod(t, "setNodeProductName", OZW::SetNodeProductName); // ** new
 		// getters
@@ -196,30 +182,69 @@ namespace OZW {
 		Nan::SetPrototypeMethod(t, "removeSceneValue", OZW::RemoveSceneValue);
 		Nan::SetPrototypeMethod(t, "sceneGetValues", OZW::SceneGetValues);
 		Nan::SetPrototypeMethod(t, "activateScene", OZW::ActivateScene);
-		// 
+		//
 		Nan::Set(target, Nan::New<String>("Emitter").ToLocalChecked(), t->GetFunction());
-		
 		/* for BeginControllerCommand
-		 * http://openzwave.com/dev/classOpenZWave_1_1Manager.html#aa11faf40f19f0cda202d2353a60dbf7b
-		 */ 
-		ctrlCmdNames = new CommandMap();
-		// (*ctrlCmdNames)["None"] 					= OpenZWave::Driver::ControllerCommand_None;
-		(*ctrlCmdNames)["AddDevice"]				= OpenZWave::Driver::ControllerCommand_AddDevice;
-		(*ctrlCmdNames)["CreateNewPrimary"] 		= OpenZWave::Driver::ControllerCommand_CreateNewPrimary;
-		(*ctrlCmdNames)["ReceiveConfiguration"] 	= OpenZWave::Driver::ControllerCommand_ReceiveConfiguration;
-		(*ctrlCmdNames)["RemoveDevice"]  			= OpenZWave::Driver::ControllerCommand_RemoveDevice;
-		(*ctrlCmdNames)["RemoveFailedNode"]			= OpenZWave::Driver::ControllerCommand_RemoveFailedNode;
-		(*ctrlCmdNames)["HasNodeFailed"]			= OpenZWave::Driver::ControllerCommand_HasNodeFailed;
-		(*ctrlCmdNames)["ReplaceFailedNode"]		= OpenZWave::Driver::ControllerCommand_ReplaceFailedNode;
-		(*ctrlCmdNames)["TransferPrimaryRole"]		= OpenZWave::Driver::ControllerCommand_TransferPrimaryRole;
-		(*ctrlCmdNames)["RequestNetworkUpdate"]		= OpenZWave::Driver::ControllerCommand_RequestNetworkUpdate;
-		(*ctrlCmdNames)["RequestNodeNeighborUpdate"]= OpenZWave::Driver::ControllerCommand_RequestNodeNeighborUpdate;
-		(*ctrlCmdNames)["AssignReturnRoute"] 		= OpenZWave::Driver::ControllerCommand_AssignReturnRoute;
-		(*ctrlCmdNames)["DeleteAllReturnRoutes"]	= OpenZWave::Driver::ControllerCommand_DeleteAllReturnRoutes;
-		(*ctrlCmdNames)["SendNodeInformation"] 		= OpenZWave::Driver::ControllerCommand_SendNodeInformation;
-		(*ctrlCmdNames)["ReplicationSend"] 			= OpenZWave::Driver::ControllerCommand_ReplicationSend;
-		(*ctrlCmdNames)["CreateButton"]				= OpenZWave::Driver::ControllerCommand_CreateButton;
-		(*ctrlCmdNames)["DeleteButton"]				= OpenZWave::Driver::ControllerCommand_DeleteButton;
+	   * http://openzwave.com/dev/classOpenZWave_1_1Manager.html#aa11faf40f19f0cda202d2353a60dbf7b
+	   */
+	  ctrlCmdNames = new CommandMap();
+	  // (*ctrlCmdNames)["None"] 					= OpenZWave::Driver::ControllerCommand_None;
+	  (*ctrlCmdNames)["AddDevice"]				= OpenZWave::Driver::ControllerCommand_AddDevice;
+	  (*ctrlCmdNames)["CreateNewPrimary"] 		= OpenZWave::Driver::ControllerCommand_CreateNewPrimary;
+	  (*ctrlCmdNames)["ReceiveConfiguration"] 	= OpenZWave::Driver::ControllerCommand_ReceiveConfiguration;
+	  (*ctrlCmdNames)["RemoveDevice"]  			= OpenZWave::Driver::ControllerCommand_RemoveDevice;
+	  (*ctrlCmdNames)["RemoveFailedNode"]			= OpenZWave::Driver::ControllerCommand_RemoveFailedNode;
+	  (*ctrlCmdNames)["HasNodeFailed"]			= OpenZWave::Driver::ControllerCommand_HasNodeFailed;
+	  (*ctrlCmdNames)["ReplaceFailedNode"]		= OpenZWave::Driver::ControllerCommand_ReplaceFailedNode;
+	  (*ctrlCmdNames)["TransferPrimaryRole"]		= OpenZWave::Driver::ControllerCommand_TransferPrimaryRole;
+	  (*ctrlCmdNames)["RequestNetworkUpdate"]		= OpenZWave::Driver::ControllerCommand_RequestNetworkUpdate;
+	  (*ctrlCmdNames)["RequestNodeNeighborUpdate"]= OpenZWave::Driver::ControllerCommand_RequestNodeNeighborUpdate;
+	  (*ctrlCmdNames)["AssignReturnRoute"] 		= OpenZWave::Driver::ControllerCommand_AssignReturnRoute;
+	  (*ctrlCmdNames)["DeleteAllReturnRoutes"]	= OpenZWave::Driver::ControllerCommand_DeleteAllReturnRoutes;
+	  (*ctrlCmdNames)["SendNodeInformation"] 		= OpenZWave::Driver::ControllerCommand_SendNodeInformation;
+	  (*ctrlCmdNames)["ReplicationSend"] 			= OpenZWave::Driver::ControllerCommand_ReplicationSend;
+	  (*ctrlCmdNames)["CreateButton"]				= OpenZWave::Driver::ControllerCommand_CreateButton;
+	  (*ctrlCmdNames)["DeleteButton"]				= OpenZWave::Driver::ControllerCommand_DeleteButton;
+
+	}
+
+  // ===================================================================
+	NAN_METHOD(OZW::OZW::New)
+	// ===================================================================
+	{
+		Nan::HandleScope scope;
+
+		assert(info.IsConstructCall());
+		OZW* self = new OZW();
+		self->Wrap(info.This());
+		std::string option_overrides;
+		// Options are global for all drivers and can only be set once.
+		if (info.Length() > 0) {
+			Local < Object > opts = info[0]->ToObject();
+			Local < Array > props = Nan::GetOwnPropertyNames(opts).ToLocalChecked();
+			for (unsigned int i = 0; i < props->Length(); ++i) {
+				Local<Value> key       = props->Get(i);
+				std::string  keyname   = *v8::String::Utf8Value(key);
+				Local<Value> argval    = Nan::Get(opts, key).ToLocalChecked();
+				std::string  argvalstr = *v8::String::Utf8Value(argval);
+				option_overrides += " --" + keyname + " " + argvalstr;
+			}
+		}
+		std::cout << "Initialising OpenZWave (" << OpenZWave::Manager::getVersionAsString() << ") binary addon for Node.JS.\n";
+		std::cout << "\tZWave device db : " << ozw_config_path << "\n\tUser settings   : " << ozw_userpath << "\n";
+		if (option_overrides.length() > 0) {
+			std::cout << "\tOption Overrides:" << option_overrides << "\n";
+		}
+#if OPENZWAVE_SECURITY == 1
+	std::cout << "\tOpenZWave Security API is ENABLED\n";
+#else
+	std::cout << "\tSecurity API not found - Using legacy API (BeginControllerCommand)\n";
+#endif
+		// scan for OpenZWave options.xml in the nodeJS module's '/config' subdirectory
+		OpenZWave::Options::Create(ozw_config_path, ozw_userpath, option_overrides);
+		OpenZWave::Options::Get()->Lock();
+		//
+		info.GetReturnValue().Set(info.This());
 	}
 }
 

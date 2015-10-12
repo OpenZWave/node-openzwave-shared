@@ -37,7 +37,9 @@ their unique identifiers are:
 * `COMMAND_CLASS_VERSION` (134)
 
 Binary switches can be controlled with `.setNodeOn()` and `.setNodeOff()`.
-Multi-level devices can be set with `.setLevel()`.
+Dimmer (multi-level) devices can be set with `.setLevel()` (*if of course they 
+support the **BASIC** command class, which is not supported by most dimmers!*
+Use `setValue` instead)
 
 The version class is informational only and cannot be controlled.
 
@@ -52,6 +54,7 @@ information about values stored for the particular class.
 
 .
 #### Controller events:
-###### `.on('controller command', function(ctrlState, ctrlError){})` :  The ZWave Controller is reporting the result of the currently active command. Check out official OpenZWave documentation on [ControllerState](http://www.openzwave.com/dev/classOpenZWave_1_1Driver.html#a5595393f6aac3175bb17f00cf53356a8) and [ControllerError](http://www.openzwave.com/dev/classOpenZWave_1_1Driver.html#a16d2da7b78f8eefc79ef4046d8148e7c) so for instance, controller state #7 (remember: 0-based arrays) is **ControllerState_Completed** which is the result you should expect from successful controller command completion.
 
+###### `.on('controller command', function(nodeId, ctrlState, ctrlError){})` :  The ZWave Controller is reporting the result of the currently active command. Check out official OpenZWave documentation on [ControllerState](http://www.openzwave.com/dev/classOpenZWave_1_1Driver.html#a5595393f6aac3175bb17f00cf53356a8) and [ControllerError](http://www.openzwave.com/dev/classOpenZWave_1_1Driver.html#a16d2da7b78f8eefc79ef4046d8148e7c) so for instance, controller state #7 (remember: 0-based arrays) is **ControllerState_Completed** which is the result you should expect from successful controller command completion.
 
+*Please Note:* OpenZWave's management API has slightly changed with the inclusion of the security framework. As of version 1.3, OpenZWave has deprecated `BeginControllerCommand` and has added a separate method for each of the controller commands. This seems to have the side-effect that some extra management events are fired upon initialisation that were not being fired before. As such, be warned that you might get some callbacks on `controller command` even though you've not sent any actual controller commands.
