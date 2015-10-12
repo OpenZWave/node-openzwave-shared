@@ -44,12 +44,7 @@ namespace OZW {
 	CommandMap* ctrlCmdNames;
 
 	std::string ozw_userpath;
-
-	#ifdef OPENZWAVE_ETC
 	const std::string ozw_config_path  = stringify( OPENZWAVE_ETC );
-	#else
-	const std::string ozw_config_path  = "/usr/local/etc/openzwave";
-	#endif
 
 	// ===================================================================
 	extern "C" void init(Handle<Object> target, Handle<Object> module) {
@@ -231,14 +226,14 @@ namespace OZW {
 			}
 		}
 		std::cout << "Initialising OpenZWave (" << OpenZWave::Manager::getVersionAsString() << ") binary addon for Node.JS.\n";
-		std::cout << "\tZWave device db : " << ozw_config_path << "\n\tUser settings   : " << ozw_userpath << "\n";
+		std::cout << "\tZWave device db  : " << ozw_config_path << "\n\tUser settings    : " << ozw_userpath << "\n";
 		if (option_overrides.length() > 0) {
-			std::cout << "\tOption Overrides:" << option_overrides << "\n";
+			std::cout << "\tOption Overrides :" << option_overrides << "\n";
 		}
 #if OPENZWAVE_SECURITY == 1
 	std::cout << "\tOpenZWave Security API is ENABLED\n";
 #else
-	std::cout << "\tSecurity API not found - Using legacy API (BeginControllerCommand)\n";
+	std::cout << "\tSecurity API not found, using legacy BeginControllerCommand() instead\n";
 #endif
 		// scan for OpenZWave options.xml in the nodeJS module's '/config' subdirectory
 		OpenZWave::Options::Create(ozw_config_path, ozw_userpath, option_overrides);

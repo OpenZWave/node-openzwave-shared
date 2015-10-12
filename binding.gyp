@@ -18,16 +18,17 @@
 		"conditions": [
 			["OS=='linux'", {
 				"variables": {
-					"PKG_CONFIG_PATH" : "<!(find /usr -type d ! -perm -g+r,u+r,o+r -prune -o -type d -name 'pkgconfig' -printf \"%p:\" | sed s/:$//g)",
+					"PKG_CONFIG_PATH" : "<!(find /usr/local -type d ! -perm -g+r,u+r,o+r -prune -o -type d -name 'pkgconfig' -printf \"%p:\" | sed s/:$//g)",
 					"OZW_INC"         : "<!(PKG_CONFIG_PATH=<(PKG_CONFIG_PATH) pkg-config --cflags-only-I libopenzwave | sed s/-I//g)",
 					"OZW_GITVERSION"  : "<!(PKG_CONFIG_PATH=<(PKG_CONFIG_PATH) pkg-config --variable=gitversion libopenzwave)",
-
+					"OZW_ETC"         : "<!(PKG_CONFIG_PATH=<(PKG_CONFIG_PATH) pkg-config --variable=sysconfdir libopenzwave)",
+					"OZW_DOC"         : "<!(PKG_CONFIG_PATH=<(PKG_CONFIG_PATH) pkg-config --variable=docdir libopenzwave)"
 				},
-        "defines": [
-					"OPENZWAVE_ETC=<!@(PKG_CONFIG_PATH=<(PKG_CONFIG_PATH) pkg-config --variable=sysconfdir libopenzwave)",
-					"OPENZWAVE_DOC=<!@(PKG_CONFIG_PATH=<(PKG_CONFIG_PATH) pkg-config --variable=docdir libopenzwave)",
-					"OPENZWAVE_SECURITY=<!@(find <(OZW_INC) -name ZWSecurity.h -printf 1)"
-        ],
+        		"defines": [
+					"OPENZWAVE_ETC=<!@(node -p -e \"'<(OZW_ETC)'.length ? '<(OZW_ETC)' : '/usr/local/etc/openzwave'\")",
+					"OPENZWAVE_DOC=<!@(node -p -e \"'<(OZW_DOC)'.length ? '<(OZW_DOC)' : '/usr/local/share/doc/openzwave'\")",
+					"OPENZWAVE_SECURITY=<!@(find <(OZW_INC) -name ZWSecurity.h | wc -l)"
+        		],
 				"link_settings": {
 					"libraries": ["-lopenzwave"]
 				},

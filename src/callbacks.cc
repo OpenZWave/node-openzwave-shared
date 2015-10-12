@@ -350,8 +350,14 @@ namespace OZW {
 				emitinfo[3] = Nan::New<Integer>(notif->notification); // Driver::ControllerState
 				emit_cb->Call(4, emitinfo);
 				break;
-#endif
 			case OpenZWave::Notification::Type_NodeReset:
+				emitinfo[0] = Nan::New<String>("controller command").ToLocalChecked();
+				emitinfo[1] = Nan::New<Integer>(notif->nodeid);
+				emitinfo[2] = Nan::New<Integer>(notif->event); // Driver::ControllerCommand
+				emitinfo[3] = Nan::New<Integer>(notif->notification); // Driver::ControllerState
+				emit_cb->Call(4, emitinfo);
+				break;
+#endif
 			default:
 				fprintf(stderr, "Unhandled OpenZWave notification: %d\n", notif->type);
 				break;
@@ -373,7 +379,7 @@ namespace OZW {
 			notif = zqueue.front();
 #if OPENZWAVE_SECURITY != 1
 			if (notif->homeid  == 0) {
-				handleControllerCommand(notif)
+				handleControllerCommand(notif);
 			} else {
 				handleNotification(notif);
 			}
