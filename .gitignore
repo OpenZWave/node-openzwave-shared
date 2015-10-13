@@ -6,3 +6,5 @@ OZW_Log.txt
 build
 zwcfg*
 zwscene.xml
+lib/open-zwave
+node_modules

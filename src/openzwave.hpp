@@ -21,7 +21,11 @@
 #include <iostream>
 #include <list>
 #include <queue>
-#include <tr1/unordered_map>
+#ifdef _WIN32
+    #include <unordered_map>
+#else
+    #include <tr1/unordered_map>
+#endif
 
 #include <node.h>
 #include <v8.h>

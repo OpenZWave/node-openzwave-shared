@@ -41,11 +41,17 @@
 			}],
 			['OS=="win"', {
 				"include_dirs": [
-					"deps/open-zwave/cpp/src/platform/windows"
-				],
+					"<!(node -e \"require('nan')\")",
+					"lib/open-zwave",
+					"lib/open-zwave/include",
+					"lib/open-zwave/include/value_classes"
+				],				
 				'msvs_settings': {
+					'VCCLCompilerTool': {
+						'AdditionalOptions': ['/MD'	]
+					},
 					'VCLinkerTool': {
-						'AdditionalDependencies': ['setupapi.lib']
+						'AdditionalDependencies': ['setupapi.lib', '../lib/open-zwave/OpenZWave.x64.lib']
 					}
 				}
 			}]
