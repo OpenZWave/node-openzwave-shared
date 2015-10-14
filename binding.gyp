@@ -45,6 +45,10 @@
 					"lib/open-zwave",
 					"lib/open-zwave/include",
 					"lib/open-zwave/include/value_classes"
+				],
+				"defines": [
+					"OPENZWAVE_ETC=lib/open-zwave/config",
+					"OPENZWAVE_SECURITY=1"
 				],				
 				'msvs_settings': {
 					'VCCLCompilerTool': {
