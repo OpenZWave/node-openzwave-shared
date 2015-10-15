@@ -40,12 +40,21 @@
 				"cflags": [ "-Wno-ignored-qualifiers -Wno-write-strings -Wno-unknown-pragmas" ],
 			}],
 			['OS=="win"', {
+				"variables": {
+					"OZW_HOME": "<!(node -p -e \"process.env.OZW_HOME.replace(/\\\\/g, '/')\")"
+				},						
 				"include_dirs": [
-					"deps/open-zwave/cpp/src/platform/windows"
+					"<!(node -e \"require('nan')\")",
+					"<(OZW_HOME)/include",
+					"<(OZW_HOME)/include/value_classes"
 				],
+				"defines": [
+					"OPENZWAVE_ETC=<(OZW_HOME)/config",
+					"OPENZWAVE_SECURITY=1"
+				],				
 				'msvs_settings': {
 					'VCLinkerTool': {
-						'AdditionalDependencies': ['setupapi.lib']
+						'AdditionalDependencies': ['setupapi.lib', '<(OZW_HOME)/bin/OpenZWave.lib']
 					}
 				}
 			}]
