@@ -44,15 +44,15 @@ The module currently builds only on Linux (and Windows, but its untested).
 On Linux you will need to ensure the OpenZWave library and headers are
 installed first.
 
-- Manually compiling OpenZwave involves the usual dance of
-  - downloading its source tarball
-  - compiling it and installing on your system (`make && sudo make install`)
-
-- You could also install OpenZWave via a precompiled package that's suitable for your Linux distribution.
-Precompiled packages for various Linux flavours and architectures can be downloaded
+- Manually compiling OpenZwave involves the usual dance of 1) downloading its source tarball
+([latest code from GitHub](https://github.com/OpenZWave/open-zwave/archive/master.zip) or
+[a stable release](https://github.com/OpenZWave/open-zwave/releases)) or
 from [the OpenZWave snapshots repository](http://old.openzwave.com/snapshots/)
-**Be sure to install BOTH the binary (libopenzwave-x.y) AND the development
-package (libopenzwave-dev).**
+and then 2) compiling it and installing on your system (`make && sudo make install`)
+
+- You could also install OpenZWave via a [precompiled package that's suitable for your Linux distribution and architecture](http://old.openzwave.com/downloads/).
+**Notice:** Be sure to install *BOTH the binary (libopenzwave-x.y) AND the development
+package (libopenzwave-dev).*
 
 **Node.JS >= 3.0 users**: please send me reports if the addon works or breaks.
 I've had very bad experience with the NodeJS API quicksand already, and NAN
@@ -65,17 +65,18 @@ Whenever you have OpenZWave installed in your machine, then all you need to do i
 ```
 $ sudo npm install -g openzwave-shared
 ```
+
 ## Development documentation
 
-[Basic API usage](../master/README-api.md)
-[List of supported events](../master/README-events.md)
-[Management of nodes](../master/README-mgmt.md)
-[Security API](../master/README-security.md)
-[See example usage](../master/README-example.md)
+- [Basic API usage](../master/README-api.md)
+- [List of supported events](../master/README-events.md)
+- [Management of nodes](../master/README-mgmt.md)
+- [Security API](../master/README-security.md)
+- [Usage example](../master/README-example.md)
 
 ## Environment-specific documentation
-[Installing on Rapsbian](../master/README-raspbian.md)
-[Installing on Ubuntu 15.04](../master/README-ubuntu.md)
+- [Installing on Rapsbian](../master/README-raspbian.md)
+- [Installing on Ubuntu 15.04](../master/README-ubuntu.md)
 
 ## License
 
