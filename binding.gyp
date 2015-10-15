@@ -41,7 +41,7 @@
 			}],
 			['OS=="win"', {
 				"variables": {
-					"OZW_HOME": "<!(node -p -e \"process.env.OZW_HOME.replace(/\\\\/g, '/')\")"
+					"OZW_HOME": "<!(node lib/install-ozw.js --get-ozw-home)"
 				},						
 				"include_dirs": [
 					"<!(node -e \"require('nan')\")",
