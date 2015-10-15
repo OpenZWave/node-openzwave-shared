@@ -27,7 +27,6 @@
     #include <tr1/unordered_map>
 #endif
 
-#include <node.h>
 #include <v8.h>
 #include "nan.h"
 

