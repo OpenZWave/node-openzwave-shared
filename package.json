@@ -8,6 +8,7 @@
   },
   "scripts": {
     "test": "node test.js",
+    "preinstall": "node lib/install-ozw.js",
     "install": "node-gyp rebuild"
   },
   "repository": {
