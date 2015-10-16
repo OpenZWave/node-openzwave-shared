@@ -24,43 +24,43 @@ which effectively replace the old `BeginControllerCommand`. There's also no
 -  zwave.removeFailedNode(nodeid):
   Remove a *specific* failed node from the controller's memory.
 
--  zwave.HasNodeFailed(nodeid)
+-  zwave.hasNodeFailed(nodeid)
   Check whether a node is in the controller's failed nodes list.
 
--  zwave.RequestNodeNeighborUpdate(nodeid)
+-  zwave.requestNodeNeighborUpdate(nodeid)
   Get a node to rebuild its neighbour list.
 
--  zwave.AssignReturnRoute(nodeid)
+-  zwave.assignReturnRoute(nodeid)
   Assign a network return routes to a device.
 
--  zwave.DeleteAllReturnRoutes(nodeid)
+-  zwave.deleteAllReturnRoutes(nodeid)
   Delete all return routes from a device.
 
--  zwave.SendNodeInformation(nodeid)
+-  zwave.sendNodeInformation(nodeid)
   Send a NIF (node information frame)
 
--  zwave.CreateNewPrimary())
+-  zwave.createNewPrimary())
   Add a new controller to the Z-Wave network. Used when old primary fails. Requires SUC.
 
--  zwave.ReceiveConfiguration()
+-  zwave.receiveConfiguration()
     Receive Z-Wave network configuration information from another controller.
 
--  zwave.ReplaceFailedNode(nideid)
+-  zwave.replaceFailedNode(nideid)
   Replace a non-responding node with another. The node must be in the controller's list of failed nodes for this command to succeed.
 
--  zwave.TransferPrimaryRole()
+-  zwave.transferPrimaryRole()
   Make a different controller the primary.
 
--  zwave.RequestNetworkUpdate(nodeid)
+-  zwave.requestNetworkUpdate(nodeid)
   Request network information from the SUC/SIS.
 
--  zwave.ReplicationSend(nodeid)
+-  zwave.replicationSend(nodeid)
   Send information from primary to secondary
 
--  zwave.CreateButton(nodeid, buttonid)
+-  zwave.createButton(nodeid, buttonid)
   Create an id that tracks handheld button presses
 
--  zwave.DeleteButton(nodeid, buttonid)
+-  zwave.deleteButton(nodeid, buttonid)
   Delete id that tracks handheld button presses
 
 
