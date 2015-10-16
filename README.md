@@ -38,11 +38,12 @@ This also means that you need to be careful if you upgrade your
 OZW library: you might need to rebuild this addon, otherwise you'd might
 get api mismatch exceptions.
 
-## Install
+## Prerequisites
 
-The module currently builds only on Linux (and Windows, but its untested).
-On Linux you will need to ensure the OpenZWave library and headers are
-installed first.
+### Linux/OSX
+
+You will need to ensure the OpenZWave library and headers are
+installed first. You can do this one of two ways.
 
 - Manually compiling OpenZwave involves the usual dance of 1) downloading its source tarball
 ([latest code from GitHub](https://github.com/OpenZWave/open-zwave/archive/master.zip) or
@@ -54,16 +55,19 @@ and then 2) compiling it and installing on your system (`make && sudo make insta
 **Notice:** Be sure to install *BOTH the binary (libopenzwave-x.y) AND the development
 package (libopenzwave-dev).*
 
+### Windows
+
+Since there is no standard installation location for Open Z-Wave on Windows, it will be automatically downloaded, compiled, and installed when you install this module.
+
+## Installation
+
 **Node.JS >= 3.0 users**: please send me reports if the addon works or breaks.
 I've had very bad experience with the NodeJS API quicksand already, and NAN
 appears to not be able to keep up. The NodeJS API is truly a wizard's tribute to Ctrl+Z.
 
-It should also compile in Windows, but you need to edit binding.gyp
-to set the paths for the OpenZWave library sources and libraries.
-
 Whenever you have OpenZWave installed in your machine, then all you need to do is:
 ```
-$ sudo npm install -g openzwave-shared
+$ npm install openzwave-shared
 ```
 
 ## Development documentation
