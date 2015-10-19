@@ -84,7 +84,7 @@ $ npm install openzwave-shared
 
 ## License
 
-The [Open Z-Wave](https://www.openzwave.com/) library that this
+The [Open Z-Wave](http://www.openzwave.com/) library that this
 module heavily relies upon is licensed under the Lesser GPLv3.
 
 Everything else (all the bits that I and Jonathan have written)
