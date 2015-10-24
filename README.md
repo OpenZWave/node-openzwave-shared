@@ -3,8 +3,11 @@ node-openzwave-shared
 
 This is a node.js add-on for node 0.10.x *and* 0.12.x (and possibly
 even for NodeJS's 3 and 4, with the help of NAN), which wraps the [Open
-Z-Wave](https://www.openzwave.com/) library to provide access to a
+Z-Wave](http://www.openzwave.com/) library to provide access to a
 Z-Wave network from within node.js (server-side JavaScript.)
+
+<img src="https://nodejs.org/static/images/logos/nodejs.png" style="width: 200px"/>
+<img src="http://www.openzwave.com/css/ozwlogo.png"/>
 
 You can now easily control *and manage* your [ZWave](http://www.z-wave.com/) devices
 (lights, dimmers, blinds, you name it) from within [NodeJS](https://nodejs.org/) applications.
