@@ -58,31 +58,7 @@ namespace OZW {
  	 * Configuration::StaticGetCommandClassId.
 	*/
 	// ===================================================================
-	NAN_METHOD(OZW::RequestConfigParam)
-	// ===================================================================
-	{
-		Nan::HandleScope scope;
-
-		uint8 nodeid = info[0]->ToNumber()->Value();
-		uint8 param = info[1]->ToNumber()->Value();
-
-		OpenZWave::Manager::Get()->RequestConfigParam(homeid, nodeid, param);
-	}
-
-
-	/*
-	 * Request the values of all known configurable parameters from a
-	 * device.
-	 * */
-	// ===================================================================
-	NAN_METHOD(OZW::RequestAllConfigParams)
-	// ===================================================================
-	{
-		Nan::HandleScope scope;
-
-		uint8 nodeid = info[0]->ToNumber()->Value();
-
-	  	OpenZWave::Manager::Get()->RequestAllConfigParams (homeid, nodeid);
-	}
+	NAN_METHOD(OZW::RequestConfigParam) { OZWMGR2(RequestConfigParam) }
+	NAN_METHOD(OZW::RequestAllConfigParams) {		OZWMGR1(RequestAllConfigParams) }
 
 }

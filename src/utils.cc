@@ -52,19 +52,22 @@ namespace OZW {
 		return NULL;
 	}
 
+
 	// populate a v8 object with an attribute called 'value' whose value is the
 	// ZWave value, as returned from its proper typed call
 	void setValObj(Local<Object>&valobj, OpenZWave::ValueID &value) {
 		/*
 		* The value itself is type-specific.
 		*/
+
 		switch (value.GetType()) {
+
 			case OpenZWave::ValueID::ValueType_Bool: {
 				bool val;
 				OpenZWave::Manager::Get()->GetValueAsBool(value, &val);
 				Nan::Set(valobj,
 					Nan::New<String>("value").ToLocalChecked(),
-					Nan::New<Boolean>(val)->ToBoolean()
+					Nan::New<Boolean>(val)
 				);
 				break;
 			}

@@ -42,7 +42,7 @@
 			['OS=="win"', {
 				"variables": {
 					"OZW_HOME": "<!(node lib/install-ozw.js --get-ozw-home)"
-				},						
+				},
 				"include_dirs": [
 					"<!(node -e \"require('nan')\")",
 					"<(OZW_HOME)/include",
@@ -51,7 +51,7 @@
 				"defines": [
 					"OPENZWAVE_ETC=<(OZW_HOME)/config",
 					"OPENZWAVE_SECURITY=1"
-				],				
+				],
 				'msvs_settings': {
 					'VCLinkerTool': {
 						'AdditionalDependencies': ['setupapi.lib', '<(OZW_HOME)/bin/OpenZWave.lib']

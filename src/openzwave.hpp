@@ -284,4 +284,87 @@ namespace OZW {
 
 }
 
+// top-level macros, not to be used directly
+#define OZWGETMGR \
+  Nan::HandleScope scope; \
+  OpenZWave::Manager *mgr = OpenZWave::Manager::Get();
+
+#define TOTYPE(Type) To ## Type
+#define ISTYPE(Type) Is ## Type
+
+//
+// Get an argument from a v8 call, do sanity checks,
+// then define a native c variable for it
+#define V8GETPARAM(NativeType, Name, Index,  V8Type) \
+  if (info.Length() < Index+1) { \
+    std::string errmsg("Cannot read "); \
+    errmsg += stringify(Name); \
+    errmsg += ": Insufficient number of arguments."; \
+    Nan::ThrowRangeError(errmsg.c_str()); \
+  } \
+  v8::Local<V8Type> arg ## Index = info[Index] -> TOTYPE(V8Type) (); \
+  NativeType Name = arg ## Index -> Value();
+
+/*
+if (! arg ## Index . ISTYPE(V8Type) ) { \
+  std::string errmsg("Cannot read argument "); \
+  errmsg += stringify(Name); \
+  errmsg += ": Wrong type."; \
+  Nan::ThrowTypeError(errmsg.c_str()); \
+}  \
+*/
+
+// macros directly usable by method mappings
+#define OZWGETMGRNODEID \
+  OZWGETMGR \
+  V8GETPARAM(uint8, nodeid, 0, Number)
+
+#define OZWMGR0(Method) \
+  OZWGETMGR \
+  (mgr->Method)(homeid);
+
+#define OZWMGR1(Method) \
+  OZWGETMGRNODEID \
+  (mgr->Method)(homeid, nodeid);
+
+#define OZWMGR2(Method) \
+  OZWGETMGRNODEID \
+  V8GETPARAM(uint8, param, 1, Number) \
+  (mgr->Method)(homeid, nodeid, param);
+
+#define OZWMGRGetUint8(Method) \
+  OZWGETMGRNODEID \
+	uint8 result = (mgr->Method)(homeid, nodeid); \
+	info.GetReturnValue().Set(Nan::New<Integer>(result));
+
+#define OZWMGRGetUint32(Method) \
+  OZWGETMGRNODEID \
+	uint32 result = (mgr->Method)(homeid, nodeid); \
+	info.GetReturnValue().Set(Nan::New<Integer>(result));
+
+#define OZWMGRGetString(Method) \
+  OZWGETMGRNODEID \
+	std::string result = (mgr->Method)(homeid, nodeid); \
+  info.GetReturnValue().Set(Nan::New<String>(result.c_str()).ToLocalChecked());
+
+#define OZWMGRGetBool(Method) \
+  OZWGETMGRNODEID \
+  info.GetReturnValue().Set(Nan::New<Boolean>( \
+    (mgr->Method)(homeid, nodeid) \
+  ));
+
+#define OZWMGRSetNodeUint8(Method) \
+	Nan::HandleScope scope; \
+  uint8 nodeid = info[0]->ToNumber()->Value(); \
+  uint8 param = info[1]->ToNumber()->Value(); \
+  OpenZWave::Manager *mgr = OpenZWave::Manager::Get(); \
+  (mgr->Method)(homeid, nodeid, param);
+
+#define OZWMGRSetNodeString(Method) \
+  Nan::HandleScope scope; \
+  uint8 nodeid = info[0]->ToNumber()->Value(); \
+  std::string s = (*String::Utf8Value(info[1]->ToString())); \
+  OpenZWave::Manager *mgr = OpenZWave::Manager::Get(); \
+  (mgr->Method)(homeid, nodeid, s);
+
 #endif // __OPENZWAVE_HPP_INCLUDED__

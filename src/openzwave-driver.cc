@@ -39,8 +39,6 @@ namespace OZW {
 
 		emit_cb = new Nan::Callback(callbackHandle);
 
-		//std::cout << "~~~~ emit_cb:" << emit_cb << " isEmpty? " << emit_cb->IsEmpty() << "\n";
-
 		OpenZWave::Manager::Create();
 		OpenZWave::Manager* mgr = OpenZWave::Manager::Get();
     mgr->AddWatcher(ozw_watcher_callback, NULL);
