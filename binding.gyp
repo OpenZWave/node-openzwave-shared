@@ -4,15 +4,11 @@
 		"sources": [
 			"src/callbacks.cc",
 			"src/openzwave.cc",
-			"src/openzwave-config.cc",
-			"src/openzwave-driver.cc",
-			"src/openzwave-groups.cc",
-			"src/openzwave-management.cc",
+			"src/openzwave-api.cc",
+			"src/openzwave-misc.cc",
 			"src/openzwave-network.cc",
-			"src/openzwave-nodes.cc",
 			"src/openzwave-polling.cc",
 			"src/openzwave-scenes.cc",
-			"src/openzwave-values.cc",
 			"src/utils.cc",
 		],
 		"conditions": [

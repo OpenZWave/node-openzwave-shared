@@ -21,15 +21,6 @@ using namespace node;
 
 namespace OZW {
 
- 	// Get the time period between polls of a node's state
-	// ===================================================================
-	NAN_METHOD(OZW::GetPollInterval)
-	// ===================================================================
-	{
-		Nan::HandleScope scope;
-		uint32 i = OpenZWave::Manager::Get()->GetPollInterval();
-		info.GetReturnValue().Set(Nan::New<Integer>(i));
-	}
 
 	/* Set the time period between polls of a node's state. Due to patent
 	 * concerns, some devices do not report state changes automatically to
@@ -43,7 +34,7 @@ namespace OZW {
 	 * network does not have to cope with more than one poll per second).
 	 */
 	// ===================================================================
-	NAN_METHOD(OZW::SetPollInterval)
+	NAN_METHOD(OZW::SetPollInterval) 
 	// ===================================================================
 	{
 		Nan::HandleScope scope;
@@ -102,28 +93,8 @@ namespace OZW {
 
 	// Determine the polling of a device's state.
 	// ===================================================================
-	NAN_METHOD(OZW::IsPolled)
+	NAN_METHOD(OZW::IsPolled) { OZWMGRGetByZWaveValueId(isPolled, Boolean) }
 	// ===================================================================
-	{
-		Nan::HandleScope scope;
-
-		uint8 nodeid = info[0]->ToNumber()->Value();
-		uint8 comclass = info[1]->ToNumber()->Value();
-		uint8 instance = info[2]->ToNumber()->Value();
-		uint8 index = info[3]->ToNumber()->Value();
-
-		NodeInfo *node;
-		std::list<OpenZWave::ValueID>::iterator vit;
-
-		if ((node = get_node_info(nodeid))) {
-			for (vit = node->values.begin(); vit != node->values.end(); ++vit) {
-				if (((*vit).GetCommandClassId() == comclass) && ((*vit).GetInstance() == instance) && ((*vit).GetIndex() == index)) {
-					bool b = OpenZWave::Manager::Get()->isPolled(*vit);
-					info.GetReturnValue().Set(Nan::New<Boolean>(b));
-				}
-			}
-		}
-	}
 
 	// ===================================================================
 	NAN_METHOD(OZW::SetPollIntensity)

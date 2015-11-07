@@ -241,6 +241,52 @@ namespace OZW {
 		//
 		info.GetReturnValue().Set(info.This());
 	}
+
+	// ===================================================================
+	NAN_METHOD(OZW::Connect)
+	// ===================================================================
+	{
+		Nan::HandleScope scope;
+
+		std::string path = (*String::Utf8Value(info[0]->ToString()));
+
+		uv_async_init(uv_default_loop(), &async, async_cb_handler);
+
+		Local<Function> callbackHandle = Nan::Get( info.This(),
+			Nan::New<String>("emit").ToLocalChecked()
+		).ToLocalChecked()
+		 .As<Function>();
+
+		emit_cb = new Nan::Callback(callbackHandle);
+
+		OpenZWave::Manager::Create();
+		OpenZWave::Manager* mgr = OpenZWave::Manager::Get();
+		mgr->AddWatcher(ozw_watcher_callback, NULL);
+		mgr->AddDriver(path);
+		std::string version(OpenZWave::Manager::getVersionAsString());
+
+		Local < v8::Value > cbinfo[16];
+		cbinfo[0] = Nan::New<String>("connected").ToLocalChecked();
+		cbinfo[1] = Nan::New<String>(version).ToLocalChecked();
+
+		emit_cb->Call(2, cbinfo);
+	}
+
+	// ===================================================================
+	NAN_METHOD(OZW::Disconnect)
+	// ===================================================================
+	{
+		Nan::HandleScope scope;
+
+		std::string path = (*String::Utf8Value(info[0]->ToString()));
+
+		OpenZWave::Manager::Get()->RemoveDriver(path);
+		OpenZWave::Manager::Get()->RemoveWatcher(ozw_watcher_callback, NULL);
+		OpenZWave::Manager::Destroy();
+		OpenZWave::Options::Destroy();
+
+		delete emit_cb;
+	}
 }
 
 NODE_MODULE(openzwave_shared, OZW::init)

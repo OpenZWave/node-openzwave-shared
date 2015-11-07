@@ -314,11 +314,11 @@ if (! arg ## Index . ISTYPE(V8Type) ) { \
 }  \
 */
 
-// macros directly usable by method mappings
 #define OZWGETMGRNODEID \
   OZWGETMGR \
   V8GETPARAM(uint8, nodeid, 0, Number)
 
+// macros directly usable by method mappings
 #define OZWMGR0(Method) \
   OZWGETMGR \
   (mgr->Method)(homeid);
@@ -332,39 +332,79 @@ if (! arg ## Index . ISTYPE(V8Type) ) { \
   V8GETPARAM(uint8, param, 1, Number) \
   (mgr->Method)(homeid, nodeid, param);
 
-#define OZWMGRGetUint8(Method) \
-  OZWGETMGRNODEID \
-	uint8 result = (mgr->Method)(homeid, nodeid); \
-	info.GetReturnValue().Set(Nan::New<Integer>(result));
+#define OZWMGRGetRaw(Method, V8Type) \
+  OZWGETMGR \
+  info.GetReturnValue().Set( \
+    Nan::New<V8Type>((mgr->Method)()) \
+  );
 
-#define OZWMGRGetUint32(Method) \
-  OZWGETMGRNODEID \
-	uint32 result = (mgr->Method)(homeid, nodeid); \
-	info.GetReturnValue().Set(Nan::New<Integer>(result));
+#define OZWMGRGet(Method, V8Type) \
+  OZWGETMGR \
+  info.GetReturnValue().Set( \
+    Nan::New<V8Type>((mgr->Method)(homeid)) \
+  );
 
-#define OZWMGRGetString(Method) \
-  OZWGETMGRNODEID \
-	std::string result = (mgr->Method)(homeid, nodeid); \
-  info.GetReturnValue().Set(Nan::New<String>(result.c_str()).ToLocalChecked());
+#define OZWMGRGetAsString(Method) \
+  OZWGETMGR \
+  info.GetReturnValue().Set( \
+    Nan::New<String>((mgr->Method)(homeid).c_str()).ToLocalChecked() \
+  );
 
-#define OZWMGRGetBool(Method) \
+#define OZWMGRGetNodeParam(Method, V8Type) \
   OZWGETMGRNODEID \
-  info.GetReturnValue().Set(Nan::New<Boolean>( \
+  info.GetReturnValue().Set(Nan::New<V8Type>( \
     (mgr->Method)(homeid, nodeid) \
   ));
 
-#define OZWMGRSetNodeUint8(Method) \
-	Nan::HandleScope scope; \
-  uint8 nodeid = info[0]->ToNumber()->Value(); \
-  uint8 param = info[1]->ToNumber()->Value(); \
-  OpenZWave::Manager *mgr = OpenZWave::Manager::Get(); \
+#define OZWMGRGetNodeParamAsString(Method) \
+  OZWGETMGRNODEID \
+  info.GetReturnValue().Set(Nan::New<String>( \
+    (mgr->Method)(homeid, nodeid).c_str()     \
+  ).ToLocalChecked());
+
+#define OZWMGRGetNodeParamIndexed(Method, V8Type) \
+  OZWGETMGRNODEID \
+  V8GETPARAM(uint8, param_idx, 1, Number)     \
+	info.GetReturnValue().Set(Nan::New<V8Type>( \
+    (mgr->Method)(homeid, nodeid, param_idx)  \
+  ));
+
+#define OZWMGRGetNodeParamIndexedAsString(Method) \
+  OZWGETMGRNODEID \
+  V8GETPARAM(uint8, param_idx, 1, Number)            \
+	info.GetReturnValue().Set(Nan::New<String>(        \
+    (mgr->Method)(homeid, nodeid, param_idx).c_str() \
+  ).ToLocalChecked());
+
+#define OZWMGRSetNodeParam(Method, V8Type) \
+  OZWGETMGRNODEID \
+  V8GETPARAM(uint8, param, 1, Number) \
   (mgr->Method)(homeid, nodeid, param);
 
 #define OZWMGRSetNodeString(Method) \
-  Nan::HandleScope scope; \
-  uint8 nodeid = info[0]->ToNumber()->Value(); \
+  OZWGETMGRNODEID \
   std::string s = (*String::Utf8Value(info[1]->ToString())); \
-  OpenZWave::Manager *mgr = OpenZWave::Manager::Get(); \
   (mgr->Method)(homeid, nodeid, s);
+
+#define OZWMGRGetByZWaveValueId(Method, V8Type) \
+  OZWGETMGRNODEID \
+  V8GETPARAM(uint8, comclass, 1, Number)  \
+  V8GETPARAM(uint8, instance, 2, Number)  \
+  V8GETPARAM(uint8, index, 3, Number)     \
+  std::list<OpenZWave::ValueID>::iterator vit; \
+  NodeInfo* node; \
+  if ((node = get_node_info(nodeid))) {  \
+    for (vit = node->values.begin(); vit != node->values.end(); ++vit) { \
+      if (((*vit).GetCommandClassId() == comclass) && ((*vit).GetInstance() == instance) && ((*vit).GetIndex() == index)) { \
+        info.GetReturnValue().Set(Nan::New<V8Type>((mgr->Method)(*vit))); \
+      } \
+    } \
+  };
+
+#define OZWMGRAssoc(Method) \
+  OZWGETMGRNODEID \
+  V8GETPARAM(uint8, groupidx, 1, Number)  \
+  V8GETPARAM(uint8, tgtnode, 2, Number)   \
+  mgr->Method(homeid, nodeid, groupidx, tgtnode);
 
 #endif // __OPENZWAVE_HPP_INCLUDED__
