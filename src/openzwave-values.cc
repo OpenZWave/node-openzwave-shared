@@ -30,65 +30,54 @@ namespace OZW {
 	{
 		Nan::HandleScope scope;
 
-		uint8 nodeid = info[0]->ToNumber()->Value();
-		uint8 comclass = info[1]->ToNumber()->Value();
-		uint8 instance = info[2]->ToNumber()->Value();
-		uint8 index = info[3]->ToNumber()->Value();
+		OpenZWave::ValueID* vit = getZwaveValueID(info);
+		uint8 validx  =  (info[0]->IsObject()) ? 1 : 4;
 
-		NodeInfo *node;
-		std::list<OpenZWave::ValueID>::iterator vit;
-
-		if ((node = get_node_info(nodeid))) {
-			for (vit = node->values.begin(); vit != node->values.end(); ++vit) {
-				if (((*vit).GetCommandClassId() == comclass) && ((*vit).GetInstance() == instance) && ((*vit).GetIndex() == index)) {
-
-					switch ((*vit).GetType()) {
-						case OpenZWave::ValueID::ValueType_Bool: {
-							bool val = info[4]->ToBoolean()->Value();
-							OpenZWave::Manager::Get()->SetValue(*vit, val);
-							break;
-						}
-						case OpenZWave::ValueID::ValueType_Byte: {
-							uint8 val = info[4]->ToInteger()->Value();
-							OpenZWave::Manager::Get()->SetValue(*vit, val);
-							break;
-						}
-						case OpenZWave::ValueID::ValueType_Decimal: {
-							float val = info[4]->ToNumber()->NumberValue();
-							OpenZWave::Manager::Get()->SetValue(*vit, val);
-							break;
-						}
-						case OpenZWave::ValueID::ValueType_Int: {
-							int32 val = info[4]->ToInteger()->Value();
-							OpenZWave::Manager::Get()->SetValue(*vit, val);
-							break;
-						}
-						case OpenZWave::ValueID::ValueType_List: {
-							std::string val = (*String::Utf8Value(info[4]->ToString()));
-							OpenZWave::Manager::Get()->SetValue(*vit, val);
-							break;
-						}
-						case OpenZWave::ValueID::ValueType_Short: {
-							int16 val = info[4]->ToInteger()->Value();
-							OpenZWave::Manager::Get()->SetValue(*vit, val);
-							break;
-						}
-						case OpenZWave::ValueID::ValueType_String: {
-							std::string val = (*String::Utf8Value(info[4]->ToString()));
-							OpenZWave::Manager::Get()->SetValue(*vit, val);
-							break;
-						}
-						case OpenZWave::ValueID::ValueType_Schedule: {
-							break;
-						}
-						case OpenZWave::ValueID::ValueType_Button: {
-							break;
-						}
-						case OpenZWave::ValueID::ValueType_Raw: {
-							break;
-						}
-					}
-				}
+		switch ((*vit).GetType()) {
+			case OpenZWave::ValueID::ValueType_Bool: {
+				bool val = info[validx]->ToBoolean()->Value();
+				OpenZWave::Manager::Get()->SetValue(*vit, val);
+				break;
+			}
+			case OpenZWave::ValueID::ValueType_Byte: {
+				uint8 val = info[validx]->ToInteger()->Value();
+				OpenZWave::Manager::Get()->SetValue(*vit, val);
+				break;
+			}
+			case OpenZWave::ValueID::ValueType_Decimal: {
+				float val = info[validx]->ToNumber()->NumberValue();
+				OpenZWave::Manager::Get()->SetValue(*vit, val);
+				break;
+			}
+			case OpenZWave::ValueID::ValueType_Int: {
+				int32 val = info[validx]->ToInteger()->Value();
+				OpenZWave::Manager::Get()->SetValue(*vit, val);
+				break;
+			}
+			case OpenZWave::ValueID::ValueType_List: {
+				std::string val = (*String::Utf8Value(info[validx]->ToString()));
+				OpenZWave::Manager::Get()->SetValue(*vit, val);
+				break;
+			}
+			case OpenZWave::ValueID::ValueType_Short: {
+				int16 val = info[validx]->ToInteger()->Value();
+				OpenZWave::Manager::Get()->SetValue(*vit, val);
+				break;
+			}
+			case OpenZWave::ValueID::ValueType_String: {
+				std::string val = (*String::Utf8Value(info[validx]->ToString()));
+				OpenZWave::Manager::Get()->SetValue(*vit, val);
+				break;
+			}
+			case OpenZWave::ValueID::ValueType_Schedule: {
+				break;
+			}
+			case OpenZWave::ValueID::ValueType_Button: {
+				OpenZWave::Manager::Get()->PressButton(*vit);
+				break;
+			}
+			case OpenZWave::ValueID::ValueType_Raw: {
+				break;
 			}
 		}
 	}

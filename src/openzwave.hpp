@@ -157,6 +157,7 @@ namespace OZW {
 		static NAN_METHOD(SetNodeLevel);
 		static NAN_METHOD(SwitchAllOn);
 		static NAN_METHOD(SwitchAllOff);
+    static NAN_METHOD(PressButton);
 		//
 		static NAN_METHOD(RefreshNodeInfo);
 		static NAN_METHOD(RequestNodeState);
@@ -260,6 +261,8 @@ namespace OZW {
 
 	NodeInfo  *get_node_info(uint8 nodeid);
 	SceneInfo *get_scene_info(uint8 sceneid);
+
+  OpenZWave::ValueID* getZwaveValueID(const Nan::FunctionCallbackInfo<v8::Value>& info, uint8 offset=0);
 
 	// OpenZWave callbacks
 	void ozw_watcher_callback(

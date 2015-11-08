@@ -106,22 +106,10 @@ namespace OZW {
 	// ===================================================================
 	{
 		Nan::HandleScope scope;
-
-		uint8 nodeid = info[0]->ToNumber()->Value();
-		uint8 comclass = info[1]->ToNumber()->Value();
-		uint8 instance = info[2]->ToNumber()->Value();
-		uint8 index = info[3]->ToNumber()->Value();
-
-		NodeInfo *node;
-		std::list<OpenZWave::ValueID>::iterator vit;
-
-		if ((node = get_node_info(nodeid))) {
-			for (vit = node->values.begin(); vit != node->values.end(); ++vit) {
-				if (((*vit).GetCommandClassId() == comclass) && ((*vit).GetInstance() == instance) && ((*vit).GetIndex() == index)) {
-					bool b = OpenZWave::Manager::Get()->isPolled(*vit);
-					info.GetReturnValue().Set(Nan::New<Boolean>(b));
-				}
-			}
+		OpenZWave::ValueID* ozwvid = getZwaveValueID(info);
+		if (ozwvid != NULL) {
+			bool b = OpenZWave::Manager::Get()->isPolled(*ozwvid);
+			info.GetReturnValue().Set(Nan::New<Boolean>(b));
 		}
 	}
 
@@ -130,24 +118,12 @@ namespace OZW {
 	// ===================================================================
 	{
 		Nan::HandleScope scope;
-
-		uint8 nodeid = info[0]->ToNumber()->Value();
-		uint8 comclass = info[1]->ToNumber()->Value();
-		uint8 instance = info[2]->ToNumber()->Value();
-		uint8 index = info[3]->ToNumber()->Value();
-		uint8 intensity = info[4]->ToNumber()->Value();
-
-		NodeInfo *node;
-		std::list<OpenZWave::ValueID>::iterator vit;
-
-		if ((node = get_node_info(nodeid))) {
-			for (vit = node->values.begin(); vit != node->values.end(); ++vit) {
-				if (((*vit).GetCommandClassId() == comclass) && ((*vit).GetInstance() == instance) && ((*vit).GetIndex() == index)) {
-
-					OpenZWave::Manager::Get()->SetPollIntensity (*vit, intensity);
-
-				}
-			}
+		OpenZWave::ValueID* ozwvid = getZwaveValueID(info);
+		uint8 intensity;
+		if (ozwvid != NULL) {
+			uint8 intensity_index = ( info[0]->IsObject() ) ? 1 : 4;
+			intensity = info[intensity_index]->ToNumber()->Value();
+			OpenZWave::Manager::Get()->SetPollIntensity (*ozwvid, intensity);
 		}
 	}
 
@@ -157,22 +133,10 @@ namespace OZW {
 	// ===================================================================
 	{
 		Nan::HandleScope scope;
-
-		uint8 nodeid = info[0]->ToNumber()->Value();
-		uint8 comclass = info[1]->ToNumber()->Value();
-		uint8 instance = info[2]->ToNumber()->Value();
-		uint8 index = info[3]->ToNumber()->Value();
-
-		NodeInfo *node;
-		std::list<OpenZWave::ValueID>::iterator vit;
-
-		if ((node = get_node_info(nodeid))) {
-			for (vit = node->values.begin(); vit != node->values.end(); ++vit) {
-				if (((*vit).GetCommandClassId() == comclass) && ((*vit).GetInstance() == instance) && ((*vit).GetIndex() == index)) {
-					uint8 i = OpenZWave::Manager::Get()->GetPollIntensity(*vit);
-					info.GetReturnValue().Set(Nan::New<Integer>(i));
-				}
-			}
+		OpenZWave::ValueID* ozwvid = getZwaveValueID(info);
+		if (ozwvid != NULL) {
+			uint8 i = OpenZWave::Manager::Get()->GetPollIntensity(*ozwvid);
+			info.GetReturnValue().Set(Nan::New<Integer>(i));
 		}
 	}
 }

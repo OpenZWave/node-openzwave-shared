@@ -123,58 +123,50 @@ namespace OZW {
 		Nan::HandleScope scope;
 
 		uint8 sceneid  = info[0]->ToNumber()->Value();
-		uint8 nodeid   = info[1]->ToNumber()->Value();
-		uint8 comclass = info[2]->ToNumber()->Value();
-		uint8 instance = info[3]->ToNumber()->Value();
-		uint8 index    = info[4]->ToNumber()->Value();
-
-		NodeInfo *node;
-		std::list<OpenZWave::ValueID>::iterator vit;
-
-		if ((node = get_node_info(nodeid))) {
-			for (vit = node->values.begin(); vit != node->values.end(); ++vit) {
-				if (((*vit).GetCommandClassId() == comclass) && ((*vit).GetInstance() == instance) && ((*vit).GetIndex() == index)) {
+		OpenZWave::ValueID* vit = getZwaveValueID(info, 1);
+		uint8 valoffset = ( info[1]->IsObject() ) ? 2 : 5;
+		if (vit != NULL) {
 
 					switch ((*vit).GetType()) {
 						case OpenZWave::ValueID::ValueType_Bool: {
 							//bool val; OpenZWave::Manager::Get()->GetValueAsBool(*vit, &val);
-							bool val = info[5]->ToBoolean()->Value();
+							bool val = info[valoffset]->ToBoolean()->Value();
 							OpenZWave::Manager::Get()->AddSceneValue(sceneid, *vit, val);
 							break;
 						}
 						case OpenZWave::ValueID::ValueType_Byte: {
 							//uint8 val; OpenZWave::Manager::Get()->GetValueAsByte(*vit, &val);
-							uint8 val = info[5]->ToInteger()->Value();
+							uint8 val = info[valoffset]->ToInteger()->Value();
 							OpenZWave::Manager::Get()->AddSceneValue(sceneid, *vit, val);
 							break;
 						}
 						case OpenZWave::ValueID::ValueType_Decimal: {
 							//float val; OpenZWave::Manager::Get()->GetValueAsFloat(*vit, &val);
-							float val = info[5]->ToNumber()->NumberValue();
+							float val = info[valoffset]->ToNumber()->NumberValue();
 							OpenZWave::Manager::Get()->AddSceneValue(sceneid, *vit, val);
 							break;
 						}
 						case OpenZWave::ValueID::ValueType_Int: {
 							//uint32 val; OpenZWave::Manager::Get()->GetValueAsInt(*vit, &val);
-							int32 val = info[5]->ToInteger()->Value();
+							int32 val = info[valoffset]->ToInteger()->Value();
 							OpenZWave::Manager::Get()->AddSceneValue(sceneid, *vit, val);
 							break;
 						}
 						case OpenZWave::ValueID::ValueType_List: {
 							//std::string val; OpenZWave::Manager::Get()->GetValueListSelection(*vit, &val);
-							std::string val = (*String::Utf8Value(info[5]->ToString()));
+							std::string val = (*String::Utf8Value(info[valoffset]->ToString()));
 							OpenZWave::Manager::Get()->AddSceneValue(sceneid, *vit, val);
 							break;
 						}
 						case OpenZWave::ValueID::ValueType_Short: {
 							//int16_t val; OpenZWave::Manager::Get()->GetValueAsShort(*vit, &val);
-							uint16 val = info[5]->ToInteger()->Value();
+							uint16 val = info[valoffset]->ToInteger()->Value();
 							OpenZWave::Manager::Get()->AddSceneValue(sceneid, *vit, val);
 							break;
 						}
 						case OpenZWave::ValueID::ValueType_String: {
 							//std::string val; OpenZWave::Manager::Get()->GetValueAsString(*vit, &val);
-							std::string val = (*String::Utf8Value(info[5]->ToString()));
+							std::string val = (*String::Utf8Value(info[valoffset]->ToString()));
 							OpenZWave::Manager::Get()->AddSceneValue(sceneid, *vit, val);
 							break;
 						}
@@ -187,8 +179,6 @@ namespace OZW {
 						case OpenZWave::ValueID::ValueType_Raw: {
 							break;
 						}
-					}
-				}
 			}
 		}
 	}
@@ -198,24 +188,13 @@ namespace OZW {
 	// ===================================================================
 	{
 		Nan::HandleScope scope;
-
 		uint8 sceneid = info[0]->ToNumber()->Value();
-		uint8 nodeid = info[1]->ToNumber()->Value();
-		uint8 comclass = info[2]->ToNumber()->Value();
-		uint8 instance = info[3]->ToNumber()->Value();
-		uint8 index = info[4]->ToNumber()->Value();
-
 		SceneInfo *scene;
-
-		std::list<OpenZWave::ValueID>::iterator vit;
-
 		if ((scene = get_scene_info(sceneid))) {
-			for (vit = scene->values.begin(); vit != scene->values.end(); ++vit) {
-				if (((*vit).GetNodeId() == nodeid) && ((*vit).GetCommandClassId() == comclass) && ((*vit).GetInstance() == instance) && ((*vit).GetIndex() == index)) {
+			OpenZWave::ValueID* vit = getZwaveValueID(info, 1);
+			if (vit != NULL) {
 					OpenZWave::Manager::Get()->RemoveSceneValue(sceneid, *vit);
-					scene->values.erase(vit);
-					break;
-				}
+					scene->values.remove(*vit);
 			}
 		}
 	}

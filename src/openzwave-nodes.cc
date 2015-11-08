@@ -90,6 +90,16 @@ namespace OZW {
 		OpenZWave::Manager::Get()->SwitchAllOff(homeid);
 	}
 
+	// ===================================================================
+	NAN_METHOD(OZW::PressButton)
+	// ===================================================================
+	{
+		Nan::HandleScope scope;
+		// TODO:
+		// OpenZWave::Manager::Get()->PressButton(valueID);
+	}
+
+
 	/*
 	* Write a new location string to the device, if supported.
 	*/
