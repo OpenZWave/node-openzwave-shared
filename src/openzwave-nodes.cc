@@ -95,8 +95,10 @@ namespace OZW {
 	// ===================================================================
 	{
 		Nan::HandleScope scope;
-		// TODO:
-		// OpenZWave::Manager::Get()->PressButton(valueID);
+		OpenZWave::ValueID* ozwvid = getZwaveValueID(info);
+		if (ozwvid != NULL) {
+			OpenZWave::Manager::Get()->PressButton(*ozwvid);
+		}
 	}
 
 
