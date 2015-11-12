@@ -219,6 +219,7 @@ namespace OZW {
 		uint8 sceneid;
 		uint8 notification;
 		std::list<OpenZWave::ValueID> values;
+    std::string *help;
 	} NotifInfo;
 
 	typedef struct {
