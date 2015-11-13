@@ -328,21 +328,21 @@ const std::string NotificationGetAsString(Notification const *n) {
 			case Notification::Type_NodeRemoved:
 				str = "NodeRemoved";		break;
 			case Notification::Type_NodeProtocolInfo:
-				str = "NodeProtocolInfo";			break;
+				str = "NodeProtocolInfo";	break;
 			case Notification::Type_NodeNaming:
 				str = "NodeNaming";			break;
 			case Notification::Type_NodeEvent:
 				str = "NodeEvent";			break;
 			case Notification::Type_PollingDisabled:
-				str = "PollingDisabled";			break;
+				str = "PollingDisabled";break;
 			case Notification::Type_PollingEnabled:
-				str = "PollingEnabled";			break;
+				str = "PollingEnabled";	break;
 			case Notification::Type_SceneEvent:
 				str = "SceneEvent";			break;
 			case Notification::Type_CreateButton:
-				str = "CreateButton";			break;
+				str = "CreateButton";		break;
 			case Notification::Type_DeleteButton:
-				str = "DeleteButton";			break;
+				str = "DeleteButton";		break;
 			case Notification::Type_ButtonOn:
 				str = "ButtonOn";			break;
 			case Notification::Type_ButtonOff:
@@ -364,22 +364,8 @@ const std::string NotificationGetAsString(Notification const *n) {
 			case Notification::Type_AllNodesQueried:
 				str = "AllNodesQueried";	break;
 			case Notification::Type_Notification:
-				switch (n->GetByte()) {
-					case Notification::Code_MsgComplete:
-						str = "Notification - MsgComplete";	break;
-					case Notification::Code_Timeout:
-						str = "Notification - TimeOut";	   break;
-					case Notification::Code_NoOperation:
-						str = "Notification - NoOperation"; break;
-					case Notification::Code_Awake:
-						str = "Notification - Node Awake"; 	break;
-					case Notification::Code_Sleep:
-						str = "Notification - Node Asleep";	break;
-					case Notification::Code_Dead:
-						str = "Notification - Node Dead";	break;
-					case Notification::Code_Alive:
-						str = "Notification - Node Alive";	break;
-				}
+				str = "Notification - ";
+				str.append(getControllerStateAsStr((OpenZWave::Driver::ControllerState) n->GetByte()));
 				break;
 			case Notification::Type_DriverRemoved:
 				str = "DriverRemoved";				break;
@@ -392,34 +378,8 @@ const std::string NotificationGetAsString(Notification const *n) {
 					case Driver::ControllerState_Cancel:
 						str = "ControllerCommand - Canceled";	break;
 					case Driver::ControllerState_Error:
-						switch (n->GetByte()) {
-							case Driver::ControllerError_None:
-								str = "ControllerCommand - Error - None";	break;
-							case Driver::ControllerError_ButtonNotFound:
-								str = "ControllerCommand - Error - ButtonNotFound";	break;
-							case Driver::ControllerError_NodeNotFound:
-								str = "ControllerCommand - Error - NodeNotFound";		break;
-							case Driver::ControllerError_NotBridge:
-								str = "ControllerCommand - Error - NotBridge";	break;
-							case Driver::ControllerError_NotSUC:
-								str = "ControllerCommand - Error - NotSUC";	break;
-							case Driver::ControllerError_NotSecondary:
-								str = "ControllerCommand - Error - NotSecondary";	break;
-							case Driver::ControllerError_NotPrimary:
-								str = "ControllerCommand - Error - NotPrimary";	break;
-							case Driver::ControllerError_IsPrimary:
-								str = "ControllerCommand - Error - IsPrimary";	break;
-							case Driver::ControllerError_NotFound:
-								str = "ControllerCommand - Error - NotFound";		break;
-							case Driver::ControllerError_Busy:
-								str = "ControllerCommand - Error - Busy";				break;
-							case Driver::ControllerError_Failed:
-								str = "ControllerCommand - Error - Failed";			break;
-							case Driver::ControllerError_Disabled:
-								str = "ControllerCommand - Error - Disabled";		break;
-							case Driver::ControllerError_Overflow:
-								str = "ControllerCommand - Error - OverFlow";		break;
-						}
+						str = "ControllerCommand - Error - ";
+						str.append(getControllerErrorAsStr((OpenZWave::Driver::ControllerError) n->GetByte()));
 						break;
 					case Driver::ControllerState_Waiting:
 						str = "ControllerCommand - Waiting";		break;
