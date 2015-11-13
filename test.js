@@ -101,30 +101,8 @@ zwave.on('node ready', function(nodeid, nodeinfo) {
 	}
 });
 
-zwave.on('notification', function(nodeid, notif) {
-	switch (notif) {
-	case 0:
-		console.log('node%d: message complete', nodeid);
-		break;
-	case 1:
-		console.log('node%d: timeout', nodeid);
-		break;
-	case 2:
-		console.log('node%d: nop', nodeid);
-		break;
-	case 3:
-		console.log('node%d: node awake', nodeid);
-		break;
-	case 4:
-		console.log('node%d: node sleep', nodeid);
-		break;
-	case 5:
-		console.log('node%d: node dead', nodeid);
-		break;
-	case 6:
-		console.log('node%d: node alive', nodeid);
-		break;
-        }
+zwave.on('notification', function(nodeid, notif, help) {
+	console.log('node%d: notification(%d): %s', nodeid, notif, help);
 });
 
 zwave.on('scan complete', function() {
