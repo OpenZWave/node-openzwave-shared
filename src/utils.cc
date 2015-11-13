@@ -16,9 +16,11 @@
 */
 
 #include "openzwave.hpp"
+#include "Notification.h"
 
 using namespace v8;
 using namespace node;
+using namespace OpenZWave;
 
 namespace OZW {
 
@@ -300,6 +302,146 @@ const char* getControllerErrorAsStr(OpenZWave::Driver::ControllerError _err) {
 		case OpenZWave::Driver::ControllerError_Overflow:       return "Overflow";
 	}
 	return "";
+}
+
+// backport code from OpenZWave to get notification help message
+const std::string NotificationGetAsString(Notification const *n) {
+#if OPENZWAVE_SECURITY == 1
+		return n->GetAsString();
+#else
+		std::string str;
+		switch (n->GetType()) {
+			case Notification::Type_ValueAdded:
+				str = "ValueAdded"; break;
+			case Notification::Type_ValueRemoved:
+				str = "ValueRemoved";		break;
+			case Notification::Type_ValueChanged:
+				str = "ValueChanged";		break;
+			case Notification::Type_ValueRefreshed:
+				str = "ValueRefreshed";	break;
+			case Notification::Type_Group:
+				str = "Group";	break;
+			case Notification::Type_NodeNew:
+				str = "NodeNew"; break;
+			case Notification::Type_NodeAdded:
+				str = "NodeAdded";	break;
+			case Notification::Type_NodeRemoved:
+				str = "NodeRemoved";		break;
+			case Notification::Type_NodeProtocolInfo:
+				str = "NodeProtocolInfo";			break;
+			case Notification::Type_NodeNaming:
+				str = "NodeNaming";			break;
+			case Notification::Type_NodeEvent:
+				str = "NodeEvent";			break;
+			case Notification::Type_PollingDisabled:
+				str = "PollingDisabled";			break;
+			case Notification::Type_PollingEnabled:
+				str = "PollingEnabled";			break;
+			case Notification::Type_SceneEvent:
+				str = "SceneEvent";			break;
+			case Notification::Type_CreateButton:
+				str = "CreateButton";			break;
+			case Notification::Type_DeleteButton:
+				str = "DeleteButton";			break;
+			case Notification::Type_ButtonOn:
+				str = "ButtonOn";			break;
+			case Notification::Type_ButtonOff:
+				str = "ButtonOff";		break;
+			case Notification::Type_DriverReady:
+				str = "DriverReady";	break;
+			case Notification::Type_DriverFailed:
+				str = "DriverFailed";	break;
+			case Notification::Type_DriverReset:
+				str = "DriverReset";	break;
+			case Notification::Type_EssentialNodeQueriesComplete:
+				str = "EssentialNodeQueriesComplete";		break;
+			case Notification::Type_NodeQueriesComplete:
+				str = "NodeQueriesComplete";	break;
+			case Notification::Type_AwakeNodesQueried:
+				str = "AwakeNodesQueried";	break;
+			case Notification::Type_AllNodesQueriedSomeDead:
+				str = "AllNodesQueriedSomeDead";	break;
+			case Notification::Type_AllNodesQueried:
+				str = "AllNodesQueried";	break;
+			case Notification::Type_Notification:
+				switch (n->GetByte()) {
+					case Notification::Code_MsgComplete:
+						str = "Notification - MsgComplete";	break;
+					case Notification::Code_Timeout:
+						str = "Notification - TimeOut";	   break;
+					case Notification::Code_NoOperation:
+						str = "Notification - NoOperation"; break;
+					case Notification::Code_Awake:
+						str = "Notification - Node Awake"; 	break;
+					case Notification::Code_Sleep:
+						str = "Notification - Node Asleep";	break;
+					case Notification::Code_Dead:
+						str = "Notification - Node Dead";	break;
+					case Notification::Code_Alive:
+						str = "Notification - Node Alive";	break;
+				}
+				break;
+			case Notification::Type_DriverRemoved:
+				str = "DriverRemoved";				break;
+			case Notification::Type_ControllerCommand:
+				switch (n->GetEvent()) {
+					case Driver::ControllerState_Normal:
+						str = "ControlerCommand - Normal";	break;
+					case Driver::ControllerState_Starting:
+						str = "ControllerComand - Starting";	break;
+					case Driver::ControllerState_Cancel:
+						str = "ControllerCommand - Canceled";	break;
+					case Driver::ControllerState_Error:
+						switch (n->GetByte()) {
+							case Driver::ControllerError_None:
+								str = "ControllerCommand - Error - None";	break;
+							case Driver::ControllerError_ButtonNotFound:
+								str = "ControllerCommand - Error - ButtonNotFound";	break;
+							case Driver::ControllerError_NodeNotFound:
+								str = "ControllerCommand - Error - NodeNotFound";		break;
+							case Driver::ControllerError_NotBridge:
+								str = "ControllerCommand - Error - NotBridge";	break;
+							case Driver::ControllerError_NotSUC:
+								str = "ControllerCommand - Error - NotSUC";	break;
+							case Driver::ControllerError_NotSecondary:
+								str = "ControllerCommand - Error - NotSecondary";	break;
+							case Driver::ControllerError_NotPrimary:
+								str = "ControllerCommand - Error - NotPrimary";	break;
+							case Driver::ControllerError_IsPrimary:
+								str = "ControllerCommand - Error - IsPrimary";	break;
+							case Driver::ControllerError_NotFound:
+								str = "ControllerCommand - Error - NotFound";		break;
+							case Driver::ControllerError_Busy:
+								str = "ControllerCommand - Error - Busy";				break;
+							case Driver::ControllerError_Failed:
+								str = "ControllerCommand - Error - Failed";			break;
+							case Driver::ControllerError_Disabled:
+								str = "ControllerCommand - Error - Disabled";		break;
+							case Driver::ControllerError_Overflow:
+								str = "ControllerCommand - Error - OverFlow";		break;
+						}
+						break;
+					case Driver::ControllerState_Waiting:
+						str = "ControllerCommand - Waiting";		break;
+					case Driver::ControllerState_Sleeping:
+						str = "ControllerCommand - Sleeping";		break;
+					case Driver::ControllerState_InProgress:
+						str = "ControllerCommand - InProgress";	break;
+					case Driver::ControllerState_Completed:
+						str = "ControllerCommand - Completed";	break;
+					case Driver::ControllerState_Failed:
+						str = "ControllerCommand - Failed";			break;
+					case Driver::ControllerState_NodeOK:
+						str = "ControllerCommand - NodeOK";			break;
+					case Driver::ControllerState_NodeFailed:
+						str = "ControllerCommand - NodeFailed";	break;
+				}
+				break;
+				case Notification::Type_NodeReset:
+					str = "Node Reset";	break;
+		}
+		return str;
+#endif
 }
 
 }

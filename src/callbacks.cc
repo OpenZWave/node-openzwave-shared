@@ -44,7 +44,7 @@ namespace OZW {
 	* Just push onto queue and trigger the handler in v8 land.
 	*/
 	// ===================================================================
-	void ozw_watcher_callback(OpenZWave::Notification *cb, void *ctx)
+	void ozw_watcher_callback(OpenZWave::Notification const *cb, void *ctx)
 	// ===================================================================
 	{
 		NotifInfo *notif = new NotifInfo();
@@ -53,7 +53,7 @@ namespace OZW {
 		notif->homeid = cb->GetHomeId();
 		notif->nodeid = cb->GetNodeId();
 		notif->values.push_front(cb->GetValueID());
-		notif->help  = new std::string(cb->GetAsString().c_str());
+		notif->help  = getNotifHelpMsg(cb);
 		/*
 		* Some values are only set on particular notifications, and
 		* assertions in openzwave prevent us from trying to fetch them
@@ -104,6 +104,7 @@ namespace OZW {
 	void ozw_ctrlcmd_callback(Driver::ControllerState _state, Driver::ControllerError _err, void *context )
 	// ===================================================================
 	{
+
 		NotifInfo *notif = new NotifInfo();
 		notif->event        = _err;
 		notif->notification = _state;
@@ -133,7 +134,7 @@ namespace OZW {
 		info[1] = Nan::New<Integer>(notif->nodeid);
 		info[2] = Nan::New<Integer>(notif->event); // Driver::ControllerCommand
 		info[3] = Nan::New<Integer>(notif->notification); // Driver::ControllerCommand
-		info[4] = Nan::New<String>(notif->help->c_str()).ToLocalChecked();
+		info[4] = Nan::New<String>(notif->help.c_str()).ToLocalChecked();
 		emit_cb->Call(5, info);
 	}
 // ##### END OF LEGACY MODE ###### //
@@ -360,7 +361,7 @@ namespace OZW {
 				emitinfo[0] = Nan::New<String>("notification").ToLocalChecked();
 				emitinfo[1] = Nan::New<Integer>(notif->nodeid);
 				emitinfo[2] = Nan::New<Integer>(notif->notification);
-				emitinfo[3] = Nan::New<String>(notif->help->c_str()).ToLocalChecked();
+				emitinfo[3] = Nan::New<String>(notif->help.c_str()).ToLocalChecked();
 				emit_cb->Call(4, emitinfo);
 				break;
 			case OpenZWave::Notification::Type_DriverRemoved:
@@ -377,7 +378,7 @@ namespace OZW {
 				emitinfo[1] = Nan::New<Integer>(notif->nodeid);
 				emitinfo[2] = Nan::New<Integer>(notif->event); // Driver::ControllerCommand
 				emitinfo[3] = Nan::New<Integer>(notif->notification); // Driver::ControllerState
-				emitinfo[4] = Nan::New<String>(notif->help->c_str()).ToLocalChecked();
+				emitinfo[4] = Nan::New<String>(notif->help.c_str()).ToLocalChecked();
 				emit_cb->Call(5, emitinfo);
 				break;
 			case OpenZWave::Notification::Type_NodeReset:
@@ -416,7 +417,6 @@ namespace OZW {
 #else
 			handleNotification(notif);
 #endif
-			delete notif->help;
 			delete notif;
 			zqueue.pop();
 		}
