@@ -41,7 +41,7 @@ node/v8 javascript paradigm.  This means that connect() will yield
 control to your script *immediately*, but the underlying OpenZWave C++
 library will *not be ready yet* to accept commands.
 In fact, it can take some time (from a few seconds to a couple of
-minutes!) to scan the ZWave network and set up itsdata structures.
+minutes!) to scan the ZWave network and set up its data structures.
 So, be sure to register a "scan complete" callback, and after it gets called,
 you can safely start issuing commands to your ZWave devices.
 

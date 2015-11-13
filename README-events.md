@@ -4,11 +4,9 @@ This is a list of all the events emitted by the library. This list is not exhaus
 #### Driver events
 Events emitted by the OpenZWave Driver class:
 
-###### `.on('connected', function(){})`  : we have connected to an OpenZWave node.
-
 ###### `.on('driver ready', function(homeid){})` : the OpenZWave driver has initialised and scanning has started.  Returns a unique `homeid` which identifies this particular network.
-
 ###### `.on('driver failed', function(){})` : The OpenZWave driver failed to initialise.
+
 ###### `.on('scan complete', function(){})`: The initial network scan has finished.
 .
 #### Node events:
@@ -16,20 +14,26 @@ Events emitted by the OpenZWave Driver class:
 
 ###### `.on('node naming', function(nodeid, nodeinfo){})` :  Useful information about the node is returned as a plain JS object. It includes elements like 'manufacturer', 'product', 'type' and 'name' amongst others.
 
-###### `.on('node ready', function(nodeid, nodeinfo){})` : A node is now ready for operation, and information about the node is available in the `nodeinfo` object:
+###### `.on('node available', function(nodeid, nodeinfo){})` : This corresponds to OpenZWave's `EssentialNodeQueriesComplete` notification, which means that the node is now available for operation, but don't expect all of its info structures (nodeinfo, see below) to be filled in.
+
+###### `.on('node ready', function(nodeid, nodeinfo){})` : This corresponds to OpenZWave's `NodeQueriesComplete` notification. The node is now ready for operation, and information about the node is available in the `nodeinfo` object:
 
 * `nodeinfo.manufacturer`
+* `nodeinfo.manufacturerid`
 * `nodeinfo.product`
+* `nodeinfo.producttype`
+* `nodeinfo.productid`
 * `nodeinfo.type`
+* `nodeinfo.name`
 * `nodeinfo.loc` (location, renamed to avoid `location` keyword).
 
 ###### `.on('polling enabled/disabled', function(nodeid){})` : Polling for a node has been enabled or disabled.
-.
+
 
 #### Value events:
-###### `.on('value added', function(nodeid, commandclass, value){})` : A new value has been discovered.  Values are associated with a particular node, and are the parts of the device you can monitor or control.
+###### `.on('value added', function(nodeid, commandclass, valueId){})` : A new ValueID has been discovered.  ValueIDs are associated with a particular node, and are the parts of the device you can monitor or control. Please see [the official OpenZWave docs on ValueIDs](http://www.openzwave.com/dev/classOpenZWave_1_1ValueID.html) for more details.
 
-Values are split into command classes.  The classes currently supported and
+Values are split into command classes.  The most commonly used ones and
 their unique identifiers are:
 
 * `COMMAND_CLASS_SWITCH_BINARY` (37)
@@ -37,7 +41,7 @@ their unique identifiers are:
 * `COMMAND_CLASS_VERSION` (134)
 
 Binary switches can be controlled with `.setNodeOn()` and `.setNodeOff()`.
-Dimmer (multi-level) devices can be set with `.setLevel()` (*if of course they 
+Dimmer (multi-level) devices can be set with `.setLevel()` (*if of course they
 support the **BASIC** command class, which is not supported by most dimmers!*
 Use `setValue` instead)
 
@@ -46,12 +50,11 @@ The version class is informational only and cannot be controlled.
 The `value` object differs between command classes, and contains all the useful
 information about values stored for the particular class.
 
-###### `.on('value changed', function(nodeid, commandclass, value){})` :  A value has changed.  Use this to keep track of value state across the network. When values are first discovered, the module enables polling on those values so that we will receive change messages. Prior to the 'node ready' event, there may be 'value changed' events even when no values were actually changed.
+###### `.on('value changed', function(nodeid, commandclass, valueId){})` :  A value has changed.  Use this to keep track of value state across the network. When values are first discovered, the module enables polling on those values so that we will receive change messages. Prior to the 'node ready' event, there may be 'value changed' events even when no values were actually changed.
 
-###### `.on('value refreshed', function(nodeid, commandclass, value){})` : A node value has been updated from the Z-Wave network. Unlike 'value changed' which implies an actual change of state, this one simply means that the value has been refreshed from the device.
+###### `.on('value refreshed', function(nodeid, commandclass, valueId){})` : A node value has been updated from the Z-Wave network. Unlike 'value changed' which implies an actual change of state, this one simply means that the value has been refreshed from the device.
 
-###### `.on('value removed', function(nodeid, commandclass, index){})` : A value has been removed.  Use the index to calculate the offset where a command class can contain multiple values.
-
+###### `.on('value removed', function(nodeid, commandclass, instance, index){})` : A value has been removed.  Your program should then remove any references to that ValueID.
 .
 #### Controller events:
 
