@@ -16,6 +16,7 @@
 */
 
 #include "openzwave.hpp"
+
 using namespace v8;
 using namespace node;
 

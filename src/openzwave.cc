@@ -16,29 +16,13 @@
 */
 
 #include "openzwave.hpp"
+
 #include <algorithm>
 
 using namespace v8;
 using namespace node;
 
 namespace OZW {
-
-	//
-	uv_async_t 		async;
-
-	//
-	Nan::Callback *emit_cb;
-
-	// Message passing queue between OpenZWave callback and v8 async handler.
-	mutex 		            zqueue_mutex;
-	std::queue<NotifInfo *> zqueue;
-
-	// Node state.
-	mutex 		          znodes_mutex;
-	std::list<NodeInfo *> znodes;
-
-	mutex zscenes_mutex;
-	std::list<SceneInfo *> zscenes;
 
 	uint32      homeid;
 	CommandMap* ctrlCmdNames;

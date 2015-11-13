@@ -16,6 +16,7 @@
 */
 
 #include "openzwave.hpp"
+
 using namespace v8;
 using namespace node;
 
@@ -265,5 +266,40 @@ namespace OZW {
 		return( NULL );
 	}
 
+const char* getControllerStateAsStr (OpenZWave::Driver::ControllerState _state) {
+	switch (_state) {
+	case OpenZWave::Driver::ControllerState_Normal: 		return "Normal";
+	case OpenZWave::Driver::ControllerState_Starting:   return "Starting";
+	case OpenZWave::Driver::ControllerState_Cancel:		  return "Cancel";
+	case OpenZWave::Driver::ControllerState_Error:      return "Error";
+	case OpenZWave::Driver::ControllerState_Waiting: 	  return "Waiting";
+	case OpenZWave::Driver::ControllerState_Sleeping:	  return "Sleeping";
+	case OpenZWave::Driver::ControllerState_InProgress: return "In Progress";
+	case OpenZWave::Driver::ControllerState_Completed:  return "Completed";
+	case OpenZWave::Driver::ControllerState_Failed:     return "Failed";
+	case OpenZWave::Driver::ControllerState_NodeOK:     return "Node OK";
+	case OpenZWave::Driver::ControllerState_NodeFailed: return "Node Failed";
+	}
+	return "";
+}
+
+const char* getControllerErrorAsStr(OpenZWave::Driver::ControllerError _err) {
+	switch (_err) {
+		case OpenZWave::Driver::ControllerError_None:           return "None";
+		case OpenZWave::Driver::ControllerError_ButtonNotFound: return "Button not found";
+		case OpenZWave::Driver::ControllerError_NodeNotFound:   return "Node not found";
+		case OpenZWave::Driver::ControllerError_NotBridge:      return "Not bridge";
+		case OpenZWave::Driver::ControllerError_NotSUC:					return "Not SUC";
+		case OpenZWave::Driver::ControllerError_NotSecondary:   return "Not secondary";
+		case OpenZWave::Driver::ControllerError_NotPrimary:     return "Not primary";
+		case OpenZWave::Driver::ControllerError_IsPrimary:      return "Is primary";
+		case OpenZWave::Driver::ControllerError_NotFound:       return "Not found";
+		case OpenZWave::Driver::ControllerError_Busy:           return "Busy";
+		case OpenZWave::Driver::ControllerError_Failed:         return "Failed";
+		case OpenZWave::Driver::ControllerError_Disabled:       return "Disabled";
+		case OpenZWave::Driver::ControllerError_Overflow:       return "Overflow";
+	}
+	return "";
+}
 
 }

@@ -23,6 +23,22 @@ using namespace OpenZWave;
 
 namespace OZW {
 
+		//
+		uv_async_t 		async;
+
+		//
+		Nan::Callback *emit_cb;
+
+		// Message passing queue between OpenZWave callback and v8 async handler.
+		mutex 		            zqueue_mutex;
+		std::queue<NotifInfo *> zqueue;
+
+		// Node state.
+		mutex 		          znodes_mutex;
+		std::list<NodeInfo *> znodes;
+
+		mutex zscenes_mutex;
+		std::list<SceneInfo *> zscenes;
 	/*
 	* OpenZWave callback, registered in Driver::AddWatcher.
 	* Just push onto queue and trigger the handler in v8 land.
@@ -92,6 +108,13 @@ namespace OZW {
 		notif->event        = _err;
 		notif->notification = _state;
 		notif->homeid       = 0; // use as guard value for legacy mode
+		notif->help  = new std::string();
+		notif->help->append(
+			std::string("Controller State: ")
+				.append(getControllerStateAsStr(_state))
+				.append(", Error:")
+				.append(getControllerErrorAsStr(_err))
+		);
 		{
 			mutex::scoped_lock sl(zqueue_mutex);
 			zqueue.push(notif);
@@ -109,8 +132,9 @@ namespace OZW {
 		info[0] = Nan::New<String>("controller command").ToLocalChecked();
 		info[1] = Nan::New<Integer>(notif->nodeid);
 		info[2] = Nan::New<Integer>(notif->event); // Driver::ControllerCommand
-		info[3] = Nan::New<Integer>(notif->notification); // Driver::ControllerState
-		emit_cb->Call(4, info);
+		info[3] = Nan::New<Integer>(notif->notification); // Driver::ControllerCommand
+		info[4] = Nan::New<String>(notif->help->c_str()).ToLocalChecked();
+		emit_cb->Call(5, info);
 	}
 // ##### END OF LEGACY MODE ###### //
 #endif
@@ -352,8 +376,9 @@ namespace OZW {
 				emitinfo[0] = Nan::New<String>("controller command").ToLocalChecked();
 				emitinfo[1] = Nan::New<Integer>(notif->nodeid);
 				emitinfo[2] = Nan::New<Integer>(notif->event); // Driver::ControllerCommand
-				emitinfo[3] = Nan::New<String>(notif->help->c_str()).ToLocalChecked();
-				emit_cb->Call(4, emitinfo);
+				emitinfo[3] = Nan::New<Integer>(notif->notification); // Driver::ControllerState
+				emitinfo[4] = Nan::New<String>(notif->help->c_str()).ToLocalChecked();
+				emit_cb->Call(5, emitinfo);
 				break;
 			case OpenZWave::Notification::Type_NodeReset:
 				emitinfo[0] = Nan::New<String>("node reset").ToLocalChecked();

@@ -15,8 +15,8 @@
 * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 //=================================
-#ifndef __OPENZWAVE_HPP_INCLUDED__
-#define __OPENZWAVE_HPP_INCLUDED__
+#ifndef __NODE_OPENZWAVE_HPP_INCLUDED__
+#define __NODE_OPENZWAVE_HPP_INCLUDED__
 
 #include <iostream>
 #include <list>
@@ -37,61 +37,7 @@
 #include "Options.h"
 #include "Value.h"
 
-#define stringify( x ) stringify_literal( x )
-#define stringify_literal( x ) # x
-
-#ifdef WIN32
-class mutex
-{
-public:
-	mutex()              { InitializeCriticalSection(&_criticalSection); }
-	~mutex()             { DeleteCriticalSection(&_criticalSection); }
-	inline void lock()   { EnterCriticalSection(&_criticalSection); }
-	inline void unlock() { LeaveCriticalSection(&_criticalSection); }
-
-	class scoped_lock
-	{
-	public:
-		inline explicit scoped_lock(mutex & sp) : _sl(sp) { _sl.lock(); }
-		inline ~scoped_lock()                             { _sl.unlock(); }
-	private:
-		scoped_lock(scoped_lock const &);
-		scoped_lock & operator=(scoped_lock const &);
-		mutex& _sl;
-	};
-
-private:
-	CRITICAL_SECTION _criticalSection;
-};
-#endif
-
-#ifdef linux
-#include <unistd.h>
-#include <pthread.h>
-
-class mutex
-{
-public:
-	mutex()             { pthread_mutex_init(&_mutex, NULL); }
-	~mutex()            { pthread_mutex_destroy(&_mutex); }
-	inline void lock()  { pthread_mutex_lock(&_mutex); }
-	inline void unlock(){ pthread_mutex_unlock(&_mutex); }
-
-	class scoped_lock
-	{
-	public:
-		inline explicit scoped_lock(mutex & sp) : _sl(sp)  { _sl.lock(); }
-		inline ~scoped_lock()                              { _sl.unlock(); }
-	private:
-		scoped_lock(scoped_lock const &);
-		scoped_lock & operator=(scoped_lock const &);
-		mutex&  _sl;
-	};
-
-private:
-	pthread_mutex_t _mutex;
-};
-#endif
+#include "utils.hpp"
 
 using namespace v8;
 using namespace node;
@@ -208,79 +154,8 @@ namespace OZW {
 		static NAN_METHOD(ActivateScene);
 	};
 
-	// callback struct to copy data from the OZW thread to the v8 event loop:
-	typedef struct {
-		uint32 type;
-		uint32 homeid;
-		uint8 nodeid;
-		uint8 groupidx;
-		uint8 event;
-		uint8 buttonid;
-		uint8 sceneid;
-		uint8 notification;
-		std::list<OpenZWave::ValueID> values;
-    std::string *help;
-	} NotifInfo;
-
-	typedef struct {
-		uint32 homeid;
-		uint8  nodeid;
-		bool   polled;
-		std::list<OpenZWave::ValueID> values;
-	} NodeInfo;
-
-	typedef struct {
-		uint32      sceneid;
-		std::string label;
-		std::list<OpenZWave::ValueID> values;
-	} SceneInfo;
-
-	/*
-	 */
-	extern uv_async_t 		async;
-
-	/*
-	* Message passing queue between OpenZWave callback and v8 async handler.
-	*/
-	extern mutex zqueue_mutex;
-	extern std::queue<NotifInfo *> zqueue;
-
-	/*
-	* Node state.
-	*/
-	extern mutex znodes_mutex;
-	extern std::list<NodeInfo *> znodes;
-
-	extern mutex zscenes_mutex;
-	extern std::list<SceneInfo *> zscenes;
-
 	// our ZWave Home ID
 	extern uint32 homeid;
-
-	Local<Object> zwaveValue2v8Value(OpenZWave::ValueID value);
-	Local<Object> zwaveSceneValue2v8Value(uint8 sceneId, OpenZWave::ValueID value);
-
-	NodeInfo  *get_node_info(uint8 nodeid);
-	SceneInfo *get_scene_info(uint8 sceneid);
-
-  OpenZWave::ValueID* getZwaveValueID(const Nan::FunctionCallbackInfo<v8::Value>& info, uint8 offset=0);
-
-	// OpenZWave callbacks
-	void ozw_watcher_callback(
-		OpenZWave::Notification const *cb,
-		void *ctx);
-	void ozw_ctrlcmd_callback(
-		OpenZWave::Driver::ControllerState _state,
-		OpenZWave::Driver::ControllerError _err,
-		void *ctx);
-
-	// v8 asynchronous callback handler
-	void async_cb_handler(uv_async_t *handle);
-	void async_cb_handler(uv_async_t *handle, int status);
-
-	//extern Handle<Object>	context_obj;
-	extern Nan::Callback *emit_cb;
-	//
 
 	// map of controller command names to enum values
 	typedef ::std::tr1::unordered_map <std::string, OpenZWave::Driver::ControllerCommand> CommandMap;
@@ -288,4 +163,4 @@ namespace OZW {
 
 }
 
-#endif // __OPENZWAVE_HPP_INCLUDED__
+#endif // __NODE_OPENZWAVE_HPP_INCLUDED__
