@@ -3,6 +3,7 @@
  */
 
 var OpenZWave = require('./lib/openzwave-shared.js');
+var os = require('os');
 
 var zwave = new OpenZWave({
 	ConsoleOutput: false,
@@ -10,7 +11,7 @@ var zwave = new OpenZWave({
 	SaveConfiguration: false,
 	DriverMaxAttempts: 3,
 	PollInterval: 500,
-	SuppressValueRefresh: true,
+	SuppressValueRefresh: true
 });
 var nodes = [];
 
@@ -131,7 +132,11 @@ zwave.on('scan complete', function() {
 	console.log('scan complete, hit ^C to finish.');
 });
 
-zwave.connect('/dev/ttyUSB0');
+if(os.platform() == "darwin") {
+	zwave.connect('/dev/cu.usbmodem1411');
+} else {
+	zwave.connect('/dev/ttyUSB0');
+}
 
 process.on('SIGINT', function() {
 	console.log('disconnecting...');
