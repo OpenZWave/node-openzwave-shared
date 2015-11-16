@@ -70,7 +70,7 @@ namespace OZW {
 		}
 
 		{
-			mutex::scoped_lock sl(zqueue_mutex);
+			mutexx::scoped_lock sl(zqueue_mutex);
 			zqueue.push(notif);
 		}
 		uv_async_send(&async);
@@ -92,7 +92,7 @@ namespace OZW {
 		notif->notification = _state;
 		notif->homeid       = 0; // use as guard value for legacy mode
 		{
-			mutex::scoped_lock sl(zqueue_mutex);
+			mutexx::scoped_lock sl(zqueue_mutex);
 			zqueue.push(notif);
 		}
 		uv_async_send(&async);
@@ -187,7 +187,7 @@ namespace OZW {
 				node->nodeid = notif->nodeid;
 				node->polled = false;
 				{
-					mutex::scoped_lock sl(znodes_mutex);
+					mutexx::scoped_lock sl(znodes_mutex);
 					znodes.push_back(node);
 				}
 				emitinfo[0] = Nan::New<String>("node added").ToLocalChecked();
@@ -232,7 +232,7 @@ namespace OZW {
 				Local<Object> valobj = zwaveValue2v8Value(value);
 
 				if ((node = get_node_info(notif->nodeid))) {
-					mutex::scoped_lock sl(znodes_mutex);
+					mutexx::scoped_lock sl(znodes_mutex);
 					node->values.push_back(value);
 				}
 
@@ -373,7 +373,7 @@ namespace OZW {
 	{
 		NotifInfo *notif;
 
-		mutex::scoped_lock sl(zqueue_mutex);
+		mutexx::scoped_lock sl(zqueue_mutex);
 
 		while (!zqueue.empty()) {
 			notif = zqueue.front();
