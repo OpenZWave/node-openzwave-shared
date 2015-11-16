@@ -65,6 +65,33 @@ private:
 };
 #endif
 
+#ifdef __APPLE__
+#include <unistd.h>
+#include <pthread.h>
+
+class mutexx {
+public:
+	mutexx()             { pthread_mutex_init(&_mutex, NULL); }
+	~mutexx()            { pthread_mutex_destroy(&_mutex); }
+	inline void lock()  { pthread_mutex_lock(&_mutex); }
+	inline void unlock(){ pthread_mutex_unlock(&_mutex); }
+
+	class scoped_lock
+	{
+	public:
+		inline explicit scoped_lock(mutexx & sp) : _sl(sp)  { _sl.lock(); }
+		inline ~scoped_lock()                              { _sl.unlock(); }
+	private:
+		scoped_lock(scoped_lock const &);
+		scoped_lock & operator=(scoped_lock const &);
+		mutexx&  _sl;
+	};
+
+private:
+	pthread_mutex_t _mutex;
+};
+#endif
+
 #ifdef linux
 #include <unistd.h>
 #include <pthread.h>
