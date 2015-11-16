@@ -21,9 +21,16 @@
 #include <iostream>
 #include <list>
 #include <queue>
+
 #ifdef _WIN32
     #include <unordered_map>
-#else
+#endif
+
+#ifdef __APPLE__
+    #include <unordered_map>
+#endif
+
+#ifdef linux
     #include <tr1/unordered_map>
 #endif
 
@@ -306,7 +313,12 @@ namespace OZW {
 	//
 
 	// map of controller command names to enum values
-	typedef ::std::tr1::unordered_map <std::string, OpenZWave::Driver::ControllerCommand> CommandMap;
+  #ifdef __APPLE__
+    typedef ::std::unordered_map <std::string, OpenZWave::Driver::ControllerCommand> CommandMap;
+  #else
+    typedef ::std::tr1::unordered_map <std::string, OpenZWave::Driver::ControllerCommand> CommandMap;
+  #endif
+
 	extern CommandMap* ctrlCmdNames;
 
 }
