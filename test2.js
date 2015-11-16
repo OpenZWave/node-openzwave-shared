@@ -1,4 +1,6 @@
 var ZWave = require('./lib/openzwave-shared.js');
+var os = require('os');
+
 var zwave = new ZWave({
 	ConsoleOutput: false
 });
@@ -122,7 +124,12 @@ zwave.on('controller command', function(n,rv,st) {
     console.log('controller commmand feedback: node==%d, retval=%d, state=%d',n,rv,st);
 });
 
-zwave.connect('/dev/ttyUSB0');
+if(os.platform() == "darwin") {
+	zwave.connect('/dev/cu.usbmodem1411');
+} else {
+	zwave.connect('/dev/ttyUSB0');
+}
+
 
 process.on('SIGINT', function() {
     console.log('disconnecting...');
