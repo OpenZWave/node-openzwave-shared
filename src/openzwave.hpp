@@ -48,23 +48,23 @@
 #define stringify_literal( x ) # x
 
 #ifdef WIN32
-class mutex
+class mutexx
 {
 public:
-	mutex()              { InitializeCriticalSection(&_criticalSection); }
-	~mutex()             { DeleteCriticalSection(&_criticalSection); }
+	mutexx()              { InitializeCriticalSection(&_criticalSection); }
+	~mutexx()             { DeleteCriticalSection(&_criticalSection); }
 	inline void lock()   { EnterCriticalSection(&_criticalSection); }
 	inline void unlock() { LeaveCriticalSection(&_criticalSection); }
 
 	class scoped_lock
 	{
 	public:
-		inline explicit scoped_lock(mutex & sp) : _sl(sp) { _sl.lock(); }
+		inline explicit scoped_lock(mutexx & sp) : _sl(sp) { _sl.lock(); }
 		inline ~scoped_lock()                             { _sl.unlock(); }
 	private:
 		scoped_lock(scoped_lock const &);
 		scoped_lock & operator=(scoped_lock const &);
-		mutex& _sl;
+		mutexx& _sl;
 	};
 
 private:
