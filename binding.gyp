@@ -39,7 +39,7 @@
                     '/usr/local/include/openzwave/value_classes/'
                 ],
 				'xcode_settings': {
-					'MACOSX_DEPLOYMENT_TARGET':'10.8',
+					'MACOSX_DEPLOYMENT_TARGET':'10.9',
 			        'OTHER_CFLAGS': [
 						'-Wno-ignored-qualifiers -Wno-write-strings -Wno-unknown-pragmas'
 			        ]
