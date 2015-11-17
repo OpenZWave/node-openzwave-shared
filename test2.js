@@ -122,7 +122,13 @@ zwave.on('controller command', function(n,rv,st) {
     console.log('controller commmand feedback: node==%d, retval=%d, state=%d',n,rv,st);
 });
 
-zwave.connect('/dev/ttyUSB0');
+zwavedriverpaths = {
+	"darwin" : '/dev/cu.usbmodem1411',
+	"linux"  : '/dev/ttyUSB0',
+	"windows": '\\\\.\\COM3'
+}
+console.log("connecting to " + zwavedriverpaths[os.platform()]);
+zwave.connect( zwavedriverpaths[os.platform()] );
 
 process.on('SIGINT', function() {
     console.log('disconnecting...');

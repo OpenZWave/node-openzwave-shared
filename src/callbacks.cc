@@ -23,22 +23,22 @@ using namespace OpenZWave;
 
 namespace OZW {
 
-		//
-		uv_async_t 		async;
+	//
+	uv_async_t 		async;
 
-		//
-		Nan::Callback *emit_cb;
+	//
+	Nan::Callback *emit_cb;
 
-		// Message passing queue between OpenZWave callback and v8 async handler.
-		mutex 		            zqueue_mutex;
-		std::queue<NotifInfo *> zqueue;
+	// Message passing queue between OpenZWave callback and v8 async handler.
+	mutex zqueue_mutex;
+	std::queue<NotifInfo *> zqueue;
 
-		// Node state.
-		mutex 		          znodes_mutex;
-		std::list<NodeInfo *> znodes;
+	// Node state.
+	mutex znodes_mutex;
+	std::list<NodeInfo *> znodes;
 
-		mutex zscenes_mutex;
-		std::list<SceneInfo *> zscenes;
+	mutex zscenes_mutex;
+	std::list<SceneInfo *> zscenes;
 	/*
 	* OpenZWave callback, registered in Driver::AddWatcher.
 	* Just push onto queue and trigger the handler in v8 land.

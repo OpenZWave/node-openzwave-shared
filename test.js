@@ -109,7 +109,13 @@ zwave.on('scan complete', function() {
 	console.log('scan complete, hit ^C to finish.');
 });
 
-zwave.connect('/dev/ttyUSB0');
+zwavedriverpaths = {
+	"darwin" : '/dev/cu.usbmodem1411',
+	"linux"  : '/dev/ttyUSB0',
+	"windows": '\\\\.\\COM3'
+}
+console.log("connecting to " + zwavedriverpaths[os.platform()]);
+zwave.connect( zwavedriverpaths[os.platform()] );
 
 process.on('SIGINT', function() {
 	console.log('disconnecting...');

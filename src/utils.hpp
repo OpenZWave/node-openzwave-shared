@@ -20,58 +20,45 @@
 #define stringify( x ) stringify_literal( x )
 #define stringify_literal( x ) # x
 
+namespace OZW {
+
 #ifdef WIN32
-class mutex
-{
-public:
-	mutex()              { InitializeCriticalSection(&_criticalSection); }
-	~mutex()             { DeleteCriticalSection(&_criticalSection); }
-	inline void lock()   { EnterCriticalSection(&_criticalSection); }
-	inline void unlock() { LeaveCriticalSection(&_criticalSection); }
-
-	class scoped_lock
-	{
-	public:
-		inline explicit scoped_lock(mutex & sp) : _sl(sp) { _sl.lock(); }
-		inline ~scoped_lock()                             { _sl.unlock(); }
+	class mutex {
 	private:
-		scoped_lock(scoped_lock const &);
-		scoped_lock & operator=(scoped_lock const &);
-		mutex& _sl;
-	};
+		CRITICAL_SECTION     _criticalSection;
+	public:
+		mutex()              { InitializeCriticalSection(&_criticalSection); }
+		~mutex()             { DeleteCriticalSection(&_criticalSection); }
+		inline void lock()   { EnterCriticalSection(&_criticalSection); }
+		inline void unlock() { LeaveCriticalSection(&_criticalSection); }
 
-private:
-	CRITICAL_SECTION _criticalSection;
-};
-#endif
-
-#ifdef linux
+#else // Linux, MacOS
 #include <unistd.h>
 #include <pthread.h>
-
-class mutex
-{
-public:
-	mutex()             { pthread_mutex_init(&_mutex, NULL); }
-	~mutex()            { pthread_mutex_destroy(&_mutex); }
-	inline void lock()  { pthread_mutex_lock(&_mutex); }
-	inline void unlock(){ pthread_mutex_unlock(&_mutex); }
-
-	class scoped_lock
-	{
-	public:
-		inline explicit scoped_lock(mutex & sp) : _sl(sp)  { _sl.lock(); }
-		inline ~scoped_lock()                              { _sl.unlock(); }
+	class mutex {
 	private:
-		scoped_lock(scoped_lock const &);
-		scoped_lock & operator=(scoped_lock const &);
-		mutex&  _sl;
+		pthread_mutex_t _mutex;
+
+	public:
+		mutex()             { pthread_mutex_init(&_mutex, NULL); }
+		~mutex()            { pthread_mutex_destroy(&_mutex); }
+		inline void lock()  { pthread_mutex_lock(&_mutex); }
+		inline void unlock(){ pthread_mutex_unlock(&_mutex); }
+#endif
+
+	class scoped_lock {
+		public:
+			inline explicit scoped_lock(mutex & sp) : _sl(sp) { _sl.lock(); }
+			inline ~scoped_lock()                             { _sl.unlock(); }
+		private:
+			scoped_lock(scoped_lock const &);
+			scoped_lock & operator=(scoped_lock const &);
+			mutex& _sl;
+		};
+
 	};
 
-private:
-	pthread_mutex_t _mutex;
 };
-#endif
 
 #include "callbacks.hpp"
 
