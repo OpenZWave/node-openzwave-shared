@@ -40,7 +40,7 @@ namespace OZW {
 			scene = new SceneInfo();
 			scene->sceneid = sceneid;
 			scene->label = label;
-			mutex::scoped_lock sl(zscenes_mutex);
+			mutexx::scoped_lock sl(zscenes_mutex);
 			zscenes.push_back(scene);
 		}
 
@@ -59,7 +59,7 @@ namespace OZW {
 
 		if ((scene = get_scene_info(sceneid))) {
 			OpenZWave::Manager::Get()->RemoveScene(sceneid);
-			mutex::scoped_lock sl(zscenes_mutex);
+			mutexx::scoped_lock sl(zscenes_mutex);
 			zscenes.remove(scene);
 		}
 	}
@@ -75,7 +75,7 @@ namespace OZW {
 
 		if (numscenes != zscenes.size()) {
 			{
-				mutex::scoped_lock sl(zscenes_mutex);
+				mutexx::scoped_lock sl(zscenes_mutex);
 				zscenes.clear();
 			}
 			uint8 *sceneids;
@@ -88,7 +88,7 @@ namespace OZW {
 				scene->sceneid = sceneids[i];
 
 				scene->label = OpenZWave::Manager::Get()->GetSceneLabel(sceneids[i]);
-				mutex::scoped_lock sl(zscenes_mutex);
+				mutexx::scoped_lock sl(zscenes_mutex);
 				zscenes.push_back(scene);
 			}
 		}
@@ -243,7 +243,7 @@ namespace OZW {
 			unsigned j = 0;
 
 			for (vit = values.begin(); vit != values.end(); ++vit) {
-				mutex::scoped_lock sl(zscenes_mutex);
+				mutexx::scoped_lock sl(zscenes_mutex);
 				scene->values.push_back(*vit);
 
 				v8values->Set(Nan::New<Integer>(j++), zwaveSceneValue2v8Value(sceneid, *vit));

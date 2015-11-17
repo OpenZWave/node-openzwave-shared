@@ -30,20 +30,21 @@ namespace OZW {
 	Nan::Callback *emit_cb;
 
 	// Message passing queue between OpenZWave callback and v8 async handler.
-	mutex 		            zqueue_mutex;
+	mutexx 		            zqueue_mutex;
 	std::queue<NotifInfo *> zqueue;
 
 	// Node state.
-	mutex 		          znodes_mutex;
+	mutexx 		          znodes_mutex;
 	std::list<NodeInfo *> znodes;
 
-	mutex zscenes_mutex;
+	mutexx zscenes_mutex;
 	std::list<SceneInfo *> zscenes;
 
 	uint32      homeid;
 	CommandMap* ctrlCmdNames;
 
 	std::string ozw_userpath;
+
 	const std::string ozw_config_path  = stringify( OPENZWAVE_ETC );
 
 	// ===================================================================

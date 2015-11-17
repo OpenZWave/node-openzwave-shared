@@ -16,6 +16,35 @@
 			"src/utils.cc",
 		],
 		"conditions": [
+			['OS=="mac"', {
+				"variables": {
+					"OZW_INC"         : "<!(pkg-config --cflags-only-I libopenzwave | sed s/-I//g)",
+					"OZW_GITVERSION"  : "<!(pkg-config --variable=gitversion libopenzwave)",
+					"OZW_ETC"         : "<!(pkg-config --variable=sysconfdir libopenzwave)",
+					"OZW_DOC"         : "<!(pkg-config --variable=docdir libopenzwave)"
+				},
+        		"defines": [
+					"OPENZWAVE_ETC=<(OZW_ETC)/config",
+					"OPENZWAVE_DOC=<!@(node -p -e \"'<(OZW_DOC)'.length ? '<(OZW_DOC)' : '/usr/local/share/doc/openzwave'\")",
+					"OPENZWAVE_SECURITY=<!@(find <(OZW_INC) -name ZWSecurity.h | wc -l)"
+        		],
+				"link_settings": {
+				    "libraries": [
+						"-L/usr/local/lib/", "-lopenzwave"
+					]
+				},
+                "include_dirs": [
+                    "<!(node -p -e \"require('path').dirname(require.resolve('nan'))\")",
+                    '/usr/local/include/openzwave/',
+                    '/usr/local/include/openzwave/value_classes/'
+                ],
+				'xcode_settings': {
+					'MACOSX_DEPLOYMENT_TARGET':'10.9',
+			        'OTHER_CFLAGS': [
+						'-Wno-ignored-qualifiers -Wno-write-strings -Wno-unknown-pragmas'
+			        ]
+			      }
+	        }],
 			["OS=='linux'", {
 				"variables": {
 					"PKG_CONFIG_PATH" : "<!(find /usr/local -type d ! -perm -g+r,u+r,o+r -prune -o -type d -name 'pkgconfig' -printf \"%p:\" | sed s/:$//g)",
@@ -42,7 +71,7 @@
 			['OS=="win"', {
 				"variables": {
 					"OZW_HOME": "<!(node lib/install-ozw.js --get-ozw-home)"
-				},						
+				},
 				"include_dirs": [
 					"<!(node -e \"require('nan')\")",
 					"<(OZW_HOME)/include",
@@ -51,7 +80,7 @@
 				"defines": [
 					"OPENZWAVE_ETC=<(OZW_HOME)/config",
 					"OPENZWAVE_SECURITY=1"
-				],				
+				],
 				'msvs_settings': {
 					'VCLinkerTool': {
 						'AdditionalDependencies': ['setupapi.lib', '<(OZW_HOME)/bin/OpenZWave.lib']

@@ -21,9 +21,16 @@
 #include <iostream>
 #include <list>
 #include <queue>
+
 #ifdef _WIN32
     #include <unordered_map>
-#else
+#endif
+
+#ifdef __APPLE__
+    #include <unordered_map>
+#endif
+
+#ifdef linux
     #include <tr1/unordered_map>
 #endif
 
@@ -41,23 +48,23 @@
 #define stringify_literal( x ) # x
 
 #ifdef WIN32
-class mutex
+class mutexx
 {
 public:
-	mutex()              { InitializeCriticalSection(&_criticalSection); }
-	~mutex()             { DeleteCriticalSection(&_criticalSection); }
+	mutexx()              { InitializeCriticalSection(&_criticalSection); }
+	~mutexx()             { DeleteCriticalSection(&_criticalSection); }
 	inline void lock()   { EnterCriticalSection(&_criticalSection); }
 	inline void unlock() { LeaveCriticalSection(&_criticalSection); }
 
 	class scoped_lock
 	{
 	public:
-		inline explicit scoped_lock(mutex & sp) : _sl(sp) { _sl.lock(); }
+		inline explicit scoped_lock(mutexx & sp) : _sl(sp) { _sl.lock(); }
 		inline ~scoped_lock()                             { _sl.unlock(); }
 	private:
 		scoped_lock(scoped_lock const &);
 		scoped_lock & operator=(scoped_lock const &);
-		mutex& _sl;
+		mutexx& _sl;
 	};
 
 private:
@@ -65,11 +72,38 @@ private:
 };
 #endif
 
+#ifdef __APPLE__
+#include <unistd.h>
+#include <pthread.h>
+
+class mutexx {
+public:
+	mutexx()             { pthread_mutex_init(&_mutex, NULL); }
+	~mutexx()            { pthread_mutex_destroy(&_mutex); }
+	inline void lock()  { pthread_mutex_lock(&_mutex); }
+	inline void unlock(){ pthread_mutex_unlock(&_mutex); }
+
+	class scoped_lock
+	{
+	public:
+		inline explicit scoped_lock(mutexx & sp) : _sl(sp)  { _sl.lock(); }
+		inline ~scoped_lock()                              { _sl.unlock(); }
+	private:
+		scoped_lock(scoped_lock const &);
+		scoped_lock & operator=(scoped_lock const &);
+		mutexx&  _sl;
+	};
+
+private:
+	pthread_mutex_t _mutex;
+};
+#endif
+
 #ifdef linux
 #include <unistd.h>
 #include <pthread.h>
 
-class mutex
+class mutexx
 {
 public:
 	mutex()             { pthread_mutex_init(&_mutex, NULL); }
@@ -80,12 +114,12 @@ public:
 	class scoped_lock
 	{
 	public:
-		inline explicit scoped_lock(mutex & sp) : _sl(sp)  { _sl.lock(); }
+		inline explicit scoped_lock(mutexx & sp) : _sl(sp)  { _sl.lock(); }
 		inline ~scoped_lock()                              { _sl.unlock(); }
 	private:
 		scoped_lock(scoped_lock const &);
 		scoped_lock & operator=(scoped_lock const &);
-		mutex&  _sl;
+		mutexx&  _sl;
 	};
 
 private:
@@ -240,16 +274,16 @@ namespace OZW {
 	/*
 	* Message passing queue between OpenZWave callback and v8 async handler.
 	*/
-	extern mutex zqueue_mutex;
+	extern mutexx zqueue_mutex;
 	extern std::queue<NotifInfo *> zqueue;
 
 	/*
 	* Node state.
 	*/
-	extern mutex znodes_mutex;
+	extern mutexx znodes_mutex;
 	extern std::list<NodeInfo *> znodes;
 
-	extern mutex zscenes_mutex;
+	extern mutexx zscenes_mutex;
 	extern std::list<SceneInfo *> zscenes;
 
 	// our ZWave Home ID
@@ -279,7 +313,12 @@ namespace OZW {
 	//
 
 	// map of controller command names to enum values
-	typedef ::std::tr1::unordered_map <std::string, OpenZWave::Driver::ControllerCommand> CommandMap;
+  #ifdef __APPLE__
+    typedef ::std::unordered_map <std::string, OpenZWave::Driver::ControllerCommand> CommandMap;
+  #else
+    typedef ::std::tr1::unordered_map <std::string, OpenZWave::Driver::ControllerCommand> CommandMap;
+  #endif
+
 	extern CommandMap* ctrlCmdNames;
 
 }
