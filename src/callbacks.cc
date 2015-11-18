@@ -109,13 +109,9 @@ namespace OZW {
 		notif->event        = _err;
 		notif->notification = _state;
 		notif->homeid       = 0; // use as guard value for legacy mode
-		notif->help  = new std::string();
-		notif->help->append(
-			std::string("Controller State: ")
-				.append(getControllerStateAsStr(_state))
-				.append(", Error:")
-				.append(getControllerErrorAsStr(_err))
-		);
+		notif->help         = std::string(
+			"Controller State: ").append(getControllerStateAsStr(_state)
+			).append(", Error: ").append(getControllerErrorAsStr(_err)));
 		{
 			mutex::scoped_lock sl(zqueue_mutex);
 			zqueue.push(notif);
