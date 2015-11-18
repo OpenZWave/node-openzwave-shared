@@ -22,12 +22,6 @@
 #include <list>
 #include <queue>
 
-#if defined(_WIN32) || defined( __APPLE__)
-    #include <unordered_map>
-#else
-    #include <tr1/unordered_map>
-#endif
-
 #include <v8.h>
 #include "nan.h"
 
@@ -38,17 +32,20 @@
 #include "Options.h"
 #include "Value.h"
 
+#if defined(_WIN32) || defined( __APPLE__)
+    #include <unordered_map>
+    typedef ::std::unordered_map <std::string, OpenZWave::Driver::ControllerCommand> CommandMap;
+#else
+    #include <tr1/unordered_map>
+    typedef ::std::tr1::unordered_map <std::string, OpenZWave::Driver::ControllerCommand> CommandMap;
+#endif
+
 #include "utils.hpp"
 
 using namespace v8;
 using namespace node;
 
 namespace OZW {
-
-// legacy version string
-#if OPENZWAVE_SECURITY != 1
-  extern char[] ovw_vers;
-#endif
 
 	struct OZW : public ObjectWrap {
 		static NAN_METHOD(New);
@@ -168,7 +165,6 @@ namespace OZW {
   extern uint16_t ozw_vers_revision;
 
 	// map of controller command names to enum values
-	typedef ::std::tr1::unordered_map <std::string, OpenZWave::Driver::ControllerCommand> CommandMap;
 	extern CommandMap* ctrlCmdNames;
 
 }
