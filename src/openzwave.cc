@@ -213,7 +213,7 @@ namespace OZW {
 
 		std::ostringstream versionstream;
 		versionstream << ozw_vers_major << "." << ozw_vers_minor << "." << ozw_vers_revision;
-		std::cout << "Initialising OpenZWave " << versionstream << " binary addon for Node.JS.\n";
+		std::cout << "Initialising OpenZWave " << versionstream.str() << " binary addon for Node.JS.\n";
 
 #if OPENZWAVE_SECURITY == 1
 		std::cout << "\tOpenZWave Security API is ENABLED\n";
@@ -221,7 +221,8 @@ namespace OZW {
 		std::cout << "\tSecurity API not found, using legacy BeginControllerCommand() instead\n";
 #endif
 
-		std::cout << "\tZWave device db  : " << ozw_config_path << "\n\tUser settings    : " << ozw_userpath << "\n";
+		std::cout << "\tZWave device db    : " << ozw_config_path << "\n";
+		std::cout << "\tUser settings path : " << ozw_userpath << "\n";
 		if (option_overrides.length() > 0) {
 			std::cout << "\tOption Overrides :" << option_overrides << "\n";
 		}

@@ -19,6 +19,7 @@
 #define __NODE_OPENZWAVE_HPP_INCLUDED__
 
 #include <iostream>
+#include <sstream>
 #include <list>
 #include <queue>
 
@@ -160,13 +161,14 @@ namespace OZW {
 	// our ZWave Home ID
 	extern uint32 homeid;
 
-  extern uint16_t ozw_vers_major;
-  extern uint16_t ozw_vers_minor;
-  extern uint16_t ozw_vers_revision;
-
 	// map of controller command names to enum values
 	extern CommandMap* ctrlCmdNames;
 
 }
+
+// OpenZWave version constituents
+extern uint16_t ozw_vers_major;
+extern uint16_t ozw_vers_minor;
+extern uint16_t ozw_vers_revision;
 
 #endif // __NODE_OPENZWAVE_HPP_INCLUDED__
