@@ -1,4 +1,6 @@
 var ZWave = require('./lib/openzwave-shared.js');
+var os = require('os');
+
 var zwave = new ZWave({
 	ConsoleOutput: false
 });
