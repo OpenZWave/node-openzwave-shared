@@ -305,7 +305,7 @@ const char* getControllerErrorAsStr(OpenZWave::Driver::ControllerError _err) {
 }
 
 // backport code from OpenZWave to get notification help message
-const std::string NotificationGetAsString(Notification const *n) {
+const std::string getNotifHelpMsg(Notification const *n) {
 #if OPENZWAVE_SECURITY == 1
 		return n->GetAsString();
 #else
@@ -369,36 +369,6 @@ const std::string NotificationGetAsString(Notification const *n) {
 				break;
 			case Notification::Type_DriverRemoved:
 				str = "DriverRemoved";				break;
-			case Notification::Type_ControllerCommand:
-				switch (n->GetEvent()) {
-					case Driver::ControllerState_Normal:
-						str = "ControlerCommand - Normal";	break;
-					case Driver::ControllerState_Starting:
-						str = "ControllerComand - Starting";	break;
-					case Driver::ControllerState_Cancel:
-						str = "ControllerCommand - Canceled";	break;
-					case Driver::ControllerState_Error:
-						str = "ControllerCommand - Error - ";
-						str.append(getControllerErrorAsStr((OpenZWave::Driver::ControllerError) n->GetByte()));
-						break;
-					case Driver::ControllerState_Waiting:
-						str = "ControllerCommand - Waiting";		break;
-					case Driver::ControllerState_Sleeping:
-						str = "ControllerCommand - Sleeping";		break;
-					case Driver::ControllerState_InProgress:
-						str = "ControllerCommand - InProgress";	break;
-					case Driver::ControllerState_Completed:
-						str = "ControllerCommand - Completed";	break;
-					case Driver::ControllerState_Failed:
-						str = "ControllerCommand - Failed";			break;
-					case Driver::ControllerState_NodeOK:
-						str = "ControllerCommand - NodeOK";			break;
-					case Driver::ControllerState_NodeFailed:
-						str = "ControllerCommand - NodeFailed";	break;
-				}
-				break;
-				case Notification::Type_NodeReset:
-					str = "Node Reset";	break;
 		}
 		return str;
 #endif
