@@ -19,6 +19,7 @@
 			['OS=="mac"', {
 				"variables": {
 					"OZW_INC"         : "<!(pkg-config --cflags-only-I libopenzwave | sed s/-I//g)",
+					"OZW_LIB_PATH"    : "<!(pkg-config --variable=libdir libopenzwave)",
 					"OZW_GITVERSION"  : "<!(pkg-config --variable=gitversion libopenzwave)",
 					"OZW_ETC"         : "<!(pkg-config --variable=sysconfdir libopenzwave)",
 					"OZW_DOC"         : "<!(pkg-config --variable=docdir libopenzwave)"
@@ -26,7 +27,7 @@
         		"defines": [
 					"OPENZWAVE_ETC=<(OZW_ETC)/config",
 					"OPENZWAVE_DOC=<!@(node -p -e \"'<(OZW_DOC)'.length ? '<(OZW_DOC)' : '/usr/local/share/doc/openzwave'\")",
-					"OPENZWAVE_SECURITY=<!@(find <(OZW_INC) -name ZWSecurity.h | wc -l)"
+					"OPENZWAVE_SECURITY=<!@(nm <(OZW_LIB_PATH)/libopenzwave.so | grep _ZN9OpenZWave7Manager7AddNodeEjb | wc -l)"
         		],
 				"link_settings": {
 				    "libraries": [
@@ -48,6 +49,7 @@
 			["OS=='linux'", {
 				"variables": {
 					"PKG_CONFIG_PATH" : "<!(find /usr/local -type d ! -perm -g+r,u+r,o+r -prune -o -type d -name 'pkgconfig' -printf \"%p:\" | sed s/:$//g)",
+					"OZW_LIB_PATH"    : "<!(PKG_CONFIG_PATH=<(PKG_CONFIG_PATH) pkg-config --variable=libdir libopenzwave)",
 					"OZW_INC"         : "<!(PKG_CONFIG_PATH=<(PKG_CONFIG_PATH) pkg-config --cflags-only-I libopenzwave | sed s/-I//g)",
 					"OZW_GITVERSION"  : "<!(PKG_CONFIG_PATH=<(PKG_CONFIG_PATH) pkg-config --variable=gitversion libopenzwave)",
 					"OZW_ETC"         : "<!(PKG_CONFIG_PATH=<(PKG_CONFIG_PATH) pkg-config --variable=sysconfdir libopenzwave)",
@@ -56,7 +58,7 @@
         		"defines": [
 					"OPENZWAVE_ETC=<!@(node -p -e \"'<(OZW_ETC)'.length ? '<(OZW_ETC)' : '/usr/local/etc/openzwave'\")",
 					"OPENZWAVE_DOC=<!@(node -p -e \"'<(OZW_DOC)'.length ? '<(OZW_DOC)' : '/usr/local/share/doc/openzwave'\")",
-					"OPENZWAVE_SECURITY=<!@(find <(OZW_INC) -name ZWSecurity.h | wc -l)"
+					"OPENZWAVE_SECURITY=<!@(nm <(OZW_LIB_PATH)/libopenzwave.so | grep _ZN9OpenZWave7Manager7AddNodeEjb | wc -l)"
         		],
 				"link_settings": {
 					"libraries": ["-lopenzwave"]
