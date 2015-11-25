@@ -27,7 +27,7 @@
         		"defines": [
 					"OPENZWAVE_ETC=<(OZW_ETC)/config",
 					"OPENZWAVE_DOC=<!@(node -p -e \"'<(OZW_DOC)'.length ? '<(OZW_DOC)' : '/usr/local/share/doc/openzwave'\")",
-					"OPENZWAVE_SECURITY=<!@(nm <(OZW_LIB_PATH)/libopenzwave.so | grep _ZN9OpenZWave7Manager7AddNodeEjb | wc -l)"
+					"OPENZWAVE_SECURITY=<!@(find <(OZW_INC) -name ZWSecurity.h | wc -l)"
         		],
 				"link_settings": {
 				    "libraries": [
@@ -58,7 +58,7 @@
         		"defines": [
 					"OPENZWAVE_ETC=<!@(node -p -e \"'<(OZW_ETC)'.length ? '<(OZW_ETC)' : '/usr/local/etc/openzwave'\")",
 					"OPENZWAVE_DOC=<!@(node -p -e \"'<(OZW_DOC)'.length ? '<(OZW_DOC)' : '/usr/local/share/doc/openzwave'\")",
-					"OPENZWAVE_SECURITY=<!@(nm <(OZW_LIB_PATH)/libopenzwave.so | grep _ZN9OpenZWave7Manager7AddNodeEjb | wc -l)"
+					"OPENZWAVE_SECURITY=<!@(find <(OZW_INC) -name ZWSecurity.h | wc -l)"
         		],
 				"link_settings": {
 					"libraries": ["-lopenzwave"]

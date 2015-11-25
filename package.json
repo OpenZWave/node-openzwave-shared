@@ -1,6 +1,6 @@
 {
   "name": "openzwave-shared",
-  "version": "1.1.4",
+  "version": "1.1.5",
   "description": "Node.JS bindings for OpenZWave including management and security functions",
   "main": "./lib/openzwave-shared.js",
   "dependencies" : {
@@ -18,13 +18,14 @@
   "keywords": [
     "zwave", "z-wave",
     "home automation",
-    "openzwave"
+    "openzwave", "open-zwave"
   ],
   "author": "Elias Karakoulakis <elias.karakoulakis@gmail.com>",
-  "contributors": [ 
-	"Jonathan Perkin <jonathan@perkin.org.uk> (http://www.perkin.org.uk/)" ,
-	"Thibaut CONSTANT",
-	"davide-lr"
+  "contributors": [
+  	"Jonathan Perkin (http://www.perkin.org.uk/)" ,
+  	"Thibaut CONSTANT",
+  	"davide-lr",
+    "Luke Hertert (http://werul.com)"
   ],
   "license": {
       "type": "ISC",
