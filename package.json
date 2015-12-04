@@ -1,10 +1,10 @@
 {
   "name": "openzwave-shared",
-  "version": "1.1.5",
+  "version": "1.1.6",
   "description": "Node.JS bindings for OpenZWave including management and security functions",
   "main": "./lib/openzwave-shared.js",
-  "dependencies" : {
-     "nan" : "~2.0.9"
+  "dependencies": {
+    "nan": "^2.0.9"
   },
   "scripts": {
     "test": "node test.js",
@@ -16,20 +16,22 @@
     "url": "git://github.com/OpenZWave/node-openzwave-shared.git"
   },
   "keywords": [
-    "zwave", "z-wave",
+    "zwave",
+    "z-wave",
     "home automation",
-    "openzwave", "open-zwave"
+    "openzwave",
+    "open-zwave"
   ],
   "author": "Elias Karakoulakis <elias.karakoulakis@gmail.com>",
   "contributors": [
-  	"Jonathan Perkin (http://www.perkin.org.uk/)" ,
-  	"Thibaut CONSTANT",
-  	"davide-lr",
+    "Jonathan Perkin (http://www.perkin.org.uk/)",
+    "Thibaut CONSTANT",
+    "davide-lr",
     "Luke Hertert (http://werul.com)"
   ],
   "license": {
-      "type": "ISC",
-      "url": "http://opensource.org/licenses/ISC"
+    "type": "ISC",
+    "url": "http://opensource.org/licenses/ISC"
   },
   "gypfile": true
 }

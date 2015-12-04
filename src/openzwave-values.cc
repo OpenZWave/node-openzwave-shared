@@ -31,54 +31,186 @@ namespace OZW {
 		Nan::HandleScope scope;
 
 		OpenZWave::ValueID* vit = getZwaveValueID(info);
-		uint8 validx  =  (info[0]->IsObject()) ? 1 : 4;
-
-		switch ((*vit).GetType()) {
-			case OpenZWave::ValueID::ValueType_Bool: {
-				bool val = info[validx]->ToBoolean()->Value();
-				OpenZWave::Manager::Get()->SetValue(*vit, val);
-				break;
-			}
-			case OpenZWave::ValueID::ValueType_Byte: {
-				uint8 val = info[validx]->ToInteger()->Value();
-				OpenZWave::Manager::Get()->SetValue(*vit, val);
-				break;
-			}
-			case OpenZWave::ValueID::ValueType_Decimal: {
-				float val = info[validx]->ToNumber()->NumberValue();
-				OpenZWave::Manager::Get()->SetValue(*vit, val);
-				break;
-			}
-			case OpenZWave::ValueID::ValueType_Int: {
-				int32 val = info[validx]->ToInteger()->Value();
-				OpenZWave::Manager::Get()->SetValue(*vit, val);
-				break;
-			}
-			case OpenZWave::ValueID::ValueType_List: {
-				std::string val = (*String::Utf8Value(info[validx]->ToString()));
-				OpenZWave::Manager::Get()->SetValue(*vit, val);
-				break;
-			}
-			case OpenZWave::ValueID::ValueType_Short: {
-				int16 val = info[validx]->ToInteger()->Value();
-				OpenZWave::Manager::Get()->SetValue(*vit, val);
-				break;
-			}
-			case OpenZWave::ValueID::ValueType_String: {
-				std::string val = (*String::Utf8Value(info[validx]->ToString()));
-				OpenZWave::Manager::Get()->SetValue(*vit, val);
-				break;
-			}
-			case OpenZWave::ValueID::ValueType_Schedule: {
-				break;
-			}
-			case OpenZWave::ValueID::ValueType_Button: {
-				OpenZWave::Manager::Get()->PressButton(*vit);
-				break;
-			}
-			case OpenZWave::ValueID::ValueType_Raw: {
-				break;
+		if (vit == NULL) {
+			Nan::ThrowTypeError("setValue: OpenZWave valueId not found");
+		} else {
+			OpenZWave::Manager* mgr = OpenZWave::Manager::Get();
+			uint8 validx  =  (info[0]->IsObject()) ? 1 : 4;
+			switch ((*vit).GetType()) {
+				case OpenZWave::ValueID::ValueType_Bool: {
+					checkType(info[validx]->IsBoolean());
+					bool val = info[validx]->BooleanValue();
+					mgr->SetValue(*vit, val);
+					break;
+				}
+				case OpenZWave::ValueID::ValueType_Byte: {
+					checkType(info[validx]->IsNumber());
+					uint8 val = info[validx]->ToInteger()->Value();
+					OpenZWave::Manager::Get()->SetValue(*vit, val);
+					break;
+				}
+				case OpenZWave::ValueID::ValueType_Decimal: {
+					checkType(info[validx]->IsNumber());
+					float val = info[validx]->ToNumber()->NumberValue();
+					OpenZWave::Manager::Get()->SetValue(*vit, val);
+					break;
+				}
+				case OpenZWave::ValueID::ValueType_Int: {
+					checkType(info[validx]->IsNumber());
+					int32 val = info[validx]->ToInteger()->Value();
+					OpenZWave::Manager::Get()->SetValue(*vit, val);
+					break;
+				}
+				case OpenZWave::ValueID::ValueType_List: {
+					checkType(info[validx]->IsString() || info[validx]->IsStringObject());
+					std::string val = (*String::Utf8Value(info[validx]->ToString()));
+					OpenZWave::Manager::Get()->SetValue(*vit, val);
+					break;
+				}
+				case OpenZWave::ValueID::ValueType_Short: {
+					checkType(info[validx]->IsNumber());
+					int16 val = info[validx]->ToInteger()->Value();
+					OpenZWave::Manager::Get()->SetValue(*vit, val);
+					break;
+				}
+				case OpenZWave::ValueID::ValueType_String: {
+					checkType(info[validx]->IsString() || info[validx]->IsStringObject());
+					std::string val = (*String::Utf8Value(info[validx]->ToString()));
+					OpenZWave::Manager::Get()->SetValue(*vit, val);
+					break;
+				}
+				case OpenZWave::ValueID::ValueType_Schedule: {
+					Nan::ThrowTypeError("please use the specialized xxxSwitchPoint commands instead of setValue for setting thermostat schedules");
+					break;
+				}
+				case OpenZWave::ValueID::ValueType_Button: {
+					OpenZWave::Manager::Get()->PressButton(*vit);
+					break;
+				}
+				case OpenZWave::ValueID::ValueType_Raw: {
+					break;
+				}
 			}
 		}
 	}
+
+
+/*
+*
+*/
+
+/*
+* Get number of thermostat switch points
+*/
+// =================================================================
+NAN_METHOD(OZW::GetNumSwitchPoints)
+// =================================================================
+{
+	Nan::HandleScope scope;
+
+	OpenZWave::ValueID* vit = getZwaveValueID(info);
+	if ((vit == NULL) || ((*vit).GetType() != OpenZWave::ValueID::ValueType_Schedule ))  {
+		Nan::ThrowTypeError("OpenZWave valueId not found or not of the correct type");
+	} else {
+		info.GetReturnValue().Set(Nan::New<Integer>(
+			OpenZWave::Manager::Get()->GetNumSwitchPoints(*vit)
+		));
+	}
+}
+
+// =================================================================
+NAN_METHOD(OZW::GetSwitchPoint)
+// =================================================================
+{
+	Nan::HandleScope scope;
+	uint8 idx, o_hours, o_minutes;
+	int8  o_setback;
+
+	OpenZWave::ValueID* vit = getZwaveValueID(info);
+	if ((vit == NULL) || ((*vit).GetType() != OpenZWave::ValueID::ValueType_Schedule ))  {
+		Nan::ThrowTypeError("OpenZWave valueId not found or not of the correct type");
+	} else {
+		uint8 idxpos  =  (info[0]->IsObject()) ? 1 : 4;
+		if ((info.Length() < idxpos) || !info[idxpos]->IsNumber()) {
+			Nan::ThrowTypeError("must supply an integer index after the valueId");
+		} else {
+			idx = info[idxpos]->ToNumber()->Value();
+			OpenZWave::Manager::Get()->GetSwitchPoint(*vit, idx, &o_hours, &o_minutes, &o_setback);
+			Local<Object> o  = Nan::New<Object>();
+			Nan::Set(o,
+				Nan::New<String>("hours").ToLocalChecked(),
+				Nan::New<Integer>(o_hours));
+			Nan::Set(o,
+				Nan::New<String>("minutes").ToLocalChecked(),
+				Nan::New<Integer>(o_minutes));
+			Nan::Set(o,
+				Nan::New<String>("setback").ToLocalChecked(),
+				Nan::New<Integer>(o_setback));
+			info.GetReturnValue().Set(o);
+		}
+	}
+}
+
+// Clears all switch points from the schedule.
+// =================================================================
+NAN_METHOD(OZW::ClearSwitchPoints)
+// =================================================================
+{
+	Nan::HandleScope scope;
+
+	OpenZWave::ValueID* vit = getZwaveValueID(info);
+	if ((vit == NULL) || ((*vit).GetType() != OpenZWave::ValueID::ValueType_Schedule ))  {
+		Nan::ThrowTypeError("OpenZWave valueId not found or not of the correct type");
+	} else {
+		OpenZWave::Manager::Get()->ClearSwitchPoints(*vit);
+	}
+}
+
+// =================================================================
+NAN_METHOD(OZW::SetSwitchPoint)
+// =================================================================
+{
+	Nan::HandleScope scope;
+
+	OpenZWave::ValueID* vit = getZwaveValueID(info);
+	if ((vit == NULL) || ((*vit).GetType() != OpenZWave::ValueID::ValueType_Schedule ))  {
+		Nan::ThrowTypeError("OpenZWave valueId not found or not of the correct type");
+	} else {
+		uint8 idxpos  =  (info[0]->IsObject()) ? 1 : 4;
+		if ((info.Length() < idxpos) || !info[idxpos]->IsObject()) {
+			Nan::ThrowTypeError("must supply a switchpoint object ");
+		} else {
+			Local<Object> sp = info[idxpos]->ToObject();
+			OpenZWave::Manager::Get()->SetSwitchPoint(*vit,
+				Nan::Get(sp, Nan::New<String>("hours").ToLocalChecked()).ToLocalChecked()->ToNumber()->Value(),
+				Nan::Get(sp, Nan::New<String>("minutes").ToLocalChecked()).ToLocalChecked()->ToNumber()->Value(),
+				Nan::Get(sp, Nan::New<String>("setback").ToLocalChecked()).ToLocalChecked()->ToNumber()->Value()
+			);
+		}
+	}
+}
+
+// =================================================================
+NAN_METHOD(OZW::RemoveSwitchPoint)
+// =================================================================
+{
+	Nan::HandleScope scope;
+
+	OpenZWave::ValueID* vit = getZwaveValueID(info);
+	if ((vit == NULL) || ((*vit).GetType() != OpenZWave::ValueID::ValueType_Schedule ))  {
+		Nan::ThrowTypeError("OpenZWave valueId not found or not of the correct type");
+	} else {
+		uint8 idxpos  =  (info[0]->IsObject()) ? 1 : 4;
+		if ((info.Length() < idxpos) || !info[idxpos]->IsObject()) {
+			Nan::ThrowTypeError("must supply a switchpoint object ");
+		} else {
+			Local<Object> sp = info[idxpos]->ToObject();
+			OpenZWave::Manager::Get()->RemoveSwitchPoint(*vit,
+				Nan::Get(sp, Nan::New<String>("hours").ToLocalChecked()).ToLocalChecked()->ToNumber()->Value(),
+				Nan::Get(sp, Nan::New<String>("minutes").ToLocalChecked()).ToLocalChecked()->ToNumber()->Value()
+			);
+		}
+	}
+}
+
 }

@@ -140,6 +140,11 @@ namespace OZW {
 		static NAN_METHOD(GetNodeNeighbors);
 		// openzwave-values.cc
 		static NAN_METHOD(SetValue);
+    static NAN_METHOD(GetNumSwitchPoints);
+    static NAN_METHOD(GetSwitchPoint);
+    static NAN_METHOD(ClearSwitchPoints);
+    static NAN_METHOD(SetSwitchPoint);
+    static NAN_METHOD(RemoveSwitchPoint);
 		// openzwave-polling.cc
 		static NAN_METHOD(GetPollInterval);
 		static NAN_METHOD(SetPollInterval);

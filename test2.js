@@ -118,10 +118,11 @@ zwave.on('scan complete', function() {
     console.log('====> scan complete, hit ^C to finish.');
     // set dimmer node 5 to 50%
     zwave.setValue(5,38,1,0,50);
+		//zwave.setValue({nodeid:5,	class_id: 38,	instance:1,	index:0}, 50 );
 });
 
-zwave.on('controller command', function(n,rv,st) {
-    console.log('controller commmand feedback: node==%d, retval=%d, state=%d',n,rv,st);
+zwave.on('controller command', function(n,rv,st,msg) {
+    console.log('controller commmand feedback: %s node==%d, retval=%d, state=%d',msg,n,rv,st);
 });
 
 zwavedriverpaths = {

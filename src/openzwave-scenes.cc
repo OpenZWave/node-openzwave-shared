@@ -124,61 +124,62 @@ namespace OZW {
 
 		uint8 sceneid  = info[0]->ToNumber()->Value();
 		OpenZWave::ValueID* vit = getZwaveValueID(info, 1);
-		uint8 valoffset = ( info[1]->IsObject() ) ? 2 : 5;
-		if (vit != NULL) {
-
-					switch ((*vit).GetType()) {
-						case OpenZWave::ValueID::ValueType_Bool: {
-							//bool val; OpenZWave::Manager::Get()->GetValueAsBool(*vit, &val);
-							bool val = info[valoffset]->ToBoolean()->Value();
-							OpenZWave::Manager::Get()->AddSceneValue(sceneid, *vit, val);
-							break;
-						}
-						case OpenZWave::ValueID::ValueType_Byte: {
-							//uint8 val; OpenZWave::Manager::Get()->GetValueAsByte(*vit, &val);
-							uint8 val = info[valoffset]->ToInteger()->Value();
-							OpenZWave::Manager::Get()->AddSceneValue(sceneid, *vit, val);
-							break;
-						}
-						case OpenZWave::ValueID::ValueType_Decimal: {
-							//float val; OpenZWave::Manager::Get()->GetValueAsFloat(*vit, &val);
-							float val = info[valoffset]->ToNumber()->NumberValue();
-							OpenZWave::Manager::Get()->AddSceneValue(sceneid, *vit, val);
-							break;
-						}
-						case OpenZWave::ValueID::ValueType_Int: {
-							//uint32 val; OpenZWave::Manager::Get()->GetValueAsInt(*vit, &val);
-							int32 val = info[valoffset]->ToInteger()->Value();
-							OpenZWave::Manager::Get()->AddSceneValue(sceneid, *vit, val);
-							break;
-						}
-						case OpenZWave::ValueID::ValueType_List: {
-							//std::string val; OpenZWave::Manager::Get()->GetValueListSelection(*vit, &val);
-							std::string val = (*String::Utf8Value(info[valoffset]->ToString()));
-							OpenZWave::Manager::Get()->AddSceneValue(sceneid, *vit, val);
-							break;
-						}
-						case OpenZWave::ValueID::ValueType_Short: {
-							//int16_t val; OpenZWave::Manager::Get()->GetValueAsShort(*vit, &val);
-							uint16 val = info[valoffset]->ToInteger()->Value();
-							OpenZWave::Manager::Get()->AddSceneValue(sceneid, *vit, val);
-							break;
-						}
-						case OpenZWave::ValueID::ValueType_String: {
-							//std::string val; OpenZWave::Manager::Get()->GetValueAsString(*vit, &val);
-							std::string val = (*String::Utf8Value(info[valoffset]->ToString()));
-							OpenZWave::Manager::Get()->AddSceneValue(sceneid, *vit, val);
-							break;
-						}
-						case OpenZWave::ValueID::ValueType_Schedule: {
-							break;
-						}
-						case OpenZWave::ValueID::ValueType_Button: {
-							break;
-						}
-						case OpenZWave::ValueID::ValueType_Raw: {
-							break;
-						}
+		if (vit == NULL) {
+			Nan::ThrowTypeError("OpenZWave valueId not found");
+		} else {
+			uint8 valoffset = ( info[1]->IsObject() ) ? 2 : 5;
+			switch ((*vit).GetType()) {
+				case OpenZWave::ValueID::ValueType_Bool: {
+					//bool val; OpenZWave::Manager::Get()->GetValueAsBool(*vit, &val);
+					bool val = info[valoffset]->ToBoolean()->Value();
+					OpenZWave::Manager::Get()->AddSceneValue(sceneid, *vit, val);
+					break;
+				}
+				case OpenZWave::ValueID::ValueType_Byte: {
+					//uint8 val; OpenZWave::Manager::Get()->GetValueAsByte(*vit, &val);
+					uint8 val = info[valoffset]->ToInteger()->Value();
+					OpenZWave::Manager::Get()->AddSceneValue(sceneid, *vit, val);
+					break;
+				}
+				case OpenZWave::ValueID::ValueType_Decimal: {
+					//float val; OpenZWave::Manager::Get()->GetValueAsFloat(*vit, &val);
+					float val = info[valoffset]->ToNumber()->NumberValue();
+					OpenZWave::Manager::Get()->AddSceneValue(sceneid, *vit, val);
+					break;
+				}
+				case OpenZWave::ValueID::ValueType_Int: {
+					//uint32 val; OpenZWave::Manager::Get()->GetValueAsInt(*vit, &val);
+					int32 val = info[valoffset]->ToInteger()->Value();
+					OpenZWave::Manager::Get()->AddSceneValue(sceneid, *vit, val);
+					break;
+				}
+				case OpenZWave::ValueID::ValueType_List: {
+					//std::string val; OpenZWave::Manager::Get()->GetValueListSelection(*vit, &val);
+					std::string val = (*String::Utf8Value(info[valoffset]->ToString()));
+					OpenZWave::Manager::Get()->AddSceneValue(sceneid, *vit, val);
+					break;
+				}
+				case OpenZWave::ValueID::ValueType_Short: {
+					//int16_t val; OpenZWave::Manager::Get()->GetValueAsShort(*vit, &val);
+					uint16 val = info[valoffset]->ToInteger()->Value();
+					OpenZWave::Manager::Get()->AddSceneValue(sceneid, *vit, val);
+					break;
+				}
+				case OpenZWave::ValueID::ValueType_String: {
+					//std::string val; OpenZWave::Manager::Get()->GetValueAsString(*vit, &val);
+					std::string val = (*String::Utf8Value(info[valoffset]->ToString()));
+					OpenZWave::Manager::Get()->AddSceneValue(sceneid, *vit, val);
+					break;
+				}
+				case OpenZWave::ValueID::ValueType_Schedule: {
+					break;
+				}
+				case OpenZWave::ValueID::ValueType_Button: {
+					break;
+				}
+				case OpenZWave::ValueID::ValueType_Raw: {
+					break;
+				}
 			}
 		}
 	}
@@ -192,9 +193,11 @@ namespace OZW {
 		SceneInfo *scene;
 		if ((scene = get_scene_info(sceneid))) {
 			OpenZWave::ValueID* vit = getZwaveValueID(info, 1);
-			if (vit != NULL) {
-					OpenZWave::Manager::Get()->RemoveSceneValue(sceneid, *vit);
-					scene->values.remove(*vit);
+			if (vit == NULL) {
+				Nan::ThrowTypeError("OpenZWave valueId not found");
+			} else {
+				OpenZWave::Manager::Get()->RemoveSceneValue(sceneid, *vit);
+				scene->values.remove(*vit);
 			}
 		}
 	}

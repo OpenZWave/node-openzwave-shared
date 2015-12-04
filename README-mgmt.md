@@ -15,7 +15,8 @@ which effectively replace the old `BeginControllerCommand`. There's also no
 
 -  zwave.addNode(doSecurity: boolean):
   Add a new device or controller with/without security. This is usually followed
-  by starting the pair/unpair process on the device (eg by some inclusion button)
+  by starting the pair/unpair process on the device (eg. pressing a special
+  inclusion button or quickly pressing the manual operation button three times)
 
 -  zwave.removeNode():
   Remove a device or controller from the Z-Wave network. This is usually followed
@@ -66,32 +67,33 @@ which effectively replace the old `BeginControllerCommand`. There's also no
 
 
 ## Legacy mode (`BeginControllerCommand`)
-If your OZW version is 1.2 or earlier, use `BeginControllerCommand` for doing
-all management stuff with your ZWave network. This
-as it allows for performing management functions on the ZWave network.
-    - The first argument is the command name, and its the only mandatory arg ,which can be any of the following:
+If your OZW version is 1.2 or earlier, use `beginControllerCommand` for doing
+all management stuff with your ZWave network. This command has the following format:
+
+`zwave.beginControllerCommand("command", highpower, node1, node2)`
+
+  - The first argument is the command name, and its the *only mandatory*, which can be any of the following:
 
 ```
-["AddDevice"]
-["CreateNewPrimary"]
-["ReceiveConfiguration"]
-["RemoveDevice"]
-["RemoveFailedNode"]
-["HasNodeFailed"]
-["ReplaceFailedNode"]
-["TransferPrimaryRole"]
-["RequestNetworkUpdate"]
-["RequestNodeNeighborUpdate"]
-["AssignReturnRoute"]
-["DeleteAllReturnRoutes"]
-["SendNodeInformation"]
-["ReplicationSend"]
-["CreateButton"]
-["DeleteButton"]
+"AddDevice"
+"CreateNewPrimary"
+"ReceiveConfiguration"
+"RemoveDevice"
+"RemoveFailedNode"
+"HasNodeFailed"
+"ReplaceFailedNode"
+"TransferPrimaryRole"
+"RequestNetworkUpdate"
+"RequestNodeNeighborUpdate"
+"AssignReturnRoute"
+"DeleteAllReturnRoutes"
+"SendNodeInformation"
+"ReplicationSend"
+"CreateButton"
+"DeleteButton"
 ```
 
-
-    - The second argument is a boolean ("highpower") - should be true/false
+    - The second argument ("highpower") is a boolean and tells OpenZWave to use low or high power mode - should be true/false. You shouldn't use high power for inclusions though.
     - The third argument is the first ZWave node to be passed to the command (if applicable for the command)
     - The fourth argument is the second ZWave node to be passed to the command
 

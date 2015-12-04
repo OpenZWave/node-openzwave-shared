@@ -146,6 +146,11 @@ namespace OZW {
 		Nan::SetPrototypeMethod(t, "isNodeSecurityDevice", OZW::IsNodeSecurityDevice); // ** new
 		// openzwave-values.cc
 		Nan::SetPrototypeMethod(t, "setValue", OZW::SetValue);
+		Nan::SetPrototypeMethod(t, "getNumSwitchPoints", OZW::GetNumSwitchPoints);
+		Nan::SetPrototypeMethod(t, "clearSwitchPoints", OZW::ClearSwitchPoints);
+		Nan::SetPrototypeMethod(t, "getSwitchPoint", OZW::GetSwitchPoint);
+		Nan::SetPrototypeMethod(t, "setSwitchPoint", OZW::SetSwitchPoint);
+		Nan::SetPrototypeMethod(t, "removeSwitchPoint", OZW::RemoveSwitchPoint);
 		// openzwave-polling.cc
 		Nan::SetPrototypeMethod(t, "enablePoll", OZW::EnablePoll);
 		Nan::SetPrototypeMethod(t, "disablePoll", OZW::DisablePoll);

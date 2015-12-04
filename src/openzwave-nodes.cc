@@ -96,7 +96,9 @@ namespace OZW {
 	{
 		Nan::HandleScope scope;
 		OpenZWave::ValueID* ozwvid = getZwaveValueID(info);
-		if (ozwvid != NULL) {
+		if (ozwvid == NULL) {
+			Nan::ThrowTypeError("OpenZWave valueId not found");
+		} else {
 			OpenZWave::Manager::Get()->PressButton(*ozwvid);
 		}
 	}

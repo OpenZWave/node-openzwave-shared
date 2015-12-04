@@ -50,10 +50,14 @@ Modifying device state:
 /*
  * Set arbitrary values.
  */
+// 1) by means of passing each individual ValueID constituent:
 zwave.setValue(nodeid, commandclass, instance, index, value);
 zwave.setValue(3,      37,           1,        0,     true); // node 3: turn on
 zwave.setValue(3,      37,           1,        0,     false); // node 3: turn off
-zwave.setValue(5,      38,           1,        0,     50); // dimmer 5: set to 50%
+// dimmer node 5: set to 50%
+zwave.setValue(5,      38,           1,        0,     50);
+// 2) or by passing the valueID object (emitted by ValueAdded event):
+zwave.setValue({ nodeid:5, class_id: 38, instance:1, index:0}, 50);
 
 /*
  * Turn a binary switch on/off.

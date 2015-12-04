@@ -38,17 +38,19 @@ their unique identifiers are:
 
 * `COMMAND_CLASS_SWITCH_BINARY` (37)
 * `COMMAND_CLASS_SWITCH_MULTILEVEL` (38)
-* `COMMAND_CLASS_VERSION` (134)
 
 Binary switches can be controlled with `.setNodeOn()` and `.setNodeOff()`.
 Dimmer (multi-level) devices can be set with `.setLevel()` (*if of course they
-support the **BASIC** command class, which is not supported by most dimmers!*
+support the **BASIC** command class, which is not always supported by most dimmers!*
 Use `setValue` instead)
+
+* `COMMAND_CLASS_VERSION` (134)
 
 The version class is informational only and cannot be controlled.
 
 The `value` object differs between command classes, and contains all the useful
-information about values stored for the particular class.
+information about values stored for the particular class. You can use this object
+as the 1st argument in `setValue` to alter its state.
 
 ###### `.on('value changed', function(nodeid, commandclass, valueId){})` :  A value has changed.  Use this to keep track of value state across the network. When values are first discovered, the module enables polling on those values so that we will receive change messages. Prior to the 'node ready' event, there may be 'value changed' events even when no values were actually changed.
 

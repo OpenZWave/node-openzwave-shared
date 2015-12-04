@@ -24,6 +24,14 @@ using namespace OpenZWave;
 
 namespace OZW {
 
+  // check
+	bool checkType(bool predicate) {
+		if (!predicate) {
+			Nan::ThrowTypeError("wrong value type!");
+		}
+		return predicate;
+	}
+
 	/*
 	* Return the node for this request.
 	*/
@@ -230,32 +238,51 @@ namespace OZW {
 		return valobj;
 	}
 
+  bool isOzwValue(Local<Object>& o) {
+		return (!Nan::HasOwnProperty(o, Nan::New<String>("nodeid").ToLocalChecked()).IsNothing()
+			&& !Nan::HasOwnProperty(o, Nan::New<String>("class_id").ToLocalChecked()).IsNothing()
+			&& !Nan::HasOwnProperty(o, Nan::New<String>("instance").ToLocalChecked()).IsNothing()
+			&& !Nan::HasOwnProperty(o, Nan::New<String>("index").ToLocalChecked()).IsNothing());
+	}
+
   /* get the ZWave ValueID from the arguments passed to a node.js function,
 		which can be either:
 	1) a series of 4 arguments of the basic value constituents (legacy mode) or
 	2) a single Javascript object (such as the one returned from zwaveValue2v8Value() )
 	In both cases the following args are needed:
-		uint8 nodeid = info[0]->ToNumber()->Value();
-		uint8 comclass = info[1]->ToNumber()->Value();
-		uint8 instance = info[2]->ToNumber()->Value();
-		uint8 index = info[3]->ToNumber()->Value();
+		nodeid : the ZWave Node ID
+		class_id: the command class ID
+		instance: the instance of the command (usually 1)
+		index: the index of the command (usually 0)
 */
 	OpenZWave::ValueID* getZwaveValueID(const Nan::FunctionCallbackInfo<v8::Value> &info, uint8 offset) {
 		uint8 nodeid, comclass, instance, index;
-		if ( info[offset]->IsObject() ) {
+		if ( (info.Length() >= offset) && info[offset]->IsObject() ) {
 			Local<Object> o = info[offset]->ToObject();
-			nodeid   = Nan::Get(o, Nan::New<String>("nodeid").ToLocalChecked()).ToLocalChecked()->ToNumber()->Value();
-			comclass = Nan::Get(o, Nan::New<String>("class_id").ToLocalChecked()).ToLocalChecked()->ToNumber()->Value();
-			instance = Nan::Get(o, Nan::New<String>("instance").ToLocalChecked()).ToLocalChecked()->ToNumber()->Value();
-			index    = Nan::Get(o, Nan::New<String>("index").ToLocalChecked()).ToLocalChecked()->ToNumber()->Value();
-		} else { // legacy mode
+			if (isOzwValue(o)) {
+				nodeid   = Nan::Get(o, Nan::New<String>("nodeid").ToLocalChecked()).ToLocalChecked()->ToNumber()->Value();
+				comclass = Nan::Get(o, Nan::New<String>("class_id").ToLocalChecked()).ToLocalChecked()->ToNumber()->Value();
+				instance = Nan::Get(o, Nan::New<String>("instance").ToLocalChecked()).ToLocalChecked()->ToNumber()->Value();
+				index    = Nan::Get(o, Nan::New<String>("index").ToLocalChecked()).ToLocalChecked()->ToNumber()->Value();
+			} else {
+				return ( NULL );
+			}
+		} else if (
+				(info.Length() >= offset+4)
+			&& info[offset]->IsNumber()
+			&& info[offset+1]->IsNumber()
+			&& info[offset+2]->IsNumber()
+			&& info[offset+3]->IsNumber()
+		) { // legacy mode
 			nodeid   = info[offset]->ToNumber()->Value();
 			comclass = info[offset+1]->ToNumber()->Value();
 			instance = info[offset+2]->ToNumber()->Value();
 			index    = info[offset+3]->ToNumber()->Value();
+		} else {
+			return( NULL );
 		}
 
-		NodeInfo *node;
+		NodeInfo *node = NULL;
 		std::list<OpenZWave::ValueID>::iterator vit;
 
 		if ((node = get_node_info(nodeid))) {

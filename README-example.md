@@ -2,9 +2,13 @@
 
 The test program below connects to a Z-Wave network, scans for all nodes and
 values, and prints out information about the network.  
-**When the network has become ready**, the library will call 'scan complete' 
-and the script will then issue a *beginControllerCommand* 
-to the driver so as to add a new node to the ZWave network. 
+
+**When the network has become ready**, the library will call 'scan complete'
+and the script will then 1) issue a `setValue` command to set a dimmer (node 5)
+at 50%, and then issue a command to begin the inclusion process for a new zwave
+device. This means calling `beginControllerCommand` OR `addNode` depending on
+which version of the OpenZWave API you've linked against.
+
 Remember to hit `^C` to end the script.
 
 ```js
@@ -122,8 +126,18 @@ zwave.on('notification', function(nodeid, notif) {
 
 zwave.on('scan complete', function() {
     console.log('====> scan complete, hit ^C to finish.');
+    // set dimmer node 5 to 50%
+    //zwave.setValue(5,38,1,0,50);
+    zwave.setValue( {nodeid:5, class_id: 38, instance:1, index:0}, 50);
     // Add a new device to the ZWave controller
-    zwave.beginControllerCommand('AddDevice', true);
+    if (zwave.hasOwnProperty('beginControllerCommand')) {
+      // using legacy mode (OpenZWave version < 1.3) - no security
+      zwave.beginControllerCommand('AddDevice', true);      
+    } else {
+      // using new security API
+      // set this to 'true' for secure devices eg. door locks
+      zwave.addNode(false);
+    }
 });
 
 zwave.on('controller command', function(r,s) {
@@ -142,7 +156,7 @@ process.on('SIGINT', function() {
 Sample output from this program:
 
 ```sh
-$ nodejs test2.js 
+$ nodejs test2.js
 initialising OpenZWave addon (/home/ekarak/src/node-openzwave-shared/lib/../build/Debug/openzwave_shared.node)
 scanning homeid=0xcafebabe...
 node2: nop
