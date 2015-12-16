@@ -29,6 +29,45 @@ Events emitted by the OpenZWave Driver class:
 
 ###### `.on('polling enabled/disabled', function(nodeid){})` : Polling for a node has been enabled or disabled.
 
+###### `zwave.on('scene event', function(nodeid, sceneid) {});`  : This is fired when a scene event is received by the controller.
+
+For example when you have your Aeon Labs Minimote setup with the following configuration:
+
+* zwave.setConfigParam(nodeid, 241, 1, 1);
+* zwave.setConfigParam(nodeid, 242, 1, 1);
+* zwave.setConfigParam(nodeid, 243, 1, 1);
+* zwave.setConfigParam(nodeid, 244, 1, 1);
+* zwave.setConfigParam(nodeid, 250, 1, 1);
+
+It would send: 
+
+* sceneid of 1 when (1) is Pressed
+* sceneid of 2 when (1) is Held
+* sceneid of 3 when (2) is Pressed
+* etc.
+
+###### `zwave.on('node event', function(nodeid, event, valueId) {});`  : This gets sent when a Basic set command is received by the controller. 
+
+Example:
+
+For a Aeon Labs Water sensor, event would be 255 when activated and 0 when deactivated.
+
+{ value_id: '27-0-1-0',
+  node_id: 27,
+  class_id: 0,
+  type: 'bool',
+  genre: 'basic',
+  instance: 1,
+  index: 0,
+  label: '',
+  units: '',
+  help: '',
+  read_only: false,
+  write_only: false,
+  is_polled: false,
+  min: 0,
+  max: 0,
+  value: true }
 
 #### Value events:
 ###### `.on('value added', function(nodeid, commandclass, valueId){})` : A new ValueID has been discovered.  ValueIDs are associated with a particular node, and are the parts of the device you can monitor or control. Please see [the official OpenZWave docs on ValueIDs](http://www.openzwave.com/dev/classOpenZWave_1_1ValueID.html) for more details.
