@@ -157,18 +157,11 @@ namespace OZW {
 			case OpenZWave::ValueID::ValueType_Raw: {
 				uint8 *val, len;
 				OpenZWave::Manager::Get()->GetValueAsRaw(value, &val, &len);
-
-				// Copy raw values into array.
-				Local<Array> rawval = Nan::New<Array>(len);
-				for (int i = 0; i < len; i++) {
-					rawval->Set(Nan::New<Integer>(i), Nan::New<Integer>(val[i]));
-				}
-				delete [] val;
-
 				Nan::Set(valobj,
 					Nan::New<String>("value").ToLocalChecked(),
-					rawval
+					Nan::CopyBuffer((char *)val, len).ToLocalChecked()
 				);
+				delete [] val;
 				break;
 			}
 			default: {

@@ -88,19 +88,10 @@ namespace OZW {
 					break;
 				}
 				case OpenZWave::ValueID::ValueType_Raw: {
-					checkType(info[validx]->IsArray());
-					Local<Array> val = Local<Array>::Cast(info[validx]);
-					uint8 len = val->Length();
-					uint8 *valArr = new uint8[len];
-
-					for (uint8 i = 0; i < len; i++) {
-						Local<Object> idx = Local<Object>::Cast(val->Get(i));
-						if (!idx->IsNumber())
-							Nan::ThrowTypeError("Raw value array contains a non-integer");
-						valArr[i] = (uint8)idx->ToInteger()->Value();
-					}
-					OpenZWave::Manager::Get()->SetValue(*vit, valArr, len);
-					delete [] valArr;
+					checkType(Buffer::HasInstance(info[validx]));
+					uint8 *val = (uint8*)Buffer::Data(info[validx]);
+					uint8 len  = Buffer::Length(info[validx]);
+					OpenZWave::Manager::Get()->SetValue(*vit, val, len);
 					break;
 				}
 			}
