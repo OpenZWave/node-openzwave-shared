@@ -183,81 +183,6 @@ namespace OZW {
 		Local < Object > cbinfo = Nan::New<Object>();
 		//
 		switch (notif->type) {
-			case OpenZWave::Notification::Type_DriverReady:
-				// the driver is ready, set our global homeid
-				homeid = notif->homeid;
-				emitinfo[0] = Nan::New<String>("driver ready").ToLocalChecked();
-				emitinfo[1] = Nan::New<Integer>(homeid);
-				emit_cb->Call(2, emitinfo);
-				break;
-			case OpenZWave::Notification::Type_DriverFailed:
-				emitinfo[0] = Nan::New<String>("driver failed").ToLocalChecked();
-				emit_cb->Call(1, emitinfo);
-				break;
-				/*
-				* NodeNew is triggered when a node is discovered which is not
-				* found in the OpenZWave XML file.  As we do not use that file
-				* simply ignore those notifications for now.
-				*
-				* NodeAdded is when we actually have a new node to set up.
-				*/
-			case OpenZWave::Notification::Type_NodeNew:
-				break;
-			case OpenZWave::Notification::Type_NodeAdded:
-				node = new NodeInfo();
-				node->homeid = notif->homeid;
-				node->nodeid = notif->nodeid;
-				node->polled = false;
-				{
-					mutex::scoped_lock sl(znodes_mutex);
-					znodes[ notif->nodeid ] = node;
-				}
-				emitinfo[0] = Nan::New<String>("node added").ToLocalChecked();
-				emitinfo[1] = Nan::New<Integer>(notif->nodeid);
-				emit_cb->Call(2, emitinfo);
-				break;
-				/*
-				* Ignore intermediate notifications about a node status, we
-				* wait until the node is ready before retrieving information.
-				*/
-			case OpenZWave::Notification::Type_NodeRemoved:
-				{
-					mutex::scoped_lock sl(znodes_mutex);
-					znodes.erase(notif->nodeid);
-				}
-				emitinfo[0] = Nan::New<String>("node removed").ToLocalChecked();
-				emitinfo[1] = Nan::New<Integer>(notif->nodeid);
-				emit_cb->Call(2, emitinfo);
-				break;
-			case OpenZWave::Notification::Type_NodeProtocolInfo:
-				break;
-			case OpenZWave::Notification::Type_NodeNaming: {
-				getV8ValueForZWaveNode(mgr, cbinfo, notif->homeid, notif->nodeid);
-				emitinfo[0] = Nan::New<String>("node naming").ToLocalChecked();
-				emitinfo[1] = Nan::New<Integer>(notif->nodeid);
-				emitinfo[2] = cbinfo;
-				emit_cb->Call(3, emitinfo);
-				break;
-			}
-			case OpenZWave::Notification::Type_PollingEnabled:
-				if ((node = get_node_info(notif->nodeid))) {
-					node->polled = true;
-					emitinfo[0] = Nan::New<String>("polling enabled").ToLocalChecked();
-					emitinfo[1] = Nan::New<Integer>(notif->nodeid);
-					emit_cb->Call(2, emitinfo);
-				}
-				break;
-			case OpenZWave::Notification::Type_PollingDisabled:
-				if ((node = get_node_info(notif->nodeid))) {
-					node->polled = false;
-					emitinfo[0] = Nan::New<String>("polling disabled").ToLocalChecked();
-					emitinfo[1] = Nan::New<Integer>(notif->nodeid);
-					emit_cb->Call(2, emitinfo);
-				}
-				break;
-			/*
-			* Node values.
-			*/
 			case OpenZWave::Notification::Type_ValueAdded: {
 				OpenZWave::ValueID value = notif->values.front();
 				Local<Object> valobj = zwaveValue2v8Value(value);
@@ -268,26 +193,6 @@ namespace OZW {
 				}
 
 				emitinfo[0] = Nan::New<String>("value added").ToLocalChecked();
-				emitinfo[1] = Nan::New<Integer>(notif->nodeid);
-				emitinfo[2] = Nan::New<Integer>(value.GetCommandClassId());
-				emitinfo[3] = valobj;
-				emit_cb->Call(4, emitinfo);
-				break;
-			}
-			case OpenZWave::Notification::Type_ValueChanged: {
-				OpenZWave::ValueID value = notif->values.front();
-				Local<Object> valobj = zwaveValue2v8Value(value);
-				emitinfo[0] = Nan::New<String>("value changed").ToLocalChecked();
-				emitinfo[1] = Nan::New<Integer>(notif->nodeid);
-				emitinfo[2] = Nan::New<Integer>(value.GetCommandClassId());
-				emitinfo[3] = valobj;
-				emit_cb->Call(4, emitinfo);
-				break;
-			}
-			case OpenZWave::Notification::Type_ValueRefreshed: {
-				OpenZWave::ValueID value = notif->values.front();
-				Local<Object> valobj = zwaveValue2v8Value(value);
-				emitinfo[0] = Nan::New<String>("value refreshed").ToLocalChecked();
 				emitinfo[1] = Nan::New<Integer>(notif->nodeid);
 				emitinfo[2] = Nan::New<Integer>(value.GetCommandClassId());
 				emitinfo[3] = valobj;
@@ -313,9 +218,150 @@ namespace OZW {
 				emit_cb->Call(5, emitinfo);
 				break;
 			}
-			/*
-			 *Now node can accept commands.
-			 */
+			case OpenZWave::Notification::Type_ValueChanged: {
+				OpenZWave::ValueID value = notif->values.front();
+				Local<Object> valobj = zwaveValue2v8Value(value);
+				emitinfo[0] = Nan::New<String>("value changed").ToLocalChecked();
+				emitinfo[1] = Nan::New<Integer>(notif->nodeid);
+				emitinfo[2] = Nan::New<Integer>(value.GetCommandClassId());
+				emitinfo[3] = valobj;
+				emit_cb->Call(4, emitinfo);
+				break;
+			}
+			case OpenZWave::Notification::Type_ValueRefreshed: {
+				OpenZWave::ValueID value = notif->values.front();
+				Local<Object> valobj = zwaveValue2v8Value(value);
+				emitinfo[0] = Nan::New<String>("value refreshed").ToLocalChecked();
+				emitinfo[1] = Nan::New<Integer>(notif->nodeid);
+				emitinfo[2] = Nan::New<Integer>(value.GetCommandClassId());
+				emitinfo[3] = valobj;
+				emit_cb->Call(4, emitinfo);
+				break;
+			}
+			case OpenZWave::Notification::Type_NodeNew:
+				/* NodeNew is triggered when a node is discovered which is not
+				* found in the OpenZWave XML file.  As we do not use that file
+				* simply ignore those notifications for now.
+				*
+				* NodeAdded is when we actually have a new node to set up.
+				*/
+				break;
+			case OpenZWave::Notification::Type_NodeAdded: {
+				node = new NodeInfo();
+				node->homeid = notif->homeid;
+				node->nodeid = notif->nodeid;
+				node->polled = false;
+				{
+					mutex::scoped_lock sl(znodes_mutex);
+					znodes[ notif->nodeid ] = node;
+				}
+				emitinfo[0] = Nan::New<String>("node added").ToLocalChecked();
+				emitinfo[1] = Nan::New<Integer>(notif->nodeid);
+				emit_cb->Call(2, emitinfo);
+				break;
+			}
+
+			case OpenZWave::Notification::Type_NodeRemoved: {
+				{
+					mutex::scoped_lock sl(znodes_mutex);
+					znodes.erase(notif->nodeid);
+				}
+				emitinfo[0] = Nan::New<String>("node removed").ToLocalChecked();
+				emitinfo[1] = Nan::New<Integer>(notif->nodeid);
+				emit_cb->Call(2, emitinfo);
+				break;
+			}
+			case OpenZWave::Notification::Type_NodeProtocolInfo: {
+				/*
+				* Ignore intermediate notifications about a node status, we
+				* wait until the node is ready before retrieving information.
+				*/
+				break;
+			}
+			case OpenZWave::Notification::Type_NodeNaming: {
+				getV8ValueForZWaveNode(mgr, cbinfo, notif->homeid, notif->nodeid);
+				emitinfo[0] = Nan::New<String>("node naming").ToLocalChecked();
+				emitinfo[1] = Nan::New<Integer>(notif->nodeid);
+				emitinfo[2] = cbinfo;
+				emit_cb->Call(3, emitinfo);
+				break;
+			}
+			case OpenZWave::Notification::Type_NodeEvent: {
+				OpenZWave::ValueID value = notif->values.front();
+				Local<Object> valobj = zwaveValue2v8Value(value);
+				emitinfo[0] = Nan::New<String>("node event").ToLocalChecked();
+				emitinfo[1] = Nan::New<Integer>(notif->nodeid);
+				emitinfo[2] = Nan::New<Integer>(notif->event);
+				emitinfo[3] = valobj;
+				emit_cb->Call(4, emitinfo);
+				break;
+			}
+			case OpenZWave::Notification::Type_PollingDisabled: {
+				if ((node = get_node_info(notif->nodeid))) {
+					node->polled = false;
+					emitinfo[0] = Nan::New<String>("polling disabled").ToLocalChecked();
+					emitinfo[1] = Nan::New<Integer>(notif->nodeid);
+					emit_cb->Call(2, emitinfo);
+				}
+				break;
+			}
+			case OpenZWave::Notification::Type_PollingEnabled: {
+				if ((node = get_node_info(notif->nodeid))) {
+					node->polled = true;
+					emitinfo[0] = Nan::New<String>("polling enabled").ToLocalChecked();
+					emitinfo[1] = Nan::New<Integer>(notif->nodeid);
+					emit_cb->Call(2, emitinfo);
+				}
+				break;
+			}
+			case OpenZWave::Notification::Type_SceneEvent:{
+				emitinfo[0] = Nan::New<String>("scene event").ToLocalChecked();
+				emitinfo[1] = Nan::New<Integer>(notif->nodeid);
+				emitinfo[2] = Nan::New<Integer>(notif->sceneid);
+				emit_cb->Call(3, emitinfo);
+				break;
+			}
+			case OpenZWave::Notification::Type_CreateButton: {
+				emitinfo[0] = Nan::New<String>("create button").ToLocalChecked();
+				emitinfo[1] = Nan::New<Integer>(notif->nodeid);
+				emitinfo[2] = Nan::New<Integer>(notif->buttonid);
+				emit_cb->Call(3, emitinfo);
+				break;
+			}
+			case OpenZWave::Notification::Type_DeleteButton: {
+				emitinfo[0] = Nan::New<String>("delete button").ToLocalChecked();
+				emitinfo[1] = Nan::New<Integer>(notif->nodeid);
+				emitinfo[2] = Nan::New<Integer>(notif->buttonid);
+				emit_cb->Call(3, emitinfo);
+				break;
+			}
+			case OpenZWave::Notification::Type_ButtonOn: {
+				emitinfo[0] = Nan::New<String>("button on").ToLocalChecked();
+				emitinfo[1] = Nan::New<Integer>(notif->nodeid);
+				emitinfo[2] = Nan::New<Integer>(notif->buttonid);
+				emit_cb->Call(3, emitinfo);
+				break;
+			}
+			case OpenZWave::Notification::Type_ButtonOff: {
+				emitinfo[0] = Nan::New<String>("button off").ToLocalChecked();
+				emitinfo[1] = Nan::New<Integer>(notif->nodeid);
+				emitinfo[2] = Nan::New<Integer>(notif->buttonid);
+				emit_cb->Call(3, emitinfo);
+				break;
+			}
+			case OpenZWave::Notification::Type_DriverReady: {
+				// the driver is ready, set our global homeid
+				homeid = notif->homeid;
+				emitinfo[0] = Nan::New<String>("driver ready").ToLocalChecked();
+				emitinfo[1] = Nan::New<Integer>(homeid);
+				emit_cb->Call(2, emitinfo);
+				break;
+			}
+			case OpenZWave::Notification::Type_DriverFailed: {
+				emitinfo[0] = Nan::New<String>("driver failed").ToLocalChecked();
+				emit_cb->Call(1, emitinfo);
+				break;
+			}
 			case OpenZWave::Notification::Type_EssentialNodeQueriesComplete: {
 				getV8ValueForZWaveNode(mgr, cbinfo, notif->homeid, notif->nodeid);
 				emitinfo[0] = Nan::New<String>("node available").ToLocalChecked();
@@ -345,23 +391,7 @@ namespace OZW {
 				emitinfo[0] = Nan::New<String>("scan complete").ToLocalChecked();
 				emit_cb->Call(1, emitinfo);
 				break;
-			case OpenZWave::Notification::Type_NodeEvent: {
-				OpenZWave::ValueID value = notif->values.front();
-				Local<Object> valobj = zwaveValue2v8Value(value);
-				emitinfo[0] = Nan::New<String>("node event").ToLocalChecked();
-				emitinfo[1] = Nan::New<Integer>(notif->nodeid);
-				emitinfo[2] = Nan::New<Integer>(notif->event);
-				emitinfo[3] = valobj;
-				emit_cb->Call(4, emitinfo);
-				break;
-			}
-			case OpenZWave::Notification::Type_SceneEvent:{
-				emitinfo[0] = Nan::New<String>("scene event").ToLocalChecked();
-				emitinfo[1] = Nan::New<Integer>(notif->nodeid);
-				emitinfo[2] = Nan::New<Integer>(notif->sceneid);
-				emit_cb->Call(3, emitinfo);
-				break;
-			}
+
 			case OpenZWave::Notification::Type_Notification:
 				emitinfo[0] = Nan::New<String>("notification").ToLocalChecked();
 				emitinfo[1] = Nan::New<Integer>(notif->nodeid);
