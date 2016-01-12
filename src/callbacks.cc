@@ -35,7 +35,7 @@ namespace OZW {
 
 	// Node state.
 	mutex znodes_mutex;
-	std::list<NodeInfo *> znodes;
+	std::map<uint8_t, NodeInfo *> znodes;
 
 	mutex zscenes_mutex;
 	std::list<SceneInfo *> zscenes;
@@ -210,7 +210,7 @@ namespace OZW {
 				node->polled = false;
 				{
 					mutex::scoped_lock sl(znodes_mutex);
-					znodes.push_back(node);
+					znodes[ notif->nodeid ] = node;
 				}
 				emitinfo[0] = Nan::New<String>("node added").ToLocalChecked();
 				emitinfo[1] = Nan::New<Integer>(notif->nodeid);
@@ -220,6 +220,15 @@ namespace OZW {
 				* Ignore intermediate notifications about a node status, we
 				* wait until the node is ready before retrieving information.
 				*/
+			case OpenZWave::Notification::Type_NodeRemoved:
+				{
+					mutex::scoped_lock sl(znodes_mutex);
+					znodes.erase(notif->nodeid);
+				}
+				emitinfo[0] = Nan::New<String>("node removed").ToLocalChecked();
+				emitinfo[1] = Nan::New<Integer>(notif->nodeid);
+				emit_cb->Call(2, emitinfo);
+				break;
 			case OpenZWave::Notification::Type_NodeProtocolInfo:
 				break;
 			case OpenZWave::Notification::Type_NodeNaming: {

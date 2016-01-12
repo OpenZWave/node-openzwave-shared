@@ -36,16 +36,10 @@ namespace OZW {
 	* Return the node for this request.
 	*/
 	NodeInfo *get_node_info(uint8 nodeid) {
-		std::list<NodeInfo *>::iterator it;
-
-		NodeInfo *node;
-
-		for (it = znodes.begin(); it != znodes.end(); ++it) {
-			node = *it;
-			if (node->nodeid == nodeid)
-				return node;
-		}
-
+		mutex::scoped_lock sl(znodes_mutex);
+		if (znodes.find(nodeid) != znodes.end()) {
+			return znodes[nodeid];
+		};
 		return NULL;
 	}
 

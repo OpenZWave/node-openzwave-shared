@@ -63,7 +63,7 @@ namespace OZW {
   extern Nan::Callback *emit_cb;
 
   /*
-  *
+  * uv_async to let the OpenZWave callback wake up the main V8 thread
   */
   extern uv_async_t 		async;
 
@@ -77,7 +77,7 @@ namespace OZW {
   * Node state.
   */
   extern mutex znodes_mutex;
-  extern std::list<NodeInfo *> znodes;
+  extern std::map<uint8_t, NodeInfo *> znodes;
 
   extern mutex zscenes_mutex;
   extern std::list<SceneInfo *> zscenes;
