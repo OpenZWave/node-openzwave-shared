@@ -88,6 +88,10 @@ namespace OZW {
 					break;
 				}
 				case OpenZWave::ValueID::ValueType_Raw: {
+					checkType(Buffer::HasInstance(info[validx]));
+					uint8 *val = (uint8*)Buffer::Data(info[validx]);
+					uint8 len  = Buffer::Length(info[validx]);
+					OpenZWave::Manager::Get()->SetValue(*vit, val, len);
 					break;
 				}
 			}

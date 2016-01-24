@@ -149,6 +149,13 @@ namespace OZW {
 				break;
 			}
 			case OpenZWave::ValueID::ValueType_Raw: {
+				uint8 *val, len;
+				OpenZWave::Manager::Get()->GetValueAsRaw(value, &val, &len);
+				Nan::Set(valobj,
+					Nan::New<String>("value").ToLocalChecked(),
+					Nan::CopyBuffer((char *)val, len).ToLocalChecked()
+				);
+				delete [] val;
 				break;
 			}
 			default: {
