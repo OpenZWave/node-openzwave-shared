@@ -240,7 +240,7 @@ namespace OZW {
 	}
 
   bool isOzwValue(Local<Object>& o) {
-		return (!Nan::HasOwnProperty(o, Nan::New<String>("nodeid").ToLocalChecked()).IsNothing()
+		return (!Nan::HasOwnProperty(o, Nan::New<String>("node_id").ToLocalChecked()).IsNothing()
 			&& !Nan::HasOwnProperty(o, Nan::New<String>("class_id").ToLocalChecked()).IsNothing()
 			&& !Nan::HasOwnProperty(o, Nan::New<String>("instance").ToLocalChecked()).IsNothing()
 			&& !Nan::HasOwnProperty(o, Nan::New<String>("index").ToLocalChecked()).IsNothing());
@@ -261,20 +261,15 @@ namespace OZW {
 		if ( (info.Length() >= offset) && info[offset]->IsObject() ) {
 			Local<Object> o = info[offset]->ToObject();
 			if (isOzwValue(o)) {
-				nodeid   = Nan::Get(o, Nan::New<String>("nodeid").ToLocalChecked()).ToLocalChecked()->ToNumber()->Value();
+				nodeid   = Nan::Get(o, Nan::New<String>("node_id").ToLocalChecked()).ToLocalChecked()->ToNumber()->Value();
 				comclass = Nan::Get(o, Nan::New<String>("class_id").ToLocalChecked()).ToLocalChecked()->ToNumber()->Value();
 				instance = Nan::Get(o, Nan::New<String>("instance").ToLocalChecked()).ToLocalChecked()->ToNumber()->Value();
 				index    = Nan::Get(o, Nan::New<String>("index").ToLocalChecked()).ToLocalChecked()->ToNumber()->Value();
 			} else {
 				return ( NULL );
 			}
-		} else if (
-				(info.Length() >= offset+4)
-			&& info[offset]->IsNumber()
-			&& info[offset+1]->IsNumber()
-			&& info[offset+2]->IsNumber()
-			&& info[offset+3]->IsNumber()
-		) { // legacy mode
+		} else if ((info.Length() >= offset+4)) {
+			// legacy mode
 			nodeid   = info[offset]->ToNumber()->Value();
 			comclass = info[offset+1]->ToNumber()->Value();
 			instance = info[offset+2]->ToNumber()->Value();
