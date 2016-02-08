@@ -104,6 +104,25 @@ namespace OZW {
 */
 
 /*
+* Refresh value from Z-Wave network
+*/
+// =================================================================
+NAN_METHOD(OZW::RefreshValue)
+    // =================================================================
+{
+	Nan::HandleScope scope;
+
+	OpenZWave::ValueID* vit = getZwaveValueID(info);
+	if (vit == NULL) {
+		Nan::ThrowTypeError("refreshValue: OpenZWave valueId not found");
+	} else {
+		OpenZWave::Manager* mgr = OpenZWave::Manager::Get();
+		const bool ok = mgr->RefreshValue(*vit);
+		info.GetReturnValue().Set(Nan::New<Boolean>(ok));
+	}
+}
+
+/*
 * Get number of thermostat switch points
 */
 // =================================================================
