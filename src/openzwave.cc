@@ -146,6 +146,7 @@ namespace OZW {
 		Nan::SetPrototypeMethod(t, "isNodeSecurityDevice", OZW::IsNodeSecurityDevice); // ** new
 		// openzwave-values.cc
 		Nan::SetPrototypeMethod(t, "setValue", OZW::SetValue);
+		Nan::SetPrototypeMethod(t, "refreshValue", OZW::RefreshValue);
 		Nan::SetPrototypeMethod(t, "getNumSwitchPoints", OZW::GetNumSwitchPoints);
 		Nan::SetPrototypeMethod(t, "clearSwitchPoints", OZW::ClearSwitchPoints);
 		Nan::SetPrototypeMethod(t, "getSwitchPoint", OZW::GetSwitchPoint);
