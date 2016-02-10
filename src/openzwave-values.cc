@@ -123,6 +123,27 @@ NAN_METHOD(OZW::RefreshValue)
 }
 
 /*
+* Ask OZW to verify the value change before notifying the application
+*/
+// =================================================================
+NAN_METHOD(OZW::SetChangeVerified)
+// =================================================================
+{
+	Nan::HandleScope scope;
+
+	OpenZWave::ValueID* vit = getZwaveValueID(info);
+	if (vit == NULL) {
+		Nan::ThrowTypeError("setChangeVerified: OpenZWave valueId not found");
+	} else {
+		const uint8 validx = (info[0]->IsObject()) ? 1 : 4;
+		if (checkType(info[validx]->IsBoolean())) {
+			OpenZWave::Manager* mgr = OpenZWave::Manager::Get();
+			mgr->SetChangeVerified(*vit, info[validx]->BooleanValue());
+		}
+	}
+}
+
+/*
 * Get number of thermostat switch points
 */
 // =================================================================
