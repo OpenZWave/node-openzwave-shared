@@ -57,7 +57,7 @@ zwave.setValue(3,      37,           1,        0,     false); // node 3: turn of
 // dimmer node 5: set to 50%
 zwave.setValue(5,      38,           1,        0,     50);
 // 2) or by passing the valueID object (emitted by ValueAdded event):
-zwave.setValue({ nodeid:5, class_id: 38, instance:1, index:0}, 50);
+zwave.setValue({ node_id:5, class_id: 38, instance:1, index:0}, 50);
 
 /*
  * Turn a binary switch on/off.
