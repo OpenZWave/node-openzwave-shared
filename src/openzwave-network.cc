@@ -21,57 +21,57 @@ using namespace v8;
 using namespace node;
 
 namespace OZW {
-	/*
-	* Test network node. Sends a series of messages to a network node
-	* for testing network reliability.
-	*/
-	// ===================================================================
-	NAN_METHOD(OZW::TestNetworkNode)
-	// ===================================================================
-	{
-		Nan::HandleScope scope;
-		uint8 nodeid = info[0]->ToNumber()->Value();
-		uint8 nummsg = (info.Length() > 1) ? info[1]->ToNumber()->Value() : 1;
-		OpenZWave::Manager::Get()->TestNetworkNode(homeid, nodeid, nummsg);
-	}
+  /*
+  * Test network node. Sends a series of messages to a network node
+  * for testing network reliability.
+  */
+  // ===================================================================
+  NAN_METHOD(OZW::TestNetworkNode)
+  // ===================================================================
+  {
+    Nan::HandleScope scope;
+    uint8 nodeid = info[0]->ToNumber()->Value();
+    uint8 nummsg = (info.Length() > 1) ? info[1]->ToNumber()->Value() : 1;
+    OpenZWave::Manager::Get()->TestNetworkNode(homeid, nodeid, nummsg);
+  }
 
-	/*
-	* Test network. Sends a series of messages to every node on the
-	* network for testing network reliability.
-	*/
-	// ===================================================================
-	NAN_METHOD(OZW::TestNetwork)
-	// ===================================================================
-	{
-		Nan::HandleScope scope;
-  	uint8 nummsg = (info.Length() > 0) ? info[0]->ToNumber()->Value() : 1;
-		OpenZWave::Manager::Get()->HealNetwork(homeid, nummsg);
-	}
+  /*
+  * Test network. Sends a series of messages to every node on the
+  * network for testing network reliability.
+  */
+  // ===================================================================
+  NAN_METHOD(OZW::TestNetwork)
+  // ===================================================================
+  {
+    Nan::HandleScope scope;
+    uint8 nummsg = (info.Length() > 0) ? info[0]->ToNumber()->Value() : 1;
+    OpenZWave::Manager::Get()->HealNetwork(homeid, nummsg);
+  }
 
-	/*
-	* Heal network node by requesting the node rediscover their neighbors.
-	*/
-	// ===================================================================
-	NAN_METHOD(OZW::HealNetworkNode)
-	// ===================================================================
-	{
-		Nan::HandleScope scope;
-		uint8 nodeid = info[0]->ToNumber()->Value();
-		uint8 doRR = info[1]->ToBoolean()->Value();
-		OpenZWave::Manager::Get()->HealNetworkNode(homeid, nodeid, doRR);
-	}
+  /*
+  * Heal network node by requesting the node rediscover their neighbors.
+  */
+  // ===================================================================
+  NAN_METHOD(OZW::HealNetworkNode)
+  // ===================================================================
+  {
+    Nan::HandleScope scope;
+    uint8 nodeid = info[0]->ToNumber()->Value();
+    uint8 doRR = info[1]->ToBoolean()->Value();
+    OpenZWave::Manager::Get()->HealNetworkNode(homeid, nodeid, doRR);
+  }
 
-	/*
-	* Heal network by requesting node's rediscover their neighbors.
-	* Sends a ControllerCommand_RequestNodeNeighborUpdate to every node.
-	* Can take a while on larger networks.
-	*/
-	// ===================================================================
-	NAN_METHOD(OZW::HealNetwork)
-	// ===================================================================
-	{
-		Nan::HandleScope scope;
-		bool doRR = info[0]->ToBoolean()->Value();
-		OpenZWave::Manager::Get()->HealNetwork(homeid, doRR);
-	}
+  /*
+  * Heal network by requesting node's rediscover their neighbors.
+  * Sends a ControllerCommand_RequestNodeNeighborUpdate to every node.
+  * Can take a while on larger networks.
+  */
+  // ===================================================================
+  NAN_METHOD(OZW::HealNetwork)
+  // ===================================================================
+  {
+    Nan::HandleScope scope;
+    bool doRR = info[0]->ToBoolean()->Value();
+    OpenZWave::Manager::Get()->HealNetwork(homeid, doRR);
+  }
 }
