@@ -45,7 +45,7 @@ namespace OZW {
   {
     Nan::HandleScope scope;
     uint8 nummsg = (info.Length() > 0) ? info[0]->ToNumber()->Value() : 1;
-    OpenZWave::Manager::Get()->HealNetwork(homeid, nummsg);
+    OpenZWave::Manager::Get()->TestNetwork(homeid, nummsg);
   }
 
   /*

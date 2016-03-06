@@ -1,7 +1,7 @@
 ## Example
 
 The test program below connects to a Z-Wave network, scans for all nodes and
-values, and prints out information about the network.  
+values, and prints out information about the network.
 
 **When the network has become ready**, the library will call 'scan complete'
 and the script will then 1) issue a `setValue` command to set a dimmer (node 5)
@@ -128,11 +128,11 @@ zwave.on('scan complete', function() {
     console.log('====> scan complete, hit ^C to finish.');
     // set dimmer node 5 to 50%
     //zwave.setValue(5,38,1,0,50);
-    zwave.setValue( {nodeid:5, class_id: 38, instance:1, index:0}, 50);
+    zwave.setValue( {node_id:5, class_id: 38, instance:1, index:0}, 50);
     // Add a new device to the ZWave controller
     if (zwave.hasOwnProperty('beginControllerCommand')) {
       // using legacy mode (OpenZWave version < 1.3) - no security
-      zwave.beginControllerCommand('AddDevice', true);      
+      zwave.beginControllerCommand('AddDevice', true);
     } else {
       // using new security API
       // set this to 'true' for secure devices eg. door locks
