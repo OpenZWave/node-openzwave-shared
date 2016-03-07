@@ -38,43 +38,36 @@ namespace OZW {
 			uint8 validx  =  (info[0]->IsObject()) ? 1 : 4;
 			switch ((*vit).GetType()) {
 				case OpenZWave::ValueID::ValueType_Bool: {
-					checkType(info[validx]->IsBoolean());
 					bool val = info[validx]->BooleanValue();
 					mgr->SetValue(*vit, val);
 					break;
 				}
 				case OpenZWave::ValueID::ValueType_Byte: {
-					checkType(info[validx]->IsNumber());
 					uint8 val = info[validx]->ToInteger()->Value();
 					OpenZWave::Manager::Get()->SetValue(*vit, val);
 					break;
 				}
 				case OpenZWave::ValueID::ValueType_Decimal: {
-					checkType(info[validx]->IsNumber());
 					float val = info[validx]->ToNumber()->NumberValue();
 					OpenZWave::Manager::Get()->SetValue(*vit, val);
 					break;
 				}
 				case OpenZWave::ValueID::ValueType_Int: {
-					checkType(info[validx]->IsNumber());
 					int32 val = info[validx]->ToInteger()->Value();
 					OpenZWave::Manager::Get()->SetValue(*vit, val);
 					break;
 				}
 				case OpenZWave::ValueID::ValueType_List: {
-					checkType(info[validx]->IsString() || info[validx]->IsStringObject());
 					std::string val = (*String::Utf8Value(info[validx]->ToString()));
 					OpenZWave::Manager::Get()->SetValue(*vit, val);
 					break;
 				}
 				case OpenZWave::ValueID::ValueType_Short: {
-					checkType(info[validx]->IsNumber());
 					int16 val = info[validx]->ToInteger()->Value();
 					OpenZWave::Manager::Get()->SetValue(*vit, val);
 					break;
 				}
 				case OpenZWave::ValueID::ValueType_String: {
-					checkType(info[validx]->IsString() || info[validx]->IsStringObject());
 					std::string val = (*String::Utf8Value(info[validx]->ToString()));
 					OpenZWave::Manager::Get()->SetValue(*vit, val);
 					break;
