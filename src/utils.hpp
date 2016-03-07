@@ -71,11 +71,15 @@ namespace OZW {
 	SceneInfo *get_scene_info(uint8 sceneid);
 
 	OpenZWave::ValueID* getZwaveValueID(const Nan::FunctionCallbackInfo<v8::Value>& info, uint8 offset=0);
-
 	const char* getControllerStateAsStr (OpenZWave::Driver::ControllerState _state);
 	const char* getControllerErrorAsStr(OpenZWave::Driver::ControllerError _err);
 
 	const std::string getNotifHelpMsg(OpenZWave::Notification const *n);
+	void getV8ValueForZWaveNode(
+			OpenZWave::Manager *mgr,
+			v8::Local<v8::Object>& nodeobj,
+			uint32 homeid, uint8 nodeid
+	);
 
 	bool checkType(bool predicate);
 } // namespace OZW

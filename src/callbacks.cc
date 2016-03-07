@@ -136,37 +136,7 @@ namespace OZW {
 // ##### END OF LEGACY MODE ###### //
 #endif
 
-	// populate a v8 Object with useful information about a ZWave node
-	void getV8ValueForZWaveNode(
-			OpenZWave::Manager *mgr,
-			Local<v8::Object>& nodeobj,
-			uint32 homeid, uint8 nodeid
-	) {
-		Nan::Set(nodeobj,
-			Nan::New<String>("manufacturer").ToLocalChecked(),
-			Nan::New<String>(mgr->GetNodeManufacturerName(homeid, nodeid).c_str()).ToLocalChecked());
-		Nan::Set(nodeobj,
-			Nan::New<String>("manufacturerid").ToLocalChecked(),
-			Nan::New<String>(mgr->GetNodeManufacturerId(homeid, nodeid).c_str()).ToLocalChecked());
-		Nan::Set(nodeobj,
-			Nan::New<String>("product").ToLocalChecked(),
-			Nan::New<String>(mgr->GetNodeProductName(homeid, nodeid).c_str()).ToLocalChecked());
-		Nan::Set(nodeobj,
-			Nan::New<String>("producttype").ToLocalChecked(),
-			Nan::New<String>(mgr->GetNodeProductType(homeid, nodeid).c_str()).ToLocalChecked());
-		Nan::Set(nodeobj,
-			Nan::New<String>("productid").ToLocalChecked(),
-			Nan::New<String>(mgr->GetNodeProductId(homeid, nodeid).c_str()).ToLocalChecked());
-		Nan::Set(nodeobj,
-			Nan::New<String>("type").ToLocalChecked(),
-			Nan::New<String>(mgr->GetNodeType(homeid, nodeid).c_str()).ToLocalChecked());
-		Nan::Set(nodeobj,
-			Nan::New<String>("name").ToLocalChecked(),
-			Nan::New<String>(mgr->GetNodeName(homeid, nodeid).c_str()).ToLocalChecked());
-		Nan::Set(nodeobj,
-			Nan::New<String>("loc").ToLocalChecked(),
-			Nan::New<String>(mgr->GetNodeLocation(homeid, nodeid).c_str()).ToLocalChecked());
-	}
+
 
 	/*
 	 * handle normal OpenZWave notifications
