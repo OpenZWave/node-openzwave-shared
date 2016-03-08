@@ -234,9 +234,11 @@ namespace OZW {
 			std::cout << "\tOption Overrides :" << option_overrides << "\n";
 		}
 
-		// scan for OpenZWave options.xml in the nodeJS module's '/config' subdirectory
-		OpenZWave::Options::Create(ozw_config_path, ozw_userpath, option_overrides);
-		OpenZWave::Options::Get()->Lock();
+		// Store configuration data for connect.
+		self->config_path = ozw_config_path;
+		self->userpath = ozw_userpath;
+		self->option_overrides = option_overrides;
+
 		//
 		info.GetReturnValue().Set(info.This());
 	}
