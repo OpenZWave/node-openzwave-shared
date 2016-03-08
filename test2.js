@@ -32,6 +32,10 @@ zwave.on('node added', function(nodeid) {
     };
 });
 
+zwave.on('node event', function(nodeid, data) {
+	  console.log('node%d event: Basic set %d', nodeid, data);
+});
+
 zwave.on('value added', function(nodeid, comclass, value) {
     if (!nodes[nodeid]['classes'][comclass])
         nodes[nodeid]['classes'][comclass] = {};
