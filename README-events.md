@@ -4,48 +4,70 @@ This is a list of all the events emitted by the library. This list is not exhaus
 ## Driver events
 Events emitted by the OpenZWave Driver class:
 
+
 * `zwave.on('driver ready', function(homeid){...})`
 
 the OpenZWave driver has initialised and scanning has started.  Returns a unique `homeid` which identifies this particular ZWave network.
+
+
+
 
 * `zwave.on('driver failed', function(){...})`
 
 The OpenZWave driver failed to initialise.
 
+
+
+
 * `zwave.on('scan complete', function(){...})`
 
 The initial network scan has finished.
 
+
+
+
 ## Node events:
+
 * `zwave.on('node added', function(nodeid){...})`
 
 A new node has been found on the network.  At this point you can allocate resources to hold information about this node.
+
+
 
 * `zwave.on('node naming', function(nodeid, nodeinfo){...})`
 
 Useful information about the node is returned as a plain JS object. It includes elements like 'manufacturer', 'product', 'type' and 'name' amongst others.
 
+
+
 * `zwave.on('node available', function(nodeid, nodeinfo){...})`
 
 This corresponds to OpenZWave's `EssentialNodeQueriesComplete` notification, which means that the node is now available for operation, but don't expect all of its info structures (nodeinfo, see below) to be filled in.
+
+
 
 * `zwave.on('node ready', function(nodeid, nodeinfo){...})`
 
 This corresponds to OpenZWave's `NodeQueriesComplete` notification. The node is now ready for operation, and information about the node is available in the `nodeinfo` object:
 
-	- `nodeinfo.manufacturer`
-	- `nodeinfo.manufacturerid`
-	- `nodeinfo.product`
-	- `nodeinfo.producttype`
-	- `nodeinfo.productid`
-	- `nodeinfo.type`
-	- `nodeinfo.name`
-	- `nodeinfo.loc` (location, renamed to avoid `location` keyword).
+	- nodeinfo.manufacturer
+	- nodeinfo.manufacturerid
+	- nodeinfo.product
+	- nodeinfo.producttype
+	- nodeinfo.productid
+	- nodeinfo.type
+	- nodeinfo.name
+	- nodeinfo.loc (location, renamed to avoid `location` keyword).
+
+
 
 
 * `zwave.on('polling enabled/disabled', function(nodeid){...})`
 
 Polling for a node has been enabled or disabled.
+
+
+
 
 * `zwave.on('scene event', function(nodeid, sceneid){...});`  
 
@@ -66,6 +88,8 @@ It would send:
 	- etc.
 
 
+
+
 * `zwave.on('node event', function(nodeid, data) {});`
 
 	This event gets called when a Basic set command is received by the controller.
@@ -73,6 +97,9 @@ It would send:
 	the local button or switch) or that a sensor device was triggered.
 	As an example, an Aeon Labs Water sensor will fire this event and `data` would
 	be 255 when water is detected and 0 when it isn't.
+
+
+
 
 ## Value events:
 
@@ -98,17 +125,29 @@ The `valueId` object differs between command classes, and contains all the usefu
 information about values stored for the particular class. You can use this object
 as the 1st argument in `setValue` to alter its state.
 
+
+
+
 * `zwave.on('value changed', function(nodeid, commandclass, valueId){...})`
 
 A value has changed.  Use this to keep track of value state across the network. When values are first discovered, the module enables polling on those values so that we will receive change messages. Prior to the 'node ready' event, there may be 'value changed' events even when no values were actually changed.
+
+
+
 
 * `zwave.on('value refreshed', function(nodeid, commandclass, valueId){...})`
 
 A node value has been updated from the Z-Wave network. Unlike 'value changed' which implies an actual change of state, this one simply means that the value has been refreshed from the device.
 
+
+
+
 * `zwave.on('value removed', function(nodeid, commandclass, instance, index){...})`
 
 A value has been removed.  Your program should then remove any references to that ValueID.
+
+
+
 
 ## Controller events:
 
