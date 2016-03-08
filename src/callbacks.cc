@@ -257,13 +257,10 @@ namespace OZW {
 				break;
 			}
 			case OpenZWave::Notification::Type_NodeEvent: {
-				OpenZWave::ValueID value = notif->values.front();
-				Local<Object> valobj = zwaveValue2v8Value(value);
 				emitinfo[0] = Nan::New<String>("node event").ToLocalChecked();
 				emitinfo[1] = Nan::New<Integer>(notif->nodeid);
 				emitinfo[2] = Nan::New<Integer>(notif->event);
-				emitinfo[3] = valobj;
-				emit_cb->Call(4, emitinfo);
+				emit_cb->Call(3, emitinfo);
 				break;
 			}
 			case OpenZWave::Notification::Type_PollingDisabled: {
