@@ -1,6 +1,6 @@
 {
   "name": "openzwave-shared",
-  "version": "1.1.7",
+  "version": "1.1.8",
   "description": "Node.JS bindings for OpenZWave including management and security functions",
   "main": "./lib/openzwave-shared.js",
   "dependencies": {
@@ -24,10 +24,11 @@
   ],
   "author": "Elias Karakoulakis <elias.karakoulakis@gmail.com>",
   "contributors": [
-    "Jonathan Perkin (http://www.perkin.org.uk/)",
-    "Thibaut CONSTANT",
     "davide-lr",
-    "Luke Hertert (http://werul.com)"
+    "Justin Hammond",
+    "Jonathan Perkin (http://www.perkin.org.uk/)",
+    "Luke Hertert (http://werul.com)",
+    "Thibaut CONSTANT",
   ],
   "license": {
     "type": "ISC",
