@@ -5,7 +5,7 @@ This is a list of all the events emitted by the library. This list is not exhaus
 Events emitted by the OpenZWave Driver class:
 
 - ###### `zwave.on('driver ready', function(homeid){...})`
-the OpenZWave driver has initialised and scanning has started.  Returns a unique `homeid` which identifies this particular network.
+the OpenZWave driver has initialised and scanning has started.  Returns a unique `homeid` which identifies this particular ZWave network.
 
 - ###### `zwave.on('driver failed', function(){...})`
 The OpenZWave driver failed to initialise.
@@ -59,9 +59,10 @@ For example when you have your Aeon Labs Minimote setup with the following confi
 
 - ###### `zwave.on('node event', function(nodeid, data) {});`
 	This event gets called when a Basic set command is received by the controller.
-	This might indicate that the node has changed (eg due to manual operation) or
-	a sensor being triggered. For example, anm Aeon Labs Water sensor, `data`
-	would be 255 when activated (water detected) and 0 when deactivated.
+	This might indicate that the node has changed (eg due to manual operation using
+	the local button or switch) or that a sensor device was triggered.
+	As an example, an Aeon Labs Water sensor will fire this event and `data` would
+	be 255 when water is detected and 0 when it isn't.
 
 ## Value events:
 - ###### `zwave.on('value added', function(nodeid, commandclass, valueId){...})`
