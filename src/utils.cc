@@ -199,8 +199,7 @@ namespace OZW {
 
 	// create a V8 object from a ZWave value
 	Local<Object> zwaveValue2v8Value(OpenZWave::ValueID value) {
-		v8::Isolate* isolate = v8::Isolate::GetCurrent();
-		EscapableHandleScope handle_scope(isolate);
+		Nan::EscapableHandleScope handle_scope;
 
 		char buffer[15];
 		sprintf(buffer, "%d-%d-%d-%d", value.GetNodeId(), value.GetCommandClassId(), value.GetInstance(), value.GetIndex());
@@ -236,13 +235,13 @@ namespace OZW {
 		Nan::Set(valobj, Nan::New<String>("min").ToLocalChecked(), Nan::New<Integer>(OpenZWave::Manager::Get()->GetValueMin(value)));
 		Nan::Set(valobj, Nan::New<String>("max").ToLocalChecked(), Nan::New<Integer>(OpenZWave::Manager::Get()->GetValueMax(value)));
 		setValObj(valobj, value);
+
   	return handle_scope.Escape(valobj);
 	}
 
 	// create a V8 object from a ZWave scene value
 	Local<Object> zwaveSceneValue2v8Value(uint8 sceneId, OpenZWave::ValueID value) {
-		v8::Isolate* isolate = v8::Isolate::GetCurrent();
-		EscapableHandleScope handle_scope(isolate);
+		Nan::EscapableHandleScope handle_scope;
 
 		char buffer[15];
 		sprintf(buffer, "%d-%d-%d-%d", value.GetNodeId(), value.GetCommandClassId(), value.GetInstance(), value.GetIndex());
