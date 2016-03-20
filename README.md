@@ -1,21 +1,26 @@
 node-openzwave-shared
 =====================
 
-This is a node.js add-on for node 0.10.x *and* 0.12.x (and possibly
-even for NodeJS's 3 and 4, with the help of NAN), which wraps the [Open
-Z-Wave](http://www.openzwave.com/) library to provide access to a
-Z-Wave network from within node.js (server-side JavaScript.)
+This is the homepage for *node-openzwave-shared*, the official binary add-on for
+Node.js, which wraps [Open ZWave](http://openzwave.com/), a high quality C++
+library for controlling Z-Wave networks.
 
 <img src="https://nodejs.org/static/images/logos/nodejs.png" style="width: 200px"/>
 <img src="http://www.openzwave.com/css/ozwlogo.png"/>
 
-You can now easily control *and manage* your [ZWave](http://www.z-wave.com/) devices
-(lights, dimmers, blinds, you name it) from within [NodeJS](https://nodejs.org/) applications.
-Initial support for *secure* devices (eg door locks) that require encryption is also included.
+You can now easily control *and manage* your [ZWave](http://www.z-wave.com/)
+devices (lights, dimmers, blinds, you name it) from within [Node.js](https://nodejs.org/)
+applications. [This library also supports *secure* devices](../master/README-security.md)
+(eg door locks) that require encryption.
+
+All known Node.js versions are supported with the help of [NaN](https://github.com/nodejs/nan).
+This add-on is currently tested against 0.12.x on ARM and 4.2.x on x86_64, but
+it should also work on all supported Node.js versions (as early as 0.10.x) and
+architectures.
 
 Check out the [Node-Red integration project](https://github.com/OpenZWave/node-red-contrib-openzwave)
-for an interesting use case, in which I've wired up ZWave and KNX devices working together as
-one big happy automated home.
+for an interesting use case, in which I've wired up ZWave and KNX devices
+working together as one big happy automated home.
 
 This addon is currently able to:
 - *scan* a Z-Wave network and report on connected devices,
@@ -58,15 +63,17 @@ and then 2) compiling it and installing on your system (`make && sudo make insta
 **Notice:** Be sure to install *BOTH the binary (libopenzwave-x.y) AND the development
 package (libopenzwave-dev).*
 
+### MacOS/X
+
+The only dependency that you need before compiling is `pkg-config`. Then, you
+could either pull down the OZW repo from Github and do a `make && sudo make install` ,
+or you could try installing OpenZWave using `brew install open-zwave`.
+
 ### Windows
 
 Since there is no standard installation location for Open Z-Wave on Windows, it will be automatically downloaded, compiled, and installed when you install this module.
 
 ## Installation
-
-**Node.JS >= 3.0 users**: please send me reports if the addon works or breaks.
-I've had very bad experience with the NodeJS API quicksand already, and NAN
-appears to not be able to keep up. The NodeJS API is truly a wizard's tribute to Ctrl+Z.
 
 Whenever you have OpenZWave installed in your machine, then all you need to do is:
 ```
