@@ -27,7 +27,8 @@ This addon is currently able to:
 - *write* values to zwave nodes
 - *monitor* the network for changes,
 - *heal* nodes and/or the network
-- *perform* management tasks (add/remove nodes, replace failed nodes, manage their group associations etc)
+- *perform* management tasks (add/remove nodes, replace failed nodes, manage
+	their group associations etc)
 
 **Important notice**
 
@@ -37,7 +38,8 @@ by means of your system dynamic linker. This is  in contrast to
 *statically* linking OpenZWave as part of the node.js addon.
 
 Thus you need to have OpenZWave fully installed on your system (both the
-compiled library AND the development headers) before trying to install this little baby.
+compiled library AND the development headers) before trying to install this
+little baby.
 I know this diverges from the dominant npm paradigm, but with the shared lib approach:
   - compilation / installation is a lot faster and
   - OZW *minor* upgrades / bugfixes are way lot easier.
@@ -48,7 +50,7 @@ get api mismatch exceptions.
 
 ## Prerequisites
 
-### Linux/OSX
+### Linux
 
 You will need to ensure the OpenZWave library and headers are
 installed first. You can do this one of two ways.
@@ -59,9 +61,10 @@ installed first. You can do this one of two ways.
 from [the OpenZWave snapshots repository](http://old.openzwave.com/snapshots/)
 and then 2) compiling it and installing on your system (`make && sudo make install`)
 
-- You could also install OpenZWave via a [precompiled package that's suitable for your Linux distribution and architecture](http://old.openzwave.com/downloads/).
-**Notice:** Be sure to install *BOTH the binary (libopenzwave-x.y) AND the development
-package (libopenzwave-dev).*
+- You could also install OpenZWave via a [precompiled package that's suitable for
+your Linux distribution and architecture](http://old.openzwave.com/downloads/).
+**Notice:** Be sure to install *BOTH the binary (libopenzwave-x.y) AND the
+development package (libopenzwave-dev).*
 
 ### MacOS/X
 
@@ -71,7 +74,8 @@ or you could try installing OpenZWave using `brew install open-zwave`.
 
 ### Windows
 
-Since there is no standard installation location for Open Z-Wave on Windows, it will be automatically downloaded, compiled, and installed when you install this module.
+Since there is no standard installation location for Open Z-Wave on Windows, it
+will be automatically downloaded, compiled, and installed when you install this module.
 
 ## Installation
 
@@ -80,7 +84,14 @@ Whenever you have OpenZWave installed in your machine, then all you need to do i
 $ npm install openzwave-shared
 ```
 
-**Notice:** If you receieve the error `cannot find -lopenzwave` on a 64-bit Linux system, `libopenzwave.so` was likely compiled into `/usr/local/lib64`. Run the terminal command `ld -lopenzwave --verbose` for a list of search locations used. You can workaround this by providing a symlink to one of the listed locations such as `/usr/local/lib`. Run `sudo ln -s /usr/local/lib64/libopenzwave.so /usr/local/lib/libopenzwave.so` creates symlink so that the file appears to be in the location that `ld` looks in. Now `npm install` should work.
+**Notice:** If you receive the error `cannot find -lopenzwave` on a 64-bit Linux
+system, `libopenzwave.so` was likely compiled into `/usr/local/lib64`.
+Run the terminal command `ld -lopenzwave --verbose` for a list of search
+locations used. You can workaround this by providing a symlink to one of the
+listed locations such as `/usr/local/lib`.
+Run `sudo ln -s /usr/local/lib64/libopenzwave.so /usr/local/lib/libopenzwave.so`
+creates symlink so that the file appears to be in the location that `ld` looks
+in. Now `npm install` should work.
 
 ## Development documentation
 

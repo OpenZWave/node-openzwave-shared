@@ -1,28 +1,33 @@
 # Installation on raspbian Debian Wheezy for Raspberry PI 2 model B
 
+
 ## Install nodejs and libudev-dev
-#### Get the 0.12 nodejs deb package for raspbian
-```
-wget http://node-arm.herokuapp.com/node_latest_armhf.deb
-```
+
+#### Get the latest stable nodejs deb package for raspbian
+```wget http://node-arm.herokuapp.com/node_latest_armhf.deb```
+
 #### Install nodejs
-```
-sudo dpkg -i node_latest_armhf.deb
-```
+```sudo dpkg -i node_latest_armhf.deb```
+
 #### Install libudev-dev
+```sudo apt-get install -y libudev-dev```
+
+
+
+## Install the Open-Zwave library on your Raspberry:
+
+### (New!) Download and install the precompiled Raspbian/ARMv6 packages for Raspberry 1:
 ```
-sudo apt-get install -y libudev-dev
-```
-## Download and compile Open-Zwave library
-#### Get the unix source at http://old.openzwave.com/downloads/ (tested with openzwave-1.2.919.tar.gz)
-```
-wget http://old.openzwave.com/downloads/openzwave-<version>.tar.gz
+wget https://raw.githubusercontent.com/ekarakou/openzwave-debs-raspbian/v1.4.1/libopenzwave1.3_1.3.532.ge3defea_armhf.deb
+wget https://raw.githubusercontent.com/ekarakou/openzwave-debs-raspbian/v1.4.1/libopenzwave1.3-dev_1.3.532.ge3defea_armhf.deb
+sudo dpkg -i libopenzwave*.deb
 ```
 
+### OR, download and compile the source at http://old.openzwave.com/downloads/ (tested with openzwave-1.2.919.tar.gz)
+```wget http://old.openzwave.com/downloads/openzwave-<version>.tar.gz```
+
 #### Untar
-```
-tar zxvf openzwave-*.gz
-```
+```tar zxvf openzwave-*.gz```
 
 #### Compile Open-Zwave
 ```
