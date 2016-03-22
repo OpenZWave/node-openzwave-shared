@@ -1,39 +1,36 @@
-# Installation on raspbian Debian Wheezy for Raspberry PI 2 model B
+# Installation on Raspbian (Debian for Raspberry Pi)
 
+You'll need a couple of well-supported packages (NodeJS and )
 
-## Install nodejs and libudev-dev
+## 1. Install Node.js and libudev-dev
 
-#### Get the latest stable nodejs deb package for raspbian
-```wget http://node-arm.herokuapp.com/node_latest_armhf.deb```
-
-#### Install nodejs
-```sudo dpkg -i node_latest_armhf.deb```
+#### Download and install Node.js for Raspbian
+```wget http://node-arm.herokuapp.com/node_latest_armhf.deb && sudo dpkg -i node_latest_armhf.deb```
 
 #### Install libudev-dev
 ```sudo apt-get install -y libudev-dev```
 
 
+## 2. Install the Open-Zwave library on your Raspberry:
 
-## Install the Open-Zwave library on your Raspberry:
+You can take the easy route:
 
 ### (New!) Download and install the precompiled Raspbian/ARMv6 packages for Raspberry 1:
 ```
-wget https://raw.githubusercontent.com/ekarakou/openzwave-debs-raspbian/v1.4.1/libopenzwave1.3_1.3.532.ge3defea_armhf.deb
-wget https://raw.githubusercontent.com/ekarakou/openzwave-debs-raspbian/v1.4.1/libopenzwave1.3-dev_1.3.532.ge3defea_armhf.deb
+wget https://github.com/ekarak/openzwave-debs-raspbian/raw/master/v1.4.1/libopenzwave1.3_1.3.532.ge3defea_armhf.deb
+wget https://github.com/ekarak/openzwave-debs-raspbian/raw/master/v1.4.1/libopenzwave1.3-dev_1.3.532.ge3defea_armhf.deb
 sudo dpkg -i libopenzwave*.deb
 ```
 
-### OR, download and compile the source at http://old.openzwave.com/downloads/ (tested with openzwave-1.2.919.tar.gz)
-```wget http://old.openzwave.com/downloads/openzwave-<version>.tar.gz```
+Or you can choose Hercules' path of blight and
+### Download the OpenZWave Unix source from [the official website](http://old.openzave.com/downloads/)
+```wget http://old.openzwave.com/downloads/openzwave-1.4.1.tar.gz```
 
 #### Untar
 ```tar zxvf openzwave-*.gz```
 
 #### Compile Open-Zwave
-```
-cd openzwave-*
-make && sudo make install
-```
+```cd openzwave-* && make && sudo make install```
 
 #### Update the environment variable
 ```
@@ -48,16 +45,13 @@ At this step you can ensure Open-Zwave library is correctly installed with
 MinOZW
 ```
 
-## Install node-openzwave-shared
+## 3. Install node-openzwave-shared
+
 #### Go to your project directory
-```
-cd /<project directory>
-```
+`cd /<project directory>`
 
 #### npm node-openzwave-shared
-```
-npm install openzwave-shared
-```
+`npm install openzwave-shared`
 
 #### You can test node-openzwave-shared
 ```
