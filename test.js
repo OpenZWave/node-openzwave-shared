@@ -88,7 +88,7 @@ zwave.on('node ready', function(nodeid, nodeinfo) {
 		    nodeinfo.name,
 		    nodeinfo.type,
 		    nodeinfo.loc);
-	for (comclass in nodes[nodeid]['classes']) {
+	for (var comclass in nodes[nodeid]['classes']) {
 		switch (comclass) {
 		case 0x25: // COMMAND_CLASS_SWITCH_BINARY
 		case 0x26: // COMMAND_CLASS_SWITCH_MULTILEVEL
@@ -97,7 +97,7 @@ zwave.on('node ready', function(nodeid, nodeinfo) {
 		}
 		var values = nodes[nodeid]['classes'][comclass];
 		console.log('node%d: class %d', nodeid, comclass);
-		for (idx in values)
+		for (var idx in values)
 			console.log('node%d:   %s=%s', nodeid, values[idx]['label'], values[idx]['value']);
 	}
 });
@@ -110,7 +110,7 @@ zwave.on('scan complete', function() {
 	console.log('scan complete, hit ^C to finish.');
 });
 
-zwavedriverpaths = {
+var zwavedriverpaths = {
 	"darwin" : '/dev/cu.usbmodem1411',
 	"linux"  : '/dev/ttyUSB0',
 	"windows": '\\\\.\\COM3'
