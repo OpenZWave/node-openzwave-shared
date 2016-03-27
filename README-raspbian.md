@@ -1,6 +1,6 @@
 # Installation on Raspbian (Debian for Raspberry Pi)
 
-You'll need a couple of well-supported packages (NodeJS and )
+You'll need a couple of well-supported packages (NodeJS and libudev-dev)
 
 ## 1. Install Node.js and libudev-dev
 
