@@ -214,7 +214,11 @@ namespace OZW {
 				std::string  keyname   = *v8::String::Utf8Value(key);
 				Local<Value> argval    = Nan::Get(opts, key).ToLocalChecked();
 				std::string  argvalstr = *v8::String::Utf8Value(argval);
-				option_overrides += " --" + keyname + " " + argvalstr;
+				if (keyname == "UserPath") {
+					ozw_userpath.assign(argvalstr);
+				} else {
+					option_overrides += " --" + keyname + " " + argvalstr;
+				}
 			}
 		}
 
