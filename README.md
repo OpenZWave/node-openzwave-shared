@@ -93,6 +93,12 @@ Run `sudo ln -s /usr/local/lib64/libopenzwave.so /usr/local/lib/libopenzwave.so`
 creates symlink so that the file appears to be in the location that `ld` looks
 in. Now `npm install` should work.
 
+In case you want to develop your application in TypeScript, there is also a TypeScript 
+declaration file available. Besides adding typechecking to your codebase this will also 
+help you to navigate the API and see the type of parameters available for each function. You can 
+download the 
+[latest version of the declaration file from GitHub](https://github.com/jbaron/openzwave-shared-tsd).
+  
 ## Development documentation
 
 - [Basic API usage](../master/README-api.md)
