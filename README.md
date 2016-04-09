@@ -1,6 +1,8 @@
 node-openzwave-shared
 =====================
 
+[![Join the chat at https://gitter.im/OpenZWave/node-openzwave-shared](https://badges.gitter.im/OpenZWave/node-openzwave-shared.svg)](https://gitter.im/OpenZWave/node-openzwave-shared?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 This is the homepage for *node-openzwave-shared*, the official binary add-on for
 Node.js, which wraps [Open ZWave](http://openzwave.com/), a high quality C++
 library for controlling Z-Wave networks.
