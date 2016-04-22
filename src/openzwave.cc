@@ -35,20 +35,20 @@ namespace OZW {
 
 		Nan::HandleScope scope;
 
-    // get the user config directory
+		// get the user config directory
 		std::string modulefilename = std::string(*v8::String::Utf8Value(
 			Nan::Get(module,
-          Nan::New("filename").ToLocalChecked()
-		  ).ToLocalChecked()
+          			Nan::New("filename").ToLocalChecked()
+		  	).ToLocalChecked()
 		));
 		std::size_t found = modulefilename.find_last_of("/\\");
 		if (found > 0) {
 			//std::cout << " path: " << modulefilename.substr(0,found) << '\n';
 			//std::cout << " file: " << modulefilename.substr(found+1) << '\n';
 			ozw_userpath.assign(modulefilename.substr(0,found));
-    } else {
-      ozw_userpath.assign(modulefilename);
-    }
+		} else {
+			ozw_userpath.assign(modulefilename);
+		}
 		ozw_userpath.append("/../../");
 
 		Local < FunctionTemplate > t = Nan::New<FunctionTemplate>(OZW::New);
@@ -83,24 +83,24 @@ namespace OZW {
 		// openzwave-management.cc
 #if OPENZWAVE_SECURITY == 1
 		Nan::SetPrototypeMethod(t, "addNode", OZW::AddNode);
-	  Nan::SetPrototypeMethod(t, "removeNode", OZW::RemoveNode);
-	  Nan::SetPrototypeMethod(t, "removeFailedNode", OZW::RemoveFailedNode);
-	  Nan::SetPrototypeMethod(t, "hasNodeFailed", OZW::HasNodeFailed);
-	  Nan::SetPrototypeMethod(t, "requestNodeNeighborUpdate", OZW::RequestNodeNeighborUpdate);
-	  Nan::SetPrototypeMethod(t, "assignReturnRoute", OZW::AssignReturnRoute);
-	  Nan::SetPrototypeMethod(t, "deleteAllReturnRoutes", OZW::DeleteAllReturnRoutes);
-	  Nan::SetPrototypeMethod(t, "sendNodeInformation", OZW::SendNodeInformation);
-	  Nan::SetPrototypeMethod(t, "createNewPrimary", OZW::CreateNewPrimary);
-	  Nan::SetPrototypeMethod(t, "receiveConfiguration", OZW::ReceiveConfiguration);
-	  Nan::SetPrototypeMethod(t, "replaceFailedNode", OZW::ReplaceFailedNode);
-	  Nan::SetPrototypeMethod(t, "transferPrimaryRole", OZW::TransferPrimaryRole);
-	  Nan::SetPrototypeMethod(t, "requestNetworkUpdate", OZW::RequestNetworkUpdate);
-	  Nan::SetPrototypeMethod(t, "replicationSend", OZW::ReplicationSend);
-	  Nan::SetPrototypeMethod(t, "createButton", OZW::CreateButton);
-	  Nan::SetPrototypeMethod(t, "deleteButton", OZW::DeleteButton);
+		Nan::SetPrototypeMethod(t, "removeNode", OZW::RemoveNode);
+		Nan::SetPrototypeMethod(t, "removeFailedNode", OZW::RemoveFailedNode);
+		Nan::SetPrototypeMethod(t, "hasNodeFailed", OZW::HasNodeFailed);
+		Nan::SetPrototypeMethod(t, "requestNodeNeighborUpdate", OZW::RequestNodeNeighborUpdate);
+		Nan::SetPrototypeMethod(t, "assignReturnRoute", OZW::AssignReturnRoute);
+		Nan::SetPrototypeMethod(t, "deleteAllReturnRoutes", OZW::DeleteAllReturnRoutes);
+		Nan::SetPrototypeMethod(t, "sendNodeInformation", OZW::SendNodeInformation);
+		Nan::SetPrototypeMethod(t, "createNewPrimary", OZW::CreateNewPrimary);
+		Nan::SetPrototypeMethod(t, "receiveConfiguration", OZW::ReceiveConfiguration);
+		Nan::SetPrototypeMethod(t, "replaceFailedNode", OZW::ReplaceFailedNode);
+		Nan::SetPrototypeMethod(t, "transferPrimaryRole", OZW::TransferPrimaryRole);
+		Nan::SetPrototypeMethod(t, "requestNetworkUpdate", OZW::RequestNetworkUpdate);
+		Nan::SetPrototypeMethod(t, "replicationSend", OZW::ReplicationSend);
+		Nan::SetPrototypeMethod(t, "createButton", OZW::CreateButton);
+		Nan::SetPrototypeMethod(t, "deleteButton", OZW::DeleteButton);
+		Nan::SetPrototypeMethod(t, "cancelControllerCommand", OZW::CancelControllerCommand);
 #else
 		Nan::SetPrototypeMethod(t, "beginControllerCommand", OZW::BeginControllerCommand);
-		Nan::SetPrototypeMethod(t, "cancelControllerCommand", OZW::CancelControllerCommand);
 #endif
 		// openzwave-network.cc
 		Nan::SetPrototypeMethod(t, "testNetworkNode", OZW::TestNetworkNode);
@@ -172,30 +172,30 @@ namespace OZW {
 		//
 		Nan::Set(target, Nan::New<String>("Emitter").ToLocalChecked(), t->GetFunction());
 		/* for BeginControllerCommand
-	   * http://openzwave.com/dev/classOpenZWave_1_1Manager.html#aa11faf40f19f0cda202d2353a60dbf7b
-	   */
-	  ctrlCmdNames = new CommandMap();
-	  // (*ctrlCmdNames)["None"] 					= OpenZWave::Driver::ControllerCommand_None;
-	  (*ctrlCmdNames)["AddDevice"]				= OpenZWave::Driver::ControllerCommand_AddDevice;
-	  (*ctrlCmdNames)["CreateNewPrimary"] 		= OpenZWave::Driver::ControllerCommand_CreateNewPrimary;
-	  (*ctrlCmdNames)["ReceiveConfiguration"] 	= OpenZWave::Driver::ControllerCommand_ReceiveConfiguration;
-	  (*ctrlCmdNames)["RemoveDevice"]  			= OpenZWave::Driver::ControllerCommand_RemoveDevice;
-	  (*ctrlCmdNames)["RemoveFailedNode"]			= OpenZWave::Driver::ControllerCommand_RemoveFailedNode;
-	  (*ctrlCmdNames)["HasNodeFailed"]			= OpenZWave::Driver::ControllerCommand_HasNodeFailed;
-	  (*ctrlCmdNames)["ReplaceFailedNode"]		= OpenZWave::Driver::ControllerCommand_ReplaceFailedNode;
-	  (*ctrlCmdNames)["TransferPrimaryRole"]		= OpenZWave::Driver::ControllerCommand_TransferPrimaryRole;
-	  (*ctrlCmdNames)["RequestNetworkUpdate"]		= OpenZWave::Driver::ControllerCommand_RequestNetworkUpdate;
-	  (*ctrlCmdNames)["RequestNodeNeighborUpdate"]= OpenZWave::Driver::ControllerCommand_RequestNodeNeighborUpdate;
-	  (*ctrlCmdNames)["AssignReturnRoute"] 		= OpenZWave::Driver::ControllerCommand_AssignReturnRoute;
-	  (*ctrlCmdNames)["DeleteAllReturnRoutes"]	= OpenZWave::Driver::ControllerCommand_DeleteAllReturnRoutes;
-	  (*ctrlCmdNames)["SendNodeInformation"] 		= OpenZWave::Driver::ControllerCommand_SendNodeInformation;
-	  (*ctrlCmdNames)["ReplicationSend"] 			= OpenZWave::Driver::ControllerCommand_ReplicationSend;
-	  (*ctrlCmdNames)["CreateButton"]				= OpenZWave::Driver::ControllerCommand_CreateButton;
-	  (*ctrlCmdNames)["DeleteButton"]				= OpenZWave::Driver::ControllerCommand_DeleteButton;
+		 * http://openzwave.com/dev/classOpenZWave_1_1Manager.html#aa11faf40f19f0cda202d2353a60dbf7b
+		 */
+		ctrlCmdNames = new CommandMap();
+		// (*ctrlCmdNames)["None"] 					= OpenZWave::Driver::ControllerCommand_None;
+		(*ctrlCmdNames)["AddDevice"]				= OpenZWave::Driver::ControllerCommand_AddDevice;
+		(*ctrlCmdNames)["CreateNewPrimary"] 		= OpenZWave::Driver::ControllerCommand_CreateNewPrimary;
+		(*ctrlCmdNames)["ReceiveConfiguration"] 	= OpenZWave::Driver::ControllerCommand_ReceiveConfiguration;
+		(*ctrlCmdNames)["RemoveDevice"]  			= OpenZWave::Driver::ControllerCommand_RemoveDevice;
+		(*ctrlCmdNames)["RemoveFailedNode"]			= OpenZWave::Driver::ControllerCommand_RemoveFailedNode;
+		(*ctrlCmdNames)["HasNodeFailed"]			= OpenZWave::Driver::ControllerCommand_HasNodeFailed;
+		(*ctrlCmdNames)["ReplaceFailedNode"]		= OpenZWave::Driver::ControllerCommand_ReplaceFailedNode;
+		(*ctrlCmdNames)["TransferPrimaryRole"]		= OpenZWave::Driver::ControllerCommand_TransferPrimaryRole;
+		(*ctrlCmdNames)["RequestNetworkUpdate"]		= OpenZWave::Driver::ControllerCommand_RequestNetworkUpdate;
+		(*ctrlCmdNames)["RequestNodeNeighborUpdate"]= OpenZWave::Driver::ControllerCommand_RequestNodeNeighborUpdate;
+		(*ctrlCmdNames)["AssignReturnRoute"] 		= OpenZWave::Driver::ControllerCommand_AssignReturnRoute;
+		(*ctrlCmdNames)["DeleteAllReturnRoutes"]	= OpenZWave::Driver::ControllerCommand_DeleteAllReturnRoutes;
+		(*ctrlCmdNames)["SendNodeInformation"] 		= OpenZWave::Driver::ControllerCommand_SendNodeInformation;
+		(*ctrlCmdNames)["ReplicationSend"] 			= OpenZWave::Driver::ControllerCommand_ReplicationSend;
+		(*ctrlCmdNames)["CreateButton"]				= OpenZWave::Driver::ControllerCommand_CreateButton;
+		(*ctrlCmdNames)["DeleteButton"]				= OpenZWave::Driver::ControllerCommand_DeleteButton;
 
 	}
 
-  // ===================================================================
+	// ===================================================================
 	NAN_METHOD(OZW::New)
 	// ===================================================================
 	{
