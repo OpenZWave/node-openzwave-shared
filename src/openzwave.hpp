@@ -92,9 +92,9 @@ namespace OZW {
 		static NAN_METHOD(ReplicationSend);
 		static NAN_METHOD(CreateButton);
 		static NAN_METHOD(DeleteButton);
+		static NAN_METHOD(CancelControllerCommand);
 #else
 		static NAN_METHOD(BeginControllerCommand);
-		static NAN_METHOD(CancelControllerCommand);
 #endif
 		// openzwave-network.cc
 		static NAN_METHOD(TestNetworkNode);
@@ -107,7 +107,7 @@ namespace OZW {
 		static NAN_METHOD(SetNodeLevel);
 		static NAN_METHOD(SwitchAllOn);
 		static NAN_METHOD(SwitchAllOff);
-    static NAN_METHOD(PressButton);
+		static NAN_METHOD(PressButton);
 		//
 		static NAN_METHOD(RefreshNodeInfo);
 		static NAN_METHOD(RequestNodeState);
@@ -142,11 +142,11 @@ namespace OZW {
 		static NAN_METHOD(SetValue);
 		static NAN_METHOD(RefreshValue);
 		static NAN_METHOD(SetChangeVerified);
-    static NAN_METHOD(GetNumSwitchPoints);
-    static NAN_METHOD(GetSwitchPoint);
-    static NAN_METHOD(ClearSwitchPoints);
-    static NAN_METHOD(SetSwitchPoint);
-    static NAN_METHOD(RemoveSwitchPoint);
+		static NAN_METHOD(GetNumSwitchPoints);
+		static NAN_METHOD(GetSwitchPoint);
+		static NAN_METHOD(ClearSwitchPoints);
+		static NAN_METHOD(SetSwitchPoint);
+		static NAN_METHOD(RemoveSwitchPoint);
 		// openzwave-polling.cc
 		static NAN_METHOD(GetPollInterval);
 		static NAN_METHOD(SetPollInterval);
@@ -164,10 +164,10 @@ namespace OZW {
 		static NAN_METHOD(SceneGetValues);
 		static NAN_METHOD(ActivateScene);
 
-    // Passing configuration around
-    std::string userpath;
-    std::string option_overrides;
-    std::string config_path;
+		// Passing configuration around
+		std::string userpath;
+		std::string option_overrides;
+		std::string config_path;
 	};
 
 	// our ZWave Home ID
