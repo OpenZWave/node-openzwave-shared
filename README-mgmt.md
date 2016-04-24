@@ -9,9 +9,7 @@ the underlying API calls.
 
 ## Security enabled (OpenZWave >= 1.3)
 If your OZW version is 1.3 or greater, then there's a whole bunch of new calls,
-which effectively replace the old `BeginControllerCommand`. There's also no
-`CancelControllerCommand` thus you can't cancel any pending commands (they simply
-  timeout).
+which effectively replace the old `BeginControllerCommand`.
 
 -  zwave.addNode(doSecurity: boolean):
   Add a new device or controller with/without security. This is usually followed
