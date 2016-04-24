@@ -41,7 +41,6 @@ namespace OZW {
 
 		OZW* self = ObjectWrap::Unwrap<OZW>(info.This());
 
-		// scan for OpenZWave options.xml in the nodeJS module's '/config' subdirectory
 		OpenZWave::Options::Create(self->config_path, self->userpath, self->option_overrides);
 		OpenZWave::Options::Get()->Lock();
 

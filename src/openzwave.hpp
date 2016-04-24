@@ -94,8 +94,8 @@ namespace OZW {
 		static NAN_METHOD(DeleteButton);
 #else
 		static NAN_METHOD(BeginControllerCommand);
-		static NAN_METHOD(CancelControllerCommand);
 #endif
+		static NAN_METHOD(CancelControllerCommand);
 		// openzwave-network.cc
 		static NAN_METHOD(TestNetworkNode);
 		static NAN_METHOD(TestNetwork);

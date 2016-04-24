@@ -100,8 +100,8 @@ namespace OZW {
 	  Nan::SetPrototypeMethod(t, "deleteButton", OZW::DeleteButton);
 #else
 		Nan::SetPrototypeMethod(t, "beginControllerCommand", OZW::BeginControllerCommand);
-		Nan::SetPrototypeMethod(t, "cancelControllerCommand", OZW::CancelControllerCommand);
 #endif
+		Nan::SetPrototypeMethod(t, "cancelControllerCommand", OZW::CancelControllerCommand);
 		// openzwave-network.cc
 		Nan::SetPrototypeMethod(t, "testNetworkNode", OZW::TestNetworkNode);
 		Nan::SetPrototypeMethod(t, "testNetwork", OZW::TestNetwork);
@@ -214,6 +214,8 @@ namespace OZW {
 				std::string  keyname   = *v8::String::Utf8Value(key);
 				Local<Value> argval    = Nan::Get(opts, key).ToLocalChecked();
 				std::string  argvalstr = *v8::String::Utf8Value(argval);
+				// UserPath is directly passed to Manager->Connect()
+				// scan for OpenZWave options.xml in the nodeJS module's '/config' subdirectory
 				if (keyname == "UserPath") {
 					ozw_userpath.assign(argvalstr);
 				} else {
