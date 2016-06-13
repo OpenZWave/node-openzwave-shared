@@ -86,7 +86,7 @@ Whenever you have OpenZWave installed in your machine, then all you need to do i
 $ npm install openzwave-shared
 ```
 
-**Notice:** If you receive the error `cannot find -lopenzwave` on a 64-bit Linux
+**Notice 1:** If you receive the error `cannot find -lopenzwave` on a 64-bit Linux
 system, `libopenzwave.so` was likely compiled into `/usr/local/lib64`.
 Run the terminal command `ld -lopenzwave --verbose` for a list of search
 locations used. You can workaround this by providing a symlink to one of the
@@ -94,6 +94,8 @@ listed locations such as `/usr/local/lib`.
 Run `sudo ln -s /usr/local/lib64/libopenzwave.so /usr/local/lib/libopenzwave.so`
 creates symlink so that the file appears to be in the location that `ld` looks
 in. Now `npm install` should work.
+
+**Notice 2:** nodejs Debian/Raspbian package (v0.10.29) causes an issue REPLACE_INVALID_UTF8 (cf. https://github.com/nodejs/nan/issues/414). You can use node from [herokuapp](http://node-arm.herokuapp.com/) or upgrade some node packages: `sudo npm -g install npm node-gyp`.
 
 In case you want to develop your application in TypeScript, there is also a TypeScript 
 declaration file available. Besides adding typechecking to your codebase this will also 
