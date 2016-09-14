@@ -102,6 +102,7 @@ namespace OZW {
 		Nan::SetPrototypeMethod(t, "beginControllerCommand", OZW::BeginControllerCommand);
 #endif
 		Nan::SetPrototypeMethod(t, "cancelControllerCommand", OZW::CancelControllerCommand);
+		Nan::SetPrototypeMethod(t, "writeConfig", OZW::WriteConfig);
 		// openzwave-network.cc
 		Nan::SetPrototypeMethod(t, "testNetworkNode", OZW::TestNetworkNode);
 		Nan::SetPrototypeMethod(t, "testNetwork", OZW::TestNetwork);
