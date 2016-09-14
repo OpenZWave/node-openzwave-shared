@@ -33,6 +33,10 @@ The initial network scan has finished.
 A new node has been found on the network.  At this point you can allocate resources to hold information about this node.
 
 
+* `zwave.on('node removed', function(nodeid){...})`
+
+A node with the provided id has been just been removed from the network. You need to deallocate all resources for this nodeid.
+
 
 * `zwave.on('node naming', function(nodeid, nodeinfo){...})`
 
