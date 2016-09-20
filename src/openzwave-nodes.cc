@@ -34,12 +34,12 @@ namespace OZW {
 		uint8 nodeid = info[0]->ToNumber()->Value();
 		uint8 numNeighbors = OpenZWave::Manager::Get()->GetNodeNeighbors(homeid, nodeid, &neighbors);
 		Local<Array> o_neighbors = Nan::New<Array>(numNeighbors);
-
-		for (uint8 nr = 0; nr < numNeighbors; nr++) {
-			o_neighbors->Set(Nan::New<Integer>(nr), Nan::New<Integer>(neighbors[nr]));
+		if (numNeighbors > 0) {
+			for (uint8 nr = 0; nr < numNeighbors; nr++) {
+				o_neighbors->Set(Nan::New<Integer>(nr), Nan::New<Integer>(neighbors[nr]));
+			}
+			delete neighbors;
 		}
-		delete[] neighbors;
-
 		info.GetReturnValue().Set( o_neighbors );
 	}
 
