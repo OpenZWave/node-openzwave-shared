@@ -276,6 +276,8 @@ namespace OZW {
 		));
 	}
 
+
+
 	#else
 
 	/* ------------------------------------
@@ -338,5 +340,14 @@ namespace OZW {
 
 		OpenZWave::Manager::Get()->CancelControllerCommand (homeid);
 	}
+
+	// =================================================================
+	NAN_METHOD(OZW::WriteConfig)
+	// =================================================================
+	{
+		Nan::HandleScope scope;
+		OpenZWave::Manager::Get()->WriteConfig(homeid);
+	}
+
 
 }
