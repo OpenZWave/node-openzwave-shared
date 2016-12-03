@@ -107,7 +107,7 @@ namespace OZW {
 	// ===================================================================
 	{
 		Nan::HandleScope scope;
-		OpenZWave::ValueID* ozwvid = getZwaveValueID(info);
+		OpenZWave::ValueID* ozwvid = populateValueId(info);
 		if (ozwvid == NULL) {
 			Nan::ThrowTypeError("OpenZWave valueId not found");
 		} else {
@@ -121,7 +121,7 @@ namespace OZW {
 	// ===================================================================
 	{
 		Nan::HandleScope scope;
-		OpenZWave::ValueID* ozwvid = getZwaveValueID(info);
+		OpenZWave::ValueID* ozwvid = populateValueId(info);
 		uint8 intensity;
 		if (ozwvid == NULL) {
 			Nan::ThrowTypeError("OpenZWave valueId not found");
@@ -138,7 +138,7 @@ namespace OZW {
 	// ===================================================================
 	{
 		Nan::HandleScope scope;
-		OpenZWave::ValueID* ozwvid = getZwaveValueID(info);
+		OpenZWave::ValueID* ozwvid = populateValueId(info);
 		if (ozwvid == NULL) {
 			Nan::ThrowTypeError("OpenZWave valueId not found");
 		} else {

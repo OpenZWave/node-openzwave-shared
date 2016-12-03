@@ -20,6 +20,27 @@
 #define stringify( x ) stringify_literal( x )
 #define stringify_literal( x ) # x
 
+#define AddIntegerProp(OBJ,PROPNAME,PROPVALUE) \
+	Nan::Set(OBJ,                                \
+		Nan::New<v8::String>( #PROPNAME ).ToLocalChecked(),  \
+		Nan::New<v8::Integer>( PROPVALUE ));
+#define AddBooleanProp(OBJ,PROPNAME,PROPVALUE) \
+	Nan::Set(OBJ,                                \
+		Nan::New<v8::String>( #PROPNAME ).ToLocalChecked(),  \
+		Nan::New<v8::Boolean>( PROPVALUE )->ToBoolean());
+#define AddStringProp(OBJ,PROPNAME,PROPVALUE) \
+	Nan::Set(OBJ,                               \
+		Nan::New<v8::String>( #PROPNAME ).ToLocalChecked(),  \
+		Nan::New<v8::String>( PROPVALUE ).ToLocalChecked());
+#define AddArrayOfStringProp(OBJ,PROPNAME,PROPVALUE) \
+		Local < Array > PROPNAME = Nan::New<Array>(PROPVALUE.size()); \
+		for (unsigned int i = 0; i < PROPVALUE.size(); i++) { \
+			Nan::Set(values, i, Nan::New<String>(   \
+				&PROPVALUE[i][0], PROPVALUE[i].size() \
+			).ToLocalChecked()); \
+		} \
+		Nan::Set(OBJ, Nan::New<String>( #PROPNAME).ToLocalChecked(), PROPNAME);
+
 namespace OZW {
 
 #ifdef WIN32
@@ -70,16 +91,12 @@ namespace OZW {
 	NodeInfo  *get_node_info(uint8 nodeid);
 	SceneInfo *get_scene_info(uint8 sceneid);
 
-	OpenZWave::ValueID* getZwaveValueID(const Nan::FunctionCallbackInfo<v8::Value>& info, uint8 offset=0);
+	OpenZWave::ValueID* populateValueId(const Nan::FunctionCallbackInfo<v8::Value>& info, uint8 offset=0);
+	void populateNode(v8::Local<v8::Object>& nodeobj, uint32 homeid, uint8 nodeid);
 	const char* getControllerStateAsStr (OpenZWave::Driver::ControllerState _state);
 	const char* getControllerErrorAsStr(OpenZWave::Driver::ControllerError _err);
 
 	const std::string getNotifHelpMsg(OpenZWave::Notification const *n);
-	void getV8ValueForZWaveNode(
-			OpenZWave::Manager *mgr,
-			v8::Local<v8::Object>& nodeobj,
-			uint32 homeid, uint8 nodeid
-	);
 
 	bool checkType(bool predicate);
 } // namespace OZW
