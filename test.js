@@ -122,6 +122,8 @@ process.on('SIGINT', function() {
 	console.log('\n\n== Driver Statistics:\n%j',
 		zwave.getDriverStatistics());
 	Object.keys(nodes).forEach(function(nodeid) {
+		console.log('== Node %d neighbors: %j',
+			nodeid, zwave.getNodeNeighbors(nodeid));
 		console.log('== Node %d Statistics:\n%j',
 			nodeid, zwave.getNodeStatistics(nodeid));
 	});
