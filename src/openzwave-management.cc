@@ -28,7 +28,7 @@ namespace OZW {
 	// and deprecate BeginControllerCommand
 	----------------------------------------------*/
 
-	/* bool 	AddNode (uint32 const _homeId, bool _doSecurity=true)
+	/* bool AddNode (uint32 const _homeId, bool _doSecurity=true)
 	* Start the Inclusion Process to add a Node to the Network.
 	* The Status of the Node Inclusion is communicated via Notifications.
 	* Specifically, you should monitor ControllerCommand Notifications.
@@ -44,7 +44,7 @@ namespace OZW {
 		));
 	}
 
-	/*bool 	RemoveNode (uint32 const _homeId)
+	/*bool RemoveNode (uint32 const _homeId)
 	* Remove a Device from the Z-Wave Network
 	* The Status of the Node Removal is communicated via Notifications.
 	* Specifically, you should monitor ControllerCommand Notifications.
@@ -59,13 +59,14 @@ namespace OZW {
 		));
 	}
 
-	/*bool 	RemoveFailedNode (uint32 const _homeId, uint8 const _nodeId)
+	/*bool RemoveFailedNode (uint32 const _homeId, uint8 const _nodeId)
 	Remove a Failed Device from the Z-Wave Network
 	This Command will remove a failed node from the network. The Node should be on
 	the Controllers Failed Node List, otherwise this command will fail. You can
 	use the HasNodeFailed function below to test if the Controller believes the
 	Node has Failed. The Status of the Node Removal is communicated via
-	Notifications. Specifically, you should monitor ControllerCommand Notifications.
+	Notifications. Specifically, you should monitor ControllerCommand
+	Notifications.
 	*/
 	// =================================================================
 	NAN_METHOD(OZW::RemoveFailedNode)
@@ -78,7 +79,7 @@ namespace OZW {
 		));
 	}
 
-	/*bool 	HasNodeFailed (uint32 const _homeId, uint8 const _nodeId)
+	/* bool HasNodeFailed (uint32 const _homeId, uint8 const _nodeId)
 	Check if the Controller Believes a Node has Failed.
 	This is different from thevIsNodeFailed call in that we test the Controllers
 	Failed Node List, whereasvthe IsNodeFailed is testing our list of Failed Nodes,
@@ -96,7 +97,7 @@ namespace OZW {
 		));
 	}
 
-	/* bool 	RequestNodeNeighborUpdate (uint32 const _homeId, uint8 const _nodeId)
+	/* bool RequestNodeNeighborUpdate (uint32 const _homeId, uint8 const _nodeId)
 	Ask a Node to update its Neighbor Tables
 	This command will ask a Node to update its Neighbor Tables.
 	*/
@@ -111,8 +112,7 @@ namespace OZW {
 		));
 	}
 
-	/*
-	bool 	AssignReturnRoute (uint32 const _homeId, uint8 const _nodeId)
+	/* bool AssignReturnRoute (uint32 const _homeId, uint8 const _nodeId)
 	Ask a Node to update its update its Return Route to the Controller
 	This command will ask a Node to update its Return Route to the Controller.
 	*/
@@ -127,7 +127,7 @@ namespace OZW {
 		));
 	}
 
-	/* bool 	DeleteAllReturnRoutes (uint32 const _homeId, uint8 const _nodeId)
+	/* bool DeleteAllReturnRoutes (uint32 const _homeId, uint8 const _nodeId)
 	Ask a Node to delete all Return Route.
 	This command will ask a Node to delete all its return routes, and will
 	rediscover when needed.
@@ -143,7 +143,7 @@ namespace OZW {
 		));
 	}
 
-	/*bool 	SendNodeInformation (uint32 const _homeId, uint8 const _nodeId)
+	/* bool SendNodeInformation (uint32 const _homeId, uint8 const _nodeId)
 	Send a NIF frame from the Controller to a Node.
 	This command send a NIF frame from the Controller to a Node.
 	*/
@@ -158,7 +158,7 @@ namespace OZW {
 		));
 	}
 
-	/*bool 	CreateNewPrimary (uint32 const _homeId)
+	/*bool CreateNewPrimary (uint32 const _homeId)
 	Create a new primary controller when old primary fails. Requires SUC.
 	This command Creates a new Primary Controller when the Old Primary has Failed.
 	Requires a SUC on the network to function.
@@ -173,9 +173,10 @@ namespace OZW {
 		));
 	}
 
-	/*bool 	ReceiveConfiguration (uint32 const _homeId)
-	Receive network configuration information from primary controller. Requires secondary.
-	This command prepares the controller to recieve Network Configuration from a Secondary Controller.
+	/* bool ReceiveConfiguration (uint32 const _homeId)
+	Receive network configuration information from primary controller. Requires
+	secondary. This command prepares the controller to recieve Network
+	Configuration from a Secondary Controller.
 	*/
 	// =================================================================
 	NAN_METHOD(OZW::ReceiveConfiguration)
@@ -187,7 +188,7 @@ namespace OZW {
 		));
 	}
 
-	/*bool 	ReplaceFailedNode (uint32 const _homeId, uint8 const _nodeId)
+	/*bool ReplaceFailedNode (uint32 const _homeId, uint8 const _nodeId)
 	Replace a failed device with another.
 	If the node is not in the controller's failed nodes list, or the node responds,
 	this command will fail. You can check if a Node is in the Controllers Failed
@@ -204,7 +205,7 @@ namespace OZW {
 		));
 	}
 
-	/*bool 	TransferPrimaryRole (uint32 const _homeId)
+	/* bool TransferPrimaryRole (uint32 const _homeId)
 	Add a new controller to the network and make it the primary.
 	The existing primary will become a secondary controller.
 	*/
@@ -218,7 +219,7 @@ namespace OZW {
 		));
 	}
 
-	/*bool 	RequestNetworkUpdate (uint32 const _homeId, uint8 const _nodeId)
+	/* bool 	RequestNetworkUpdate (uint32 const _homeId, uint8 const _nodeId)
 	Update the controller with network information from the SUC/SIS.
 	*/
 	// =================================================================
@@ -246,7 +247,7 @@ namespace OZW {
 		));
 	}
 
-	/* bool 	CreateButton (uint32 const _homeId, uint8 const _nodeId, uint8 const _buttonid)
+	/* bool CreateButton (uint32 const _homeId, uint8 const _nodeId, uint8 const _buttonid)
 	Create a handheld button id.
 	*/
 	// =================================================================
@@ -261,7 +262,7 @@ namespace OZW {
 		));
 	}
 
-	/* bool 	DeleteButton (uint32 const _homeId, uint8 const _nodeId, uint8 const _buttonid)
+	/* bool DeleteButton (uint32 const _homeId, uint8 const _nodeId, uint8 const _buttonid)
 	Delete a handheld button id.
 	*/
 	// =================================================================
@@ -276,8 +277,6 @@ namespace OZW {
 		));
 	}
 
-
-
 	#else
 
 	/* ------------------------------------
@@ -290,8 +289,8 @@ namespace OZW {
 		Nan::HandleScope scope;
 
 		std::string ctrcmd = (*String::Utf8Value(info[0]->ToString()));
-		uint8    nodeid1 = 0xff;
-		uint8    nodeid2 = 0;
+		uint8 nodeid1 = 0xff;
+		uint8 nodeid2 = 0;
 		bool highpower = false;
 		if (info.Length() > 1) {
 			highpower = info[1]->ToBoolean()->Value();
@@ -304,41 +303,47 @@ namespace OZW {
 		}
 		//
 		CommandMap::const_iterator search = (*ctrlCmdNames).find(ctrcmd);
-		if(search != (*ctrlCmdNames).end()) {
+		if (search != (*ctrlCmdNames).end()) {
 			/*
 			* BeginControllerCommand
 			* http://openzwave.com/dev/classOpenZWave_1_1Manager.html#aa11faf40f19f0cda202d2353a60dbf7b
 			*
 			_homeId		The Home ID of the Z-Wave controller.
 			_command	The command to be sent to the controller.
-			_callback	pointer to a function that will be called at various stages during the command process to notify the user of progress or to request actions on the user's part. Defaults to NULL.
-			_context	pointer to user defined data that will be passed into to the callback function. Defaults to NULL.
-			_highPower	used only with the AddDevice, AddController, RemoveDevice and RemoveController commands. Usually when adding or removing devices, the controller operates at low power so that the controller must be physically close to the device for security reasons. If _highPower is true, the controller will operate at normal power levels instead. Defaults to false.
+			_callback	pointer to a function that will be called at various stages
+			during the command process to notify the user of progress or to request
+			actions on the user's part. Defaults to NULL.
+			_context	pointer to user defined data that will be passed into to the
+			callback function. Defaults to NULL.
+			_highPower	used only with the AddDevice, AddController, RemoveDevice and
+			RemoveController commands. Usually when adding or removing devices, the
+			controller operates at low power so that the controller must be physically
+			close to the device for security reasons. If _highPower is true, the
+			controller will operate at normal power levels instead. Defaults to false.
 			_nodeId	is the node ID used by the command if necessary.
-			_arg	is an optional argument, usually another node ID, that is used by the command.
+			_arg	is an optional argument, usually another node ID, that is used
+			by the command.
 			* */
-			OpenZWave::Manager::Get()->BeginControllerCommand (
+			OpenZWave::Manager::Get()->BeginControllerCommand(
 				homeid,
-				search->second, // _command
+				search->second,       // _command
 				ozw_ctrlcmd_callback, // _callback
-				NULL, 	// void * 	_context = NULL,
-				highpower,	// bool 	_highPower = false,
-				nodeid1,// uint8 	_nodeId = 0xff,
-				nodeid2	// uint8 	_arg = 0
-			);
+				NULL,                 // void * 	_context = NULL,
+				highpower,            // bool 	_highPower = false,
+				nodeid1,              // uint8 	_nodeId = 0xff,
+				nodeid2               // uint8 	_arg = 0
+				);
 		}
 	}
 
 	#endif
-
 
 	// ===================================================================
 	NAN_METHOD(OZW::CancelControllerCommand)
 	// ===================================================================
 	{
 		Nan::HandleScope scope;
-
-		OpenZWave::Manager::Get()->CancelControllerCommand (homeid);
+		OpenZWave::Manager::Get()->CancelControllerCommand(homeid);
 	}
 
 	// =================================================================
@@ -349,5 +354,68 @@ namespace OZW {
 		OpenZWave::Manager::Get()->WriteConfig(homeid);
 	}
 
+//
+#define AddIntegerStat(OBJ,PROP) \
+	Nan::Set(OBJ,              \
+		Nan::New<String>( #PROP ).ToLocalChecked(),  \
+		Nan::New<Integer>( data.PROP ));
 
+#define AddStringStat(OBJ,PROP) \
+	Nan::Set(OBJ,              \
+		Nan::New<String>( #PROP ).ToLocalChecked(),  \
+		Nan::New<String>( data.PROP ).ToLocalChecked());
+
+	// =================================================================
+	NAN_METHOD(OZW::GetDriverStatistics)
+	// =================================================================
+	{
+		Nan::HandleScope scope;
+		OpenZWave::Driver::DriverData data;
+		OpenZWave::Manager::Get()->GetDriverStatistics(homeid, &data);
+		Local <Object> stats = Nan::New<Object>();
+		AddIntegerStat(stats, m_SOFCnt);
+		AddIntegerStat(stats, m_ACKWaiting);
+		AddIntegerStat(stats, m_readAborts);
+		AddIntegerStat(stats, m_badChecksum);
+		AddIntegerStat(stats, m_readCnt);
+		AddIntegerStat(stats, m_writeCnt);
+		AddIntegerStat(stats, m_CANCnt);
+		AddIntegerStat(stats, m_NAKCnt);
+		AddIntegerStat(stats, m_ACKCnt);
+		AddIntegerStat(stats, m_OOFCnt);
+		AddIntegerStat(stats, m_dropped);
+		AddIntegerStat(stats, m_retries);
+		AddIntegerStat(stats, m_callbacks);
+		AddIntegerStat(stats, m_badroutes);
+		//
+		info.GetReturnValue().Set(stats);
+	}
+
+	// =================================================================
+	NAN_METHOD(OZW::GetNodeStatistics)
+	// =================================================================
+	{
+		Nan::HandleScope scope;
+		OpenZWave::Node::NodeData data;
+		if (info.Length() > 0) {
+			uint8 nodeid = info[0]->ToNumber()->Value();
+			OpenZWave::Manager::Get()->GetNodeStatistics(homeid, nodeid, &data);
+			Local <Object> stats = Nan::New<Object>();
+			AddIntegerStat(stats, m_sentCnt);
+			AddIntegerStat(stats, m_sentFailed);
+			AddIntegerStat(stats, m_retries);
+			AddIntegerStat(stats, m_receivedCnt);
+			AddIntegerStat(stats, m_receivedDups);
+			AddIntegerStat(stats, m_receivedUnsolicited);
+			AddIntegerStat(stats, m_lastRequestRTT);
+			AddIntegerStat(stats, m_lastResponseRTT);
+			AddIntegerStat(stats, m_averageRequestRTT);
+			AddIntegerStat(stats, m_averageResponseRTT);
+			AddIntegerStat(stats, m_quality);
+			AddStringStat(stats, m_sentTS);
+			AddStringStat(stats, m_receivedTS);
+		}
+	}
+
+//namespace OZW
 }

@@ -55,16 +55,16 @@ zwave.on('value added', function(nodeid, comclass, value) {
 zwave.on('value changed', function(nodeid, comclass, value) {
 	if (nodes[nodeid]['ready']) {
 		console.log('node%d: changed: %d:%s:%s->%s', nodeid, comclass,
-			    value['label'],
-			    nodes[nodeid]['classes'][comclass][value.index]['value'],
-			    value['value']);
+			value['label'],
+			nodes[nodeid]['classes'][comclass][value.index]['value'],
+			value['value']);
 	}
 	nodes[nodeid]['classes'][comclass][value.index] = value;
 });
 
 zwave.on('value removed', function(nodeid, comclass, index) {
 	if (nodes[nodeid]['classes'][comclass] &&
-	    nodes[nodeid]['classes'][comclass][index])
+		nodes[nodeid]['classes'][comclass][index])
 		delete nodes[nodeid]['classes'][comclass][index];
 });
 
@@ -79,26 +79,26 @@ zwave.on('node ready', function(nodeid, nodeinfo) {
 	nodes[nodeid]['loc'] = nodeinfo.loc;
 	nodes[nodeid]['ready'] = true;
 	console.log('node%d: %s, %s', nodeid,
-		    nodeinfo.manufacturer ? nodeinfo.manufacturer
-					  : 'id=' + nodeinfo.manufacturerid,
-		    nodeinfo.product ? nodeinfo.product
-				     : 'product=' + nodeinfo.productid +
-				       ', type=' + nodeinfo.producttype);
+		nodeinfo.manufacturer ? nodeinfo.manufacturer : 'id=' + nodeinfo.manufacturerid,
+		nodeinfo.product ? nodeinfo.product : 'product=' + nodeinfo.productid +
+		', type=' + nodeinfo.producttype);
 	console.log('node%d: name="%s", type="%s", location="%s"', nodeid,
-		    nodeinfo.name,
-		    nodeinfo.type,
-		    nodeinfo.loc);
+		nodeinfo.name,
+		nodeinfo.type,
+		nodeinfo.loc);
 	for (var comclass in nodes[nodeid]['classes']) {
 		switch (comclass) {
-		case 0x25: // COMMAND_CLASS_SWITCH_BINARY
-		case 0x26: // COMMAND_CLASS_SWITCH_MULTILEVEL
-			zwave.enablePoll(nodeid, comclass);
-			break;
+			case 0x25: // COMMAND_CLASS_SWITCH_BINARY
+			case 0x26: // COMMAND_CLASS_SWITCH_MULTILEVEL
+				zwave.enablePoll(nodeid, comclass);
+				break;
 		}
 		var values = nodes[nodeid]['classes'][comclass];
 		console.log('node%d: class %d', nodeid, comclass);
 		for (var idx in values)
-			console.log('node%d:   %s=%s', nodeid, values[idx]['label'], values[idx]['value']);
+			console.log('node%d:   %s=%s', nodeid, values[idx]['label'], values[idx][
+				'value'
+			]);
 	}
 });
 
@@ -111,14 +111,20 @@ zwave.on('scan complete', function() {
 });
 
 var zwavedriverpaths = {
-	"darwin" : '/dev/cu.usbmodem1411',
-	"linux"  : '/dev/ttyUSB0',
+	"darwin": '/dev/cu.usbmodem1411',
+	"linux": '/dev/ttyUSB0',
 	"windows": '\\\\.\\COM3'
 }
 console.log("connecting to " + zwavedriverpaths[os.platform()]);
-zwave.connect( zwavedriverpaths[os.platform()] );
+zwave.connect(zwavedriverpaths[os.platform()]);
 
 process.on('SIGINT', function() {
+	console.log('\n\n== Driver Statistics:\n%j',
+		zwave.getDriverStatistics());
+	Object.keys(nodes).forEach(function(nodeid) {
+		console.log('== Node %d Statistics:\n%j',
+			nodeid, zwave.getNodeStatistics(nodeid));
+	});
 	console.log('disconnecting...');
 	zwave.disconnect();
 	process.exit();
