@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2015 Elias Karakoulakis <elias.karakoulakis@gmail.com>
+* Copyright (c) 2015-1016 Elias Karakoulakis <elias.karakoulakis@gmail.com>
 *
 * Permission to use, copy, modify, and distribute this software for any
 * purpose with or without fee is hereby granted, provided that the above
@@ -355,15 +355,6 @@ namespace OZW {
 	}
 
 //
-#define AddIntegerStat(OBJ,PROP) \
-	Nan::Set(OBJ,              \
-		Nan::New<String>( #PROP ).ToLocalChecked(),  \
-		Nan::New<Integer>( data.PROP ));
-
-#define AddStringStat(OBJ,PROP) \
-	Nan::Set(OBJ,              \
-		Nan::New<String>( #PROP ).ToLocalChecked(),  \
-		Nan::New<String>( data.PROP ).ToLocalChecked());
 
 	// =================================================================
 	NAN_METHOD(OZW::GetDriverStatistics)
@@ -373,20 +364,20 @@ namespace OZW {
 		OpenZWave::Driver::DriverData data;
 		OpenZWave::Manager::Get()->GetDriverStatistics(homeid, &data);
 		Local <Object> stats = Nan::New<Object>();
-		AddIntegerStat(stats, m_SOFCnt);
-		AddIntegerStat(stats, m_ACKWaiting);
-		AddIntegerStat(stats, m_readAborts);
-		AddIntegerStat(stats, m_badChecksum);
-		AddIntegerStat(stats, m_readCnt);
-		AddIntegerStat(stats, m_writeCnt);
-		AddIntegerStat(stats, m_CANCnt);
-		AddIntegerStat(stats, m_NAKCnt);
-		AddIntegerStat(stats, m_ACKCnt);
-		AddIntegerStat(stats, m_OOFCnt);
-		AddIntegerStat(stats, m_dropped);
-		AddIntegerStat(stats, m_retries);
-		AddIntegerStat(stats, m_callbacks);
-		AddIntegerStat(stats, m_badroutes);
+		AddIntegerProp(stats, SOFCnt, data.m_SOFCnt);
+		AddIntegerProp(stats, ACKWaiting, data.m_ACKWaiting);
+		AddIntegerProp(stats, readAborts, data.m_readAborts);
+		AddIntegerProp(stats, badChecksum, data.m_badChecksum);
+		AddIntegerProp(stats, readCnt, data.m_readCnt);
+		AddIntegerProp(stats, writeCnt, data.m_writeCnt);
+		AddIntegerProp(stats, CANCnt, data.m_CANCnt);
+		AddIntegerProp(stats, NAKCnt, data.m_NAKCnt);
+		AddIntegerProp(stats, ACKCnt, data.m_ACKCnt);
+		AddIntegerProp(stats, OOFCnt, data.m_OOFCnt);
+		AddIntegerProp(stats, dropped, data.m_dropped);
+		AddIntegerProp(stats, retries, data.m_retries);
+		AddIntegerProp(stats, callbacks, data.m_callbacks);
+		AddIntegerProp(stats, badroutes, data.m_badroutes);
 		//
 		info.GetReturnValue().Set(stats);
 	}
@@ -401,19 +392,19 @@ namespace OZW {
 			uint8 nodeid = info[0]->ToNumber()->Value();
 			OpenZWave::Manager::Get()->GetNodeStatistics(homeid, nodeid, &data);
 			Local <Object> stats = Nan::New<Object>();
-			AddIntegerStat(stats, m_sentCnt);
-			AddIntegerStat(stats, m_sentFailed);
-			AddIntegerStat(stats, m_retries);
-			AddIntegerStat(stats, m_receivedCnt);
-			AddIntegerStat(stats, m_receivedDups);
-			AddIntegerStat(stats, m_receivedUnsolicited);
-			AddIntegerStat(stats, m_lastRequestRTT);
-			AddIntegerStat(stats, m_lastResponseRTT);
-			AddIntegerStat(stats, m_averageRequestRTT);
-			AddIntegerStat(stats, m_averageResponseRTT);
-			AddIntegerStat(stats, m_quality);
-			AddStringStat(stats, m_sentTS);
-			AddStringStat(stats, m_receivedTS);
+			AddIntegerProp(stats, sentCnt, data.m_sentCnt);
+			AddIntegerProp(stats, sentFailed, data.m_sentFailed);
+			AddIntegerProp(stats, retries, data.m_retries);
+			AddIntegerProp(stats, receivedCnt, data.m_receivedCnt);
+			AddIntegerProp(stats, receivedDups, data.m_receivedDups);
+			AddIntegerProp(stats, receivedUnsolicited, data.m_receivedUnsolicited);
+			AddIntegerProp(stats, lastRequestRTT, data.m_lastRequestRTT);
+			AddIntegerProp(stats, lastResponseRTT, data.m_lastResponseRTT);
+			AddIntegerProp(stats, averageRequestRTT, data.m_averageRequestRTT);
+			AddIntegerProp(stats, averageResponseRTT, data.m_averageResponseRTT);
+			AddIntegerProp(stats, quality, data.m_quality);
+			AddStringProp(stats, sentTS, data.m_sentTS);
+			AddStringProp(stats, receivedTS, data.m_receivedTS);
 		}
 	}
 

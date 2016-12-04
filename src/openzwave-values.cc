@@ -1,6 +1,6 @@
 /*
 * Copyright (c) 2013 Jonathan Perkin <jonathan@perkin.org.uk>
-* Copyright (c) 2015 Elias Karakoulakis <elias.karakoulakis@gmail.com>
+* Copyright (c) 2015-1016 Elias Karakoulakis <elias.karakoulakis@gmail.com>
 *
 * Permission to use, copy, modify, and distribute this software for any
 * purpose with or without fee is hereby granted, provided that the above
@@ -30,7 +30,7 @@ namespace OZW {
 	{
 		Nan::HandleScope scope;
 
-		OpenZWave::ValueID* vit = getZwaveValueID(info);
+		OpenZWave::ValueID* vit = populateValueId(info);
 		if (vit == NULL) {
 			Nan::ThrowTypeError("setValue: OpenZWave valueId not found");
 		} else {
@@ -105,7 +105,7 @@ NAN_METHOD(OZW::RefreshValue)
 {
 	Nan::HandleScope scope;
 
-	OpenZWave::ValueID* vit = getZwaveValueID(info);
+	OpenZWave::ValueID* vit = populateValueId(info);
 	if (vit == NULL) {
 		Nan::ThrowTypeError("refreshValue: OpenZWave valueId not found");
 	} else {
@@ -124,7 +124,7 @@ NAN_METHOD(OZW::SetChangeVerified)
 {
 	Nan::HandleScope scope;
 
-	OpenZWave::ValueID* vit = getZwaveValueID(info);
+	OpenZWave::ValueID* vit = populateValueId(info);
 	if (vit == NULL) {
 		Nan::ThrowTypeError("setChangeVerified: OpenZWave valueId not found");
 	} else {
@@ -145,7 +145,7 @@ NAN_METHOD(OZW::GetNumSwitchPoints)
 {
 	Nan::HandleScope scope;
 
-	OpenZWave::ValueID* vit = getZwaveValueID(info);
+	OpenZWave::ValueID* vit = populateValueId(info);
 	if ((vit == NULL) || ((*vit).GetType() != OpenZWave::ValueID::ValueType_Schedule ))  {
 		Nan::ThrowTypeError("OpenZWave valueId not found or not of the correct type");
 	} else {
@@ -163,7 +163,7 @@ NAN_METHOD(OZW::GetSwitchPoint)
 	uint8 idx, o_hours, o_minutes;
 	int8  o_setback;
 
-	OpenZWave::ValueID* vit = getZwaveValueID(info);
+	OpenZWave::ValueID* vit = populateValueId(info);
 	if ((vit == NULL) || ((*vit).GetType() != OpenZWave::ValueID::ValueType_Schedule ))  {
 		Nan::ThrowTypeError("OpenZWave valueId not found or not of the correct type");
 	} else {
@@ -195,7 +195,7 @@ NAN_METHOD(OZW::ClearSwitchPoints)
 {
 	Nan::HandleScope scope;
 
-	OpenZWave::ValueID* vit = getZwaveValueID(info);
+	OpenZWave::ValueID* vit = populateValueId(info);
 	if ((vit == NULL) || ((*vit).GetType() != OpenZWave::ValueID::ValueType_Schedule ))  {
 		Nan::ThrowTypeError("OpenZWave valueId not found or not of the correct type");
 	} else {
@@ -209,7 +209,7 @@ NAN_METHOD(OZW::SetSwitchPoint)
 {
 	Nan::HandleScope scope;
 
-	OpenZWave::ValueID* vit = getZwaveValueID(info);
+	OpenZWave::ValueID* vit = populateValueId(info);
 	if ((vit == NULL) || ((*vit).GetType() != OpenZWave::ValueID::ValueType_Schedule ))  {
 		Nan::ThrowTypeError("OpenZWave valueId not found or not of the correct type");
 	} else {
@@ -233,7 +233,7 @@ NAN_METHOD(OZW::RemoveSwitchPoint)
 {
 	Nan::HandleScope scope;
 
-	OpenZWave::ValueID* vit = getZwaveValueID(info);
+	OpenZWave::ValueID* vit = populateValueId(info);
 	if ((vit == NULL) || ((*vit).GetType() != OpenZWave::ValueID::ValueType_Schedule ))  {
 		Nan::ThrowTypeError("OpenZWave valueId not found or not of the correct type");
 	} else {

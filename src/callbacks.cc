@@ -1,6 +1,6 @@
 /*
 * Copyright (c) 2013 Jonathan Perkin <jonathan@perkin.org.uk>
-* Copyright (c) 2015 Elias Karakoulakis <elias.karakoulakis@gmail.com>
+* Copyright (c) 2015-1016 Elias Karakoulakis <elias.karakoulakis@gmail.com>
 *
 * Permission to use, copy, modify, and distribute this software for any
 * purpose with or without fee is hereby granted, provided that the above
@@ -149,11 +149,10 @@ void handleNotification(NotifInfo *notif)
 // ===================================================================
 {
   Nan::HandleScope scope;
-
-  NodeInfo *node;
-  OpenZWave::Manager *mgr = OpenZWave::Manager::Get();
   Local<v8::Value> emitinfo[16];
   Local<Object> cbinfo = Nan::New<Object>();
+	//
+  NodeInfo *node;
   //
   switch (notif->type) {
   //                            ################
@@ -269,7 +268,7 @@ void handleNotification(NotifInfo *notif)
   //                            ################
   case OpenZWave::Notification::Type_NodeNaming: {
     //                            ################
-    getV8ValueForZWaveNode(mgr, cbinfo, notif->homeid, notif->nodeid);
+    populateNode(cbinfo, notif->homeid, notif->nodeid);
     emitinfo[0] = Nan::New<String>("node naming").ToLocalChecked();
     emitinfo[1] = Nan::New<Integer>(notif->nodeid);
     emitinfo[2] = cbinfo;
@@ -373,7 +372,7 @@ void handleNotification(NotifInfo *notif)
   //                            ##################################
   case OpenZWave::Notification::Type_EssentialNodeQueriesComplete: {
     //                            ##################################
-    getV8ValueForZWaveNode(mgr, cbinfo, notif->homeid, notif->nodeid);
+    populateNode(cbinfo, notif->homeid, notif->nodeid);
     emitinfo[0] = Nan::New<String>("node available").ToLocalChecked();
     emitinfo[1] = Nan::New<Integer>(notif->nodeid);
     emitinfo[2] = cbinfo;
@@ -386,7 +385,7 @@ void handleNotification(NotifInfo *notif)
   //                            #########################
   case OpenZWave::Notification::Type_NodeQueriesComplete: {
     //                            #########################
-    getV8ValueForZWaveNode(mgr, cbinfo, notif->homeid, notif->nodeid);
+    populateNode(cbinfo, notif->homeid, notif->nodeid);
     emitinfo[0] = Nan::New<String>("node ready").ToLocalChecked();
     emitinfo[1] = Nan::New<Integer>(notif->nodeid);
     emitinfo[2] = cbinfo;

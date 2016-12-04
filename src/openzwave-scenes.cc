@@ -1,6 +1,6 @@
 /*
 * Copyright (c) 2013 Jonathan Perkin <jonathan@perkin.org.uk>
-* Copyright (c) 2015 Elias Karakoulakis <elias.karakoulakis@gmail.com>
+* Copyright (c) 2015-1016 Elias Karakoulakis <elias.karakoulakis@gmail.com>
 *
 * Permission to use, copy, modify, and distribute this software for any
 * purpose with or without fee is hereby granted, provided that the above
@@ -123,7 +123,7 @@ namespace OZW {
 		Nan::HandleScope scope;
 
 		uint8 sceneid  = info[0]->ToNumber()->Value();
-		OpenZWave::ValueID* vit = getZwaveValueID(info, 1);
+		OpenZWave::ValueID* vit = populateValueId(info, 1);
 		if (vit == NULL) {
 			Nan::ThrowTypeError("OpenZWave valueId not found");
 		} else {
@@ -192,7 +192,7 @@ namespace OZW {
 		uint8 sceneid = info[0]->ToNumber()->Value();
 		SceneInfo *scene;
 		if ((scene = get_scene_info(sceneid))) {
-			OpenZWave::ValueID* vit = getZwaveValueID(info, 1);
+			OpenZWave::ValueID* vit = populateValueId(info, 1);
 			if (vit == NULL) {
 				Nan::ThrowTypeError("OpenZWave valueId not found");
 			} else {

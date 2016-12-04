@@ -119,12 +119,12 @@ console.log("connecting to " + zwavedriverpaths[os.platform()]);
 zwave.connect(zwavedriverpaths[os.platform()]);
 
 process.on('SIGINT', function() {
-	console.log('\n\n== Driver Statistics:\n%j',
+	console.log('\n\n== Driver Statistics: %j',
 		zwave.getDriverStatistics());
 	Object.keys(nodes).forEach(function(nodeid) {
 		console.log('== Node %d neighbors: %j',
 			nodeid, zwave.getNodeNeighbors(nodeid));
-		console.log('== Node %d Statistics:\n%j',
+		console.log('== Node %d Statistics: %j',
 			nodeid, zwave.getNodeStatistics(nodeid));
 	});
 	console.log('disconnecting...');

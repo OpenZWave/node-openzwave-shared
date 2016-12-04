@@ -1,6 +1,6 @@
 /*
 * Copyright (c) 2013 Jonathan Perkin <jonathan@perkin.org.uk>
-* Copyright (c) 2015 Elias Karakoulakis <elias.karakoulakis@gmail.com>
+* Copyright (c) 2015-1016 Elias Karakoulakis <elias.karakoulakis@gmail.com>
 *
 * Permission to use, copy, modify, and distribute this software for any
 * purpose with or without fee is hereby granted, provided that the above
@@ -107,7 +107,7 @@ namespace OZW {
 	// ===================================================================
 	{
 		Nan::HandleScope scope;
-		OpenZWave::ValueID* ozwvid = getZwaveValueID(info);
+		OpenZWave::ValueID* ozwvid = populateValueId(info);
 		if (ozwvid == NULL) {
 			Nan::ThrowTypeError("OpenZWave valueId not found");
 		} else {
@@ -121,7 +121,7 @@ namespace OZW {
 	// ===================================================================
 	{
 		Nan::HandleScope scope;
-		OpenZWave::ValueID* ozwvid = getZwaveValueID(info);
+		OpenZWave::ValueID* ozwvid = populateValueId(info);
 		uint8 intensity;
 		if (ozwvid == NULL) {
 			Nan::ThrowTypeError("OpenZWave valueId not found");
@@ -138,7 +138,7 @@ namespace OZW {
 	// ===================================================================
 	{
 		Nan::HandleScope scope;
-		OpenZWave::ValueID* ozwvid = getZwaveValueID(info);
+		OpenZWave::ValueID* ozwvid = populateValueId(info);
 		if (ozwvid == NULL) {
 			Nan::ThrowTypeError("OpenZWave valueId not found");
 		} else {
