@@ -1,6 +1,6 @@
 {
   "name": "openzwave-shared",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "Node.JS bindings for OpenZWave including management and security functions",
   "main": "./lib/openzwave-shared.js",
   "dependencies": {
@@ -28,6 +28,7 @@
     "Justin Hammond",
     "Jonathan Perkin (http://www.perkin.org.uk/)",
     "Luke Hertert (http://werul.com)",
+    "Michiel Mooring",
     "Thibaut CONSTANT",
     "Henry Rawas",
     "Rushi Desai",
