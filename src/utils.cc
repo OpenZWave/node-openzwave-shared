@@ -67,25 +67,25 @@ namespace OZW {
 			case OpenZWave::ValueID::ValueType_Bool: {
 				bool val;
 				OpenZWave::Manager::Get()->GetValueAsBool(value, &val);
-				AddBooleanProp(valobj, "value", val);
+				AddBooleanProp(valobj, value, val);
 				break;
 			}
 			case OpenZWave::ValueID::ValueType_Byte: {
 				uint8 val;
 				OpenZWave::Manager::Get()->GetValueAsByte(value, &val);
-				AddIntegerProp(valobj, "value", val);
+				AddIntegerProp(valobj, value, val);
 				break;
 			}
 			case OpenZWave::ValueID::ValueType_Decimal: {
 				std::string val;
 				OpenZWave::Manager::Get()->GetValueAsString(value, &val);
-				AddStringProp(valobj, "value", val);
+				AddStringProp(valobj, value, val);
 				break;
 			}
 			case OpenZWave::ValueID::ValueType_Int: {
 				int32 val;
 				OpenZWave::Manager::Get()->GetValueAsInt(value, &val);
-				AddIntegerProp(valobj, "value", val);
+				AddIntegerProp(valobj, value, val);
 				break;
 			}
 			case OpenZWave::ValueID::ValueType_List: {
@@ -96,19 +96,19 @@ namespace OZW {
 				AddArrayOfStringProp(valobj, values, items);
 				// populated selected element
 				OpenZWave::Manager::Get()->GetValueListSelection(value, &val);
-				AddStringProp(valobj, "value", val.c_str())
+				AddStringProp(valobj, value, val.c_str())
 				break;
 			}
 			case OpenZWave::ValueID::ValueType_Short: {
 				int16 val;
 				OpenZWave::Manager::Get()->GetValueAsShort(value, &val);
-				AddIntegerProp(valobj, "value", val);
+				AddIntegerProp(valobj, value, val);
 				break;
 			}
 			case OpenZWave::ValueID::ValueType_String: {
 				std::string val;
 				OpenZWave::Manager::Get()->GetValueAsString(value, &val);
-				AddStringProp(valobj, "value", val.c_str())
+				AddStringProp(valobj, value, val.c_str())
 				break;
 			}
 			/*
@@ -143,14 +143,14 @@ namespace OZW {
 			uint32 homeid, uint8 nodeid
 	) {
 		OpenZWave::Manager *mgr = OpenZWave::Manager::Get();
-		AddStringProp(nodeobj, "manufacturer", mgr->GetNodeManufacturerName(homeid, nodeid).c_str());
-		AddStringProp(nodeobj,"manufacturerid",   mgr->GetNodeManufacturerId(homeid, nodeid).c_str());
-		AddStringProp(nodeobj,"product",    mgr->GetNodeProductName(homeid, nodeid).c_str());
-		AddStringProp(nodeobj,"producttype",mgr->GetNodeProductType(homeid, nodeid).c_str());
-		AddStringProp(nodeobj,"productid",  mgr->GetNodeProductId(homeid, nodeid).c_str());
-		AddStringProp(nodeobj,"type", mgr->GetNodeType(homeid, nodeid).c_str());
-		AddStringProp(nodeobj,"name", mgr->GetNodeName(homeid, nodeid).c_str());
-		AddStringProp(nodeobj,"loc",  mgr->GetNodeLocation(homeid, nodeid).c_str());
+		AddStringProp(nodeobj, manufacturer, mgr->GetNodeManufacturerName(homeid, nodeid).c_str());
+		AddStringProp(nodeobj, manufacturerid,   mgr->GetNodeManufacturerId(homeid, nodeid).c_str());
+		AddStringProp(nodeobj, product,    mgr->GetNodeProductName(homeid, nodeid).c_str());
+		AddStringProp(nodeobj, producttype,mgr->GetNodeProductType(homeid, nodeid).c_str());
+		AddStringProp(nodeobj, productid,  mgr->GetNodeProductId(homeid, nodeid).c_str());
+		AddStringProp(nodeobj, type, mgr->GetNodeType(homeid, nodeid).c_str());
+		AddStringProp(nodeobj, name, mgr->GetNodeName(homeid, nodeid).c_str());
+		AddStringProp(nodeobj, loc,  mgr->GetNodeLocation(homeid, nodeid).c_str());
 	}
 
 	void populateValueId(v8::Local<v8::Object>& nodeobj, OpenZWave::ValueID value) {
@@ -165,21 +165,21 @@ namespace OZW {
 		//Nan::Set(valobj, Nan::New<String>("id"), Nan::New<Integer>(value.GetId()));
 		//Nan::Set(valobj, Nan::New<String>("change_verified").ToLocalChecked(), Nan::New<Boolean>(mgr->GetChangeVerified(value))->ToBoolean());
 		//
-		AddStringProp(nodeobj,  "value_id",  buffer);
-		AddIntegerProp(nodeobj, "node_id",   value.GetNodeId());
-		AddIntegerProp(nodeobj, "class_id",  value.GetCommandClassId());
-		AddStringProp (nodeobj, "type",      OpenZWave::Value::GetTypeNameFromEnum(value.GetType()));
-		AddStringProp (nodeobj, "genre",     OpenZWave::Value::GetGenreNameFromEnum(value.GetGenre()));
-		AddIntegerProp(nodeobj, "instance",  value.GetInstance());
-		AddIntegerProp(nodeobj, "index",     value.GetIndex());
-		AddStringProp (nodeobj, "label",     mgr->GetValueLabel(value).c_str());
-		AddStringProp (nodeobj, "units",     mgr->GetValueUnits(value).c_str());
-		AddStringProp (nodeobj, "help",      mgr->GetValueHelp(value).c_str());
-		AddBooleanProp(nodeobj, "read_only", mgr->IsValueReadOnly(value));
-		AddBooleanProp(nodeobj, "write_only",mgr->IsValueWriteOnly(value));
-		AddIntegerProp(nodeobj, "min",       mgr->GetValueMin(value));
-		AddIntegerProp(nodeobj, "max",       mgr->GetValueMax(value));
-		AddBooleanProp(nodeobj, "is_polled", mgr->IsValuePolled(value));
+		AddStringProp(nodeobj,  value_id,  buffer);
+		AddIntegerProp(nodeobj, node_id,   value.GetNodeId());
+		AddIntegerProp(nodeobj, class_id,  value.GetCommandClassId());
+		AddStringProp (nodeobj, type,      OpenZWave::Value::GetTypeNameFromEnum(value.GetType()));
+		AddStringProp (nodeobj, genre,     OpenZWave::Value::GetGenreNameFromEnum(value.GetGenre()));
+		AddIntegerProp(nodeobj, instance,  value.GetInstance());
+		AddIntegerProp(nodeobj, index,     value.GetIndex());
+		AddStringProp (nodeobj, label,     mgr->GetValueLabel(value).c_str());
+		AddStringProp (nodeobj, units,     mgr->GetValueUnits(value).c_str());
+		AddStringProp (nodeobj, help,      mgr->GetValueHelp(value).c_str());
+		AddBooleanProp(nodeobj, read_only, mgr->IsValueReadOnly(value));
+		AddBooleanProp(nodeobj, write_only,mgr->IsValueWriteOnly(value));
+		AddIntegerProp(nodeobj, min,       mgr->GetValueMin(value));
+		AddIntegerProp(nodeobj, max,       mgr->GetValueMax(value));
+		AddBooleanProp(nodeobj, is_polled, mgr->IsValuePolled(value));
 	}
 
 	// create a V8 object from a OpenZWave::ValueID
