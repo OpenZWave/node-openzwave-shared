@@ -217,7 +217,7 @@ namespace OZW {
 		instance: the instance of the command (usually 1)
 		index: the index of the command (usually 0)
 */
-	OpenZWave::ValueID* getZwaveValueID(const Nan::FunctionCallbackInfo<v8::Value> &info, uint8 offset) {
+	OpenZWave::ValueID* populateValueId(const Nan::FunctionCallbackInfo<v8::Value> &info, uint8 offset) {
 		uint8 nodeid, comclass, instance, index;
 		if ( (info.Length() >= offset) && info[offset]->IsObject() ) {
 			Local<Object> o = info[offset]->ToObject();
