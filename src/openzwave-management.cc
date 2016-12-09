@@ -405,6 +405,7 @@ namespace OZW {
 			AddIntegerProp(stats, quality, data.m_quality);
 			AddStringProp(stats, sentTS, data.m_sentTS);
 			AddStringProp(stats, receivedTS, data.m_receivedTS);
+			info.GetReturnValue().Set(stats);
 		}
 	}
 
