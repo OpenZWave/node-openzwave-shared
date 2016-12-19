@@ -15,9 +15,9 @@ devices (lights, dimmers, blinds, you name it) from within [Node.js](https://nod
 applications. [This library also supports *secure* devices](../master/README-security.md)
 (eg door locks) that require encryption.
 
-All known Node.js versions are supported with the help of [NaN](https://github.com/nodejs/nan).
+All widely used Node.js versions are supported with the help of [NaN](https://github.com/nodejs/nan).
 This add-on is currently tested against 0.12.x on ARM and 4.2.x on x86_64, but
-it should also work on all supported Node.js versions (as early as 0.10.x) and
+it should also work on all supported Node.js versions (as early as 0.11.12) and
 architectures.
 
 Check out the [Node-Red integration project](https://github.com/OpenZWave/node-red-contrib-openzwave)
@@ -97,12 +97,12 @@ in. Now `npm install` should work.
 
 **Notice 2:** nodejs Debian/Raspbian package (v0.10.29) causes an issue REPLACE_INVALID_UTF8 (cf. https://github.com/nodejs/nan/issues/414). You can use node from [herokuapp](http://node-arm.herokuapp.com/) or upgrade some node packages: `sudo npm -g install npm node-gyp`.
 
-In case you want to develop your application in TypeScript, there is also a TypeScript 
-declaration file available. Besides adding typechecking to your codebase this will also 
-help you to navigate the API and see the type of parameters available for each function. You can 
-download the 
+In case you want to develop your application in TypeScript, there is also a TypeScript
+declaration file available. Besides adding typechecking to your codebase this will also
+help you to navigate the API and see the type of parameters available for each function. You can
+download the
 [latest version of the declaration file from GitHub](https://github.com/jbaron/openzwave-shared-tsd).
-  
+
 ## Development documentation
 
 - [Basic API usage](../master/README-api.md)
