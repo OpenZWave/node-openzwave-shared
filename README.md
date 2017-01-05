@@ -87,14 +87,15 @@ Whenever you have OpenZWave installed in your machine, then all you need to do i
 $ npm install openzwave-shared
 ```
 
-Boot up NodeJS, and use the `.load` helper to boot up a basic OpenZWave CLI. Usethe `zwave` object to send commands and the `nodes` object to get a list of all nodes:
+To try it out, boot up NodeJS, and use the `.load` shell helper function to boot up a basic OpenZWave CLI. This will initialise and expose 1) a `zwave` object that you can use to send commands and 2) the `nodes` object to get a list of all nodes:
 
 ```js
 $ node
 > .load test2.js
 ...
 ...
-// who's your daddy?
+
+// the 1st node is the USB controller stick
 > console.log(nodes[1])
 { manufacturer: 'Aeotec',
   manufacturerid: '0x0086',
@@ -106,6 +107,7 @@ $ node
   loc: '',
   classes: { '32': { '0': [Object] } },
   ready: true }
+
 // set dimmer (node 5) to 50%
 > zwave.setValue(5,38,1,0,50);
 undefined
