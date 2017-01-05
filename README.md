@@ -79,11 +79,37 @@ or you could try installing OpenZWave using `brew install open-zwave`.
 Since there is no standard installation location for Open Z-Wave on Windows, it
 will be automatically downloaded, compiled, and installed when you install this module.
 
-## Installation
+## Installation and test script
 
 Whenever you have OpenZWave installed in your machine, then all you need to do is:
+
 ```
 $ npm install openzwave-shared
+```
+
+Boot up NodeJS, and use the `.load` helper to boot up a basic OpenZWave CLI. Usethe `zwave` object to send commands and the `nodes` object to get a list of all nodes:
+
+```js
+$ node
+> .load test2.js
+...
+...
+// who's your daddy?
+> console.log(nodes[1])
+{ manufacturer: 'Aeotec',
+  manufacturerid: '0x0086',
+  product: 'Z-Stick S2',
+  producttype: '0x0002',
+  productid: '0x0001',
+  type: 'Static PC Controller',
+  name: '',
+  loc: '',
+  classes: { '32': { '0': [Object] } },
+  ready: true }
+// set dimmer (node 5) to 50%
+> zwave.setValue(5,38,1,0,50);
+undefined
+> node5: changed: 38:Level:54->54
 ```
 
 **Notice 1:** If you receive the error `cannot find -lopenzwave` on a 64-bit Linux
