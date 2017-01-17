@@ -129,6 +129,7 @@ zwave.on('scan complete', function() {
   // set dimmer node 5 to 50%
   //    zwave.setValue(5,38,1,0,50);
   //zwave.setValue({node_id:5,	class_id: 38,	instance:1,	index:0}, 50 );
+  zwave.requestAllConfigParams(3);
 });
 
 zwave.on('controller command', function(n, rv, st, msg) {
