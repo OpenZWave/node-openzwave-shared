@@ -24,22 +24,32 @@
 	Nan::Set(OBJ,                                \
 		Nan::New<v8::String>( #PROPNAME ).ToLocalChecked(),  \
 		Nan::New<v8::Integer>( PROPVALUE ));
+
 #define AddBooleanProp(OBJ,PROPNAME,PROPVALUE) \
 	Nan::Set(OBJ,                                \
 		Nan::New<v8::String>( #PROPNAME ).ToLocalChecked(),  \
 		Nan::New<v8::Boolean>( PROPVALUE )->ToBoolean());
+
 #define AddStringProp(OBJ,PROPNAME,PROPVALUE) \
 	Nan::Set(OBJ,                               \
 		Nan::New<v8::String>( #PROPNAME ).ToLocalChecked(),  \
 		Nan::New<v8::String>( PROPVALUE ).ToLocalChecked());
+
 #define AddArrayOfStringProp(OBJ,PROPNAME,PROPVALUE) \
-		Local < Array > PROPNAME = Nan::New<Array>(PROPVALUE.size()); \
-		for (unsigned int i = 0; i < PROPVALUE.size(); i++) { \
-			Nan::Set(values, i, Nan::New<String>(   \
-				&PROPVALUE[i][0], PROPVALUE[i].size() \
-			).ToLocalChecked()); \
-		} \
-		Nan::Set(OBJ, Nan::New<String>( #PROPNAME).ToLocalChecked(), PROPNAME);
+	Local < Array > PROPNAME = Nan::New<Array>(PROPVALUE.size()); \
+	for (unsigned int i = 0; i < PROPVALUE.size(); i++) { \
+		Nan::Set(values, i, Nan::New<String>(   \
+			&PROPVALUE[i][0], PROPVALUE[i].size() \
+		).ToLocalChecked()); \
+	} \
+	Nan::Set(OBJ, Nan::New<String>( #PROPNAME).ToLocalChecked(), PROPNAME);
+
+#define CheckMinArgs(NUM, DESC) \
+	if(info.Length() < NUM) { \
+		char buffer [100]; \
+		sprintf(buffer, "This OpenZwave method requires at least %d argument(s): %s", NUM, DESC); \
+		Nan::ThrowError( buffer ); \
+	}
 
 namespace OZW {
 

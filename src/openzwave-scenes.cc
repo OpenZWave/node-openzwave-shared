@@ -1,6 +1,6 @@
 /*
 * Copyright (c) 2013 Jonathan Perkin <jonathan@perkin.org.uk>
-* Copyright (c) 2015-1016 Elias Karakoulakis <elias.karakoulakis@gmail.com>
+* Copyright (c) 2015-1017 Elias Karakoulakis <elias.karakoulakis@gmail.com>
 *
 * Permission to use, copy, modify, and distribute this software for any
 * purpose with or without fee is hereby granted, provided that the above
@@ -28,9 +28,8 @@ namespace OZW {
 	// ===================================================================
 	{
 		Nan::HandleScope scope;
-
+		CheckMinArgs(2, "label");
 		std::string label = (*String::Utf8Value(info[0]->ToString()));
-
 		SceneInfo *scene;
 
 		uint8 sceneid = OpenZWave::Manager::Get()->CreateScene();
@@ -52,9 +51,8 @@ namespace OZW {
 	// ===================================================================
 	{
 		Nan::HandleScope scope;
-
+		CheckMinArgs(1, "sceneid");
 		uint8 sceneid = info[0]->ToNumber()->Value();
-
 		SceneInfo *scene;
 
 		if ((scene = get_scene_info(sceneid))) {
@@ -69,7 +67,6 @@ namespace OZW {
 	// ===================================================================
 	{
 		Nan::HandleScope scope;
-
 		uint8 numscenes = OpenZWave::Manager::Get()->GetNumScenes();
 		SceneInfo *scene;
 
@@ -121,7 +118,7 @@ namespace OZW {
 	// ===================================================================
 	{
 		Nan::HandleScope scope;
-
+		CheckMinArgs(2, "sceneid, value");
 		uint8 sceneid  = info[0]->ToNumber()->Value();
 		OpenZWave::ValueID* vit = populateValueId(info, 1);
 		if (vit == NULL) {
@@ -189,6 +186,7 @@ namespace OZW {
 	// ===================================================================
 	{
 		Nan::HandleScope scope;
+		CheckMinArgs(2, "sceneid, value");
 		uint8 sceneid = info[0]->ToNumber()->Value();
 		SceneInfo *scene;
 		if ((scene = get_scene_info(sceneid))) {
@@ -207,7 +205,7 @@ namespace OZW {
 	// ===================================================================
 	{
 		Nan::HandleScope scope;
-
+		CheckMinArgs(1, "sceneid");
 		uint8 sceneid = info[0]->ToNumber()->Value();
 
 		std::vector<OpenZWave::ValueID> values;
@@ -239,9 +237,8 @@ namespace OZW {
 	// ===================================================================
 	{
 		Nan::HandleScope scope;
-
+		CheckMinArgs(1, "sceneid");
 		uint8 sceneid = info[0]->ToNumber()->Value();
-
 		SceneInfo *scene;
 
 		if ((scene = get_scene_info(sceneid))) {

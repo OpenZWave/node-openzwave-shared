@@ -1,6 +1,6 @@
 /*
 * Copyright (c) 2013 Jonathan Perkin <jonathan@perkin.org.uk>
-* Copyright (c) 2015-1016 Elias Karakoulakis <elias.karakoulakis@gmail.com>
+* Copyright (c) 2015-1017 Elias Karakoulakis <elias.karakoulakis@gmail.com>
 *
 * Permission to use, copy, modify, and distribute this software for any
 * purpose with or without fee is hereby granted, provided that the above
@@ -32,10 +32,9 @@ namespace OZW {
 	// ===================================================================
 	{
 		Nan::HandleScope scope;
-
+		CheckMinArgs(1, "nodeid");
 		uint8 nodeid = info[0]->ToNumber()->Value();
 		uint8 numGroups = OpenZWave::Manager::Get()->GetNumGroups(homeid, nodeid);
-
 		info.GetReturnValue().Set(Nan::New<Integer>(numGroups));
 	}
 
@@ -47,9 +46,8 @@ namespace OZW {
 	// ===================================================================
 	{
 		Nan::HandleScope scope;
-
+		CheckMinArgs(2, "nodeid, groupidx");
 		uint8* associations;
-
 		uint8 nodeid = info[0]->ToNumber()->Value();
 		uint8 groupidx = info[1]->ToNumber()->Value();
 
@@ -78,7 +76,7 @@ namespace OZW {
 	// ===================================================================
 	{
 		Nan::HandleScope scope;
-
+		CheckMinArgs(2, "nodeid, groupidx");
 		uint8 nodeid = info[0]->ToNumber()->Value();
 		uint8 groupidx = info[1]->ToNumber()->Value();
 
@@ -97,7 +95,7 @@ namespace OZW {
 	// ===================================================================
 	{
 		Nan::HandleScope scope;
-
+		CheckMinArgs(2, "nodeid, groupidx");
 		uint8 nodeid = info[0]->ToNumber()->Value();
 		uint8 groupidx = info[1]->ToNumber()->Value();
 
@@ -119,7 +117,7 @@ namespace OZW {
 	// ===================================================================
 	{
 		Nan::HandleScope scope;
-
+		CheckMinArgs(3, "nodeid, groupidx, tgtnodeid");
 		uint8 nodeid = info[0]->ToNumber()->Value();
 		uint8 groupidx = info[1]->ToNumber()->Value();
 		uint8 tgtnodeid = info[2]->ToNumber()->Value();
@@ -137,7 +135,7 @@ namespace OZW {
 	// ===================================================================
 	{
 		Nan::HandleScope scope;
-
+		CheckMinArgs(3, "nodeid, groupidx, tgtnodeid");
 		uint8 nodeid = info[0]->ToNumber()->Value();
 		uint8 groupidx = info[1]->ToNumber()->Value();
 		uint8 tgtnodeid = info[2]->ToNumber()->Value();

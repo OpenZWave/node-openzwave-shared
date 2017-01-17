@@ -1,6 +1,6 @@
 /*
 * Copyright (c) 2013 Jonathan Perkin <jonathan@perkin.org.uk>
-* Copyright (c) 2015-1016 Elias Karakoulakis <elias.karakoulakis@gmail.com>
+* Copyright (c) 2015-1017 Elias Karakoulakis <elias.karakoulakis@gmail.com>
 *
 * Permission to use, copy, modify, and distribute this software for any
 * purpose with or without fee is hereby granted, provided that the above
@@ -27,6 +27,7 @@ namespace OZW {
 	// ===================================================================
 	{
 		Nan::HandleScope scope;
+		CheckMinArgs(1, "path");
 
 		std::string path = (*String::Utf8Value(info[0]->ToString()));
 
@@ -46,9 +47,9 @@ namespace OZW {
 
 		OpenZWave::Manager::Create();
 		OpenZWave::Manager* mgr = OpenZWave::Manager::Get();
-    mgr->AddWatcher(ozw_watcher_callback, NULL);
+		mgr->AddWatcher(ozw_watcher_callback, NULL);
 		mgr->AddDriver(path);
-    std::string version(OpenZWave::Manager::getVersionAsString());
+		std::string version(OpenZWave::Manager::getVersionAsString());
 
 		Local < v8::Value > cbinfo[16];
 		cbinfo[0] = Nan::New<String>("connected").ToLocalChecked();
@@ -62,7 +63,7 @@ namespace OZW {
 	// ===================================================================
 	{
 		Nan::HandleScope scope;
-
+		CheckMinArgs(1, "path");
 		std::string path = (*String::Utf8Value(info[0]->ToString()));
 
 		OpenZWave::Manager::Get()->RemoveDriver(path);
@@ -82,7 +83,6 @@ namespace OZW {
 	// ===================================================================
 	{
 		Nan::HandleScope scope;
-
 		OpenZWave::Manager::Get()->ResetController(homeid);
 	}
 
@@ -91,7 +91,6 @@ namespace OZW {
 	// ===================================================================
 	{
 		Nan::HandleScope scope;
-
 		OpenZWave::Manager::Get()->SoftReset(homeid);
 	}
 
@@ -101,7 +100,6 @@ namespace OZW {
 	// ===================================================================
 	{
 		Nan::HandleScope scope;
-
 	 	uint8 ctrlid = OpenZWave::Manager::Get()->GetControllerNodeId (homeid);
 	 	info.GetReturnValue().Set(
 			Nan::New<Integer>(ctrlid)
@@ -113,7 +111,6 @@ namespace OZW {
 	// ===================================================================
 	{
 		Nan::HandleScope scope;
-
 	 	uint8 sucid = OpenZWave::Manager::Get()->GetSUCNodeId (homeid);
 	 	info.GetReturnValue().Set(
 			Nan::New<Integer>(sucid)
@@ -130,7 +127,6 @@ namespace OZW {
 	// ===================================================================
 	{
 		Nan::HandleScope scope;
-
 	 	bool isprimary = OpenZWave::Manager::Get()->IsPrimaryController (homeid);
 	 	info.GetReturnValue().Set(Nan::New<Boolean>(isprimary));
 	}
@@ -145,7 +141,6 @@ namespace OZW {
 	// ===================================================================
 	{
 		Nan::HandleScope scope;
-
 	 	bool issuc = OpenZWave::Manager::Get()->IsStaticUpdateController (homeid);
 	 	info.GetReturnValue().Set(Nan::New<Boolean>(issuc));
 	}
@@ -159,7 +154,6 @@ namespace OZW {
 	// ===================================================================
 	{
 		Nan::HandleScope scope;
-
 	 	bool isbridge = OpenZWave::Manager::Get()->IsBridgeController (homeid);
 	 	info.GetReturnValue().Set(Nan::New<Boolean>(isbridge));
 	}
@@ -171,7 +165,6 @@ namespace OZW {
 	// ===================================================================
 	{
 		Nan::HandleScope scope;
-
 	 	std::string libver = OpenZWave::Manager::Get()->GetLibraryVersion (homeid);
 	 	info.GetReturnValue().Set(
 			Nan::New<String>(
@@ -200,7 +193,6 @@ namespace OZW {
 	// ===================================================================
 	{
 		Nan::HandleScope scope;
-
 	 	std::string libtype = OpenZWave::Manager::Get()->GetLibraryTypeName (homeid);
 	 	info.GetReturnValue().Set(
 			Nan::New<String>(
@@ -214,7 +206,6 @@ namespace OZW {
 	// ===================================================================
 	{
 		Nan::HandleScope scope;
-
 	 	uint32 cnt = OpenZWave::Manager::Get()->GetSendQueueCount (homeid);
 	 	info.GetReturnValue().Set(Nan::New<Integer>(cnt));
 	}

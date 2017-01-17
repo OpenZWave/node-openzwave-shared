@@ -1,6 +1,6 @@
 /*
 * Copyright (c) 2013 Jonathan Perkin <jonathan@perkin.org.uk>
-* Copyright (c) 2015-1016 Elias Karakoulakis <elias.karakoulakis@gmail.com>
+* Copyright (c) 2015-1017 Elias Karakoulakis <elias.karakoulakis@gmail.com>
 *
 * Permission to use, copy, modify, and distribute this software for any
 * purpose with or without fee is hereby granted, provided that the above
@@ -48,7 +48,7 @@ namespace OZW {
 	// ===================================================================
 	{
 		Nan::HandleScope scope;
-
+		CheckMinArgs(1, "intervalMillisecs");
 		uint32 intervalMillisecs = info[0]->ToNumber()->Value();
 		OpenZWave::Manager::Get()->SetPollInterval (intervalMillisecs, false);
 	}
@@ -62,7 +62,7 @@ namespace OZW {
 	// ===================================================================
 	{
 		Nan::HandleScope scope;
-
+		CheckMinArgs(2, "nodeid, commandclass");
 		uint8 nodeid = info[0]->ToNumber()->Value();
 		uint8 comclass = info[1]->ToNumber()->Value();
 		uint8 intensity = (info.Length() > 2) ? info[2]->ToNumber()->Value() : 1;
@@ -85,7 +85,7 @@ namespace OZW {
 	// ===================================================================
 	{
 		Nan::HandleScope scope;
-
+		CheckMinArgs(2, "nodeid, commandclass");
 		uint8 nodeid = info[0]->ToNumber()->Value();
 		uint8 comclass = info[1]->ToNumber()->Value();
 		NodeInfo *node;
@@ -107,6 +107,7 @@ namespace OZW {
 	// ===================================================================
 	{
 		Nan::HandleScope scope;
+		CheckMinArgs(1, "valueId");
 		OpenZWave::ValueID* ozwvid = populateValueId(info);
 		if (ozwvid == NULL) {
 			Nan::ThrowTypeError("OpenZWave valueId not found");
@@ -121,6 +122,7 @@ namespace OZW {
 	// ===================================================================
 	{
 		Nan::HandleScope scope;
+		CheckMinArgs(1, "valueId");
 		OpenZWave::ValueID* ozwvid = populateValueId(info);
 		uint8 intensity;
 		if (ozwvid == NULL) {
@@ -138,6 +140,7 @@ namespace OZW {
 	// ===================================================================
 	{
 		Nan::HandleScope scope;
+		CheckMinArgs(1, "valueId");
 		OpenZWave::ValueID* ozwvid = populateValueId(info);
 		if (ozwvid == NULL) {
 			Nan::ThrowTypeError("OpenZWave valueId not found");
