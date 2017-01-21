@@ -60,10 +60,10 @@ namespace OZW {
 		for (uint8 nr = 0; nr < numNodes; nr++) {
 			o_assocs->Set(Nan::New<Integer>(nr), Nan::New<Integer>(associations[nr]));
 		}
-
-		// The caller is responsible for freeing the array memory
-		// with a call to delete [].
-		delete associations;
+		if (numNodes > 0) {
+			// The caller is responsible for freeing the array memory with a call to delete [].
+			delete associations;
+		}
 
 		info.GetReturnValue().Set(o_assocs);
 	}
