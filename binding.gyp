@@ -48,10 +48,10 @@
 	        }],
 			["OS=='linux'", {
 				"variables": {
-					"OZW_INC"         : "<!(node -e \"console.log(require('./lib/ozwpaths.js').includedir)\")",
-					"OZW_LIB_PATH"    : "<!(node -e \"console.log(require('./lib/ozwpaths.js').libdir)\")",
-					"OZW_ETC"         : "<!(node -e \"console.log(require('./lib/ozwpaths.js').sysconfdir)\")",
-					"OZW_DOC"         : "<!(node -e \"console.log(require('./lib/ozwpaths.js').docdir)\")"
+					"OZW_INC"         : "<!(node -p \"require('./lib/ozwpaths.js').includedir\")",
+					"OZW_LIB_PATH"    : "<!(node -p \"require('./lib/ozwpaths.js').libdir\")",
+					"OZW_ETC"         : "<!(node -p \"require('./lib/ozwpaths.js').sysconfdir\")",
+					"OZW_DOC"         : "<!(node -p \"require('./lib/ozwpaths.js').docdir\")"
 				},
         		"defines": [
 					"OPENZWAVE_ETC=<!@(node -p -e \"'<(OZW_ETC)'.length ? '<(OZW_ETC)' : '/usr/local/etc/openzwave'\")",

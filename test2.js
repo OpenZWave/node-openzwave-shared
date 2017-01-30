@@ -143,6 +143,6 @@ zwave.connect(zwavedriverpaths[os.platform()]);
 
 process.on('SIGINT', function() {
   console.log('disconnecting...');
-  zwave.disconnect();
+  zwave.disconnect(zwavedriverpaths[os.platform()]);
   process.exit();
 });
