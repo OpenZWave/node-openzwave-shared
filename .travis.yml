@@ -8,13 +8,12 @@ addons:
       - openzwave
 
     packages:
-      - gcc-4.9
-      - g++-4.9
+      - build-essentials
 
 env:
   global:
-    - CC=/usr/bin/gcc-4.9
-    - CXX=/usr/bin/g++-4.9
+    - CC=/usr/bin/gcc
+    - CXX=/usr/bin/g++
 
 node_js:
   - "0.12"
