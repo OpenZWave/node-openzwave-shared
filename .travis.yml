@@ -4,8 +4,10 @@ sudo: required
 
 addons:
   apt:
+    sources:
+      - ubuntu-toolchain-r-test
     packages:
-      - clang
+      - gcc-4.9
       - libudev-dev
       - build-essential
 
@@ -19,8 +21,8 @@ before_install:
 
 env:
   global:
-    - CC=clang
-    - CXX=clang++
+    - CC=/usr/bin/gcc-4.9
+    - CXX=/usr/bin/g++-4.9
 
 node_js:
   - "0.12"
