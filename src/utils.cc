@@ -58,7 +58,7 @@ namespace OZW {
 	}
 
 	// populate a v8 object with an attribute called 'value' whose value is the
-	// ZWave value, as returned from its proper typed call
+	// ZWave value, as returned from its proper typed call.
 	void setValObj(Local<Object>&valobj, OpenZWave::ValueID &value) {
 		/*
 		* The value itself is type-specific.
@@ -137,10 +137,67 @@ namespace OZW {
 		}
 	}
 
+	// populate a v8 object with an attribute called 'value' whose value is the
+	// SCENE value (not the current one!) - as returned from its proper typed call
+	// (using Manager::SceneGetValueAsXXX calls)
+	void setSceneValObj(uint8 sceneid, Local<Object>&valobj, OpenZWave::ValueID &value) {
+		/*
+		* The value itself is type-specific.
+		*/
+		switch (value.GetType()) {
+			case OpenZWave::ValueID::ValueType_Bool: {
+				bool val;
+				OpenZWave::Manager::Get()->SceneGetValueAsBool(sceneid, value, &val);
+				AddBooleanProp(valobj, value, val);
+				break;
+			}
+			case OpenZWave::ValueID::ValueType_Byte: {
+				uint8 val;
+				OpenZWave::Manager::Get()->SceneGetValueAsByte(sceneid, value, &val);
+				AddIntegerProp(valobj, value, val);
+				break;
+			}
+			case OpenZWave::ValueID::ValueType_Decimal: {
+				std::string val;
+				OpenZWave::Manager::Get()->SceneGetValueAsString(sceneid, value, &val);
+				AddStringProp(valobj, value, val);
+				break;
+			}
+			case OpenZWave::ValueID::ValueType_Int: {
+				int32 val;
+				OpenZWave::Manager::Get()->SceneGetValueAsInt(sceneid, value, &val);
+				AddIntegerProp(valobj, value, val);
+				break;
+			}
+			case OpenZWave::ValueID::ValueType_Short: {
+				int16 val;
+				OpenZWave::Manager::Get()->SceneGetValueAsShort(sceneid, value, &val);
+				AddIntegerProp(valobj, value, val);
+				break;
+			}
+			case OpenZWave::ValueID::ValueType_String: {
+				std::string val;
+				OpenZWave::Manager::Get()->SceneGetValueAsString(sceneid, value, &val);
+				AddStringProp(valobj, value, val.c_str())
+				break;
+			}
+			/*
+			* Buttons, Schedules, Lists and Raw do not have a SceneGetValue extractor.
+			*/
+			case OpenZWave::ValueID::ValueType_Button:
+			case OpenZWave::ValueID::ValueType_Schedule:
+			case OpenZWave::ValueID::ValueType_List:
+			case OpenZWave::ValueID::ValueType_Raw: {
+				fprintf(stderr, "unsupported scene value type: 0x%x\n", value.GetType());
+				break;
+			}
+		}
+	}
+
 	// populate a v8 Object with useful information about a ZWave node
 	void populateNode(
-			v8::Local<v8::Object>& nodeobj,
-			uint32 homeid, uint8 nodeid
+		v8::Local<v8::Object>& nodeobj,
+		uint32 homeid, uint8 nodeid
 	) {
 		OpenZWave::Manager *mgr = OpenZWave::Manager::Get();
 		AddStringProp(nodeobj, manufacturer, mgr->GetNodeManufacturerName(homeid, nodeid).c_str());
@@ -188,7 +245,7 @@ namespace OZW {
 		Local <Object> valobj = Nan::New<Object>();
 		populateValueId(valobj, value);
 		setValObj(valobj, value);
-  	return handle_scope.Escape(valobj);
+		return handle_scope.Escape(valobj);
 	}
 
 	// create a V8 object from a ZWave scene value
@@ -196,11 +253,11 @@ namespace OZW {
 		Nan::EscapableHandleScope handle_scope;
 		Local <Object> valobj =  Nan::New<Object>();
 		populateValueId(valobj, value);
-		setValObj(valobj, value);
+		setSceneValObj(sceneId, valobj, value);
 		return handle_scope.Escape(valobj);
 	}
 
-  bool isOzwValue(Local<Object>& o) {
+	bool isOzwValue(Local<Object>& o) {
 		return (!Nan::HasOwnProperty(o, Nan::New<String>("node_id").ToLocalChecked()).IsNothing()
 			&& !Nan::HasOwnProperty(o, Nan::New<String>("class_id").ToLocalChecked()).IsNothing()
 			&& !Nan::HasOwnProperty(o, Nan::New<String>("instance").ToLocalChecked()).IsNothing()
