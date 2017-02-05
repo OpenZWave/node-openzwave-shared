@@ -15,6 +15,7 @@ before_install:
   - cd open-zwave-master
   - sudo make install
   - npm install -g node-gyp
+  - cd ..
 
 env:
   global:
@@ -27,6 +28,5 @@ node_js:
   - "6"
 
 script:
-  - cd ~/OpenZWave/node-openzwave-shared
   - node-gyp configure
   - node-gyp build
