@@ -4,10 +4,8 @@ sudo: false
 
 addons:
   apt:
-    sources:
-      - openzwave
-
     packages:
+      - libudev-dev
       - build-essentials
 
 before_install:
