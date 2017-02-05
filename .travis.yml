@@ -27,5 +27,6 @@ node_js:
   - "6"
 
 script:
+  - cd ~/OpenZWave/node-openzwave-shared
   - node-gyp configure
   - node-gyp build
