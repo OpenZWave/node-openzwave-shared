@@ -5,6 +5,7 @@ sudo: required
 addons:
   apt:
     packages:
+      - clang
       - libudev-dev
       - build-essential
 
@@ -13,11 +14,12 @@ before_install:
   - unzip master.zip
   - cd open-zwave-master
   - sudo make install
+  - npm install -g node-gyp
 
 env:
   global:
-    - CC=/usr/bin/gcc
-    - CXX=/usr/bin/g++
+    - CC=clang
+    - CXX=clang++
 
 node_js:
   - "0.12"
