@@ -6,7 +6,7 @@ addons:
   apt:
     packages:
       - libudev-dev
-      - build-essentials
+      - build-essential
 
 before_install:
   - wget http://mirror.my-ho.st/Downloads/OpenZWave/Debian_8.0/amd64/libopenzwave1.3-dev_1.4.164_amd64.deb
