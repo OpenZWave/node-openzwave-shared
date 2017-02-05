@@ -1,7 +1,11 @@
+.cproject
+.project
 *.diff
 *.swo
+*.swp
 *.tgz
 OZW_Log.txt
 build
 zwcfg*
 zwscene.xml
+node_modules
