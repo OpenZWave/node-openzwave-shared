@@ -1,0 +1,25 @@
+language: node_js
+
+sudo: false
+
+addons:
+  apt:
+    sources:
+      - openzwave
+
+    packages:
+      - gcc-4.9
+      - g++-4.9
+
+env:
+  global:
+    - CC=/usr/bin/gcc-4.9
+    - CXX=/usr/bin/g++-4.9
+
+node_js:
+  - "0.12"
+  - "4"
+  - "6"
+
+script:
+  - npm test
