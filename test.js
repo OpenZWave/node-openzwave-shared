@@ -110,15 +110,7 @@ zwave.on('scan complete', function() {
 	console.log('scan complete, hit ^C to finish.');
 });
 
-var zwavedriverpaths = {
-	"darwin": '/dev/cu.usbmodem1411',
-	"linux": '/dev/ttyUSB0',
-	"windows": '\\\\.\\COM3'
-}
-console.log("connecting to " + zwavedriverpaths[os.platform()]);
-zwave.connect(zwavedriverpaths[os.platform()]);
-
-process.on('SIGINT', function() {
+function do_disconnect() {
 	console.log('\n\n== Driver Statistics: %j',
 		zwave.getDriverStatistics());
 	Object.keys(nodes).forEach(function(nodeid) {
@@ -128,6 +120,17 @@ process.on('SIGINT', function() {
 			nodeid, zwave.getNodeStatistics(nodeid));
 	});
 	console.log('disconnecting...');
-	zwave.disconnect();
+	zwave.disconnect(zwp);
 	process.exit();
-});
+}
+
+var zwavedriverpaths = {
+	"darwin": '/dev/cu.usbmodem1411',
+	"linux": '/dev/ttyUSB0',
+	"windows": '\\\\.\\COM3'
+}
+var zwp = zwavedriverpaths[os.platform()];
+console.log("connecting to %s",zwp);
+zwave.connect(zwp);
+process.on('SIGINT', do_disconnect);
+setTimeout(do_disconnect, 3000);

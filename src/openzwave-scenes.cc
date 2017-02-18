@@ -1,6 +1,6 @@
 /*
 * Copyright (c) 2013 Jonathan Perkin <jonathan@perkin.org.uk>
-* Copyright (c) 2015-1017 Elias Karakoulakis <elias.karakoulakis@gmail.com>
+* Copyright (c) 2015-2017 Elias Karakoulakis <elias.karakoulakis@gmail.com>
 *
 * Permission to use, copy, modify, and distribute this software for any
 * purpose with or without fee is hereby granted, provided that the above
@@ -83,7 +83,6 @@ namespace OZW {
 			for (unsigned i = 0; i < numscenes; i++) {
 				scene = new SceneInfo();
 				scene->sceneid = sceneids[i];
-
 				scene->label = OpenZWave::Manager::Get()->GetSceneLabel(sceneids[i]);
 				mutex::scoped_lock sl(zscenes_mutex);
 				zscenes.push_back(scene);
@@ -221,11 +220,9 @@ namespace OZW {
 			Local<Array> v8values = Nan::New<Array>(scene->values.size());
 
 			unsigned j = 0;
-
 			for (vit = values.begin(); vit != values.end(); ++vit) {
 				mutex::scoped_lock sl(zscenes_mutex);
 				scene->values.push_back(*vit);
-
 				v8values->Set(Nan::New<Integer>(j++), zwaveSceneValue2v8Value(sceneid, *vit));
 			}
 			info.GetReturnValue().Set(v8values);
