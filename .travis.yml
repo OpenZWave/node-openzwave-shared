@@ -16,7 +16,7 @@ before_install:
   - unzip master.zip
   - cd open-zwave-master
   - sudo make install
-  - sudo ldconfig -n /usr/local/lib64
+  - sudo ldconfig /usr/local/lib /usr/local/lib64
   - npm install -g node-gyp
   - cd ..
 
