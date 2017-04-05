@@ -28,7 +28,7 @@ namespace OZW {
 	// ===================================================================
 	{
 		Nan::HandleScope scope;
-		CheckMinArgs(2, "label");
+		CheckMinArgs(1, "label");
 		std::string label = (*String::Utf8Value(info[0]->ToString()));
 		SceneInfo *scene;
 
