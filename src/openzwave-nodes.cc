@@ -105,7 +105,17 @@ namespace OZW {
 		}
 	}
 
-
+	NAN_METHOD(OZW::ReleaseButton)
+	// ===================================================================
+	{
+		Nan::HandleScope scope;
+		OpenZWave::ValueID* ozwvid = populateValueId(info);
+		if (ozwvid == NULL) {
+			Nan::ThrowTypeError("OpenZWave valueId not found");
+		} else {
+			OpenZWave::Manager::Get()->ReleaseButton(*ozwvid);
+		}
+	}
 	/*
 	* Write a new location string to the device, if supported.
 	*/
