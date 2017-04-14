@@ -48,21 +48,22 @@
 	        }],
 			["OS=='linux'", {
 				"variables": {
-					"OZW_INC"         : "<!(node -p \"require('./lib/ozwpaths.js').includedir\")",
-					"OZW_LIB_PATH"    : "<!(node -p \"require('./lib/ozwpaths.js').libdir\")",
-					"OZW_ETC"         : "<!(node -p \"require('./lib/ozwpaths.js').sysconfdir\")",
-					"OZW_DOC"         : "<!(node -p \"require('./lib/ozwpaths.js').docdir\")"
+					"NODE"            : "<!(which nodejs || which node)",
+					"OZW_INC"         : "<!(<(NODE) -p \"require('./lib/ozwpaths.js').includedir || '/usr/*/include'\")",
+					"OZW_LIB_PATH"    : "<!(<(NODE) -p \"require('./lib/ozwpaths.js').libdir\")",
+					"OZW_ETC"         : "<!(<(NODE) -p \"require('./lib/ozwpaths.js').sysconfdir\")",
+					"OZW_DOC"         : "<!(<(NODE) -p \"require('./lib/ozwpaths.js').docdir\")"
 				},
         		"defines": [
-					"OPENZWAVE_ETC=<!@(node -p -e \"'<(OZW_ETC)'.length ? '<(OZW_ETC)' : '/usr/local/etc/openzwave'\")",
-					"OPENZWAVE_DOC=<!@(node -p -e \"'<(OZW_DOC)'.length ? '<(OZW_DOC)' : '/usr/local/share/doc/openzwave'\")",
+					"OPENZWAVE_ETC=<!@(<(NODE) -p -e \"'<(OZW_ETC)'.length ? '<(OZW_ETC)' : '/usr/local/etc/openzwave'\")",
+					"OPENZWAVE_DOC=<!@(<(NODE) -p -e \"'<(OZW_DOC)'.length ? '<(OZW_DOC)' : '/usr/local/share/doc/openzwave'\")",
 					"OPENZWAVE_SECURITY=<!@(find <(OZW_INC) -name ZWSecurity.h | wc -l)"
         		],
 				"link_settings": {
 					"libraries": ["-lopenzwave"]
 				},
 				"include_dirs": [
-					"<!(node -p -e \"require('path').dirname(require.resolve('nan'))\")",
+					"<!(<(NODE) -p -e \"require('path').dirname(require.resolve('nan'))\")",
 					"<(OZW_INC)",
 					"<(OZW_INC)/value_classes"
 				],
