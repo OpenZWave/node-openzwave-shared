@@ -111,6 +111,7 @@ namespace OZW {
 		static NAN_METHOD(SwitchAllOn);
 		static NAN_METHOD(SwitchAllOff);
     static NAN_METHOD(PressButton);
+		static NAN_METHOD(ReleaseButton);
 		//
 		static NAN_METHOD(RefreshNodeInfo);
 		static NAN_METHOD(RequestNodeState);
