@@ -1,6 +1,6 @@
 {
   "name": "openzwave-shared",
-  "version": "1.3.2",
+  "version": "1.3.4",
   "description": "Node.JS bindings for OpenZWave including management and security functions",
   "main": "./lib/openzwave-shared.js",
   "dependencies": {
@@ -37,7 +37,8 @@
     "Brennan Kinney",
     "Adam Rensel",
     "David Moxey",
-    "Bart Bakker"
+    "Bart Bakker",
+    "vectah0"
   ],
   "license": {
     "type": "ISC",
