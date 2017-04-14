@@ -117,6 +117,7 @@ namespace OZW {
 		Nan::SetPrototypeMethod(t, "switchAllOn", OZW::SwitchAllOn);
 		Nan::SetPrototypeMethod(t, "switchAllOff", OZW::SwitchAllOff);
 		Nan::SetPrototypeMethod(t, "pressButton", OZW::PressButton);
+		Nan::SetPrototypeMethod(t, "releaseButton", OZW::ReleaseButton);
 		//
 		Nan::SetPrototypeMethod(t, "refreshNodeInfo", OZW::RefreshNodeInfo); // ** new
 		Nan::SetPrototypeMethod(t, "requestNodeState", OZW::RequestNodeState); // ** new
