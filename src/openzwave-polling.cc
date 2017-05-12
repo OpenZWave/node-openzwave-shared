@@ -69,7 +69,7 @@ namespace OZW {
 
 		NodeInfo *node;
 		std::list<OpenZWave::ValueID>::iterator vit;
-		bool = false;
+		bool b = false;
 		if ((node = get_node_info(nodeid))) {
 			for (vit = node->values.begin(); vit != node->values.end(); ++vit) {
 				if ((*vit).GetCommandClassId() == comclass) {
@@ -91,7 +91,7 @@ namespace OZW {
 		uint8 comclass = info[1]->ToNumber()->Value();
 		NodeInfo *node;
 		std::list<OpenZWave::ValueID>::iterator vit;
-		b = false;
+		bool b = false;
 		if ((node = get_node_info(nodeid))) {
 			for (vit = node->values.begin(); vit != node->values.end(); ++vit) {
 				if ((*vit).GetCommandClassId() == comclass) {
