@@ -69,15 +69,16 @@ namespace OZW {
 
 		NodeInfo *node;
 		std::list<OpenZWave::ValueID>::iterator vit;
-
+		bool = false;
 		if ((node = get_node_info(nodeid))) {
 			for (vit = node->values.begin(); vit != node->values.end(); ++vit) {
 				if ((*vit).GetCommandClassId() == comclass) {
-					OpenZWave::Manager::Get()->EnablePoll((*vit), intensity);
+					b = OpenZWave::Manager::Get()->EnablePoll((*vit), intensity);
 					break;
 				}
 			}
 		}
+		info.GetReturnValue().Set(Nan::New<Boolean>(b));
 	}
 
 	// ===================================================================
@@ -90,15 +91,16 @@ namespace OZW {
 		uint8 comclass = info[1]->ToNumber()->Value();
 		NodeInfo *node;
 		std::list<OpenZWave::ValueID>::iterator vit;
-
+		b = false;
 		if ((node = get_node_info(nodeid))) {
 			for (vit = node->values.begin(); vit != node->values.end(); ++vit) {
 				if ((*vit).GetCommandClassId() == comclass) {
-					OpenZWave::Manager::Get()->DisablePoll((*vit));
+					b = OpenZWave::Manager::Get()->DisablePoll((*vit));
 					break;
 				}
 			}
 		}
+		info.GetReturnValue().Set(Nan::New<Boolean>(b));
 	}
 
 	// Determine the polling of a device's state.
