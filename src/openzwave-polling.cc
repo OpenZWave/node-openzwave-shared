@@ -111,9 +111,7 @@ namespace OZW {
 		Nan::HandleScope scope;
 		CheckMinArgs(1, "valueId");
 		OpenZWave::ValueID* ozwvid = populateValueId(info);
-		if (ozwvid == NULL) {
-			Nan::ThrowTypeError("OpenZWave valueId not found");
-		} else {
+		if (ozwvid) {
 			bool b = OpenZWave::Manager::Get()->isPolled(*ozwvid);
 			info.GetReturnValue().Set(Nan::New<Boolean>(b));
 		}
@@ -127,9 +125,7 @@ namespace OZW {
 		CheckMinArgs(1, "valueId");
 		OpenZWave::ValueID* ozwvid = populateValueId(info);
 		uint8 intensity;
-		if (ozwvid == NULL) {
-			Nan::ThrowTypeError("OpenZWave valueId not found");
-		} else {
+		if (ozwvid) {
 			uint8 intensity_index = ( info[0]->IsObject() ) ? 1 : 4;
 			intensity = info[intensity_index]->ToNumber()->Value();
 			OpenZWave::Manager::Get()->SetPollIntensity (*ozwvid, intensity);
@@ -144,9 +140,7 @@ namespace OZW {
 		Nan::HandleScope scope;
 		CheckMinArgs(1, "valueId");
 		OpenZWave::ValueID* ozwvid = populateValueId(info);
-		if (ozwvid == NULL) {
-			Nan::ThrowTypeError("OpenZWave valueId not found");
-		} else {
+		if (ozwvid) {
 			uint8 i = OpenZWave::Manager::Get()->GetPollIntensity(*ozwvid);
 			info.GetReturnValue().Set(Nan::New<Integer>(i));
 		}
