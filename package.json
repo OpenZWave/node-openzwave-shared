@@ -4,7 +4,7 @@
   "description": "Node.JS bindings for OpenZWave including management and security functions",
   "main": "./lib/openzwave-shared.js",
   "dependencies": {
-    "nan": "2.5.0"
+    "nan": "2.6.2"
   },
   "scripts": {
     "test": "node test.js",
