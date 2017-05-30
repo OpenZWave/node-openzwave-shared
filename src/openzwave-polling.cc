@@ -69,14 +69,15 @@ namespace OZW {
 
 		NodeInfo *node;
 		std::list<OpenZWave::ValueID>::iterator vit;
-
+		bool b = false;
 		if ((node = get_node_info(nodeid))) {
 			for (vit = node->values.begin(); vit != node->values.end(); ++vit) {
 				if ((*vit).GetCommandClassId() == comclass) {
-					OpenZWave::Manager::Get()->EnablePoll((*vit), intensity);
+					b = OpenZWave::Manager::Get()->EnablePoll((*vit), intensity);
 				}
 			}
 		}
+		info.GetReturnValue().Set(Nan::New<Boolean>(b));
 	}
 
 	// ===================================================================
@@ -89,14 +90,15 @@ namespace OZW {
 		uint8 comclass = info[1]->ToNumber()->Value();
 		NodeInfo *node;
 		std::list<OpenZWave::ValueID>::iterator vit;
-
+		bool b = false;
 		if ((node = get_node_info(nodeid))) {
 			for (vit = node->values.begin(); vit != node->values.end(); ++vit) {
 				if ((*vit).GetCommandClassId() == comclass) {
-					OpenZWave::Manager::Get()->DisablePoll((*vit));
+					b = OpenZWave::Manager::Get()->DisablePoll((*vit));
 				}
 			}
 		}
+		info.GetReturnValue().Set(Nan::New<Boolean>(b));
 	}
 
 	// Determine the polling of a device's state.
@@ -107,9 +109,7 @@ namespace OZW {
 		Nan::HandleScope scope;
 		CheckMinArgs(1, "valueId");
 		OpenZWave::ValueID* ozwvid = populateValueId(info);
-		if (ozwvid == NULL) {
-			Nan::ThrowTypeError("OpenZWave valueId not found");
-		} else {
+		if (ozwvid) {
 			bool b = OpenZWave::Manager::Get()->isPolled(*ozwvid);
 			info.GetReturnValue().Set(Nan::New<Boolean>(b));
 		}
@@ -123,9 +123,7 @@ namespace OZW {
 		CheckMinArgs(1, "valueId");
 		OpenZWave::ValueID* ozwvid = populateValueId(info);
 		uint8 intensity;
-		if (ozwvid == NULL) {
-			Nan::ThrowTypeError("OpenZWave valueId not found");
-		} else {
+		if (ozwvid) {
 			uint8 intensity_index = ( info[0]->IsObject() ) ? 1 : 4;
 			intensity = info[intensity_index]->ToNumber()->Value();
 			OpenZWave::Manager::Get()->SetPollIntensity (*ozwvid, intensity);
@@ -140,9 +138,7 @@ namespace OZW {
 		Nan::HandleScope scope;
 		CheckMinArgs(1, "valueId");
 		OpenZWave::ValueID* ozwvid = populateValueId(info);
-		if (ozwvid == NULL) {
-			Nan::ThrowTypeError("OpenZWave valueId not found");
-		} else {
+		if (ozwvid) {
 			uint8 i = OpenZWave::Manager::Get()->GetPollIntensity(*ozwvid);
 			info.GetReturnValue().Set(Nan::New<Integer>(i));
 		}

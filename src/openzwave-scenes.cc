@@ -120,9 +120,7 @@ namespace OZW {
 		CheckMinArgs(2, "sceneid, value");
 		uint8 sceneid  = info[0]->ToNumber()->Value();
 		OpenZWave::ValueID* vit = populateValueId(info, 1);
-		if (vit == NULL) {
-			Nan::ThrowTypeError("OpenZWave valueId not found");
-		} else {
+		if (vit) {
 			uint8 valoffset = ( info[1]->IsObject() ) ? 2 : 5;
 			switch ((*vit).GetType()) {
 				case OpenZWave::ValueID::ValueType_Bool: {
@@ -190,9 +188,7 @@ namespace OZW {
 		SceneInfo *scene;
 		if ((scene = get_scene_info(sceneid))) {
 			OpenZWave::ValueID* vit = populateValueId(info, 1);
-			if (vit == NULL) {
-				Nan::ThrowTypeError("OpenZWave valueId not found");
-			} else {
+			if (vit) {
 				OpenZWave::Manager::Get()->RemoveSceneValue(sceneid, *vit);
 				scene->values.remove(*vit);
 			}

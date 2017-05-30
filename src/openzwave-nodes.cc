@@ -98,22 +98,18 @@ namespace OZW {
 	{
 		Nan::HandleScope scope;
 		OpenZWave::ValueID* ozwvid = populateValueId(info);
-		if (ozwvid == NULL) {
-			Nan::ThrowTypeError("OpenZWave valueId not found");
-		} else {
+		if (ozwvid) {
 			OpenZWave::Manager::Get()->PressButton(*ozwvid);
 		}
 	}
-	
+
 	// ===================================================================
 	NAN_METHOD(OZW::ReleaseButton)
 	// ===================================================================
 	{
 		Nan::HandleScope scope;
 		OpenZWave::ValueID* ozwvid = populateValueId(info);
-		if (ozwvid == NULL) {
-			Nan::ThrowTypeError("OpenZWave valueId not found");
-		} else {
+		if (ozwvid) {
 			OpenZWave::Manager::Get()->ReleaseButton(*ozwvid);
 		}
 	}
