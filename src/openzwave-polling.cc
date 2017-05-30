@@ -74,7 +74,6 @@ namespace OZW {
 			for (vit = node->values.begin(); vit != node->values.end(); ++vit) {
 				if ((*vit).GetCommandClassId() == comclass) {
 					b = OpenZWave::Manager::Get()->EnablePoll((*vit), intensity);
-					break;
 				}
 			}
 		}
@@ -96,7 +95,6 @@ namespace OZW {
 			for (vit = node->values.begin(); vit != node->values.end(); ++vit) {
 				if ((*vit).GetCommandClassId() == comclass) {
 					b = OpenZWave::Manager::Get()->DisablePoll((*vit));
-					break;
 				}
 			}
 		}
