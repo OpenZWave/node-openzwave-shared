@@ -45,19 +45,26 @@ minutes!) to scan the ZWave network and set up its data structures.
 So, be sure to register a "scan complete" callback, and after it gets called,
 you can safely start issuing commands to your ZWave devices.
 
-Modifying device state:
+**Controlling zwave valueIDs** is usually done by passing the ValueID as a
+Javascipt object or as 4 discrete integer arguments:
+- 1: ZWave Node Id,
+- 2: Command Class,
+- 3: Instance and
+- 4: Index
+
+For example if Zwave Node #3 is a binary switch, to turn it on and off, use
+command class 37:
+
 ```js
-/*
- * Set arbitrary values.
- */
-// 1) by means of passing each individual ValueID constituent:
-zwave.setValue(nodeid, commandclass, instance, index, value);
-zwave.setValue(3,      37,           1,        0,     true); // node 3: turn on
-zwave.setValue(3,      37,           1,        0,     false); // node 3: turn off
-// dimmer node 5: set to 50%
-zwave.setValue(5,      38,           1,        0,     50);
-// 2) or by passing the valueID object (emitted by ValueAdded event):
-zwave.setValue({ node_id:5, class_id: 38, instance:1, index:0}, 50);
+zwave.setValue(3, 37,  1,  0,  true);  // node 3: turn on
+zwave.setValue(3, 37,  1,  0,  false); // node 3: turn off
+```
+
+Another example: if Zwave Node #5 is a dimmer, use class 38:
+
+```js
+zwave.setValue(5,  38,  1,  0, 50); // 1) passing each individual ValueID constituent:
+zwave.setValue({ node_id:5, class_id: 38, instance:1, index:0}, 50); // 2) or a valueID object (emitted by ValueAdded event):
 
 /*
  * Turn a binary switch on/off.
@@ -94,13 +101,13 @@ zwave.setNodeName(nodeid, name);            // arbitrary name string
 
 Polling a device for changes (not all devices require this):
 ```js
-zwave.enablePoll(nodeid, commandclass, intensity);
-zwave.disablePoll(nodeid, commandclass);
-zwave.setPollInterval(nodeid, )
-zwave.getPollInterval();
-zwave.isPolled();
-zwave.setPollIntensity();
-zwave.getPollIntensity();
+zwave.enablePoll({valueId}, intensity);
+zwave.disablePoll({valueId});
+zwave.setPollInterval(intervalMillisecs) // set the polling interval in msec
+zwave.getPollInterval();  // return the polling interval
+zwave.setPollIntensity({valueId}, intensity); // Set the frequency of polling (0=none, 1=every time through the list, 2-every other time, etc)
+zwave.getPollIntensity({valueId});
+zwave.isPolled({valueId});
 ```
 
 Association groups management:

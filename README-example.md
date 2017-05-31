@@ -42,10 +42,10 @@ zwave.on('node added', function(nodeid) {
     };
 });
 
-zwave.on('value added', function(nodeid, comclass, value) {
+zwave.on('value added', function(nodeid, comclass, valueId) {
     if (!nodes[nodeid]['classes'][comclass])
         nodes[nodeid]['classes'][comclass] = {};
-    nodes[nodeid]['classes'][comclass][value.index] = value;
+    nodes[nodeid]['classes'][comclass][valueId.index] = value;
 });
 
 zwave.on('value changed', function(nodeid, comclass, value) {
@@ -85,16 +85,17 @@ zwave.on('node ready', function(nodeid, nodeinfo) {
             nodeinfo.type,
             nodeinfo.loc);
     for (comclass in nodes[nodeid]['classes']) {
-        switch (comclass) {
+      console.log('node%d: class %d', nodeid, comclass);
+      switch (comclass) {
         case 0x25: // COMMAND_CLASS_SWITCH_BINARY
         case 0x26: // COMMAND_CLASS_SWITCH_MULTILEVEL
-            zwave.enablePoll(nodeid, comclass);
+          var valueIds = nodes[nodeid]['classes'][comclass];
+          for (valueId in valueIds) {
+            zwave.enablePoll(valueId);
             break;
-        }
-        var values = nodes[nodeid]['classes'][comclass];
-        console.log('node%d: class %d', nodeid, comclass);
-        for (idx in values)
-            console.log('node%d:   %s=%s', nodeid, values[idx]['label'], values[idx]['value']);
+          }
+          console.log('node%d:   %s=%s', nodeid, values[idx]['label'], values[idx]['value']);
+      }
     }
 });
 
