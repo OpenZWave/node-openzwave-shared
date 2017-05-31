@@ -53,30 +53,20 @@ namespace OZW {
 		OpenZWave::Manager::Get()->SetPollInterval (intervalMillisecs, false);
 	}
 
-
 	/*
-	* Enable/Disable polling on a COMMAND_CLASS basis.
+	* Enable/Disable polling on a ValueID
 	*/
 	// ===================================================================
 	NAN_METHOD(OZW::EnablePoll)
 	// ===================================================================
 	{
 		Nan::HandleScope scope;
-		CheckMinArgs(2, "nodeid, commandclass");
-		uint8 nodeid = info[0]->ToNumber()->Value();
-		uint8 comclass = info[1]->ToNumber()->Value();
-		uint8 intensity = (info.Length() > 2) ? info[2]->ToNumber()->Value() : 1;
-
-		NodeInfo *node;
-		std::list<OpenZWave::ValueID>::iterator vit;
+		CheckMinArgs(2, "valueId_object, intensity");
+		OpenZWave::ValueID* vit = populateValueId(info);
 		bool b = false;
-		if ((node = get_node_info(nodeid))) {
-			for (vit = node->values.begin(); vit != node->values.end(); ++vit) {
-				if ((*vit).GetCommandClassId() == comclass) {
-					b = OpenZWave::Manager::Get()->EnablePoll((*vit), intensity);
-					break;
-				}
-			}
+		if (vit) {
+			uint8 intensity = (info.Length() > 4) ? info[4]->ToNumber()->Value() : 1;
+			b = OpenZWave::Manager::Get()->EnablePoll((*vit), intensity);
 		}
 		info.GetReturnValue().Set(Nan::New<Boolean>(b));
 	}
@@ -86,19 +76,11 @@ namespace OZW {
 	// ===================================================================
 	{
 		Nan::HandleScope scope;
-		CheckMinArgs(2, "nodeid, commandclass");
-		uint8 nodeid = info[0]->ToNumber()->Value();
-		uint8 comclass = info[1]->ToNumber()->Value();
-		NodeInfo *node;
-		std::list<OpenZWave::ValueID>::iterator vit;
+		CheckMinArgs(1, "valueId");
+		OpenZWave::ValueID* vit = populateValueId(info);
 		bool b = false;
-		if ((node = get_node_info(nodeid))) {
-			for (vit = node->values.begin(); vit != node->values.end(); ++vit) {
-				if ((*vit).GetCommandClassId() == comclass) {
-					b = OpenZWave::Manager::Get()->DisablePoll((*vit));
-					break;
-				}
-			}
+		if (vit) {
+			b = OpenZWave::Manager::Get()->DisablePoll((*vit));
 		}
 		info.GetReturnValue().Set(Nan::New<Boolean>(b));
 	}
