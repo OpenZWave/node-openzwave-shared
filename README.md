@@ -31,6 +31,14 @@ This addon is currently able to:
 - *perform* management tasks (add/remove nodes, replace failed nodes, manage
 	their group associations etc)
 
+**API change notice (v1.4.0)**
+`enablePoll()` and `disablePoll()` used to affect *only the first ValueID of any given command class*.
+This is *wrong*, as for multi-instance devices you probably need to poll multiple ValueID's.
+These calls now accept a valueId, in very much the same way as `setValue()` does. This means that 
+you now have to pass a valueID object (or its 4 constituents) for each value you want to enable/disable 
+polling for.
+
+
 **Important notice**
 
 This library differs from its [ancestor library](https://github.com/jperkin/node-openzwave)
