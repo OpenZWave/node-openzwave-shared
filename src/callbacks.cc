@@ -150,7 +150,11 @@ void handleNotification(NotifInfo *notif)
 {
   Nan::HandleScope scope;
   Local<v8::Value> emitinfo[16];
+  Local<Object> emitobj = Nan::New<Object>();
   Local<Object> cbinfo = Nan::New<Object>();
+
+  AddIntegerProp(emitobj, homeid, notif->homeid);
+
 	//
   NodeInfo *node;
   //
@@ -239,8 +243,9 @@ void handleNotification(NotifInfo *notif)
       mutex::scoped_lock sl(znodes_mutex);
       znodes[notif->nodeid] = node;
     }
+    AddIntegerProp(emitobj, nodeid, notif->nodeid);
     emitinfo[0] = Nan::New<String>("node added").ToLocalChecked();
-    emitinfo[1] = Nan::New<Integer>(notif->nodeid);
+    emitinfo[1] = emitobj;
     emit_cb->Call(2, emitinfo);
     break;
   }
