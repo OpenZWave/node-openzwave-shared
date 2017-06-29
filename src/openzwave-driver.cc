@@ -31,6 +31,9 @@ namespace OZW {
 
 		std::string path = (*String::Utf8Value(info[0]->ToString()));
 
+    uint8 tst = Nan::To<Number>(info[1]).ToLocalChecked()->Value();
+		std::cout << "test: (" << unsigned(tst) << ")\n";
+
 		uv_async_init(uv_default_loop(), &async, async_cb_handler);
 
 		Local<Function> callbackHandle = Nan::Get( info.This(),
