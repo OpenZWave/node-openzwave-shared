@@ -36,37 +36,37 @@ namespace OZW {
 			uint8 validx  =  (info[0]->IsObject()) ? 1 : 4;
 			switch ((*vit).GetType()) {
 				case OpenZWave::ValueID::ValueType_Bool: {
-					bool val = info[validx]->BooleanValue();
+					bool val = Nan::To<Boolean>(info[validx]).ToLocalChecked()->Value();
 					mgr->SetValue(*vit, val);
 					break;
 				}
 				case OpenZWave::ValueID::ValueType_Byte: {
-					uint8 val = info[validx]->ToInteger()->Value();
+					uint8 val = Nan::To<Integer>(info[validx]).ToLocalChecked()->Value();
 					OpenZWave::Manager::Get()->SetValue(*vit, val);
 					break;
 				}
 				case OpenZWave::ValueID::ValueType_Decimal: {
-					float val = info[validx]->ToNumber()->NumberValue();
+					float val = Nan::To<Number>(info[validx]).ToLocalChecked()->NumberValue();
 					OpenZWave::Manager::Get()->SetValue(*vit, val);
 					break;
 				}
 				case OpenZWave::ValueID::ValueType_Int: {
-					int32 val = info[validx]->ToInteger()->Value();
+					int32 val = Nan::To<Integer>(info[validx]).ToLocalChecked()->Value();
 					OpenZWave::Manager::Get()->SetValue(*vit, val);
 					break;
 				}
 				case OpenZWave::ValueID::ValueType_List: {
-					std::string val = (*String::Utf8Value(info[validx]->ToString()));
+					std::string val = (*String::Utf8Value(Nan::To<String>(info[validx]).ToLocalChecked()));
 					OpenZWave::Manager::Get()->SetValue(*vit, val);
 					break;
 				}
 				case OpenZWave::ValueID::ValueType_Short: {
-					int16 val = info[validx]->ToInteger()->Value();
+					int16 val = Nan::To<Integer>(info[validx]).ToLocalChecked()->Value();
 					OpenZWave::Manager::Get()->SetValue(*vit, val);
 					break;
 				}
 				case OpenZWave::ValueID::ValueType_String: {
-					std::string val = (*String::Utf8Value(info[validx]->ToString()));
+					std::string val = (*String::Utf8Value(Nan::To<String>(info[validx]).ToLocalChecked()));
 					OpenZWave::Manager::Get()->SetValue(*vit, val);
 					break;
 				}
@@ -121,7 +121,7 @@ namespace OZW {
 			const uint8 validx = (info[0]->IsObject()) ? 1 : 4;
 			if (checkType(info[validx]->IsBoolean())) {
 				OpenZWave::Manager* mgr = OpenZWave::Manager::Get();
-				mgr->SetChangeVerified(*vit, info[validx]->BooleanValue());
+				mgr->SetChangeVerified(*vit, Nan::To<Boolean>(info[validx]).ToLocalChecked()->Value());
 			}
 		}
 	}
@@ -164,7 +164,7 @@ namespace OZW {
 			if ((info.Length() < idxpos) || !info[idxpos]->IsNumber()) {
 				Nan::ThrowTypeError("must supply an integer index after the valueId");
 			} else {
-				idx = info[idxpos]->ToNumber()->Value();
+				idx = Nan::To<Number>(info[idxpos]).ToLocalChecked()->Value();
 				OpenZWave::Manager::Get()->GetSwitchPoint(*vit, idx, &o_hours, &o_minutes, &o_setback);
 				Local<Object> o  = Nan::New<Object>();
 				Nan::Set(o,
@@ -215,9 +215,9 @@ namespace OZW {
 				} else {
 					Local<Object> sp = info[idxpos]->ToObject();
 					OpenZWave::Manager::Get()->SetSwitchPoint(*vit,
-						Nan::Get(sp, Nan::New<String>("hours").ToLocalChecked()).ToLocalChecked()->ToNumber()->Value(),
-						Nan::Get(sp, Nan::New<String>("minutes").ToLocalChecked()).ToLocalChecked()->ToNumber()->Value(),
-						Nan::Get(sp, Nan::New<String>("setback").ToLocalChecked()).ToLocalChecked()->ToNumber()->Value()
+						Nan::To<Number>(Nan::Get(sp, Nan::New<String>("hours").ToLocalChecked()).ToLocalChecked()).ToLocalChecked()->Value(),
+						Nan::To<Number>(Nan::Get(sp, Nan::New<String>("minutes").ToLocalChecked()).ToLocalChecked()).ToLocalChecked()->Value(),
+						Nan::To<Number>(Nan::Get(sp, Nan::New<String>("setback").ToLocalChecked()).ToLocalChecked()).ToLocalChecked()->Value()
 					);
 				}
 			}
@@ -239,10 +239,10 @@ namespace OZW {
 				if ((info.Length() < idxpos) || !info[idxpos]->IsObject()) {
 					Nan::ThrowTypeError("must supply a switchpoint object ");
 				} else {
-					Local<Object> sp = info[idxpos]->ToObject();
+					Local<Object> sp = Nan::To<Object>(info[idxpos]).ToLocalChecked();
 					OpenZWave::Manager::Get()->RemoveSwitchPoint(*vit,
-						Nan::Get(sp, Nan::New<String>("hours").ToLocalChecked()).ToLocalChecked()->ToNumber()->Value(),
-						Nan::Get(sp, Nan::New<String>("minutes").ToLocalChecked()).ToLocalChecked()->ToNumber()->Value()
+						Nan::To<Number>(Nan::Get(sp, Nan::New<String>("hours").ToLocalChecked()).ToLocalChecked()).ToLocalChecked()->Value(),
+						Nan::To<Number>(Nan::Get(sp, Nan::New<String>("minutes").ToLocalChecked()).ToLocalChecked()).ToLocalChecked()->Value()
 					);
 				}
 			}

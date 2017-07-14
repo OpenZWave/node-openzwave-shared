@@ -211,7 +211,7 @@ namespace OZW {
 		std::string option_overrides;
 		// Options are global for all drivers and can only be set once.
 		if (info.Length() > 0) {
-			Local < Object > opts = info[0]->ToObject();
+			Local < Object > opts = Nan::To<Object>(info[0]).ToLocalChecked();
 			Local < Array > props = Nan::GetOwnPropertyNames(opts).ToLocalChecked();
 			for (unsigned int i = 0; i < props->Length(); ++i) {
 				Local<Value> key       = props->Get(i);
@@ -248,6 +248,8 @@ namespace OZW {
 		self->config_path = ozw_config_path;
 		self->userpath = ozw_userpath;
 		self->option_overrides = option_overrides;
+
+		ctx_obj = Nan::Persistent<Object>(info.This());
 
 		//
 		info.GetReturnValue().Set(info.This());

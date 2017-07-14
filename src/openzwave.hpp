@@ -26,12 +26,12 @@
 #include <v8.h>
 #include "nan.h"
 
-#include "Manager.h"
-#include "Driver.h"
-#include "Node.h"
-#include "Notification.h"
-#include "Options.h"
-#include "Value.h"
+#include "openzwave/Manager.h"
+#include "openzwave/Driver.h"
+#include "openzwave/Node.h"
+#include "openzwave/Notification.h"
+#include "openzwave/Options.h"
+#include "openzwave/value_classes/Value.h"
 
 #if defined(_WIN32) || defined( __APPLE__)
     #include <unordered_map>

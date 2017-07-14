@@ -55,7 +55,7 @@ namespace OZW {
 		cbinfo[0] = Nan::New<String>("connected").ToLocalChecked();
 		cbinfo[1] = Nan::New<String>(version).ToLocalChecked();
 
-		emit_cb->Call(2, cbinfo);
+		emit_cb->Call(Nan::New(ctx_obj), 2, cbinfo);
 	}
 
 	// ===================================================================

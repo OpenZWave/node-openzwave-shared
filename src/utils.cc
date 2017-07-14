@@ -288,12 +288,12 @@ namespace OZW {
 	OpenZWave::ValueID* populateValueId(const Nan::FunctionCallbackInfo<v8::Value> &info, uint8 offset) {
 		uint8 nodeid, comclass, instance, index;
 		if ( (info.Length() >= offset) && info[offset]->IsObject() ) {
-			Local<Object> o = info[offset]->ToObject();
+			Local<Object> o = Nan::To<Object>(info[offset]).ToLocalChecked();
 			if (isOzwValue(o)) {
-				nodeid   = Nan::Get(o, Nan::New<String>("node_id").ToLocalChecked()).ToLocalChecked()->ToNumber()->Value();
-				comclass = Nan::Get(o, Nan::New<String>("class_id").ToLocalChecked()).ToLocalChecked()->ToNumber()->Value();
-				instance = Nan::Get(o, Nan::New<String>("instance").ToLocalChecked()).ToLocalChecked()->ToNumber()->Value();
-				index    = Nan::Get(o, Nan::New<String>("index").ToLocalChecked()).ToLocalChecked()->ToNumber()->Value();
+				nodeid   = Nan::To<Number>(Nan::Get(o, Nan::New<String>("node_id").ToLocalChecked()).ToLocalChecked()).ToLocalChecked()->Value();
+				comclass = Nan::To<Number>(Nan::Get(o, Nan::New<String>("class_id").ToLocalChecked()).ToLocalChecked()).ToLocalChecked()->Value();
+				instance = Nan::To<Number>(Nan::Get(o, Nan::New<String>("instance").ToLocalChecked()).ToLocalChecked()).ToLocalChecked()->Value();
+				index    = Nan::To<Number>(Nan::Get(o, Nan::New<String>("index").ToLocalChecked()).ToLocalChecked()).ToLocalChecked()->Value();
 			} else {
 				std::string errmsg("OpenZWave valueId object not found: ");
 				Nan::JSON NanJSON;
@@ -307,10 +307,10 @@ namespace OZW {
 			}
 		} else if ((info.Length() >= offset+4)) {
 			// legacy mode
-			nodeid   = info[offset]->ToNumber()->Value();
-			comclass = info[offset+1]->ToNumber()->Value();
-			instance = info[offset+2]->ToNumber()->Value();
-			index    = info[offset+3]->ToNumber()->Value();
+			nodeid   = Nan::To<Number>(info[offset]).ToLocalChecked()->Value();
+			comclass = Nan::To<Number>(info[offset+1]).ToLocalChecked()->Value();
+			instance = Nan::To<Number>(info[offset+2]).ToLocalChecked()->Value();
+			index    = Nan::To<Number>(info[offset+3]).ToLocalChecked()->Value();
 		} else {
 			std::string errmsg("OpenZWave valueId not found. Pass either a JS object with {node_id, class_id, instance, index} or the raw values in this order.");
 			Nan::ThrowTypeError(errmsg.c_str());

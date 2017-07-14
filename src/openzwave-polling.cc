@@ -49,7 +49,7 @@ namespace OZW {
 	{
 		Nan::HandleScope scope;
 		CheckMinArgs(1, "intervalMillisecs");
-		uint32 intervalMillisecs = info[0]->ToNumber()->Value();
+		uint32 intervalMillisecs = Nan::To<Number>(info[0]).ToLocalChecked()->Value();
 		OpenZWave::Manager::Get()->SetPollInterval (intervalMillisecs, false);
 	}
 
@@ -65,7 +65,7 @@ namespace OZW {
 		OpenZWave::ValueID* vit = populateValueId(info);
 		bool b = false;
 		if (vit) {
-			uint8 intensity = (info.Length() > 4) ? info[4]->ToNumber()->Value() : 1;
+			uint8 intensity = (info.Length() > 4) ? Nan::To<Number>(info[4]).ToLocalChecked()->Value() : 1;
 			b = OpenZWave::Manager::Get()->EnablePoll((*vit), intensity);
 		}
 		info.GetReturnValue().Set(Nan::New<Boolean>(b));
@@ -109,7 +109,7 @@ namespace OZW {
 		uint8 intensity;
 		if (ozwvid) {
 			uint8 intensity_index = ( info[0]->IsObject() ) ? 1 : 4;
-			intensity = info[intensity_index]->ToNumber()->Value();
+			intensity = Nan::To<Number>(info[intensity_index]).ToLocalChecked()->Value();
 			OpenZWave::Manager::Get()->SetPollIntensity (*ozwvid, intensity);
 		}
 	}
