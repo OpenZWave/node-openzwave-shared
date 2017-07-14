@@ -31,8 +31,8 @@ namespace OZW {
 	{
 		Nan::HandleScope scope;
 		CheckMinArgs(1, "nodeid");
-		uint8 nodeid = info[0]->ToNumber()->Value();
-		uint8 nummsg = (info.Length() > 1) ? info[1]->ToNumber()->Value() : 1;
+		uint8 nodeid = Nan::To<Number>(info[0]).ToLocalChecked()->Value();
+		uint8 nummsg = (info.Length() > 1) ? Nan::To<Number>(info[1]).ToLocalChecked()->Value() : 1;
 		OpenZWave::Manager::Get()->TestNetworkNode(homeid, nodeid, nummsg);
 	}
 
@@ -45,7 +45,7 @@ namespace OZW {
 	// ===================================================================
 	{
 		Nan::HandleScope scope;
-		uint8 nummsg = (info.Length() > 0) ? info[0]->ToNumber()->Value() : 1;
+		uint8 nummsg = (info.Length() > 0) ? Nan::To<Number>(info[0]).ToLocalChecked()->Value() : 1;
 		OpenZWave::Manager::Get()->TestNetwork(homeid, nummsg);
 	}
 
@@ -58,8 +58,8 @@ namespace OZW {
 	{
 		Nan::HandleScope scope;
 		CheckMinArgs(1, "nodeid");
-		uint8 nodeid = info[0]->ToNumber()->Value();
-		uint8 doRR = (info.Length() > 1) ? info[1]->ToBoolean()->Value() : false;
+		uint8 nodeid = Nan::To<Number>(info[0]).ToLocalChecked()->Value();
+		uint8 doRR = (info.Length() > 1) ? Nan::To<Boolean>(info[1]).ToLocalChecked()->Value() : false;
 		OpenZWave::Manager::Get()->HealNetworkNode(homeid, nodeid, doRR);
 	}
 
@@ -73,7 +73,7 @@ namespace OZW {
 	// ===================================================================
 	{
 		Nan::HandleScope scope;
-		bool doRR = (info.Length() > 0) ? info[0]->ToBoolean()->Value() : false;
+		bool doRR = (info.Length() > 0) ? Nan::To<Boolean>(info[0]).ToLocalChecked()->Value() : false;
 		OpenZWave::Manager::Get()->HealNetwork(homeid, doRR);
 	}
 }
