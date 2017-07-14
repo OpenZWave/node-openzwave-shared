@@ -249,6 +249,8 @@ namespace OZW {
 		self->userpath = ozw_userpath;
 		self->option_overrides = option_overrides;
 
+		ctx_obj = Nan::Persistent<Object>(info.This());
+
 		//
 		info.GetReturnValue().Set(info.This());
 	}
