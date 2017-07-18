@@ -462,6 +462,8 @@ void async_cb_handler(uv_async_t *handle)
 
   while (!zqueue.empty()) {
     notif = zqueue.front();
+    zqueue.pop();
+    zqueue_mutex.unlock();
 #if OPENZWAVE_SECURITY != 1
     if (notif->homeid == 0) {
       handleControllerCommand(notif);
@@ -471,8 +473,8 @@ void async_cb_handler(uv_async_t *handle)
 #else
     handleNotification(notif);
 #endif
+    zqueue_mutex.lock();
     delete notif;
-    zqueue.pop();
   }
 }
 
