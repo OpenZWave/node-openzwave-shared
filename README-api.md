@@ -1,20 +1,26 @@
 ## API
 
-Start by loading the addon with `require`:
+Start by loading the addon with `require` and then create a new instance of the addon:
 ```js
 var OZW = require('openzwave-shared');
-```
-and then create a new instance of the addon:
-```js
 var zwave = new OZW();
 ```
+
 You can also pass in an optional object specifying any desired option overrides:
 ```js
 var zwave = new OZW({
-	Logging: false,		// disable file logging (OZWLog.txt)
+    Logging: false,     // disable file logging (OZWLog.txt)
     ConsoleOutput: true // enable console logging
 });
 ```
+
+The underlying OpenZWave library is a effectively a singleton so you can simply do:
+```js
+var zwave = require("openzwave-shared")({
+  ConsoleOutput: false
+});
+```
+
 The default options are specified in `config/options.xml`. Please refer
 [to the full list of OpenZWave options](https://github.com/OpenZWave/open-zwave/wiki/Config-Options)
 for all the available options. If, for instance, you're using security devices

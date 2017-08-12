@@ -45,7 +45,7 @@ zwave.on('node added', function(nodeid) {
 zwave.on('value added', function(nodeid, comclass, valueId) {
     if (!nodes[nodeid]['classes'][comclass])
         nodes[nodeid]['classes'][comclass] = {};
-    nodes[nodeid]['classes'][comclass][valueId.index] = value;
+    nodes[nodeid]['classes'][comclass][valueId.index] = valueId;
 });
 
 zwave.on('value changed', function(nodeid, comclass, value) {
