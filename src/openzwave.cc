@@ -28,7 +28,7 @@ namespace OZW {
 	CommandMap* ctrlCmdNames;
 
 	std::string ozw_userpath;
-	const std::string ozw_config_path  = stringify( OPENZWAVE_ETC );
+	std::string ozw_config_path  = stringify( OPENZWAVE_ETC );
 
 	// ===================================================================
 	extern "C" void init(Handle<Object> target, Handle<Object> module) {
@@ -222,6 +222,8 @@ namespace OZW {
 				// scan for OpenZWave options.xml in the nodeJS module's '/config' subdirectory
 				if (keyname == "UserPath") {
 					ozw_userpath.assign(argvalstr);
+				} else if (keyname == "ConfigPath") {
+					ozw_config_path.assign(argvalstr);
 				} else {
 					option_overrides += " --" + keyname + " " + argvalstr;
 				}
