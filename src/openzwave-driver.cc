@@ -21,97 +21,481 @@ using namespace v8;
 using namespace node;
 
 namespace OZW {
-
-	// ===================================================================
-	NAN_METHOD(OZW::Connect)
-	// ===================================================================
-	{
-		Nan::HandleScope scope;
-		CheckMinArgs(1, "path");
-
-		std::string path = (*String::Utf8Value(info[0]->ToString()));
-
-		uv_async_init(uv_default_loop(), &async, async_cb_handler);
-
-		Local<Function> callbackHandle = Nan::Get( info.This(),
-			Nan::New<String>("emit").ToLocalChecked()
-		).ToLocalChecked()
-		 .As<Function>();
-
-		emit_cb = new Nan::Callback(callbackHandle);
-
-		OZW* self = ObjectWrap::Unwrap<OZW>(info.This());
-
-		OpenZWave::Options::Create(self->config_path, self->userpath, self->option_overrides);
-		OpenZWave::Options::Get()->Lock();
-
-		OpenZWave::Manager::Create();
-		OpenZWave::Manager* mgr = OpenZWave::Manager::Get();
-		mgr->AddWatcher(ozw_watcher_callback, NULL);
-		mgr->AddDriver(path);
-		std::string version(OpenZWave::Manager::getVersionAsString());
-
-		Local < v8::Value > cbinfo[16];
-		cbinfo[0] = Nan::New<String>("connected").ToLocalChecked();
-		cbinfo[1] = Nan::New<String>(version).ToLocalChecked();
-
-		emit_cb->Call(Nan::New(ctx_obj), 2, cbinfo);
-	}
-
-	// ===================================================================
-	NAN_METHOD(OZW::Disconnect)
+  // ===================================================================
+	NAN_METHOD(OZWDriver::New)
 	// ===================================================================
 	{
 		Nan::HandleScope scope;
-		CheckMinArgs(1, "path");
-		std::string path = (*String::Utf8Value(info[0]->ToString()));
-
-		OpenZWave::Manager::Get()->RemoveDriver(path);
-		OpenZWave::Manager::Get()->RemoveWatcher(ozw_watcher_callback, NULL);
-		OpenZWave::Manager::Destroy();
-		OpenZWave::Options::Destroy();
-
-		delete emit_cb;
+		assert(info.IsConstructCall());
+		OZWDriver* self = new OZWDriver();
+		self->Wrap(info.This());
+		std::cout << "Initialising Driver\n";
+		info.GetReturnValue().Set(info.This());
 	}
+
+	#if OPENZWAVE_SECURITY == 1
+	/* -------------------------------------------
+	// OpenZWave >= 1.3: Enable Security Functions
+	// and deprecate BeginControllerCommand
+	----------------------------------------------*/
+
+	/* bool AddNode (uint32 const _homeId, bool _doSecurity=true)
+	* Start the Inclusion Process to add a Node to the Network.
+	* The Status of the Node Inclusion is communicated via Notifications.
+	* Specifically, you should monitor ControllerCommand Notifications.
+	*/
+	// =================================================================
+	NAN_METHOD(OZWDriver::AddNode)
+	// =================================================================
+	{
+		Nan::HandleScope scope;
+		OZWDriver* self = ObjectWrap::Unwrap<OZWDriver>(info.This());
+		bool doSecurity = info.Length() > 0 && Nan::To<Boolean>(info[0]).ToLocalChecked()->Value();
+		info.GetReturnValue().Set(Nan::New<Boolean>(
+			OpenZWave::Manager::Get()->AddNode(self->homeid, doSecurity)
+		));
+	}
+
+	/*bool RemoveNode (uint32 const _homeId)
+	* Remove a Device from the Z-Wave Network
+	* The Status of the Node Removal is communicated via Notifications.
+	* Specifically, you should monitor ControllerCommand Notifications.
+	*/
+	// =================================================================
+	NAN_METHOD(OZWDriver::RemoveNode)
+	// =================================================================
+	{
+		Nan::HandleScope scope;
+		OZWDriver* self = ObjectWrap::Unwrap<OZWDriver>(info.This());
+		info.GetReturnValue().Set(Nan::New<Boolean>(
+			OpenZWave::Manager::Get()->RemoveNode(self->homeid)
+		));
+	}
+
+	/*bool RemoveFailedNode (uint32 const _homeId, uint8 const _nodeId)
+	Remove a Failed Device from the Z-Wave Network
+	This Command will remove a failed node from the network. The Node should be on
+	the Controllers Failed Node List, otherwise this command will fail. You can
+	use the HasNodeFailed function below to test if the Controller believes the
+	Node has Failed. The Status of the Node Removal is communicated via
+	Notifications. Specifically, you should monitor ControllerCommand
+	Notifications.
+	*/
+	// =================================================================
+	NAN_METHOD(OZWDriver::RemoveFailedNode)
+	// =================================================================
+	{
+		Nan::HandleScope scope;
+		CheckMinArgs(1, "nodeid");
+		OZWDriver* self = ObjectWrap::Unwrap<OZWDriver>(info.This());
+		uint8 nodeid = Nan::To<Number>(info[0]).ToLocalChecked()->Value();
+		info.GetReturnValue().Set(Nan::New<Boolean>(
+			OpenZWave::Manager::Get()->RemoveFailedNode(self->homeid, nodeid)
+		));
+	}
+
+	/* bool HasNodeFailed (uint32 const _homeId, uint8 const _nodeId)
+	Check if the Controller Believes a Node has Failed.
+	This is different from thevIsNodeFailed call in that we test the Controllers
+	Failed Node List, whereasvthe IsNodeFailed is testing our list of Failed Nodes,
+	which might be different. The Results will be communicated via Notifications.
+	Specifically, you should monitor the ControllerCommand notifications.
+	*/
+	// =================================================================
+	NAN_METHOD(OZWDriver::HasNodeFailed)
+	// =================================================================
+	{
+		Nan::HandleScope scope;
+		CheckMinArgs(1, "nodeid");
+		OZWDriver* self = ObjectWrap::Unwrap<OZWDriver>(info.This());
+		uint8 nodeid = Nan::To<Number>(info[0]).ToLocalChecked()->Value();
+		info.GetReturnValue().Set(Nan::New<Boolean>(
+			OpenZWave::Manager::Get()->HasNodeFailed(self->homeid, nodeid)
+		));
+	}
+
+	/* bool RequestNodeNeighborUpdate (uint32 const _homeId, uint8 const _nodeId)
+	Ask a Node to update its Neighbor Tables
+	This command will ask a Node to update its Neighbor Tables.
+	*/
+	// =================================================================
+	NAN_METHOD(OZWDriver::RequestNodeNeighborUpdate)
+	// =================================================================
+	{
+		Nan::HandleScope scope;
+		CheckMinArgs(1, "nodeid");
+		OZWDriver* self = ObjectWrap::Unwrap<OZWDriver>(info.This());
+		uint8 nodeid = Nan::To<Number>(info[0]).ToLocalChecked()->Value();
+		info.GetReturnValue().Set(Nan::New<Boolean>(
+			OpenZWave::Manager::Get()->RequestNodeNeighborUpdate(self->homeid, nodeid)
+		));
+	}
+
+	/* bool AssignReturnRoute (uint32 const _homeId, uint8 const _nodeId)
+	Ask a Node to update its update its Return Route to the Controller
+	This command will ask a Node to update its Return Route to the Controller.
+	*/
+	// =================================================================
+	NAN_METHOD(OZWDriver::AssignReturnRoute)
+	// =================================================================
+	{
+		Nan::HandleScope scope;
+		CheckMinArgs(1, "nodeid");
+		OZWDriver* self = ObjectWrap::Unwrap<OZWDriver>(info.This());
+		uint8 nodeid = Nan::To<Number>(info[0]).ToLocalChecked()->Value();
+		info.GetReturnValue().Set(Nan::New<Boolean>(
+			OpenZWave::Manager::Get()->AssignReturnRoute(self->homeid, nodeid)
+		));
+	}
+
+	/* bool DeleteAllReturnRoutes (uint32 const _homeId, uint8 const _nodeId)
+	Ask a Node to delete all Return Route.
+	This command will ask a Node to delete all its return routes, and will
+	rediscover when needed.
+	*/
+	// =================================================================
+	NAN_METHOD(OZWDriver::DeleteAllReturnRoutes)
+	// =================================================================
+	{
+		Nan::HandleScope scope;
+		CheckMinArgs(1, "nodeid");
+		OZWDriver* self = ObjectWrap::Unwrap<OZWDriver>(info.This());
+		uint8 nodeid = Nan::To<Number>(info[0]).ToLocalChecked()->Value();
+		info.GetReturnValue().Set(Nan::New<Boolean>(
+			OpenZWave::Manager::Get()->DeleteAllReturnRoutes(self->homeid, nodeid)
+		));
+	}
+
+	/* bool SendNodeInformation (uint32 const _homeId, uint8 const _nodeId)
+	Send a NIF frame from the Controller to a Node.
+	This command send a NIF frame from the Controller to a Node.
+	*/
+	// =================================================================
+	NAN_METHOD(OZWDriver::SendNodeInformation)
+	// =================================================================
+	{
+		Nan::HandleScope scope;
+		CheckMinArgs(1, "nodeid");
+		OZWDriver* self = ObjectWrap::Unwrap<OZWDriver>(info.This());
+		uint8 nodeid = Nan::To<Number>(info[0]).ToLocalChecked()->Value();
+		info.GetReturnValue().Set(Nan::New<Boolean>(
+			OpenZWave::Manager::Get()->SendNodeInformation(self->homeid, nodeid)
+		));
+	}
+
+	/*bool CreateNewPrimary (uint32 const _homeId)
+	Create a new primary controller when old primary fails. Requires SUC.
+	This command Creates a new Primary Controller when the Old Primary has Failed.
+	Requires a SUC on the network to function.
+	*/
+	// =================================================================
+	NAN_METHOD(OZWDriver::CreateNewPrimary)
+	// =================================================================
+	{
+		Nan::HandleScope scope;
+		OZWDriver* self = ObjectWrap::Unwrap<OZWDriver>(info.This());
+		info.GetReturnValue().Set(Nan::New<Boolean>(
+			OpenZWave::Manager::Get()->CreateNewPrimary(self->homeid)
+		));
+	}
+
+	/* bool ReceiveConfiguration (uint32 const _homeId)
+	Receive network configuration information from primary controller. Requires
+	secondary. This command prepares the controller to recieve Network
+	Configuration from a Secondary Controller.
+	*/
+	// =================================================================
+	NAN_METHOD(OZWDriver::ReceiveConfiguration)
+	// =================================================================
+	{
+		Nan::HandleScope scope;
+		OZWDriver* self = ObjectWrap::Unwrap<OZWDriver>(info.This());
+		info.GetReturnValue().Set(Nan::New<Boolean>(
+			OpenZWave::Manager::Get()->ReceiveConfiguration(self->homeid)
+		));
+	}
+
+	/*bool ReplaceFailedNode (uint32 const _homeId, uint8 const _nodeId)
+	Replace a failed device with another.
+	If the node is not in the controller's failed nodes list, or the node responds,
+	this command will fail. You can check if a Node is in the Controllers Failed
+	node list by using the HasNodeFailed method.
+	*/
+	// =================================================================
+	NAN_METHOD(OZWDriver::ReplaceFailedNode)
+	// =================================================================
+	{
+		Nan::HandleScope scope;
+		CheckMinArgs(1, "nodeid");
+		OZWDriver* self = ObjectWrap::Unwrap<OZWDriver>(info.This());
+		uint8 nodeid = Nan::To<Number>(info[0]).ToLocalChecked()->Value();
+		info.GetReturnValue().Set(Nan::New<Boolean>(
+			OpenZWave::Manager::Get()->ReplaceFailedNode(self->homeid, nodeid)
+		));
+	}
+
+	/* bool TransferPrimaryRole (uint32 const _homeId)
+	Add a new controller to the network and make it the primary.
+	The existing primary will become a secondary controller.
+	*/
+	// =================================================================
+	NAN_METHOD(OZWDriver::TransferPrimaryRole)
+	// =================================================================
+	{
+		Nan::HandleScope scope;
+		OZWDriver* self = ObjectWrap::Unwrap<OZWDriver>(info.This());
+		info.GetReturnValue().Set(Nan::New<Boolean>(
+			OpenZWave::Manager::Get()->TransferPrimaryRole(self->homeid)
+		));
+	}
+
+	/* bool 	RequestNetworkUpdate (uint32 const _homeId, uint8 const _nodeId)
+	Update the controller with network information from the SUC/SIS.
+	*/
+	// =================================================================
+	NAN_METHOD(OZWDriver::RequestNetworkUpdate)
+	// =================================================================
+	{
+		Nan::HandleScope scope;
+		CheckMinArgs(1, "nodeid");
+		OZWDriver* self = ObjectWrap::Unwrap<OZWDriver>(info.This());
+		uint8 nodeid = Nan::To<Number>(info[0]).ToLocalChecked()->Value();
+		info.GetReturnValue().Set(Nan::New<Boolean>(
+			OpenZWave::Manager::Get()->RequestNetworkUpdate(self->homeid, nodeid)
+		));
+	}
+
+	/* bool 	ReplicationSend (uint32 const _homeId, uint8 const _nodeId)
+	Send information from primary to secondary.
+	*/
+	// =================================================================
+	NAN_METHOD(OZWDriver::ReplicationSend)
+	// =================================================================
+	{
+		Nan::HandleScope scope;
+		CheckMinArgs(1, "nodeid");
+		OZWDriver* self = ObjectWrap::Unwrap<OZWDriver>(info.This());
+		uint8 nodeid = Nan::To<Number>(info[0]).ToLocalChecked()->Value();
+		info.GetReturnValue().Set(Nan::New<Boolean>(
+			OpenZWave::Manager::Get()->ReplicationSend(self->homeid, nodeid)
+		));
+	}
+
+	/* bool CreateButton (uint32 const _homeId, uint8 const _nodeId, uint8 const _buttonid)
+	Create a handheld button id.
+	*/
+	// =================================================================
+	NAN_METHOD(OZWDriver::CreateButton)
+	// =================================================================
+	{
+		Nan::HandleScope scope;
+		CheckMinArgs(2, "nodeid, buttonid");
+		OZWDriver* self = ObjectWrap::Unwrap<OZWDriver>(info.This());
+		uint8 nodeid = Nan::To<Number>(info[0]).ToLocalChecked()->Value();
+		uint8 btnid = Nan::To<Number>(info[1]).ToLocalChecked()->Value();
+		info.GetReturnValue().Set(Nan::New<Boolean>(
+			OpenZWave::Manager::Get()->CreateButton(self->homeid, nodeid, btnid)
+		));
+	}
+
+	/* bool DeleteButton (uint32 const _homeId, uint8 const _nodeId, uint8 const _buttonid)
+	Delete a handheld button id.
+	*/
+	// =================================================================
+	NAN_METHOD(OZWDriver::DeleteButton)
+	// =================================================================
+	{
+		Nan::HandleScope scope;
+		CheckMinArgs(2, "nodeid, buttonid");
+		OZWDriver* self = ObjectWrap::Unwrap<OZWDriver>(info.This());
+		uint8 nodeid = Nan::To<Number>(info[0]).ToLocalChecked()->Value();
+		uint8 btnid = Nan::To<Number>(info[1]).ToLocalChecked()->Value();
+		info.GetReturnValue().Set(Nan::New<Boolean>(
+			OpenZWave::Manager::Get()->DeleteButton(self->homeid, nodeid, btnid)
+		));
+	}
+
+	#else
+
+	/* ------------------------------------
+	// LEGACY MODE (using BeginControllerCommand)
+	---------------------------------------*/
+	// ===================================================================
+	NAN_METHOD(OZWDriver::BeginControllerCommand)
+	// ===================================================================
+	{
+		Nan::HandleScope scope;
+		CheckMinArgs(1, "command");
+		OZWDriver* self = ObjectWrap::Unwrap<OZWDriver>(info.This());
+		std::string ctrcmd = (*String::Utf8Value(Nan::To<String>(info[0]).ToLocalChecked()));
+		uint8 nodeid1 = 0xff;
+		uint8 nodeid2 = 0;
+		bool highpower = false;
+		if (info.Length() > 1) {
+			highpower = Nan::To<Boolean>(info[1]).ToLocalChecked()->Value();
+			if (info.Length() > 2) {
+				nodeid1 = Nan::To<Number>(info[2]).ToLocalChecked()->Value();
+				if (info.Length() > 3) {
+					nodeid2 = Nan::To<Number>(info[3]).ToLocalChecked()->Value();
+				}
+			}
+		}
+		//
+		CommandMap::const_iterator search = (*ctrlCmdNames).find(ctrcmd);
+		if (search != (*ctrlCmdNames).end()) {
+			/*
+			* BeginControllerCommand
+			* http://openzwave.com/dev/classOpenZWave_1_1Manager.html#aa11faf40f19f0cda202d2353a60dbf7b
+			*
+			_homeId		The Home ID of the Z-Wave controller.
+			_command	The command to be sent to the controller.
+			_callback	pointer to a function that will be called at various stages
+			during the command process to notify the user of progress or to request
+			actions on the user's part. Defaults to NULL.
+			_context	pointer to user defined data that will be passed into to the
+			callback function. Defaults to NULL.
+			_highPower	used only with the AddDevice, AddController, RemoveDevice and
+			RemoveController commands. Usually when adding or removing devices, the
+			controller operates at low power so that the controller must be physically
+			close to the device for security reasons. If _highPower is true, the
+			controller will operate at normal power levels instead. Defaults to false.
+			_nodeId	is the node ID used by the command if necessary.
+			_arg	is an optional argument, usually another node ID, that is used
+			by the command.
+			* */
+			OpenZWave::Manager::Get()->BeginControllerCommand(
+				self->homeid,
+				search->second,       // _command
+				ozw_ctrlcmd_callback, // _callback
+				NULL,                 // void * 	_context = NULL,
+				highpower,            // bool 	_highPower = false,
+				nodeid1,              // uint8 	_nodeId = 0xff,
+				nodeid2               // uint8 	_arg = 0
+				);
+		}
+	}
+
+	#endif
+
+	// ===================================================================
+	NAN_METHOD(OZWDriver::CancelControllerCommand)
+	// ===================================================================
+	{
+		Nan::HandleScope scope;
+		OZWDriver* self = ObjectWrap::Unwrap<OZWDriver>(info.This());
+		OpenZWave::Manager::Get()->CancelControllerCommand(self->homeid);
+	}
+
+	// =================================================================
+	NAN_METHOD(OZWDriver::WriteConfig)
+	// =================================================================
+	{
+		Nan::HandleScope scope;
+		OZWDriver* self = ObjectWrap::Unwrap<OZWDriver>(info.This());
+		OpenZWave::Manager::Get()->WriteConfig(self->homeid);
+	}
+
+//
+
+	// =================================================================
+	NAN_METHOD(OZWDriver::GetDriverStatistics)
+	// =================================================================
+	{
+		Nan::HandleScope scope;
+		OpenZWave::Driver::DriverData data;
+		OZWDriver* self = ObjectWrap::Unwrap<OZWDriver>(info.This());
+		OpenZWave::Manager::Get()->GetDriverStatistics(self->homeid, &data);
+		Local <Object> stats = Nan::New<Object>();
+		AddIntegerProp(stats, SOFCnt, data.m_SOFCnt);
+		AddIntegerProp(stats, ACKWaiting, data.m_ACKWaiting);
+		AddIntegerProp(stats, readAborts, data.m_readAborts);
+		AddIntegerProp(stats, badChecksum, data.m_badChecksum);
+		AddIntegerProp(stats, readCnt, data.m_readCnt);
+		AddIntegerProp(stats, writeCnt, data.m_writeCnt);
+		AddIntegerProp(stats, CANCnt, data.m_CANCnt);
+		AddIntegerProp(stats, NAKCnt, data.m_NAKCnt);
+		AddIntegerProp(stats, ACKCnt, data.m_ACKCnt);
+		AddIntegerProp(stats, OOFCnt, data.m_OOFCnt);
+		AddIntegerProp(stats, dropped, data.m_dropped);
+		AddIntegerProp(stats, retries, data.m_retries);
+		AddIntegerProp(stats, callbacks, data.m_callbacks);
+		AddIntegerProp(stats, badroutes, data.m_badroutes);
+		//
+		info.GetReturnValue().Set(stats);
+	}
+
+	// =================================================================
+	NAN_METHOD(OZWDriver::GetNodeStatistics)
+	// =================================================================
+	{
+		Nan::HandleScope scope;
+		CheckMinArgs(1, "nodeid");
+		OZWDriver* self = ObjectWrap::Unwrap<OZWDriver>(info.This());
+		OpenZWave::Node::NodeData data;
+		uint8 nodeid = Nan::To<Number>(info[0]).ToLocalChecked()->Value();
+
+		OpenZWave::Manager::Get()->GetNodeStatistics(self->homeid, nodeid, &data);
+
+		Local <Object> stats = Nan::New<Object>();
+		AddIntegerProp(stats, sentCnt, data.m_sentCnt);
+		AddIntegerProp(stats, sentFailed, data.m_sentFailed);
+		AddIntegerProp(stats, retries, data.m_retries);
+		AddIntegerProp(stats, receivedCnt, data.m_receivedCnt);
+		AddIntegerProp(stats, receivedDups, data.m_receivedDups);
+		AddIntegerProp(stats, receivedUnsolicited, data.m_receivedUnsolicited);
+		AddIntegerProp(stats, lastRequestRTT, data.m_lastRequestRTT);
+		AddIntegerProp(stats, lastResponseRTT, data.m_lastResponseRTT);
+		AddIntegerProp(stats, averageRequestRTT, data.m_averageRequestRTT);
+		AddIntegerProp(stats, averageResponseRTT, data.m_averageResponseRTT);
+		AddIntegerProp(stats, quality, data.m_quality);
+		AddStringProp(stats, sentTS, data.m_sentTS);
+		AddStringProp(stats, receivedTS, data.m_receivedTS);
+		info.GetReturnValue().Set(stats);
+	}
+
 
 	/*
 	* Reset the ZWave controller chip.  A hard reset is destructive and wipes
 	* out all known configuration, a soft reset just restarts the chip.
 	*/
 	// ===================================================================
-	NAN_METHOD(OZW::HardReset)
+	NAN_METHOD(OZWDriver::HardReset)
 	// ===================================================================
 	{
 		Nan::HandleScope scope;
-		OpenZWave::Manager::Get()->ResetController(homeid);
+		OZWDriver* self = ObjectWrap::Unwrap<OZWDriver>(info.This());
+		OpenZWave::Manager::Get()->ResetController(self->homeid);
 	}
 
 	// ===================================================================
-	NAN_METHOD(OZW::SoftReset)
+	NAN_METHOD(OZWDriver::SoftReset)
 	// ===================================================================
 	{
 		Nan::HandleScope scope;
-		OpenZWave::Manager::Get()->SoftReset(homeid);
+		OZWDriver* self = ObjectWrap::Unwrap<OZWDriver>(info.This());
+		OpenZWave::Manager::Get()->SoftReset(self->homeid);
 	}
 
 
 	// ===================================================================
-	NAN_METHOD(OZW::GetControllerNodeId)
+	NAN_METHOD(OZWDriver::GetControllerNodeId)
 	// ===================================================================
 	{
 		Nan::HandleScope scope;
-	 	uint8 ctrlid = OpenZWave::Manager::Get()->GetControllerNodeId (homeid);
+		OZWDriver* self = ObjectWrap::Unwrap<OZWDriver>(info.This());
+	 	uint8 ctrlid = OpenZWave::Manager::Get()->GetControllerNodeId(self->homeid);
 	 	info.GetReturnValue().Set(
 			Nan::New<Integer>(ctrlid)
 		);
 	}
 
 	// ===================================================================
-	NAN_METHOD(OZW::GetSUCNodeId)
+	NAN_METHOD(OZWDriver::GetSUCNodeId)
 	// ===================================================================
 	{
 		Nan::HandleScope scope;
-	 	uint8 sucid = OpenZWave::Manager::Get()->GetSUCNodeId (homeid);
+		OZWDriver* self = ObjectWrap::Unwrap<OZWDriver>(info.This());
+	 	uint8 sucid = OpenZWave::Manager::Get()->GetSUCNodeId(self->homeid);
 	 	info.GetReturnValue().Set(
 			Nan::New<Integer>(sucid)
 		);
@@ -123,11 +507,12 @@ namespace OZW {
 	 * are secondary controllers.
 	 */
 	// ===================================================================
-	NAN_METHOD(OZW::IsPrimaryController)
+	NAN_METHOD(OZWDriver::IsPrimaryController)
 	// ===================================================================
 	{
 		Nan::HandleScope scope;
-	 	bool isprimary = OpenZWave::Manager::Get()->IsPrimaryController (homeid);
+		OZWDriver* self = ObjectWrap::Unwrap<OZWDriver>(info.This());
+	 	bool isprimary = OpenZWave::Manager::Get()->IsPrimaryController(self->homeid);
 	 	info.GetReturnValue().Set(Nan::New<Boolean>(isprimary));
 	}
 
@@ -137,11 +522,12 @@ namespace OZW {
 	 * receive information about network changes.
 	 */
 	// ===================================================================
-	NAN_METHOD(OZW::IsStaticUpdateController)
+	NAN_METHOD(OZWDriver::IsStaticUpdateController)
 	// ===================================================================
 	{
 		Nan::HandleScope scope;
-	 	bool issuc = OpenZWave::Manager::Get()->IsStaticUpdateController (homeid);
+		OZWDriver* self = ObjectWrap::Unwrap<OZWDriver>(info.This());
+	 	bool issuc = OpenZWave::Manager::Get()->IsStaticUpdateController(self->homeid);
 	 	info.GetReturnValue().Set(Nan::New<Boolean>(issuc));
 	}
 
@@ -150,22 +536,24 @@ namespace OZW {
 	 * associated with other controllers to enable events to be passed on.
 	 */
 	// ===================================================================
-	NAN_METHOD(OZW::IsBridgeController)
+	NAN_METHOD(OZWDriver::IsBridgeController)
 	// ===================================================================
 	{
 		Nan::HandleScope scope;
-	 	bool isbridge = OpenZWave::Manager::Get()->IsBridgeController (homeid);
+		OZWDriver* self = ObjectWrap::Unwrap<OZWDriver>(info.This());
+	 	bool isbridge = OpenZWave::Manager::Get()->IsBridgeController(self->homeid);
 	 	info.GetReturnValue().Set(Nan::New<Boolean>(isbridge));
 	}
 
  	/* Get the version of the Z-Wave API library used by a controller.
  	 */
  	// ===================================================================
-	NAN_METHOD(OZW::GetLibraryVersion)
+	NAN_METHOD(OZWDriver::GetLibraryVersion)
 	// ===================================================================
 	{
 		Nan::HandleScope scope;
-	 	std::string libver = OpenZWave::Manager::Get()->GetLibraryVersion (homeid);
+		OZWDriver* self = ObjectWrap::Unwrap<OZWDriver>(info.This());
+	 	std::string libver = OpenZWave::Manager::Get()->GetLibraryVersion(self->homeid);
 	 	info.GetReturnValue().Set(
 			Nan::New<String>(
 				libver.c_str()
@@ -189,11 +577,12 @@ namespace OZW {
  	 * use the IsBridgeController method.
  	 */
  	// ===================================================================
-	NAN_METHOD(OZW::GetLibraryTypeName)
+	NAN_METHOD(OZWDriver::GetLibraryTypeName)
 	// ===================================================================
 	{
 		Nan::HandleScope scope;
-	 	std::string libtype = OpenZWave::Manager::Get()->GetLibraryTypeName (homeid);
+		OZWDriver* self = ObjectWrap::Unwrap<OZWDriver>(info.This());
+	 	std::string libtype = OpenZWave::Manager::Get()->GetLibraryTypeName (self->homeid);
 	 	info.GetReturnValue().Set(
 			Nan::New<String>(
 				libtype.c_str()
@@ -202,11 +591,12 @@ namespace OZW {
 	}
 
 	// ===================================================================
-	NAN_METHOD(OZW::GetSendQueueCount)
+	NAN_METHOD(OZWDriver::GetSendQueueCount)
 	// ===================================================================
 	{
 		Nan::HandleScope scope;
-	 	uint32 cnt = OpenZWave::Manager::Get()->GetSendQueueCount (homeid);
+		OZWDriver* self = ObjectWrap::Unwrap<OZWDriver>(info.This());
+	 	uint32 cnt = OpenZWave::Manager::Get()->GetSendQueueCount (self->homeid);
 	 	info.GetReturnValue().Set(Nan::New<Integer>(cnt));
 	}
 

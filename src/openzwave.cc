@@ -26,6 +26,7 @@ namespace OZW {
 
 	uint32      homeid;
 	CommandMap* ctrlCmdNames;
+	DriverMap*  drivers;
 
 	std::string ozw_userpath;
 	std::string ozw_config_path  = stringify( OPENZWAVE_ETC );
@@ -38,7 +39,7 @@ namespace OZW {
     // get the user config directory
 		std::string modulefilename = std::string(*v8::String::Utf8Value(
 			Nan::Get(module,
-          Nan::New("filename").ToLocalChecked()
+				Nan::New("filename").ToLocalChecked()
 		  ).ToLocalChecked()
 		));
 		std::size_t found = modulefilename.find_last_of("/\\");
@@ -46,135 +47,139 @@ namespace OZW {
 			//std::cout << " path: " << modulefilename.substr(0,found) << '\n';
 			//std::cout << " file: " << modulefilename.substr(found+1) << '\n';
 			ozw_userpath.assign(modulefilename.substr(0,found));
-    } else {
-      ozw_userpath.assign(modulefilename);
-    }
+		} else {
+			ozw_userpath.assign(modulefilename);
+		}
 		ozw_userpath.append("/../../");
 
-		Local < FunctionTemplate > t = Nan::New<FunctionTemplate>(OZW::New);
-		t->SetClassName(Nan::New("OZW").ToLocalChecked());
+		Local < FunctionTemplate > t = Nan::New<FunctionTemplate>(OZWDriver::New);
+		t->SetClassName(Nan::New("OZWDriver").ToLocalChecked());
 		t->InstanceTemplate()->SetInternalFieldCount(1);
 
 		// openzwave-config.cc
-		Nan::SetPrototypeMethod(t, "setConfigParam", OZW::SetConfigParam);
-		Nan::SetPrototypeMethod(t, "requestConfigParam", OZW::RequestConfigParam);
-		Nan::SetPrototypeMethod(t, "requestAllConfigParams", OZW::RequestAllConfigParams);
+		Nan::SetPrototypeMethod(t, "setConfigParam", OZWDriver::SetConfigParam);
+		Nan::SetPrototypeMethod(t, "requestConfigParam", OZWDriver::RequestConfigParam);
+		Nan::SetPrototypeMethod(t, "requestAllConfigParams", OZWDriver::RequestAllConfigParams);
 		// openzwave-controller.cc
-		Nan::SetPrototypeMethod(t, "hardReset", OZW::HardReset);
-		Nan::SetPrototypeMethod(t, "softReset", OZW::SoftReset);
-		Nan::SetPrototypeMethod(t, "getControllerNodeId", OZW::GetControllerNodeId); // ** new
-		Nan::SetPrototypeMethod(t, "getSUCNodeId", OZW::GetSUCNodeId); // ** new
-		Nan::SetPrototypeMethod(t, "isPrimaryController", OZW::IsPrimaryController); // ** new
-		Nan::SetPrototypeMethod(t, "isStaticUpdateController", OZW::IsStaticUpdateController); // ** new
-		Nan::SetPrototypeMethod(t, "isBridgeController", OZW::IsBridgeController); // ** new
-		Nan::SetPrototypeMethod(t, "getLibraryVersion", OZW::GetLibraryVersion); // ** new
-		Nan::SetPrototypeMethod(t, "getLibraryTypeName", OZW::GetLibraryTypeName); // ** new
-		Nan::SetPrototypeMethod(t, "getSendQueueCount", OZW::GetSendQueueCount);	// ** new
-		// openzwave-driver.cc
-		Nan::SetPrototypeMethod(t, "connect", OZW::Connect);
-		Nan::SetPrototypeMethod(t, "disconnect", OZW::Disconnect);
+		Nan::SetPrototypeMethod(t, "hardReset", OZWDriver::HardReset);
+		Nan::SetPrototypeMethod(t, "softReset", OZWDriver::SoftReset);
+		Nan::SetPrototypeMethod(t, "getControllerNodeId", OZWDriver::GetControllerNodeId); // ** new
+		Nan::SetPrototypeMethod(t, "getSUCNodeId", OZWDriver::GetSUCNodeId); // ** new
+		Nan::SetPrototypeMethod(t, "isPrimaryController", OZWDriver::IsPrimaryController); // ** new
+		Nan::SetPrototypeMethod(t, "isStaticUpdateController", OZWDriver::IsStaticUpdateController); // ** new
+		Nan::SetPrototypeMethod(t, "isBridgeController", OZWDriver::IsBridgeController); // ** new
+		Nan::SetPrototypeMethod(t, "getLibraryVersion", OZWDriver::GetLibraryVersion); // ** new
+		Nan::SetPrototypeMethod(t, "getLibraryTypeName", OZWDriver::GetLibraryTypeName); // ** new
+		Nan::SetPrototypeMethod(t, "getSendQueueCount", OZWDriver::GetSendQueueCount);	// ** new
+
 		// openzwave-groups.cc
-		Nan::SetPrototypeMethod(t, "getNumGroups", OZW::GetNumGroups);
-		Nan::SetPrototypeMethod(t, "getAssociations", OZW::GetAssociations);
-		Nan::SetPrototypeMethod(t, "getMaxAssociations", OZW::GetMaxAssociations);
-		Nan::SetPrototypeMethod(t, "getGroupLabel", OZW::GetGroupLabel);
-		Nan::SetPrototypeMethod(t, "addAssociation", OZW::AddAssociation);
-		Nan::SetPrototypeMethod(t, "removeAssociation", OZW::RemoveAssociation);
+		Nan::SetPrototypeMethod(t, "getNumGroups", OZWDriver::GetNumGroups);
+		Nan::SetPrototypeMethod(t, "getAssociations", OZWDriver::GetAssociations);
+		Nan::SetPrototypeMethod(t, "getMaxAssociations", OZWDriver::GetMaxAssociations);
+		Nan::SetPrototypeMethod(t, "getGroupLabel", OZWDriver::GetGroupLabel);
+		Nan::SetPrototypeMethod(t, "addAssociation", OZWDriver::AddAssociation);
+		Nan::SetPrototypeMethod(t, "removeAssociation", OZWDriver::RemoveAssociation);
 		// openzwave-management.cc
 #if OPENZWAVE_SECURITY == 1
-		Nan::SetPrototypeMethod(t, "addNode", OZW::AddNode);
-	  Nan::SetPrototypeMethod(t, "removeNode", OZW::RemoveNode);
-	  Nan::SetPrototypeMethod(t, "removeFailedNode", OZW::RemoveFailedNode);
-	  Nan::SetPrototypeMethod(t, "hasNodeFailed", OZW::HasNodeFailed);
-	  Nan::SetPrototypeMethod(t, "requestNodeNeighborUpdate", OZW::RequestNodeNeighborUpdate);
-	  Nan::SetPrototypeMethod(t, "assignReturnRoute", OZW::AssignReturnRoute);
-	  Nan::SetPrototypeMethod(t, "deleteAllReturnRoutes", OZW::DeleteAllReturnRoutes);
-	  Nan::SetPrototypeMethod(t, "sendNodeInformation", OZW::SendNodeInformation);
-	  Nan::SetPrototypeMethod(t, "createNewPrimary", OZW::CreateNewPrimary);
-	  Nan::SetPrototypeMethod(t, "receiveConfiguration", OZW::ReceiveConfiguration);
-	  Nan::SetPrototypeMethod(t, "replaceFailedNode", OZW::ReplaceFailedNode);
-	  Nan::SetPrototypeMethod(t, "transferPrimaryRole", OZW::TransferPrimaryRole);
-	  Nan::SetPrototypeMethod(t, "requestNetworkUpdate", OZW::RequestNetworkUpdate);
-	  Nan::SetPrototypeMethod(t, "replicationSend", OZW::ReplicationSend);
-	  Nan::SetPrototypeMethod(t, "createButton", OZW::CreateButton);
-	  Nan::SetPrototypeMethod(t, "deleteButton", OZW::DeleteButton);
+		Nan::SetPrototypeMethod(t, "addNode", OZWDriver::AddNode);
+	  Nan::SetPrototypeMethod(t, "removeNode", OZWDriver::RemoveNode);
+	  Nan::SetPrototypeMethod(t, "removeFailedNode", OZWDriver::RemoveFailedNode);
+	  Nan::SetPrototypeMethod(t, "hasNodeFailed", OZWDriver::HasNodeFailed);
+	  Nan::SetPrototypeMethod(t, "requestNodeNeighborUpdate", OZWDriver::RequestNodeNeighborUpdate);
+	  Nan::SetPrototypeMethod(t, "assignReturnRoute", OZWDriver::AssignReturnRoute);
+	  Nan::SetPrototypeMethod(t, "deleteAllReturnRoutes", OZWDriver::DeleteAllReturnRoutes);
+	  Nan::SetPrototypeMethod(t, "sendNodeInformation", OZWDriver::SendNodeInformation);
+	  Nan::SetPrototypeMethod(t, "createNewPrimary", OZWDriver::CreateNewPrimary);
+	  Nan::SetPrototypeMethod(t, "receiveConfiguration", OZWDriver::ReceiveConfiguration);
+	  Nan::SetPrototypeMethod(t, "replaceFailedNode", OZWDriver::ReplaceFailedNode);
+	  Nan::SetPrototypeMethod(t, "transferPrimaryRole", OZWDriver::TransferPrimaryRole);
+	  Nan::SetPrototypeMethod(t, "requestNetworkUpdate", OZWDriver::RequestNetworkUpdate);
+	  Nan::SetPrototypeMethod(t, "replicationSend", OZWDriver::ReplicationSend);
+	  Nan::SetPrototypeMethod(t, "createButton", OZWDriver::CreateButton);
+	  Nan::SetPrototypeMethod(t, "deleteButton", OZWDriver::DeleteButton);
 #else
-		Nan::SetPrototypeMethod(t, "beginControllerCommand", OZW::BeginControllerCommand);
+		Nan::SetPrototypeMethod(t, "beginControllerCommand", OZWDriver::BeginControllerCommand);
 #endif
-		Nan::SetPrototypeMethod(t, "cancelControllerCommand", OZW::CancelControllerCommand);
-		Nan::SetPrototypeMethod(t, "writeConfig", OZW::WriteConfig);
-		Nan::SetPrototypeMethod(t, "getDriverStatistics", OZW::GetDriverStatistics);
-		Nan::SetPrototypeMethod(t, "getNodeStatistics", OZW::GetNodeStatistics);
+		Nan::SetPrototypeMethod(t, "cancelControllerCommand", OZWDriver::CancelControllerCommand);
+		Nan::SetPrototypeMethod(t, "writeConfig", OZWDriver::WriteConfig);
+		Nan::SetPrototypeMethod(t, "getDriverStatistics", OZWDriver::GetDriverStatistics);
+		Nan::SetPrototypeMethod(t, "getNodeStatistics", OZWDriver::GetNodeStatistics);
 		// openzwave-network.cc
-		Nan::SetPrototypeMethod(t, "testNetworkNode", OZW::TestNetworkNode);
-		Nan::SetPrototypeMethod(t, "testNetwork", OZW::TestNetwork);
-		Nan::SetPrototypeMethod(t, "healNetworkNode", OZW::HealNetworkNode);
-		Nan::SetPrototypeMethod(t, "healNetwork", OZW::HealNetwork);
+		Nan::SetPrototypeMethod(t, "testNetworkNode", OZWDriver::TestNetworkNode);
+		Nan::SetPrototypeMethod(t, "testNetwork", OZWDriver::TestNetwork);
+		Nan::SetPrototypeMethod(t, "healNetworkNode", OZWDriver::HealNetworkNode);
+		Nan::SetPrototypeMethod(t, "healNetwork", OZWDriver::HealNetwork);
 		// openzwave-nodes.cc
-		Nan::SetPrototypeMethod(t, "setNodeOn", OZW::SetNodeOn);
-		Nan::SetPrototypeMethod(t, "setNodeOff", OZW::SetNodeOff);
-		Nan::SetPrototypeMethod(t, "setNodeLevel", OZW::SetNodeLevel);
-		Nan::SetPrototypeMethod(t, "switchAllOn", OZW::SwitchAllOn);
-		Nan::SetPrototypeMethod(t, "switchAllOff", OZW::SwitchAllOff);
-		Nan::SetPrototypeMethod(t, "pressButton", OZW::PressButton);
-		Nan::SetPrototypeMethod(t, "releaseButton", OZW::ReleaseButton);
+		Nan::SetPrototypeMethod(t, "setNodeOn", OZWDriver::SetNodeOn);
+		Nan::SetPrototypeMethod(t, "setNodeOff", OZWDriver::SetNodeOff);
+		Nan::SetPrototypeMethod(t, "setNodeLevel", OZWDriver::SetNodeLevel);
+		Nan::SetPrototypeMethod(t, "switchAllOn", OZWDriver::SwitchAllOn);
+		Nan::SetPrototypeMethod(t, "switchAllOff", OZWDriver::SwitchAllOff);
+		Nan::SetPrototypeMethod(t, "pressButton", OZWDriver::PressButton);
+		Nan::SetPrototypeMethod(t, "releaseButton", OZWDriver::ReleaseButton);
 		//
-		Nan::SetPrototypeMethod(t, "refreshNodeInfo", OZW::RefreshNodeInfo); // ** new
-		Nan::SetPrototypeMethod(t, "requestNodeState", OZW::RequestNodeState); // ** new
-		Nan::SetPrototypeMethod(t, "requestNodeDynamic", OZW::RequestNodeDynamic); // ** new
+		Nan::SetPrototypeMethod(t, "refreshNodeInfo", OZWDriver::RefreshNodeInfo); // ** new
+		Nan::SetPrototypeMethod(t, "requestNodeState", OZWDriver::RequestNodeState); // ** new
+		Nan::SetPrototypeMethod(t, "requestNodeDynamic", OZWDriver::RequestNodeDynamic); // ** new
 		// getter-setter pairs
-		Nan::SetPrototypeMethod(t, "getNodeLocation", OZW::GetNodeLocation); // ** new
-		Nan::SetPrototypeMethod(t, "setNodeLocation", OZW::SetNodeLocation);
-		Nan::SetPrototypeMethod(t, "getNodeName", OZW::GetNodeName);
-		Nan::SetPrototypeMethod(t, "setNodeName", OZW::SetNodeName);
-		Nan::SetPrototypeMethod(t, "getNodeManufacturerName", OZW::GetNodeManufacturerName); // ** new
-		Nan::SetPrototypeMethod(t, "setNodeManufacturerName", OZW::SetNodeManufacturerName); // ** new
-		Nan::SetPrototypeMethod(t, "getNodeProductName", OZW::GetNodeProductName); // ** new
-		Nan::SetPrototypeMethod(t, "setNodeProductName", OZW::SetNodeProductName); // ** new
+		Nan::SetPrototypeMethod(t, "getNodeLocation", OZWDriver::GetNodeLocation); // ** new
+		Nan::SetPrototypeMethod(t, "setNodeLocation", OZWDriver::SetNodeLocation);
+		Nan::SetPrototypeMethod(t, "getNodeName", OZWDriver::GetNodeName);
+		Nan::SetPrototypeMethod(t, "setNodeName", OZWDriver::SetNodeName);
+		Nan::SetPrototypeMethod(t, "getNodeManufacturerName", OZWDriver::GetNodeManufacturerName); // ** new
+		Nan::SetPrototypeMethod(t, "setNodeManufacturerName", OZWDriver::SetNodeManufacturerName); // ** new
+		Nan::SetPrototypeMethod(t, "getNodeProductName", OZWDriver::GetNodeProductName); // ** new
+		Nan::SetPrototypeMethod(t, "setNodeProductName", OZWDriver::SetNodeProductName); // ** new
 		// getters
-		Nan::SetPrototypeMethod(t, "getNodeMaxBaudRate", OZW::GetNodeMaxBaudRate); // ** new
-		Nan::SetPrototypeMethod(t, "getNodeVersion", OZW::GetNodeVersion); // ** new
-		Nan::SetPrototypeMethod(t, "getNodeBasic", OZW::GetNodeBasic); // ** new
-		Nan::SetPrototypeMethod(t, "getNodeGeneric", OZW::GetNodeGeneric); // ** new
-		Nan::SetPrototypeMethod(t, "getNodeManufacturerId", OZW::GetNodeManufacturerId); // ** new
-		Nan::SetPrototypeMethod(t, "getNodeNeighbors", OZW::GetNodeNeighbors);
-		Nan::SetPrototypeMethod(t, "getNodeProductId", OZW::GetNodeProductId); // ** new
-		Nan::SetPrototypeMethod(t, "getNodeProductType", OZW::GetNodeProductType); // ** new
-		Nan::SetPrototypeMethod(t, "getNodeSecurity", OZW::GetNodeSecurity); // ** new
-		Nan::SetPrototypeMethod(t, "getNodeSpecific", OZW::GetNodeSpecific); // ** new
-		Nan::SetPrototypeMethod(t, "getNodeType", OZW::GetNodeType); // ** new
-		Nan::SetPrototypeMethod(t, "isNodeListeningDevice", OZW::IsNodeListeningDevice); // ** new
-		Nan::SetPrototypeMethod(t, "isNodeFrequentListeningDevice", OZW::IsNodeFrequentListeningDevice); // ** new
-		Nan::SetPrototypeMethod(t, "isNodeBeamingDevice", OZW::IsNodeBeamingDevice); // ** new
-		Nan::SetPrototypeMethod(t, "isNodeRoutingDevice", OZW::IsNodeRoutingDevice); // ** new
-		Nan::SetPrototypeMethod(t, "isNodeSecurityDevice", OZW::IsNodeSecurityDevice); // ** new
+		Nan::SetPrototypeMethod(t, "getNodeMaxBaudRate", OZWDriver::GetNodeMaxBaudRate); // ** new
+		Nan::SetPrototypeMethod(t, "getNodeVersion", OZWDriver::GetNodeVersion); // ** new
+		Nan::SetPrototypeMethod(t, "getNodeBasic", OZWDriver::GetNodeBasic); // ** new
+		Nan::SetPrototypeMethod(t, "getNodeGeneric", OZWDriver::GetNodeGeneric); // ** new
+		Nan::SetPrototypeMethod(t, "getNodeManufacturerId", OZWDriver::GetNodeManufacturerId); // ** new
+		Nan::SetPrototypeMethod(t, "getNodeNeighbors", OZWDriver::GetNodeNeighbors);
+		Nan::SetPrototypeMethod(t, "getNodeProductId", OZWDriver::GetNodeProductId); // ** new
+		Nan::SetPrototypeMethod(t, "getNodeProductType", OZWDriver::GetNodeProductType); // ** new
+		Nan::SetPrototypeMethod(t, "getNodeSecurity", OZWDriver::GetNodeSecurity); // ** new
+		Nan::SetPrototypeMethod(t, "getNodeSpecific", OZWDriver::GetNodeSpecific); // ** new
+		Nan::SetPrototypeMethod(t, "getNodeType", OZWDriver::GetNodeType); // ** new
+		Nan::SetPrototypeMethod(t, "isNodeListeningDevice", OZWDriver::IsNodeListeningDevice); // ** new
+		Nan::SetPrototypeMethod(t, "isNodeFrequentListeningDevice", OZWDriver::IsNodeFrequentListeningDevice); // ** new
+		Nan::SetPrototypeMethod(t, "isNodeBeamingDevice", OZWDriver::IsNodeBeamingDevice); // ** new
+		Nan::SetPrototypeMethod(t, "isNodeRoutingDevice", OZWDriver::IsNodeRoutingDevice); // ** new
+		Nan::SetPrototypeMethod(t, "isNodeSecurityDevice", OZWDriver::IsNodeSecurityDevice); // ** new
 		// openzwave-values.cc
-		Nan::SetPrototypeMethod(t, "setValue", OZW::SetValue);
-		Nan::SetPrototypeMethod(t, "refreshValue", OZW::RefreshValue);
-		Nan::SetPrototypeMethod(t, "setChangeVerified", OZW::SetChangeVerified);
-		Nan::SetPrototypeMethod(t, "getNumSwitchPoints", OZW::GetNumSwitchPoints);
-		Nan::SetPrototypeMethod(t, "clearSwitchPoints", OZW::ClearSwitchPoints);
-		Nan::SetPrototypeMethod(t, "getSwitchPoint", OZW::GetSwitchPoint);
-		Nan::SetPrototypeMethod(t, "setSwitchPoint", OZW::SetSwitchPoint);
-		Nan::SetPrototypeMethod(t, "removeSwitchPoint", OZW::RemoveSwitchPoint);
+		Nan::SetPrototypeMethod(t, "setValue", OZWDriver::SetValue);
+		Nan::SetPrototypeMethod(t, "refreshValue", OZWDriver::RefreshValue);
+		Nan::SetPrototypeMethod(t, "setChangeVerified", OZWDriver::SetChangeVerified);
+		Nan::SetPrototypeMethod(t, "getNumSwitchPoints", OZWDriver::GetNumSwitchPoints);
+		Nan::SetPrototypeMethod(t, "clearSwitchPoints", OZWDriver::ClearSwitchPoints);
+		Nan::SetPrototypeMethod(t, "getSwitchPoint", OZWDriver::GetSwitchPoint);
+		Nan::SetPrototypeMethod(t, "setSwitchPoint", OZWDriver::SetSwitchPoint);
+		Nan::SetPrototypeMethod(t, "removeSwitchPoint", OZWDriver::RemoveSwitchPoint);
 		// openzwave-polling.cc
-		Nan::SetPrototypeMethod(t, "enablePoll", OZW::EnablePoll);
-		Nan::SetPrototypeMethod(t, "disablePoll", OZW::DisablePoll);
-		Nan::SetPrototypeMethod(t, "isPolled",  OZW::IsPolled); // ** new
-		Nan::SetPrototypeMethod(t, "getPollInterval",  OZW::GetPollInterval); // ** new
-		Nan::SetPrototypeMethod(t, "setPollInterval",  OZW::SetPollInterval); // ** new
-		Nan::SetPrototypeMethod(t, "getPollIntensity",  OZW::GetPollIntensity); // ** new
-		Nan::SetPrototypeMethod(t, "setPollIntensity",  OZW::SetPollIntensity); // ** new
+		Nan::SetPrototypeMethod(t, "enablePoll", OZWDriver::EnablePoll);
+		Nan::SetPrototypeMethod(t, "disablePoll", OZWDriver::DisablePoll);
+		Nan::SetPrototypeMethod(t, "isPolled", OZWDriver::IsPolled); // ** new
+		Nan::SetPrototypeMethod(t, "getPollInterval", OZWDriver::GetPollInterval); // ** new
+		Nan::SetPrototypeMethod(t, "setPollInterval", OZWDriver::SetPollInterval); // ** new
+		Nan::SetPrototypeMethod(t, "getPollIntensity", OZWDriver::GetPollIntensity); // ** new
+		Nan::SetPrototypeMethod(t, "setPollIntensity", OZWDriver::SetPollIntensity); // ** new
 		// openzwave-scenes.cc
-		Nan::SetPrototypeMethod(t, "createScene", OZW::CreateScene);
-		Nan::SetPrototypeMethod(t, "removeScene", OZW::RemoveScene);
-		Nan::SetPrototypeMethod(t, "getScenes", OZW::GetScenes);
-		Nan::SetPrototypeMethod(t, "addSceneValue", OZW::AddSceneValue);
-		Nan::SetPrototypeMethod(t, "removeSceneValue", OZW::RemoveSceneValue);
-		Nan::SetPrototypeMethod(t, "sceneGetValues", OZW::SceneGetValues);
-		Nan::SetPrototypeMethod(t, "activateScene", OZW::ActivateScene);
+		Nan::SetPrototypeMethod(t, "createScene", OZWDriver::CreateScene);
+		Nan::SetPrototypeMethod(t, "removeScene", OZWDriver::RemoveScene);
+		Nan::SetPrototypeMethod(t, "getScenes", OZWDriver::GetScenes);
+		Nan::SetPrototypeMethod(t, "addSceneValue", OZWDriver::AddSceneValue);
+		Nan::SetPrototypeMethod(t, "removeSceneValue", OZWDriver::RemoveSceneValue);
+		Nan::SetPrototypeMethod(t, "sceneGetValues", OZWDriver::SceneGetValues);
+		Nan::SetPrototypeMethod(t, "activateScene", OZWDriver::ActivateScene);
 		//
-		Nan::Set(target, Nan::New<String>("Emitter").ToLocalChecked(), t->GetFunction());
+		Local < FunctionTemplate > t_ozw = Nan::New<FunctionTemplate>(OZW::New);
+		t_ozw->SetClassName(Nan::New("OZW").ToLocalChecked());
+		t_ozw->InstanceTemplate()->SetInternalFieldCount(1);
+		// openzwave-driver.cc
+		Nan::SetPrototypeMethod(t_ozw, "connect", OZW::Connect);
+		Nan::SetPrototypeMethod(t_ozw, "disconnect", OZW::Disconnect);
+		Nan::Set(target, Nan::New<String>("Emitter").ToLocalChecked(), t_ozw->GetFunction());
 		/* for BeginControllerCommand
 	   * http://openzwave.com/dev/classOpenZWave_1_1Manager.html#aa11faf40f19f0cda202d2353a60dbf7b
 	   */
@@ -196,7 +201,8 @@ namespace OZW {
 		(*ctrlCmdNames)["ReplicationSend"] 			= OpenZWave::Driver::ControllerCommand_ReplicationSend;
 		(*ctrlCmdNames)["CreateButton"]				= OpenZWave::Driver::ControllerCommand_CreateButton;
 		(*ctrlCmdNames)["DeleteButton"]				= OpenZWave::Driver::ControllerCommand_DeleteButton;
-
+		//
+		drivers =  new DriverMap();
 	}
 
   // ===================================================================
@@ -250,9 +256,25 @@ namespace OZW {
 		self->config_path = ozw_config_path;
 		self->userpath = ozw_userpath;
 		self->option_overrides = option_overrides;
-
+		//
 		ctx_obj = Nan::Persistent<Object>(info.This());
 
+		// init new libuv loop
+		uv_async_init(uv_default_loop(), &async, async_cb_handler);
+
+		Local<Function> callbackHandle = Nan::Get( info.This(),
+			Nan::New<String>("emit").ToLocalChecked()
+		).ToLocalChecked()
+		 .As<Function>();
+
+		emit_cb = new Nan::Callback(callbackHandle);
+
+		OpenZWave::Options::Create(self->config_path, self->userpath, self->option_overrides);
+		OpenZWave::Options::Get()->Lock();
+		// create the singleton Manager
+		OpenZWave::Manager::Create();
+		// add the watcher callback
+		OpenZWave::Manager::Get()->AddWatcher(ozw_watcher_callback, NULL);
 		//
 		info.GetReturnValue().Set(info.This());
 	}

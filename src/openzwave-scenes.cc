@@ -24,7 +24,7 @@ namespace OZW {
 
 	/* OpenZWave scene management functions */
 	// ===================================================================
-	NAN_METHOD(OZW::CreateScene)
+	NAN_METHOD(OZWDriver::CreateScene)
 	// ===================================================================
 	{
 		Nan::HandleScope scope;
@@ -47,7 +47,7 @@ namespace OZW {
 	}
 
 	// ===================================================================
-	NAN_METHOD(OZW::RemoveScene)
+	NAN_METHOD(OZWDriver::RemoveScene)
 	// ===================================================================
 	{
 		Nan::HandleScope scope;
@@ -63,7 +63,7 @@ namespace OZW {
 	}
 
 	// ===================================================================
-	NAN_METHOD(OZW::GetScenes)
+	NAN_METHOD(OZWDriver::GetScenes)
 	// ===================================================================
 	{
 		Nan::HandleScope scope;
@@ -113,7 +113,7 @@ namespace OZW {
 	}
 
 	// ===================================================================
-	NAN_METHOD(OZW::AddSceneValue)
+	NAN_METHOD(OZWDriver::AddSceneValue)
 	// ===================================================================
 	{
 		Nan::HandleScope scope;
@@ -179,7 +179,7 @@ namespace OZW {
 	}
 
 	// ===================================================================
-	NAN_METHOD(OZW::RemoveSceneValue)
+	NAN_METHOD(OZWDriver::RemoveSceneValue)
 	// ===================================================================
 	{
 		Nan::HandleScope scope;
@@ -196,7 +196,7 @@ namespace OZW {
 	}
 
 	// ===================================================================
-	NAN_METHOD(OZW::SceneGetValues)
+	NAN_METHOD(OZWDriver::SceneGetValues)
 	// ===================================================================
 	{
 		Nan::HandleScope scope;
@@ -226,7 +226,7 @@ namespace OZW {
 	}
 
 	// ===================================================================
-	NAN_METHOD(OZW::ActivateScene)
+	NAN_METHOD(OZWDriver::ActivateScene)
 	// ===================================================================
 	{
 		Nan::HandleScope scope;

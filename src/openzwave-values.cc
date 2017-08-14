@@ -25,7 +25,7 @@ namespace OZW {
 	* Generic value set.
 	*/
 	// =================================================================
-	NAN_METHOD(OZW::SetValue)
+	NAN_METHOD(OZWDriver::SetValue)
 	// =================================================================
 	{
 		Nan::HandleScope scope;
@@ -94,7 +94,7 @@ namespace OZW {
 	* Refresh value from Z-Wave network
 	*/
 	// =================================================================
-	NAN_METHOD(OZW::RefreshValue)
+	NAN_METHOD(OZWDriver::RefreshValue)
 			// =================================================================
 	{
 		Nan::HandleScope scope;
@@ -111,7 +111,7 @@ namespace OZW {
 	* Ask OZW to verify the value change before notifying the application
 	*/
 	// =================================================================
-	NAN_METHOD(OZW::SetChangeVerified)
+	NAN_METHOD(OZWDriver::SetChangeVerified)
 	// =================================================================
 	{
 		Nan::HandleScope scope;
@@ -130,7 +130,7 @@ namespace OZW {
 	* Get number of thermostat switch points
 	*/
 	// =================================================================
-	NAN_METHOD(OZW::GetNumSwitchPoints)
+	NAN_METHOD(OZWDriver::GetNumSwitchPoints)
 	// =================================================================
 	{
 		Nan::HandleScope scope;
@@ -147,7 +147,7 @@ namespace OZW {
 	}
 
 	// =================================================================
-	NAN_METHOD(OZW::GetSwitchPoint)
+	NAN_METHOD(OZWDriver::GetSwitchPoint)
 	// =================================================================
 	{
 		Nan::HandleScope scope;
@@ -183,7 +183,7 @@ namespace OZW {
 
 	// Clears all switch points from the schedule.
 	// =================================================================
-	NAN_METHOD(OZW::ClearSwitchPoints)
+	NAN_METHOD(OZWDriver::ClearSwitchPoints)
 	// =================================================================
 	{
 		Nan::HandleScope scope;
@@ -199,7 +199,7 @@ namespace OZW {
 	}
 
 	// =================================================================
-	NAN_METHOD(OZW::SetSwitchPoint)
+	NAN_METHOD(OZWDriver::SetSwitchPoint)
 	// =================================================================
 	{
 		Nan::HandleScope scope;
@@ -225,7 +225,7 @@ namespace OZW {
 	}
 
 	// =================================================================
-	NAN_METHOD(OZW::RemoveSwitchPoint)
+	NAN_METHOD(OZWDriver::RemoveSwitchPoint)
 	// =================================================================
 	{
 		Nan::HandleScope scope;

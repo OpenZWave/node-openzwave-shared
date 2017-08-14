@@ -33,22 +33,31 @@
 #include "openzwave/Options.h"
 #include "openzwave/value_classes/Value.h"
 
-#if defined(_WIN32) || defined( __APPLE__)
-    #include <unordered_map>
-    typedef ::std::unordered_map <std::string, OpenZWave::Driver::ControllerCommand> CommandMap;
-#else
-    #include <tr1/unordered_map>
-    typedef ::std::tr1::unordered_map <std::string, OpenZWave::Driver::ControllerCommand> CommandMap;
-#endif
-
 #include "utils.hpp"
 
 using namespace v8;
 using namespace node;
 
 namespace OZW {
-
+	// the singleton for OpenZWave::Manager
 	struct OZW : public ObjectWrap {
+		// Passing configuration around
+		std::string userpath;
+		std::string option_overrides;
+		std::string config_path;
+		//
+		static NAN_METHOD(New);
+		// openzwave-driver.cc
+		static NAN_METHOD(Connect);
+		static NAN_METHOD(Disconnect);
+	};
+
+	/* an OpenZWave::Driver wrapper */
+	struct OZWDriver : public ObjectWrap {
+		// our ZWave Home ID for this
+		uint32 homeid;
+		std::string path;
+		//
 		static NAN_METHOD(New);
 		// openzwave-config.cc
 		static NAN_METHOD(SetConfigParam);
@@ -65,9 +74,6 @@ namespace OZW {
 		static NAN_METHOD(GetLibraryVersion);
 		static NAN_METHOD(GetLibraryTypeName);
 		static NAN_METHOD(GetSendQueueCount);
-		// openzwave-driver.cc
-		static NAN_METHOD(Connect);
-		static NAN_METHOD(Disconnect);
 		// openzwave-groups.cc
 		static NAN_METHOD(GetNumGroups);
 		static NAN_METHOD(GetAssociations);
@@ -167,24 +173,29 @@ namespace OZW {
 		static NAN_METHOD(RemoveSceneValue);
 		static NAN_METHOD(SceneGetValues);
 		static NAN_METHOD(ActivateScene);
-
-    // Passing configuration around
-    std::string userpath;
-    std::string option_overrides;
-    std::string config_path;
 	};
-
-	// our ZWave Home ID
-	extern uint32 homeid;
-
-	// map of controller command names to enum values
-	extern CommandMap* ctrlCmdNames;
-
 }
 
-// OpenZWave version constituents
+#if defined(_WIN32) || defined( __APPLE__)
+    #include <unordered_map>
+    typedef ::std::unordered_map <std::string, OpenZWave::Driver::ControllerCommand> CommandMap;
+		typedef ::std::unordered_map <uint32, OZW::OZWDriver*> DriverMap;
+#else
+    #include <tr1/unordered_map>
+    typedef ::std::tr1::unordered_map <std::string, OpenZWave::Driver::ControllerCommand> CommandMap;
+		typedef ::std::tr1::unordered_map <uint32, OZW::OZWDriver*> DriverMap;
+#endif
+namespace OZW {
+	// map of controller command names to enum values
+	extern CommandMap* ctrlCmdNames;
+	// homeId (uint32) => OZWDriver
+	extern DriverMap*  drivers;
+}
+
+// OpenZWave version constituents, external symbols from the main OZW lib
 extern uint16_t ozw_vers_major;
 extern uint16_t ozw_vers_minor;
 extern uint16_t ozw_vers_revision;
+
 
 #endif // __NODE_OPENZWAVE_HPP_INCLUDED__

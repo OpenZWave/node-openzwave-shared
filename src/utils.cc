@@ -233,6 +233,7 @@ namespace OZW {
 		//Nan::Set(valobj, Nan::New<String>("change_verified").ToLocalChecked(), Nan::New<Boolean>(mgr->GetChangeVerified(value))->ToBoolean());
 		//
 		AddStringProp(nodeobj,  value_id,  buffer.c_str());
+		AddIntegerProp(nodeobj, home_id,   value.GetHomeId());
 		AddIntegerProp(nodeobj, node_id,   value.GetNodeId());
 		AddIntegerProp(nodeobj, class_id,  value.GetCommandClassId());
 		AddStringProp (nodeobj, type,      OpenZWave::Value::GetTypeNameFromEnum(value.GetType()));
@@ -286,6 +287,7 @@ namespace OZW {
 		index: the index of the command (usually 0)
 */
 	OpenZWave::ValueID* populateValueId(const Nan::FunctionCallbackInfo<v8::Value> &info, uint8 offset) {
+		OZWDriver* driver = ObjectWrap::Unwrap<OZWDriver>(info.This());
 		uint8 nodeid, comclass, instance, index;
 		if ( (info.Length() >= offset) && info[offset]->IsObject() ) {
 			Local<Object> o = Nan::To<Object>(info[offset]).ToLocalChecked();
@@ -434,7 +436,8 @@ const std::string getNotifHelpMsg(Notification const *n) {
 				str.append(getControllerStateAsStr((OpenZWave::Driver::ControllerState) n->GetByte()));
 				break;
 			case Notification::Type_DriverRemoved:
-				str = "DriverRemoved";				break;
+				str = "DriverRemoved";
+				break;
 		}
 		return str;
 #endif

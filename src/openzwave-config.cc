@@ -24,20 +24,21 @@ namespace OZW {
 	* Set Config Parameters
 	*/
 	// ===================================================================
-	NAN_METHOD(OZW::SetConfigParam)
+	NAN_METHOD(OZWDriver::SetConfigParam)
 	// ===================================================================
 	{
 		Nan::HandleScope scope;
 		CheckMinArgs(3, "nodeid, param, value");
+		OZWDriver* self = ObjectWrap::Unwrap<OZWDriver>(info.This());
 		uint8 nodeid = Nan::To<Number>(info[0]).ToLocalChecked()->Value();
 		uint8 param  = Nan::To<Number>(info[1]).ToLocalChecked()->Value();
 		int32 value  = Nan::To<Number>(info[2]).ToLocalChecked()->Value();
 		if (info.Length() < 4) {
-			OpenZWave::Manager::Get()->SetConfigParam(homeid, nodeid, param, value);
+			OpenZWave::Manager::Get()->SetConfigParam(self->homeid, nodeid, param, value);
 		}
 		else {
 			uint8 size = Nan::To<Number>(info[3]).ToLocalChecked()->Value();
-			OpenZWave::Manager::Get()->SetConfigParam(homeid, nodeid, param, value, size);
+			OpenZWave::Manager::Get()->SetConfigParam(self->homeid, nodeid, param, value, size);
 		}
 	}
 
@@ -57,14 +58,15 @@ namespace OZW {
  	 * Configuration::StaticGetCommandClassId.
 	*/
 	// ===================================================================
-	NAN_METHOD(OZW::RequestConfigParam)
+	NAN_METHOD(OZWDriver::RequestConfigParam)
 	// ===================================================================
 	{
 		Nan::HandleScope scope;
 		CheckMinArgs(2, "nodeid, param");
+		OZWDriver* self = ObjectWrap::Unwrap<OZWDriver>(info.This());
 		uint8 nodeid = Nan::To<Number>(info[0]).ToLocalChecked()->Value();
 		uint8 param = Nan::To<Number>(info[1]).ToLocalChecked()->Value();
-		OpenZWave::Manager::Get()->RequestConfigParam(homeid, nodeid, param);
+		OpenZWave::Manager::Get()->RequestConfigParam(self->homeid, nodeid, param);
 	}
 
 
@@ -73,13 +75,14 @@ namespace OZW {
 	 * device.
 	 * */
 	// ===================================================================
-	NAN_METHOD(OZW::RequestAllConfigParams)
+	NAN_METHOD(OZWDriver::RequestAllConfigParams)
 	// ===================================================================
 	{
 		Nan::HandleScope scope;
 		CheckMinArgs(1, "nodeid");
+		OZWDriver* self = ObjectWrap::Unwrap<OZWDriver>(info.This());
 		uint8 nodeid = Nan::To<Number>(info[0]).ToLocalChecked()->Value();
-		OpenZWave::Manager::Get()->RequestAllConfigParams (homeid, nodeid);
+		OpenZWave::Manager::Get()->RequestAllConfigParams (self->homeid, nodeid);
 	}
 
 }

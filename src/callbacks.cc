@@ -156,6 +156,29 @@ void handleNotification(NotifInfo *notif)
   NodeInfo *node;
   //
   switch (notif->type) {
+	  //                            #################
+	  case OpenZWave::Notification::Type_DriverReady: {
+		    //                            #################
+		    // the driver is ready, create an OZWDriver instance
+				cout << "driver ready\n";
+				Local <Object> drvobj = Nan::New<OZWDriver>(info);
+/*					Nan::New<Integer>(notif->homeid),
+					Nan::New<String>(OpenZWave::Manager::Get()->GetControllerPath(notif->homeid)).ToLocalChecked()
+				);*/
+				//
+		    emitinfo[0] = Nan::New<String>("driver ready").ToLocalChecked();
+		    emitinfo[1] = Nan::New<Integer>(notif->homeid);
+				emitinfo[2] = drvobj;
+		    emit_cb->Call(Nan::New(ctx_obj), 3, emitinfo);
+		    break;
+		  }
+		  //                            ##################
+		  case OpenZWave::Notification::Type_DriverFailed: {
+		    //                            ##################
+		    emitinfo[0] = Nan::New<String>("driver failed").ToLocalChecked();
+		    emit_cb->Call(Nan::New(ctx_obj), 1, emitinfo);
+		    break;
+		  }
   //                            ################
   case OpenZWave::Notification::Type_ValueAdded: {
     //                            ################
@@ -353,23 +376,6 @@ void handleNotification(NotifInfo *notif)
     emit_cb->Call(Nan::New(ctx_obj), 3, emitinfo);
     break;
   }
-  //                            #################
-  case OpenZWave::Notification::Type_DriverReady: {
-    //                            #################
-    // the driver is ready, set our global homeid
-    homeid = notif->homeid;
-    emitinfo[0] = Nan::New<String>("driver ready").ToLocalChecked();
-    emitinfo[1] = Nan::New<Integer>(homeid);
-    emit_cb->Call(Nan::New(ctx_obj), 2, emitinfo);
-    break;
-  }
-  //                            ##################
-  case OpenZWave::Notification::Type_DriverFailed: {
-    //                            ##################
-    emitinfo[0] = Nan::New<String>("driver failed").ToLocalChecked();
-    emit_cb->Call(Nan::New(ctx_obj), 1, emitinfo);
-    break;
-  }
   //                            ##################################
   case OpenZWave::Notification::Type_EssentialNodeQueriesComplete: {
     //                            ##################################
@@ -462,6 +468,8 @@ void async_cb_handler(uv_async_t *handle)
 
   while (!zqueue.empty()) {
     notif = zqueue.front();
+		zqueue.pop();
+		zqueue_mutex.unlock();
 #if OPENZWAVE_SECURITY != 1
     if (notif->homeid == 0) {
       handleControllerCommand(notif);
@@ -472,7 +480,6 @@ void async_cb_handler(uv_async_t *handle)
     handleNotification(notif);
 #endif
     delete notif;
-    zqueue.pop();
   }
 }
 

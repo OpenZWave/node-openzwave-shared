@@ -24,7 +24,7 @@ namespace OZW {
 
  	// Get the time period between polls of a node's state
 	// ===================================================================
-	NAN_METHOD(OZW::GetPollInterval)
+	NAN_METHOD(OZWDriver::GetPollInterval)
 	// ===================================================================
 	{
 		Nan::HandleScope scope;
@@ -44,7 +44,7 @@ namespace OZW {
 	 * network does not have to cope with more than one poll per second).
 	 */
 	// ===================================================================
-	NAN_METHOD(OZW::SetPollInterval)
+	NAN_METHOD(OZWDriver::SetPollInterval)
 	// ===================================================================
 	{
 		Nan::HandleScope scope;
@@ -57,7 +57,7 @@ namespace OZW {
 	* Enable/Disable polling on a ValueID
 	*/
 	// ===================================================================
-	NAN_METHOD(OZW::EnablePoll)
+	NAN_METHOD(OZWDriver::EnablePoll)
 	// ===================================================================
 	{
 		Nan::HandleScope scope;
@@ -72,7 +72,7 @@ namespace OZW {
 	}
 
 	// ===================================================================
-	NAN_METHOD(OZW::DisablePoll)
+	NAN_METHOD(OZWDriver::DisablePoll)
 	// ===================================================================
 	{
 		Nan::HandleScope scope;
@@ -87,7 +87,7 @@ namespace OZW {
 
 	// Determine the polling of a device's state.
 	// ===================================================================
-	NAN_METHOD(OZW::IsPolled)
+	NAN_METHOD(OZWDriver::IsPolled)
 	// ===================================================================
 	{
 		Nan::HandleScope scope;
@@ -100,7 +100,7 @@ namespace OZW {
 	}
 
 	// ===================================================================
-	NAN_METHOD(OZW::SetPollIntensity)
+	NAN_METHOD(OZWDriver::SetPollIntensity)
 	// ===================================================================
 	{
 		Nan::HandleScope scope;
@@ -116,7 +116,7 @@ namespace OZW {
 
  	// Get the polling intensity of a device's state.
 	// ===================================================================
-	NAN_METHOD(OZW::GetPollIntensity)
+	NAN_METHOD(OZWDriver::GetPollIntensity)
 	// ===================================================================
 	{
 		Nan::HandleScope scope;

@@ -28,13 +28,14 @@ namespace OZW {
 	 * will be a number between 1 and 4.
 	*/
 	// ===================================================================
-	NAN_METHOD(OZW::GetNumGroups)
+	NAN_METHOD(OZWDriver::GetNumGroups)
 	// ===================================================================
 	{
 		Nan::HandleScope scope;
 		CheckMinArgs(1, "nodeid");
+		OZWDriver* self = ObjectWrap::Unwrap<OZWDriver>(info.This());
 		uint8 nodeid = Nan::To<Number>(info[0]).ToLocalChecked()->Value();
-		uint8 numGroups = OpenZWave::Manager::Get()->GetNumGroups(homeid, nodeid);
+		uint8 numGroups = OpenZWave::Manager::Get()->GetNumGroups(self->homeid, nodeid);
 		info.GetReturnValue().Set(Nan::New<Integer>(numGroups));
 	}
 
@@ -42,17 +43,18 @@ namespace OZW {
 	 *
 	 */
 	// ===================================================================
-	NAN_METHOD(OZW::GetAssociations)
+	NAN_METHOD(OZWDriver::GetAssociations)
 	// ===================================================================
 	{
 		Nan::HandleScope scope;
 		CheckMinArgs(2, "nodeid, groupidx");
+		OZWDriver* self = ObjectWrap::Unwrap<OZWDriver>(info.This());
 		uint8* associations;
 		uint8 nodeid = Nan::To<Number>(info[0]).ToLocalChecked()->Value();
 		uint8 groupidx = Nan::To<Number>(info[1]).ToLocalChecked()->Value();
 
 		uint32 numNodes = OpenZWave::Manager::Get()->GetAssociations(
-			homeid, nodeid,	groupidx, &associations
+			self->homeid, nodeid,	groupidx, &associations
 		);
 
 		Local<Array> o_assocs = Nan::New<Array>(numNodes);
@@ -72,16 +74,17 @@ namespace OZW {
 	 *
 	 */
 	// ===================================================================
-	NAN_METHOD(OZW::GetMaxAssociations)
+	NAN_METHOD(OZWDriver::GetMaxAssociations)
 	// ===================================================================
 	{
 		Nan::HandleScope scope;
 		CheckMinArgs(2, "nodeid, groupidx");
+		OZWDriver* self = ObjectWrap::Unwrap<OZWDriver>(info.This());
 		uint8 nodeid = Nan::To<Number>(info[0]).ToLocalChecked()->Value();
 		uint8 groupidx = Nan::To<Number>(info[1]).ToLocalChecked()->Value();
 
 		uint8 numMaxAssoc = OpenZWave::Manager::Get()->GetMaxAssociations(
-			homeid, nodeid,	groupidx
+			self->homeid, nodeid,	groupidx
 		);
 
 		info.GetReturnValue().Set(Nan::New<Integer>(numMaxAssoc));
@@ -91,16 +94,17 @@ namespace OZW {
 	 *
 	 */
 	// ===================================================================
-	NAN_METHOD(OZW::GetGroupLabel)
+	NAN_METHOD(OZWDriver::GetGroupLabel)
 	// ===================================================================
 	{
 		Nan::HandleScope scope;
 		CheckMinArgs(2, "nodeid, groupidx");
+		OZWDriver* self = ObjectWrap::Unwrap<OZWDriver>(info.This());
 		uint8 nodeid = Nan::To<Number>(info[0]).ToLocalChecked()->Value();
 		uint8 groupidx = Nan::To<Number>(info[1]).ToLocalChecked()->Value();
 
 		std::string groupLabel = OpenZWave::Manager::Get()->GetGroupLabel(
-			homeid, nodeid, groupidx
+			self->homeid, nodeid, groupidx
 		);
 
 		info.GetReturnValue().Set(
@@ -113,17 +117,18 @@ namespace OZW {
 	 *
 	 */
 	// ===================================================================
-	NAN_METHOD(OZW::AddAssociation)
+	NAN_METHOD(OZWDriver::AddAssociation)
 	// ===================================================================
 	{
 		Nan::HandleScope scope;
 		CheckMinArgs(3, "nodeid, groupidx, tgtnodeid");
+		OZWDriver* self = ObjectWrap::Unwrap<OZWDriver>(info.This());
 		uint8 nodeid = Nan::To<Number>(info[0]).ToLocalChecked()->Value();
 		uint8 groupidx = Nan::To<Number>(info[1]).ToLocalChecked()->Value();
 		uint8 tgtnodeid = Nan::To<Number>(info[2]).ToLocalChecked()->Value();
 
 		OpenZWave::Manager::Get()->AddAssociation(
-			homeid,nodeid,groupidx,tgtnodeid
+			self->homeid,nodeid,groupidx,tgtnodeid
 		);
 	}
 
@@ -131,16 +136,17 @@ namespace OZW {
 	 *
 	 */
 	// ===================================================================
-	NAN_METHOD(OZW::RemoveAssociation)
+	NAN_METHOD(OZWDriver::RemoveAssociation)
 	// ===================================================================
 	{
 		Nan::HandleScope scope;
 		CheckMinArgs(3, "nodeid, groupidx, tgtnodeid");
+		OZWDriver* self = ObjectWrap::Unwrap<OZWDriver>(info.This());
 		uint8 nodeid = Nan::To<Number>(info[0]).ToLocalChecked()->Value();
 		uint8 groupidx = Nan::To<Number>(info[1]).ToLocalChecked()->Value();
 		uint8 tgtnodeid = Nan::To<Number>(info[2]).ToLocalChecked()->Value();
 
-		OpenZWave::Manager::Get()->RemoveAssociation(homeid,nodeid,groupidx,tgtnodeid);
+		OpenZWave::Manager::Get()->RemoveAssociation(self->homeid, nodeid, groupidx, tgtnodeid);
 	}
 
 }

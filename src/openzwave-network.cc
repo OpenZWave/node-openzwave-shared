@@ -26,14 +26,15 @@ namespace OZW {
 	* for testing network reliability.
 	*/
 	// ===================================================================
-	NAN_METHOD(OZW::TestNetworkNode)
+	NAN_METHOD(OZWDriver::TestNetworkNode)
 	// ===================================================================
 	{
 		Nan::HandleScope scope;
 		CheckMinArgs(1, "nodeid");
+		OZWDriver* self = ObjectWrap::Unwrap<OZWDriver>(info.This());
 		uint8 nodeid = Nan::To<Number>(info[0]).ToLocalChecked()->Value();
 		uint8 nummsg = (info.Length() > 1) ? Nan::To<Number>(info[1]).ToLocalChecked()->Value() : 1;
-		OpenZWave::Manager::Get()->TestNetworkNode(homeid, nodeid, nummsg);
+		OpenZWave::Manager::Get()->TestNetworkNode(self->homeid, nodeid, nummsg);
 	}
 
 	/*
@@ -41,26 +42,28 @@ namespace OZW {
 	* network for testing network reliability.
 	*/
 	// ===================================================================
-	NAN_METHOD(OZW::TestNetwork)
+	NAN_METHOD(OZWDriver::TestNetwork)
 	// ===================================================================
 	{
 		Nan::HandleScope scope;
+		OZWDriver* self = ObjectWrap::Unwrap<OZWDriver>(info.This());
 		uint8 nummsg = (info.Length() > 0) ? Nan::To<Number>(info[0]).ToLocalChecked()->Value() : 1;
-		OpenZWave::Manager::Get()->TestNetwork(homeid, nummsg);
+		OpenZWave::Manager::Get()->TestNetwork(self->homeid, nummsg);
 	}
 
 	/*
 	* Heal network node by requesting the node rediscover their neighbors.
 	*/
 	// ===================================================================
-	NAN_METHOD(OZW::HealNetworkNode)
+	NAN_METHOD(OZWDriver::HealNetworkNode)
 	// ===================================================================
 	{
 		Nan::HandleScope scope;
 		CheckMinArgs(1, "nodeid");
+		OZWDriver* self = ObjectWrap::Unwrap<OZWDriver>(info.This());
 		uint8 nodeid = Nan::To<Number>(info[0]).ToLocalChecked()->Value();
 		uint8 doRR = (info.Length() > 1) ? Nan::To<Boolean>(info[1]).ToLocalChecked()->Value() : false;
-		OpenZWave::Manager::Get()->HealNetworkNode(homeid, nodeid, doRR);
+		OpenZWave::Manager::Get()->HealNetworkNode(self->homeid, nodeid, doRR);
 	}
 
 	/*
@@ -69,11 +72,12 @@ namespace OZW {
 	* Can take a while on larger networks.
 	*/
 	// ===================================================================
-	NAN_METHOD(OZW::HealNetwork)
+	NAN_METHOD(OZWDriver::HealNetwork)
 	// ===================================================================
 	{
 		Nan::HandleScope scope;
+		OZWDriver* self = ObjectWrap::Unwrap<OZWDriver>(info.This());
 		bool doRR = (info.Length() > 0) ? Nan::To<Boolean>(info[0]).ToLocalChecked()->Value() : false;
-		OpenZWave::Manager::Get()->HealNetwork(homeid, doRR);
+		OpenZWave::Manager::Get()->HealNetwork(self->homeid, doRR);
 	}
 }
