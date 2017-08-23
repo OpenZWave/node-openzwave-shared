@@ -3,6 +3,7 @@ var os = require('os');
 
 var zwave = new ZWave({
   ConsoleOutput: false
+  //ConsoleOutput: true
 });
 
 zwavedriverpaths = {
@@ -13,9 +14,9 @@ zwavedriverpaths = {
 
 var nodes = [];
 var homeid = null;
-zwave.on('driver ready', function(home_id) {
+zwave.on('driver ready', function(home_id, drv) {
   homeid = home_id;
-  console.log('scanning homeid=0x%s...', homeid.toString(16));
+  console.log('scanning homeid=0x%s... drv=%j', homeid.toString(16), drv);
 });
 
 zwave.on('driver failed', function() {

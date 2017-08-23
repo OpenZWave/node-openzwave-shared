@@ -29,8 +29,7 @@ namespace OZW {
 		Nan::HandleScope scope;
 		CheckMinArgs(1, "path");
 		std::string path = (*String::Utf8Value(info[0]->ToString()));
-		OpenZWave::Manager* mgr = OpenZWave::Manager::Get();
-		mgr->AddDriver(path);
+		OpenZWave::Manager::Get()->AddDriver(path);
 	}
 
 	// ===================================================================
@@ -43,9 +42,6 @@ namespace OZW {
 
 		OpenZWave::Manager::Get()->RemoveDriver(path);
 /*
-		OpenZWave::Manager::Get()->RemoveWatcher(ozw_watcher_callback, NULL);
-		OpenZWave::Manager::Destroy();
-		OpenZWave::Options::Destroy();
 */
 		delete emit_cb;
 	}

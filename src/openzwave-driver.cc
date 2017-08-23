@@ -27,9 +27,14 @@ namespace OZW {
 	{
 		Nan::HandleScope scope;
 		assert(info.IsConstructCall());
+		assert(info.Length() > 0);
+		uint32 homeid = Nan::To<Number>(info[0]).ToLocalChecked()->Value();
+		std::cout << "Initialising Driver for " << homeid << "\n";
 		OZWDriver* self = new OZWDriver();
+		std::cout<< *String::Utf8Value(info.This()->GetConstructorName()) << "\n";
+		std::cout << "internalFieldCount=" << info.This()->InternalFieldCount() << "\n";
 		self->Wrap(info.This());
-		std::cout << "Initialising Driver\n";
+		self->homeid = homeid;
 		info.GetReturnValue().Set(info.This());
 	}
 
@@ -598,6 +603,16 @@ namespace OZW {
 		OZWDriver* self = ObjectWrap::Unwrap<OZWDriver>(info.This());
 	 	uint32 cnt = OpenZWave::Manager::Get()->GetSendQueueCount (self->homeid);
 	 	info.GetReturnValue().Set(Nan::New<Integer>(cnt));
+	}
+
+	// ===================================================================
+	NAN_METHOD(OZWDriver::ToString)
+	// ===================================================================
+	{
+		Nan::HandleScope scope;
+		OZWDriver* self = ObjectWrap::Unwrap<OZWDriver>(info.This());
+		std::string s("OpenZWave Driver for home %d", self->homeid);
+	 	info.GetReturnValue().Set(Nan::New<String>(s).ToLocalChecked());
 	}
 
 }

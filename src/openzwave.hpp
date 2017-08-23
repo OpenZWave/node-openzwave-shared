@@ -56,9 +56,9 @@ namespace OZW {
 	struct OZWDriver : public ObjectWrap {
 		// our ZWave Home ID for this
 		uint32 homeid;
-		std::string path;
 		//
 		static NAN_METHOD(New);
+		static NAN_METHOD(ToString);
 		// openzwave-config.cc
 		static NAN_METHOD(SetConfigParam);
 		static NAN_METHOD(RequestConfigParam);
