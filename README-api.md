@@ -1,21 +1,24 @@
 ## API
 
 Typical usage pattern is to 
-1) load the addon with `require` 
-2) create a new instance with your options object and 
-3) then use `connect` to add a driver to your ZWave controller(s):
+1) load the addon with `require`, and create a new instance with your options
+2) bind the `driver ready` event to capture the created driver object 
+3) then, use `connect` to add a driver to your ZWave controller(s):
 
 ```js
+// step 1: initialize
 var zwave = require("openzwave-shared")({
     Logging: false,     // disable file logging (OZWLog.txt)
     ConsoleOutput: true // enable console logging
 });
-//
+// step 2: bind the driver to your home network
 var home;
 zwave.on('driver ready', function(home_id, drv) {
   console.log('scanning homeid=0x%s... drv=%j', homeid.toString(16), drv);
   home = drv;
 });
+// step 3: connect!
+zwave.connect('/dev/ttyUSB0');
 ```
 
 The default options are specified in `config/options.xml`. Please refer
@@ -23,7 +26,7 @@ The default options are specified in `config/options.xml`. Please refer
 for all the available options. If, for instance, you're using security devices
 (e.g. door locks) then you should specify an encryption key.
 
-The `driver` object emitted from `driver ready` is effectively a convenience wrapper around all the available commands exposed by the `OpenZWave::Manager` interface, hiding from you the necessity to pass the home ID on each OpenZWave::Manager API call. If you only got multiple ZWave controllers you'd better use a hash to keep references to all your drivers:
+The `home` object emitted from `driver ready` is effectively a convenience wrapper around all the available commands exposed by the `OpenZWave::Manager` interface, hiding from you the necessity to pass the home ID on each OpenZWave::Manager API call. If you only got multiple ZWave controllers you'd better use a hash to keep references to all your drivers:
 
 ```js
 var drivers;
