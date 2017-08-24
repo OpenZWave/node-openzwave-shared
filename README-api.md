@@ -7,13 +7,13 @@ Typical usage pattern is to
 
 ```js
 // step 1: initialize
-var zwave = require("openzwave-shared")({
+var zwaveModule = require("openzwave-shared")({
     Logging: false,     // disable file logging (OZWLog.txt)
     ConsoleOutput: true // enable console logging
 });
 // step 2: bind the driver to your home network
 var home;
-zwave.on('driver ready', function(home_id, drv) {
+zwave.on('driver ready', function(homeid, drv) {
   console.log('scanning homeid=0x%s... drv=%j', homeid.toString(16), drv);
   home = drv;
 });
@@ -26,13 +26,13 @@ The default options are specified in `config/options.xml`. Please refer
 for all the available options. If, for instance, you're using security devices
 (e.g. door locks) then you should specify an encryption key.
 
-The `home` object emitted from `driver ready` is effectively a convenience wrapper around all the available commands exposed by the `OpenZWave::Manager` interface, hiding from you the necessity to pass the home ID on each OpenZWave::Manager API call. If you only got multiple ZWave controllers you'd better use a hash to keep references to all your drivers:
+The `drv` object emitted from `driver ready` is effectively a convenience wrapper around all the available commands exposed by the `OpenZWave::Manager` interface, hiding from you the necessity to pass the home ID on each OpenZWave::Manager API call. If you only got multiple ZWave controllers you'd better use a hash to keep references to all your drivers:
 
 ```js
 var drivers;
-zwave.on('driver ready', function(home_id, drv) {
+home.on('driver ready', function(homeid, drv) {
   console.log('scanning homeid=0x%s... drv=%j', homeid.toString(16), drv);
-  drivers[home_id] = drv;
+  drivers[homeid] = drv;
 });
 ```
 
@@ -63,8 +63,7 @@ minutes!) to scan the ZWave network and set up its data structures.
 So, be sure to register a "scan complete" callback, and after it gets called,
 you can safely start issuing commands to your ZWave devices.
 
-**Controlling zwave valueIDs** is usually done by passing the ValueID as a
-Javascipt object or as 4 discrete integer arguments:
+**Controlling zwave valueIDs** is usually done by passing an [OpenZWave::ValueID](http://openzwave.com/dev/classOpenZWave_1_1ValueID.html) as a Javascipt object or as 4 discrete integer arguments:
 - 1: ZWave Node Id,
 - 2: Command Class,
 - 3: Instance and
@@ -87,14 +86,14 @@ home.setValue({ node_id:5, class_id: 38, instance:1, index:0}, 50); // 2) or a v
 /*
  * Turn a binary switch on/off.
  */
-zwave.setNodeOn(3); // node 3: switch ON
-zwave.setNodeOff(3);// node 3: switch OFF
+home.setNodeOn(3); // node 3: switch ON
+home.setNodeOff(3);// node 3: switch OFF
 
 /*
  * Set a multi-level device to the specified level (between 0-99).
  * See warning below
  */
-zwave.setLevel(5, 50); // node 5: dim to 50%
+home.setLevel(5, 50); // node 5: dim to 50%
 ```
 
 *WARNING: setNodeOn/Off/Level _don't work reliably with all devices_*, as they are
@@ -103,97 +102,106 @@ consult your device's manual to see if it supports this command class.
 The 'standard' way to control your devices is by `setValue` which is also the
 _only_ way to control multi-instance devices, such as the Fibaro FGS-221
 (double in-wall 2x1,5kw relay) for example:
+
 ```js
-zwave.setValue(8, 37, 1, 0, true); // node 8: turn on 1st relay
-zwave.setValue(8, 37, 1, 0, false);// node 8: turn off 1st relay
-zwave.setValue(8, 37, 2, 0, true); // node 8: turn on 2nd relay
-zwave.setValue(8, 37, 2, 0, false);// node 8: turn off 2nd relay
+home.setValue(8, 37, 1, 0, true); // node 8: turn on 1st relay
+home.setValue(8, 37, 1, 0, false);// node 8: turn off 1st relay
+home.setValue(8, 37, 2, 0, true); // node 8: turn on 2nd relay
+home.setValue(8, 37, 2, 0, false);// node 8: turn off 2nd relay
 ```
 Useful documentation on [command classes can be found on MiCasaVerde website](http://wiki.micasaverde.com/index.php/ZWave_Command_Classes)
 
 Writing to device metadata (stored on the device itself):
+
 ```js
-zwave.setNodeLocation(nodeid, location);    // arbitrary location string
-zwave.setNodeName(nodeid, name);            // arbitrary name string
+home.setNodeLocation(nodeid, location);    // arbitrary location string
+home.setNodeName(nodeid, name);            // arbitrary name string
 ```
 
 Polling a device for changes (not all devices require this):
+
 ```js
-zwave.enablePoll({valueId}, intensity);
-zwave.disablePoll({valueId});
-zwave.setPollInterval(intervalMillisecs) // set the polling interval in msec
-zwave.getPollInterval();  // return the polling interval
-zwave.setPollIntensity({valueId}, intensity); // Set the frequency of polling (0=none, 1=every time through the list, 2-every other time, etc)
-zwave.getPollIntensity({valueId});
-zwave.isPolled({valueId});
+home.enablePoll({valueId}, intensity);
+home.disablePoll({valueId});
+home.setPollInterval(intervalMillisecs) // set the polling interval in msec
+home.getPollInterval();  // return the polling interval
+home.setPollIntensity({valueId}, intensity); // Set the frequency of polling (0=none, 1=every time through the list, 2-every other time, etc)
+home.getPollIntensity({valueId});
+home.isPolled({valueId});
 ```
 
 Association groups management:
+
 ```js
-zwave.getNumGroups(nodeid);
-zwave.getGroupLabel(nodeid, group);
-zwave.getAssociations(nodeid, group);
-zwave.getMaxAssociations(nodeid, group);
-zwave.addAssociation(nodeid, group, target_nodeid);
-zwave.removeAssociation(nodeid, group, target_nodeid);
+home.getNumGroups(nodeid);
+home.getGroupLabel(nodeid, group);
+home.getAssociations(nodeid, group);
+home.getMaxAssociations(nodeid, group);
+home.addAssociation(nodeid, group, target_nodeid);
+home.removeAssociation(nodeid, group, target_nodeid);
 ```
 
 Resetting the controller.  Calling `hardReset` will clear any associations, so use
 carefully:
+
 ```js
-zwave.hardReset();      // destructive! will wipe out all known configuration
-zwave.softReset();      // non-destructive, just resets the chip
+home.hardReset();      // destructive! will wipe out all known configuration
+home.softReset();      // non-destructive, just resets the chip
 ```
 
 Scenes control:
+
 ```js
-zwave.createScene(label); 	// create a scene and assign a label, return its numeric id.
-zwave.removeScene(sceneId); // perform #GRExit
-zwave.getScenes();			// get all scenes as an array
+home.createScene(label); 	// create a scene and assign a label, return its numeric id.
+home.removeScene(sceneId); // perform #GRExit
+home.getScenes();			// get all scenes as an array
 // add a zwave value to a scene
-zwave.addSceneValue(sceneId, nodeId, commandclass, instance, index);
+home.addSceneValue(sceneId, nodeId, commandclass, instance, index);
 // remove a zwave value from a scene
-zwave.removeSceneValue(sceneId, nodeId, commandclass, instance, index);
-zwave.sceneGetValues(sceneId); // return array of values associated with this scene
-zwave.activateScene(sceneId);  // The Show Must Go On...
+home.removeSceneValue(sceneId, nodeId, commandclass, instance, index);
+home.sceneGetValues(sceneId); // return array of values associated with this scene
+home.activateScene(sceneId);  // The Show Must Go On...
 ```
 
 ZWave network commands:
+
 ```js
-zwave.healNetworkNode(nodeId, doReturnRoutes=false);
-zwave.healNetwork();   // guru meditation
-zwave.getNeighbors();
-zwave.refreshNodeInfo(nodeid);
+home.healNetworkNode(nodeId, doReturnRoutes=false);
+home.healNetwork();   // guru meditation
+home.getNeighbors();
+home.refreshNodeInfo(nodeid);
 ```
 
 ZWave controller commands:
+
 ```js
 // begin an async controller command on node1:
-zwave.beginControllerCommand( "command name", highPower = false, node1_id, node2_id = null);  
+home.beginControllerCommand( "command name", highPower = false, node1_id, node2_id = null);  
 // cancel controller command in progress
-zwave.cancelControllerCommand();
+home.cancelControllerCommand();
 // returns controller's node id
-zwave.getControllerNodeId();
+home.getControllerNodeId();
 // returns static update controller node id
-zwave.getSUCNodeId();
+home.getSUCNodeId();
 // is the OZW-managed controller the primary controller for this zwave network?
-zwave.isPrimaryController();
+home.isPrimaryController();
 // Query if the controller is a static update controller.
-zwave.isStaticUpdateController();
+home.isStaticUpdateController();
 // Query if the controller is using the bridge controller library.
-zwave.isBridgeController();
+home.isBridgeController();
 // Get the version of the Z-Wave API library used by a controller.
-zwave.getLibraryVersion();
+home.getLibraryVersion();
 // Get a string containing the Z-Wave API library type used by a controller
-zwave.getLibraryTypeName();
+home.getLibraryTypeName();
 //
-zwave.getSendQueueCount();
+home.getSendQueueCount();
 ```
 
 
 ### Configuration commands:
+
 ```js
-zwave.requestAllConfigParams(nodeId);
-zwave.requestConfigParam(nodeId, paramId);
-zwave.setConfigParam(nodeId, paramId, paramValue, <sizeof paramValue>);
+home.requestAllConfigParams(nodeId);
+home.requestConfigParam(nodeId, paramId);
+home.setConfigParam(nodeId, paramId, paramValue, <sizeof paramValue>);
 ```
