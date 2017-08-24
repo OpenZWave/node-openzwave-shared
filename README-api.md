@@ -1,23 +1,20 @@
 ## API
 
-Start by loading the addon with `require` and then create a new instance of the addon:
-```js
-var OZW = require('openzwave-shared');
-var zwave = new OZW();
-```
+Typical usage pattern is to 
+1) load the addon with `require` 
+2) create a new instance with your options object and 
+3) then use `connect` to add a driver to your ZWave controller(s):
 
-You can also pass in an optional object specifying any desired option overrides:
 ```js
-var zwave = new OZW({
+var zwave = require("openzwave-shared")({
     Logging: false,     // disable file logging (OZWLog.txt)
     ConsoleOutput: true // enable console logging
 });
-```
-
-The underlying OpenZWave library is a effectively a singleton so you can simply do:
-```js
-var zwave = require("openzwave-shared")({
-  ConsoleOutput: false
+//
+var home;
+zwave.on('driver ready', function(home_id, drv) {
+  console.log('scanning homeid=0x%s... drv=%j', homeid.toString(16), drv);
+  home = drv;
 });
 ```
 
@@ -26,13 +23,24 @@ The default options are specified in `config/options.xml`. Please refer
 for all the available options. If, for instance, you're using security devices
 (e.g. door locks) then you should specify an encryption key.
 
+The `driver` object emitted from `driver ready` is effectively a convenience wrapper around all the available commands exposed by the `OpenZWave::Manager` interface, hiding from you the necessity to pass the home ID on each OpenZWave::Manager API call. If you only got multiple ZWave controllers you'd better use a hash to keep references to all your drivers:
+
+```js
+var drivers;
+zwave.on('driver ready', function(home_id, drv) {
+  console.log('scanning homeid=0x%s... drv=%j', homeid.toString(16), drv);
+  drivers[home_id] = drv;
+});
+```
+
 The rest of the API is split into Functions and Events.  Messages from the
 Z-Wave network are handled by `EventEmitter`, and you will need to listen for
-specific events to correctly map the network.
+specific events to correctly map the network. The most important one is the `driver ready` message emitted when you call `connect` to add a driver for your ZWave controller (usually a USB stick, but it can also be an extension board or a serial module). 
 
 ### Functions
 
 Connecting to the network:
+
 ```js
 // for Linux/Mac OSX
 zwave.connect('/dev/ttyUSB0');  // connect to a USB ZWave controller
@@ -42,6 +50,7 @@ zwave.disconnect('dev/ttyUSB0');// disconnect from the current connection
 zwave.connect('\\\\.\\COM3');  // connect to a USB ZWave controller on COM3
 zwave.disconnect('\\\\.\\COM3');// disconnect from the current connection on COM3
 ```
+
 **Important notice**: the connect() call is asynchronous following the
 node/v8 javascript paradigm.  This means that connect() will yield
 control to your script *immediately*, but the underlying OpenZWave C++
@@ -62,15 +71,15 @@ For example if Zwave Node #3 is a binary switch, to turn it on and off, use
 command class 37:
 
 ```js
-zwave.setValue(3, 37,  1,  0,  true);  // node 3: turn on
-zwave.setValue(3, 37,  1,  0,  false); // node 3: turn off
+home.setValue(3, 37,  1,  0,  true);  // node 3: turn on
+home.setValue(3, 37,  1,  0,  false); // node 3: turn off
 ```
 
 Another example: if Zwave Node #5 is a dimmer, use class 38:
 
 ```js
-zwave.setValue(5,  38,  1,  0, 50); // 1) passing each individual ValueID constituent:
-zwave.setValue({ node_id:5, class_id: 38, instance:1, index:0}, 50); // 2) or a valueID object (emitted by ValueAdded event):
+home.setValue(5,  38,  1,  0, 50); // 1) passing each individual ValueID constituent:
+home.setValue({ node_id:5, class_id: 38, instance:1, index:0}, 50); // 2) or a valueID object (emitted by ValueAdded event):
 
 /*
  * Turn a binary switch on/off.

@@ -185,11 +185,15 @@ namespace OZW {
     typedef ::std::tr1::unordered_map <std::string, OpenZWave::Driver::ControllerCommand> CommandMap;
 		typedef ::std::tr1::unordered_map <uint32, OZW::OZWDriver*> DriverMap;
 #endif
+
 namespace OZW {
 	// map of controller command names to enum values
 	extern CommandMap* ctrlCmdNames;
 	// homeId (uint32) => OZWDriver
 	extern DriverMap*  drivers;
+	// persistent handles to our function templates
+	extern Nan::Persistent<FunctionTemplate>* ozwmain;
+	extern Nan::Persistent<FunctionTemplate>* ozwdriver;
 }
 
 // OpenZWave version constituents, external symbols from the main OZW lib

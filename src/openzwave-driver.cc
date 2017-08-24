@@ -29,10 +29,7 @@ namespace OZW {
 		assert(info.IsConstructCall());
 		assert(info.Length() > 0);
 		uint32 homeid = Nan::To<Number>(info[0]).ToLocalChecked()->Value();
-		std::cout << "Initialising Driver for " << homeid << "\n";
 		OZWDriver* self = new OZWDriver();
-		std::cout<< *String::Utf8Value(info.This()->GetConstructorName()) << "\n";
-		std::cout << "internalFieldCount=" << info.This()->InternalFieldCount() << "\n";
 		self->Wrap(info.This());
 		self->homeid = homeid;
 		info.GetReturnValue().Set(info.This());
