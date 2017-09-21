@@ -75,7 +75,12 @@ namespace OZW {
 					break;
 				}
 				case OpenZWave::ValueID::ValueType_Button: {
-					OpenZWave::Manager::Get()->PressButton(*vit);
+					bool val = Nan::To<Boolean>(info[validx]).ToLocalChecked()->Value();
+					if (val) {
+						OpenZWave::Manager::Get()->PressButton(*vit);						
+					} else {
+						OpenZWave::Manager::Get()->ReleaseButton(*vit);						
+					}
 					break;
 				}
 				case OpenZWave::ValueID::ValueType_Raw: {
