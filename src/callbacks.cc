@@ -456,23 +456,30 @@ void handleNotification(NotifInfo *notif)
 void async_cb_handler(uv_async_t *handle)
 // ===================================================================
 {
-  NotifInfo *notif;
-
-  mutex::scoped_lock sl(zqueue_mutex);
-
+  NotifInfo* notif;
+  std::list<NotifInfo*> notifications;
+  // consume all the queued notifications
+	zqueue_mutex.lock();
   while (!zqueue.empty()) {
     notif = zqueue.front();
+    notifications.push_back(notif);
+    zqueue.pop();
+  }
+  // unlock the mutex so that notification handlers are safe to invoke more notifications
+  zqueue_mutex.unlock();
+	// process notifications
+  std::list<NotifInfo*>::const_iterator it;
+  for (it = notifications.begin(); it != notifications.end(); ++it) {
 #if OPENZWAVE_SECURITY != 1
-    if (notif->homeid == 0) {
-      handleControllerCommand(notif);
+    if (*it->homeid == 0) {
+      handleControllerCommand(*it);
     } else {
-      handleNotification(notif);
+      handleNotification(*it);
     }
 #else
-    handleNotification(notif);
+    handleNotification(*it);
 #endif
-    delete notif;
-    zqueue.pop();
+    delete *it;
   }
 }
 
