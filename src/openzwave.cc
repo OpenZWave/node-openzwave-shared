@@ -59,7 +59,7 @@ namespace OZW {
 		Nan::SetPrototypeMethod(t, "setConfigParam", OZW::SetConfigParam);
 		Nan::SetPrototypeMethod(t, "requestConfigParam", OZW::RequestConfigParam);
 		Nan::SetPrototypeMethod(t, "requestAllConfigParams", OZW::RequestAllConfigParams);
-		// openzwave-controller.cc
+		// openzwave-driver.cc
 		Nan::SetPrototypeMethod(t, "hardReset", OZW::HardReset);
 		Nan::SetPrototypeMethod(t, "softReset", OZW::SoftReset);
 		Nan::SetPrototypeMethod(t, "getControllerNodeId", OZW::GetControllerNodeId); // ** new
@@ -70,7 +70,6 @@ namespace OZW {
 		Nan::SetPrototypeMethod(t, "getLibraryVersion", OZW::GetLibraryVersion); // ** new
 		Nan::SetPrototypeMethod(t, "getLibraryTypeName", OZW::GetLibraryTypeName); // ** new
 		Nan::SetPrototypeMethod(t, "getSendQueueCount", OZW::GetSendQueueCount);	// ** new
-		// openzwave-driver.cc
 		Nan::SetPrototypeMethod(t, "connect", OZW::Connect);
 		Nan::SetPrototypeMethod(t, "disconnect", OZW::Disconnect);
 		// openzwave-groups.cc
