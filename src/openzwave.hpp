@@ -54,7 +54,7 @@ namespace OZW {
 		static NAN_METHOD(SetConfigParam);
 		static NAN_METHOD(RequestConfigParam);
 		static NAN_METHOD(RequestAllConfigParams);
-		// openzwave-controller.cc
+		// openzwave-driver.cc
 		static NAN_METHOD(HardReset);
 		static NAN_METHOD(SoftReset);
 		static NAN_METHOD(GetControllerNodeId);
@@ -65,7 +65,6 @@ namespace OZW {
 		static NAN_METHOD(GetLibraryVersion);
 		static NAN_METHOD(GetLibraryTypeName);
 		static NAN_METHOD(GetSendQueueCount);
-		// openzwave-driver.cc
 		static NAN_METHOD(Connect);
 		static NAN_METHOD(Disconnect);
 		// openzwave-groups.cc
