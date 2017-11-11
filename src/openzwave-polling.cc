@@ -65,7 +65,9 @@ namespace OZW {
 		OpenZWave::ValueID* vit = populateValueId(info);
 		bool b = false;
 		if (vit) {
-			uint8 intensity = (info.Length() > 4) ? Nan::To<Number>(info[4]).ToLocalChecked()->Value() : 1;
+			uint8 idxpos  =  (info[0]->IsObject()) ? 1 : 4;
+			uint8 intensity = Nan::To<Number>(info[idxpos]).ToLocalChecked()->Value();
+
 			b = OpenZWave::Manager::Get()->EnablePoll((*vit), intensity);
 		}
 		info.GetReturnValue().Set(Nan::New<Boolean>(b));
