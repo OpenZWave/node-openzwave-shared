@@ -457,29 +457,26 @@ void async_cb_handler(uv_async_t *handle)
 // ===================================================================
 {
   NotifInfo* notif;
-  std::list<NotifInfo*> notifications;
+  std::queue<NotifInfo*> notifications;
   // consume all the queued notifications
-	zqueue_mutex.lock();
-  while (!zqueue.empty()) {
-    notif = zqueue.front();
-    notifications.push_back(notif);
-    zqueue.pop();
+  {
+    mutex::scoped_lock sl(zqueue_mutex);
+    // http://media2.giphy.com/media/MS0fQBmGGMaRy/giphy.gif
+    swap(notifications, zqueue);
   }
-  // unlock the mutex so that notification handlers are safe to invoke more notifications
-  zqueue_mutex.unlock();
-	// process notifications
-  std::list<NotifInfo*>::const_iterator it;
-  for (it = notifications.begin(); it != notifications.end(); ++it) {
+  // process notifications
+  while (!notifications.empty()) {
+    notif = notifications.front();
+    notifications.pop();
 #if OPENZWAVE_SECURITY != 1
-    if (*it->homeid == 0) {
-      handleControllerCommand(*it);
+    if (notif->homeid == 0) {
+      handleControllerCommand(notif);
     } else {
-      handleNotification(*it);
+      handleNotification(notif);
     }
 #else
-    handleNotification(*it);
+    handleNotification(notif);
 #endif
-    delete *it;
   }
 }
 
