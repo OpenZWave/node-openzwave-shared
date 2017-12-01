@@ -48,7 +48,7 @@
 	        }],
 			["OS=='linux'", {
 				"variables": {
-					"NODE"            : "<!(which nodejs || which node)",
+					"NODE"            : "<!(which node || which nodejs)",
 					"OZW_INC"         : "<!(<(NODE) -p \"require('./lib/ozwpaths.js').includedir || '/usr/*/include'\")",
 					"OZW_LIB_PATH"    : "<!(<(NODE) -p \"require('./lib/ozwpaths.js').libdir\")",
 					"OZW_ETC"         : "<!(<(NODE) -p \"require('./lib/ozwpaths.js').sysconfdir\")",
