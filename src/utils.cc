@@ -62,7 +62,7 @@ namespace OZW {
 		sprintf(buffer, "%d-%d-%d-%d", value.GetNodeId(), value.GetCommandClassId(), value.GetInstance(), value.GetIndex());
 		return std::string(buffer);
 	}
-	std::string getValueIdDescriptor(uint node_id, uint class_id, uint instance, uint index) {
+	std::string getValueIdDescriptor(uint8 node_id, uint8 class_id, uint8 instance, uint8 index) {
 		char buffer[15];
 		sprintf(buffer, "%d-%d-%d-%d", node_id, class_id, instance, index);
 		return std::string(buffer);
