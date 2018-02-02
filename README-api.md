@@ -150,7 +150,7 @@ ZWave network commands:
 ```js
 zwave.healNetworkNode(nodeId, doReturnRoutes=false);
 zwave.healNetwork();   // guru meditation
-zwave.getNeighbors();
+zwave.getNodeNeighbors();
 zwave.refreshNodeInfo(nodeid);
 ```
 
