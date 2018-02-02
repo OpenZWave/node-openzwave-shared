@@ -68,7 +68,7 @@ installed first. You can do this one of two ways.
 ([latest code from GitHub](https://github.com/OpenZWave/open-zwave/archive/master.zip) or
 [a stable release](https://github.com/OpenZWave/open-zwave/releases)) or
 from [the OpenZWave snapshots repository](http://old.openzwave.com/snapshots/)
-and then 2) compiling it and installing on your system (`make && sudo make install`)
+and then 2) compiling it and installing on your system (`make && sudo make install && sudo ldconfig`)
 
 - You could also install OpenZWave via a [precompiled package that's suitable for
 your Linux distribution and architecture](http://old.openzwave.com/downloads/).
