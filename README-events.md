@@ -109,9 +109,9 @@ It would send:
 
 * `zwave.on('value added', function(nodeid, commandclass, valueId){...})`
 
-A new ValueID has been discovered.  ValueIDs are associated with a particular node, and are the parts of the device you can monitor or control. Please see [the official OpenZWave docs on ValueIDs](http://www.openzwave.com/dev/classOpenZWave_1_1ValueID.html) for more details.
+A new ValueID has been discovered.  ValueIDs are compound structs ("objects") associated with a particular node, and are the parts of the device you can monitor or control. Please see [the official OpenZWave docs on ValueIDs](http://www.openzwave.com/dev/classOpenZWave_1_1ValueID.html) for more details.
 
-Values are split into command classes.  The most commonly used ones and
+ValueId's are split into command classes.  The most commonly used ones and
 their unique identifiers are:
 
 	- COMMAND_CLASS_SWITCH_BINARY (37)
@@ -134,21 +134,21 @@ as the 1st argument in `setValue` to alter its state.
 
 * `zwave.on('value changed', function(nodeid, commandclass, valueId){...})`
 
-A value has changed.  Use this to keep track of value state across the network. When values are first discovered, the module enables polling on those values so that we will receive change messages. Prior to the 'node ready' event, there may be 'value changed' events even when no values were actually changed.
+A valueId has changed.  Use this to keep track of value state across the network. When values are first discovered, the module enables polling on those values so that we will receive change messages. Prior to the 'node ready' event, there may be 'value changed' events even when no values were actually changed.
 
 
 
 
 * `zwave.on('value refreshed', function(nodeid, commandclass, valueId){...})`
 
-A node value has been updated from the Z-Wave network. Unlike 'value changed' which implies an actual change of state, this one simply means that the value has been refreshed from the device.
+A node valueId has been updated from the Z-Wave network. Unlike 'value changed' which implies an actual change of state, this one simply means that the value has been refreshed from the device.
 
 
 
 
 * `zwave.on('value removed', function(nodeid, commandclass, instance, index){...})`
 
-A value has been removed.  Your program should then remove any references to that ValueID.
+A valueId has been removed.  Your program should then remove any references to that ValueID.
 
 
 
