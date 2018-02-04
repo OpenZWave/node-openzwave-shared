@@ -74,7 +74,7 @@ namespace OZW {
 		static NAN_METHOD(GetGroupLabel);
 		static NAN_METHOD(AddAssociation);
 		static NAN_METHOD(RemoveAssociation);
-#if OPENZWAVE_SECURITY == 1
+
 		static NAN_METHOD(AddNode);
 		static NAN_METHOD(RemoveNode);
 		static NAN_METHOD(RemoveFailedNode);
@@ -91,9 +91,9 @@ namespace OZW {
 		static NAN_METHOD(ReplicationSend);
 		static NAN_METHOD(CreateButton);
 		static NAN_METHOD(DeleteButton);
-#else
+
 		static NAN_METHOD(BeginControllerCommand);
-#endif
+
 		static NAN_METHOD(CancelControllerCommand);
 		static NAN_METHOD(WriteConfig);
 		static NAN_METHOD(GetDriverStatistics);
@@ -130,7 +130,20 @@ namespace OZW {
 		static NAN_METHOD(GetNodeProductName);
 		static NAN_METHOD(SetNodeProductName);
 		// plain getters
+
+		
+		static NAN_METHOD(IsNodeInfoReceived);
+		static NAN_METHOD(IsNodeAwake);
+		static NAN_METHOD(IsNodeFailed); //
+		static NAN_METHOD(GetNodeDeviceType);
+		static NAN_METHOD(GetNodeRole);
+		static NAN_METHOD(GetNodeRoleString);
+		static NAN_METHOD(GetNodePlusType);	
+		static NAN_METHOD(GetNodePlusTypeString);
 		static NAN_METHOD(GetNodeQueryStage);
+		static NAN_METHOD(GetNodeDeviceTypeString);
+
+
 		static NAN_METHOD(GetNodeMaxBaudRate);
 		static NAN_METHOD(GetNodeVersion);
 		static NAN_METHOD(GetNodeSecurity);

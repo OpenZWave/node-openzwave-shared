@@ -274,6 +274,114 @@ namespace OZW {
 	}
 	/*
 	 *
+	 */// ===================================================================
+	NAN_METHOD(OZW::GetNodePlusTypeString)
+	// ===================================================================
+	{
+		Nan::HandleScope scope;
+		CheckMinArgs(1, "nodeid");
+		uint8  nodeid = Nan::To<Number>(info[0]).ToLocalChecked()->Value();		
+		std::string result = OpenZWave::Manager::Get()->GetNodePlusTypeString(homeid, nodeid);
+		info.GetReturnValue().Set(Nan::New<String>(result.c_str()).ToLocalChecked());
+	}
+	/*
+	 *
+	 */// ===================================================================
+	NAN_METHOD(OZW::GetNodeRoleString)
+	// ===================================================================
+	{
+		Nan::HandleScope scope;
+		CheckMinArgs(1, "nodeid");
+		uint8  nodeid = Nan::To<Number>(info[0]).ToLocalChecked()->Value();		
+		std::string result = OpenZWave::Manager::Get()->GetNodeRoleString(homeid, nodeid);
+		info.GetReturnValue().Set(Nan::New<String>(result.c_str()).ToLocalChecked());
+	}
+	/*
+	 *
+	 */// ===================================================================
+	NAN_METHOD(OZW::GetNodePlusType)
+	// ===================================================================
+	{
+		Nan::HandleScope scope;
+		CheckMinArgs(1, "nodeid");
+		uint8  nodeid = Nan::To<Number>(info[0]).ToLocalChecked()->Value();		
+		uint8 result = OpenZWave::Manager::Get()->GetNodePlusType(homeid, nodeid);
+		info.GetReturnValue().Set(Nan::New<Integer>(result));
+	}
+	/*
+	 *
+	 */// ===================================================================
+	NAN_METHOD(OZW::GetNodeRole)
+	// ===================================================================
+	{
+		Nan::HandleScope scope;
+		CheckMinArgs(1, "nodeid");
+		uint8  nodeid = Nan::To<Number>(info[0]).ToLocalChecked()->Value();		
+		uint8 result = OpenZWave::Manager::Get()->GetNodeRole(homeid, nodeid);
+		info.GetReturnValue().Set(Nan::New<Integer>(result));
+	}
+	/*
+	 *
+	 */// ===================================================================
+	NAN_METHOD(OZW::GetNodeDeviceTypeString)
+	// ===================================================================
+	{
+		Nan::HandleScope scope;
+		CheckMinArgs(1, "nodeid");
+		uint8  nodeid = Nan::To<Number>(info[0]).ToLocalChecked()->Value();		
+		std::string result = OpenZWave::Manager::Get()->GetNodeDeviceTypeString(homeid, nodeid);
+		info.GetReturnValue().Set(Nan::New<String>(result.c_str()).ToLocalChecked());
+	}
+	/*
+	 *
+	 */// ===================================================================
+	NAN_METHOD(OZW::GetNodeDeviceType)
+	// ===================================================================
+	{
+		Nan::HandleScope scope;
+		CheckMinArgs(1, "nodeid");
+		uint8  nodeid = Nan::To<Number>(info[0]).ToLocalChecked()->Value();		
+		uint16 result = OpenZWave::Manager::Get()->GetNodeDeviceType(homeid, nodeid);
+		info.GetReturnValue().Set(Nan::New<Integer>(result));
+	}
+	/*
+	 *
+	 */// ===================================================================
+	NAN_METHOD(OZW::IsNodeFailed)
+	// ===================================================================
+	{
+		Nan::HandleScope scope;
+		CheckMinArgs(1, "nodeid");
+		uint8  nodeid = Nan::To<Number>(info[0]).ToLocalChecked()->Value();
+		bool result = OpenZWave::Manager::Get()->IsNodeFailed(homeid, nodeid);
+		info.GetReturnValue().Set(Nan::New<Boolean>(result));
+	}
+	/*
+	 *
+	 */// ===================================================================
+	NAN_METHOD(OZW::IsNodeAwake)
+	// ===================================================================
+	{
+		Nan::HandleScope scope;
+		CheckMinArgs(1, "nodeid");
+		uint8  nodeid = Nan::To<Number>(info[0]).ToLocalChecked()->Value();
+		bool result = OpenZWave::Manager::Get()->IsNodeAwake(homeid, nodeid);
+		info.GetReturnValue().Set(Nan::New<Boolean>(result));
+	}
+	/*
+	 *
+	 */// ===================================================================
+	NAN_METHOD(OZW::IsNodeInfoReceived)
+	// ===================================================================
+	{
+		Nan::HandleScope scope;
+		CheckMinArgs(1, "nodeid");
+		uint8  nodeid = Nan::To<Number>(info[0]).ToLocalChecked()->Value();
+		bool result = OpenZWave::Manager::Get()->IsNodeInfoReceived(homeid, nodeid);
+		info.GetReturnValue().Set(Nan::New<Boolean>(result));
+	}
+	/*
+	 *
 	 */
 	// ===================================================================
 	NAN_METHOD(OZW::GetNodeQueryStage)

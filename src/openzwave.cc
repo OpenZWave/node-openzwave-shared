@@ -80,7 +80,7 @@ namespace OZW {
 		Nan::SetPrototypeMethod(t, "addAssociation", OZW::AddAssociation);
 		Nan::SetPrototypeMethod(t, "removeAssociation", OZW::RemoveAssociation);
 		// openzwave-management.cc
-#if OPENZWAVE_SECURITY == 1
+
 		Nan::SetPrototypeMethod(t, "addNode", OZW::AddNode);
 	  Nan::SetPrototypeMethod(t, "removeNode", OZW::RemoveNode);
 	  Nan::SetPrototypeMethod(t, "removeFailedNode", OZW::RemoveFailedNode);
@@ -97,9 +97,9 @@ namespace OZW {
 	  Nan::SetPrototypeMethod(t, "replicationSend", OZW::ReplicationSend);
 	  Nan::SetPrototypeMethod(t, "createButton", OZW::CreateButton);
 	  Nan::SetPrototypeMethod(t, "deleteButton", OZW::DeleteButton);
-#else
+
 		Nan::SetPrototypeMethod(t, "beginControllerCommand", OZW::BeginControllerCommand);
-#endif
+
 		Nan::SetPrototypeMethod(t, "cancelControllerCommand", OZW::CancelControllerCommand);
 		Nan::SetPrototypeMethod(t, "writeConfig", OZW::WriteConfig);
 		Nan::SetPrototypeMethod(t, "getDriverStatistics", OZW::GetDriverStatistics);
@@ -131,7 +131,16 @@ namespace OZW {
 		Nan::SetPrototypeMethod(t, "getNodeProductName", OZW::GetNodeProductName); // ** new
 		Nan::SetPrototypeMethod(t, "setNodeProductName", OZW::SetNodeProductName); // ** new
 		// getters
+		Nan::SetPrototypeMethod(t, "isNodeInfoReceived", OZW::IsNodeInfoReceived); // ** new add by VIBR
+		Nan::SetPrototypeMethod(t, "isNodeAwake", OZW::IsNodeAwake); // ** new add by VIBR
+		Nan::SetPrototypeMethod(t, "isNodeFailed", OZW::IsNodeFailed); // ** new add by VIBR
+		Nan::SetPrototypeMethod(t, "getNodeDeviceType", OZW::GetNodeDeviceType); // ** new add by VIBR
+		Nan::SetPrototypeMethod(t, "getNodeRole", OZW::GetNodeRole); // ** new add by VIBR
+		Nan::SetPrototypeMethod(t, "getNodeRoleString", OZW::GetNodeRoleString); // ** new add by VIBR
+		Nan::SetPrototypeMethod(t, "getNodePlusType", OZW::GetNodePlusType); // ** new add by VIBR
+		Nan::SetPrototypeMethod(t, "getNodePlusTypeString", OZW::GetNodePlusTypeString); // ** new add by VIBR
 		Nan::SetPrototypeMethod(t, "getNodeQueryStage", OZW::GetNodeQueryStage); // ** new add by VIBR
+
 		Nan::SetPrototypeMethod(t, "getNodeMaxBaudRate", OZW::GetNodeMaxBaudRate); // ** new
 		Nan::SetPrototypeMethod(t, "getNodeVersion", OZW::GetNodeVersion); // ** new
 		Nan::SetPrototypeMethod(t, "getNodeBasic", OZW::GetNodeBasic); // ** new
