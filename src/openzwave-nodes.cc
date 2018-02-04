@@ -272,7 +272,19 @@ namespace OZW {
 		bool result = OpenZWave::Manager::Get()->IsNodeSecurityDevice(homeid, nodeid);
 		info.GetReturnValue().Set(Nan::New<Boolean>(result));
 	}
-
+	/*
+	 *
+	 */
+	// ===================================================================
+	NAN_METHOD(OZW::GetNodeQueryStage)
+	// ===================================================================
+	{
+		Nan::HandleScope scope;
+		CheckMinArgs(1, "nodeid");
+		uint8  nodeid = Nan::To<Number>(info[0]).ToLocalChecked()->Value();
+		std::string result = OpenZWave::Manager::Get()->GetNodeQueryStage(homeid, nodeid);
+		info.GetReturnValue().Set(Nan::New<String>(result.c_str()).ToLocalChecked());
+	}
 	/*
 	 *
 	 */

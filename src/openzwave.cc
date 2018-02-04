@@ -131,6 +131,7 @@ namespace OZW {
 		Nan::SetPrototypeMethod(t, "getNodeProductName", OZW::GetNodeProductName); // ** new
 		Nan::SetPrototypeMethod(t, "setNodeProductName", OZW::SetNodeProductName); // ** new
 		// getters
+		Nan::SetPrototypeMethod(t, "getNodeQueryStage", OZW::GetNodeQueryStage); // ** new add by VIBR
 		Nan::SetPrototypeMethod(t, "getNodeMaxBaudRate", OZW::GetNodeMaxBaudRate); // ** new
 		Nan::SetPrototypeMethod(t, "getNodeVersion", OZW::GetNodeVersion); // ** new
 		Nan::SetPrototypeMethod(t, "getNodeBasic", OZW::GetNodeBasic); // ** new

@@ -130,6 +130,7 @@ namespace OZW {
 		static NAN_METHOD(GetNodeProductName);
 		static NAN_METHOD(SetNodeProductName);
 		// plain getters
+		static NAN_METHOD(GetNodeQueryStage);
 		static NAN_METHOD(GetNodeMaxBaudRate);
 		static NAN_METHOD(GetNodeVersion);
 		static NAN_METHOD(GetNodeSecurity);
