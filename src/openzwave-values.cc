@@ -102,7 +102,6 @@ namespace OZW {
 		Nan::HandleScope scope;
 		CheckMinArgs(1, "valueid, label");
 		OpenZWave::Manager* mgr = OpenZWave::Manager::Get();
-		uint8 nodeid = info[0]->ToNumber()->Value();
 		OpenZWave::ValueID* vit = populateValueId(info);
 		uint8 validx  =  (info[0]->IsObject()) ? 1 : 4;
 		std::string label = (*String::Utf8Value(info[validx]->ToString()));
