@@ -1,8 +1,7 @@
 node-openzwave-shared
 =====================
-[![Linux Build Status](https://travis-ci.org/OpenZWave/node-openzwave-shared.svg?branch=master)](https://travis-ci.org/OpenZWave/node-openzwave-shared)
-[![Windows Build status](https://ci.appveyor.com/api/projects/status/txg360huomtpgc8o?svg=true)](https://ci.appveyor.com/project/ekarak/node-openzwave-shared)
-
+[Linux![Linux Build Status](https://travis-ci.org/OpenZWave/node-openzwave-shared.svg?branch=master)](https://travis-ci.org/OpenZWave/node-openzwave-shared)
+[Windows![Windows Build status](https://ci.appveyor.com/api/projects/status/txg360huomtpgc8o?svg=true)](https://ci.appveyor.com/project/ekarak/node-openzwave-shared)
 [![Join the chat at https://gitter.im/OpenZWave/node-openzwave-shared](https://badges.gitter.im/OpenZWave/node-openzwave-shared.svg)](https://gitter.im/OpenZWave/node-openzwave-shared?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 This is the homepage for *node-openzwave-shared*, the official binary add-on for
