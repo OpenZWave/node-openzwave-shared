@@ -1,0 +1,16 @@
+version: 1.0.{build}
+
+# branches to build
+branches:
+  # whitelist
+  only:
+    - master
+
+# Build worker image (VM template)
+image: Visual Studio 2015
+
+platform:
+  - x86
+
+build_script:
+- cmd: npm install

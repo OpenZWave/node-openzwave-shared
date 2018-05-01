@@ -1,6 +1,9 @@
 node-openzwave-shared
 =====================
-[![Build Status](https://travis-ci.org/OpenZWave/node-openzwave-shared.svg?branch=master)](https://travis-ci.org/OpenZWave/node-openzwave-shared) [![Join the chat at https://gitter.im/OpenZWave/node-openzwave-shared](https://badges.gitter.im/OpenZWave/node-openzwave-shared.svg)](https://gitter.im/OpenZWave/node-openzwave-shared?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Linux Build Status](https://travis-ci.org/OpenZWave/node-openzwave-shared.svg?branch=master)](https://travis-ci.org/OpenZWave/node-openzwave-shared)
+[![Windows Build status](https://ci.appveyor.com/api/projects/status/txg360huomtpgc8o?svg=true)](https://ci.appveyor.com/project/ekarak/node-openzwave-shared)
+
+[![Join the chat at https://gitter.im/OpenZWave/node-openzwave-shared](https://badges.gitter.im/OpenZWave/node-openzwave-shared.svg)](https://gitter.im/OpenZWave/node-openzwave-shared?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 This is the homepage for *node-openzwave-shared*, the official binary add-on for
 Node.js, which wraps [Open ZWave](http://openzwave.com/), a high quality C++
@@ -34,8 +37,8 @@ This addon is currently able to:
 **API change notice (v1.4.0)**
 `enablePoll()` and `disablePoll()` used to affect *only the first ValueID of any given command class*.
 This is *wrong*, as for multi-instance devices you probably need to poll multiple ValueID's.
-These calls now accept a valueId, in very much the same way as `setValue()` does. This means that 
-you now have to pass a valueID object (or its 4 constituents) for each value you want to enable/disable 
+These calls now accept a valueId, in very much the same way as `setValue()` does. This means that
+you now have to pass a valueID object (or its 4 constituents) for each value you want to enable/disable
 polling for.
 
 
