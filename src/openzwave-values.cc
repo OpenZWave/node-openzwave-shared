@@ -32,12 +32,11 @@ namespace OZW {
 		CheckMinArgs(1, "valueId");
 		OpenZWave::ValueID* vit = populateValueId(info);
 		if (vit) {
-			OpenZWave::Manager* mgr = OpenZWave::Manager::Get();
 			uint8 validx  =  (info[0]->IsObject()) ? 1 : 4;
 			switch ((*vit).GetType()) {
 				case OpenZWave::ValueID::ValueType_Bool: {
 					bool val = Nan::To<Boolean>(info[validx]).ToLocalChecked()->Value();
-					mgr->SetValue(*vit, val);
+					OpenZWave::Manager::Get()->SetValue(*vit, val);
 					break;
 				}
 				case OpenZWave::ValueID::ValueType_Byte: {
@@ -77,9 +76,9 @@ namespace OZW {
 				case OpenZWave::ValueID::ValueType_Button: {
 					if (checkType(info[validx]->IsBoolean())) {
 						if (Nan::To<Boolean>(info[validx]).ToLocalChecked()->Value()) {
-							mgr->PressButton(*vit);
+							OpenZWave::Manager::Get()->PressButton(*vit);
 						} else {
-							mgr->ReleaseButton(*vit);
+							OpenZWave::Manager::Get()->ReleaseButton(*vit);
 						}
 					}
 					break;
@@ -101,7 +100,6 @@ namespace OZW {
 	{
 		Nan::HandleScope scope;
 		CheckMinArgs(1, "valueid, label");
-		OpenZWave::Manager* mgr = OpenZWave::Manager::Get();
 		OpenZWave::ValueID* vit = populateValueId(info);
 		uint8 validx  =  (info[0]->IsObject()) ? 1 : 4;
 		std::string label = (*String::Utf8Value(info[validx]->ToString()));
@@ -122,8 +120,7 @@ namespace OZW {
 		CheckMinArgs(1, "valueId");
 		OpenZWave::ValueID* vit = populateValueId(info);
 		if (vit) {
-			OpenZWave::Manager* mgr = OpenZWave::Manager::Get();
-			const bool ok = mgr->RefreshValue(*vit);
+			const bool ok = OpenZWave::Manager::Get()->RefreshValue(*vit);
 			info.GetReturnValue().Set(Nan::New<Boolean>(ok));
 		}
 	}
@@ -141,8 +138,8 @@ namespace OZW {
 		if (vit) {
 			const uint8 validx = (info[0]->IsObject()) ? 1 : 4;
 			if (checkType(info[validx]->IsBoolean())) {
-				OpenZWave::Manager* mgr = OpenZWave::Manager::Get();
-				mgr->SetChangeVerified(*vit, Nan::To<Boolean>(info[validx]).ToLocalChecked()->Value());
+				bool b = Nan::To<Boolean>(info[validx]).ToLocalChecked()->Value();
+				OpenZWave::Manager::Get()->SetChangeVerified(*vit, b);
 			}
 		}
 	}

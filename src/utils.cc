@@ -58,12 +58,12 @@ namespace OZW {
 	}
 
 	std::string getValueIdDescriptor(OpenZWave::ValueID value) {
-		char buffer[15];
+		char buffer[32];
 		sprintf(buffer, "%d-%d-%d-%d", value.GetNodeId(), value.GetCommandClassId(), value.GetInstance(), value.GetIndex());
 		return std::string(buffer);
 	}
 	std::string getValueIdDescriptor(uint8 node_id, uint8 class_id, uint8 instance, uint8 index) {
-		char buffer[15];
+		char buffer[32];
 		sprintf(buffer, "%d-%d-%d-%d", node_id, class_id, instance, index);
 		return std::string(buffer);
 	}
