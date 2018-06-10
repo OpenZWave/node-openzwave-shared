@@ -1,6 +1,6 @@
 {
   "name": "openzwave-shared",
-  "version": "1.4.3",
+  "version": "1.4.4",
   "description": "Node.JS bindings for OpenZWave including management and security functions",
   "main": "./lib/openzwave-shared.js",
   "dependencies": {
@@ -43,7 +43,8 @@
     "Rob Huehn",
     "Michael Franken",
     "Matt Eastman",
-    "codepeon"
+    "codepeon",
+    "Casey Foster"
   ],
   "license": {
     "type": "ISC",
