@@ -36,7 +36,7 @@ namespace OZW {
 		Nan::HandleScope scope;
 
     // get the user config directory
-		std::string modulefilename = std::string(*v8::String::Utf8Value(
+		std::string modulefilename = std::string(*Nan::Utf8String(
 			Nan::Get(module,
           Nan::New("filename").ToLocalChecked()
 		  ).ToLocalChecked()
@@ -216,9 +216,9 @@ namespace OZW {
 			Local < Array > props = Nan::GetOwnPropertyNames(opts).ToLocalChecked();
 			for (unsigned int i = 0; i < props->Length(); ++i) {
 				Local<Value> key       = props->Get(i);
-				std::string  keyname   = *v8::String::Utf8Value(key);
+				std::string  keyname   = *Nan::Utf8String(key);
 				Local<Value> argval    = Nan::Get(opts, key).ToLocalChecked();
-				std::string  argvalstr = *v8::String::Utf8Value(argval);
+				std::string  argvalstr = *Nan::Utf8String(argval);
 				// UserPath is directly passed to Manager->Connect()
 				// scan for OpenZWave options.xml in the nodeJS module's '/config' subdirectory
 				if (keyname == "UserPath") {

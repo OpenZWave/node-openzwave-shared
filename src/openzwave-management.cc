@@ -299,7 +299,7 @@ namespace OZW {
 	{
 		Nan::HandleScope scope;
 		CheckMinArgs(1, "command");
-		std::string ctrcmd = (*String::Utf8Value(Nan::To<String>(info[0]).ToLocalChecked()));
+		std::string ctrcmd(*Nan::Utf8String( info[0] ));
 		uint8 nodeid1 = 0xff;
 		uint8 nodeid2 = 0;
 		bool highpower = false;

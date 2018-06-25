@@ -29,7 +29,7 @@ namespace OZW {
 	{
 		Nan::HandleScope scope;
 		CheckMinArgs(1, "label");
-		std::string label = (*String::Utf8Value(Nan::To<String>(info[0]).ToLocalChecked()));
+    std::string label(*Nan::Utf8String( info[0] ));
 		SceneInfo *scene;
 
 		uint8 sceneid = OpenZWave::Manager::Get()->CreateScene();
@@ -149,7 +149,7 @@ namespace OZW {
 				}
 				case OpenZWave::ValueID::ValueType_List: {
 					//std::string val; OpenZWave::Manager::Get()->GetValueListSelection(*vit, &val);
-					std::string val = (*String::Utf8Value(Nan::To<String>(info[valoffset]).ToLocalChecked()));
+					std::string val(*Nan::Utf8String( info[valoffset] ));
 					OpenZWave::Manager::Get()->AddSceneValue(sceneid, *vit, val);
 					break;
 				}
@@ -161,7 +161,7 @@ namespace OZW {
 				}
 				case OpenZWave::ValueID::ValueType_String: {
 					//std::string val; OpenZWave::Manager::Get()->GetValueAsString(*vit, &val);
-					std::string val = (*String::Utf8Value(Nan::To<String>(info[valoffset]).ToLocalChecked()));
+					std::string val(*Nan::Utf8String( info[valoffset] ));
 					OpenZWave::Manager::Get()->AddSceneValue(sceneid, *vit, val);
 					break;
 				}
