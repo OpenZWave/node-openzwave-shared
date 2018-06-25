@@ -20,3 +20,4 @@ Add LogInitialisation boolean option
 # 1.4.5
 Deprecated Nan v8::Value::ToNumber() replaced by Uint32Value()
 Deprecated v8::String::Utf8Value() replaced by Nan::Utf8String()
+Update all emitted callbacks to use AsyncResource's

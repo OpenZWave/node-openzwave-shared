@@ -59,9 +59,9 @@ namespace OZW {
   void async_cb_handler(uv_async_t *handle);
   void async_cb_handler(uv_async_t *handle, int status);
 
-  //extern Handle<Object>	context_obj;
   extern Nan::Callback *emit_cb;
   extern Nan::CopyablePersistentTraits<v8::Object>::CopyablePersistent ctx_obj;
+  extern Nan::AsyncResource *resource;
 
   /*
   * uv_async to let the OpenZWave callback wake up the main V8 thread

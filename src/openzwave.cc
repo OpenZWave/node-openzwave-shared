@@ -257,7 +257,7 @@ namespace OZW {
 		self->option_overrides = option_overrides;
 
 		ctx_obj = Nan::Persistent<Object>(info.This());
-
+		resource = new Nan::AsyncResource("openzwave.callback", info.This());
 		//
 		info.GetReturnValue().Set(info.This());
 	}
