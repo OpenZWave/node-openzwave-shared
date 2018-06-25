@@ -55,7 +55,7 @@ namespace OZW {
 					break;
 				}
 				case OpenZWave::ValueID::ValueType_List: {
-					std::string val = (*String::Utf8Value(Nan::To<String>(info[validx]).ToLocalChecked()));
+					std::string val(*Nan::Utf8String( info[validx] ));
 					OpenZWave::Manager::Get()->SetValue(*vit, val);
 					break;
 				}
@@ -65,7 +65,7 @@ namespace OZW {
 					break;
 				}
 				case OpenZWave::ValueID::ValueType_String: {
-					std::string val = (*String::Utf8Value(Nan::To<String>(info[validx]).ToLocalChecked()));
+					std::string val(*Nan::Utf8String( info[validx] ));
 					OpenZWave::Manager::Get()->SetValue(*vit, val);
 					break;
 				}
@@ -102,7 +102,7 @@ namespace OZW {
 		CheckMinArgs(1, "valueid, label");
 		OpenZWave::ValueID* vit = populateValueId(info);
 		uint8 validx  =  (info[0]->IsObject()) ? 1 : 4;
-		std::string label = (*String::Utf8Value(info[validx]->ToString()));
+		std::string label(*Nan::Utf8String( info[validx] ));
 
 		if (vit) {
 			OpenZWave::Manager::Get()->SetValueLabel(*vit, label);

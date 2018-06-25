@@ -1,10 +1,10 @@
 {
   "name": "openzwave-shared",
-  "version": "1.4.4",
+  "version": "1.4.5",
   "description": "Node.JS bindings for OpenZWave including management and security functions",
   "main": "./lib/openzwave-shared.js",
   "dependencies": {
-    "nan": "2.10.0"
+    "nan": ">=2.10.0"
   },
   "scripts": {
     "test": "node test.js",

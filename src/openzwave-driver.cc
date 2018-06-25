@@ -29,7 +29,7 @@ namespace OZW {
 		Nan::HandleScope scope;
 		CheckMinArgs(1, "path");
 
-		std::string path = (*String::Utf8Value(info[0]->ToString()));
+		std::string path(*Nan::Utf8String( info[0] ));
 
 		uv_async_init(uv_default_loop(), &async, async_cb_handler);
 
@@ -55,7 +55,7 @@ namespace OZW {
 		cbinfo[0] = Nan::New<String>("connected").ToLocalChecked();
 		cbinfo[1] = Nan::New<String>(version).ToLocalChecked();
 
-		emit_cb->Call(Nan::New(ctx_obj), 2, cbinfo);
+		emit_cb->Call(2, cbinfo, resource);
 	}
 
 	// ===================================================================
@@ -64,7 +64,7 @@ namespace OZW {
 	{
 		Nan::HandleScope scope;
 		CheckMinArgs(1, "path");
-		std::string path = (*String::Utf8Value(info[0]->ToString()));
+		std::string path(*Nan::Utf8String( info[0] ));
 
 		OpenZWave::Manager::Get()->RemoveDriver(path);
 		OpenZWave::Manager::Get()->RemoveWatcher(ozw_watcher_callback, NULL);
