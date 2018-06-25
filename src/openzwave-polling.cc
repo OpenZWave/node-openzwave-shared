@@ -49,7 +49,7 @@ namespace OZW {
 	{
 		Nan::HandleScope scope;
 		CheckMinArgs(1, "intervalMillisecs");
-		uint32 intervalMillisecs = Nan::To<Number>(info[0]).ToLocalChecked()->Value();
+		uint32 intervalMillisecs = info[0]->Uint32Value();
 		OpenZWave::Manager::Get()->SetPollInterval (intervalMillisecs, false);
 	}
 

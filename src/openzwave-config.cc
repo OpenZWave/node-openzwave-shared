@@ -29,7 +29,7 @@ namespace OZW {
 	{
 		Nan::HandleScope scope;
 		CheckMinArgs(3, "nodeid, param, value");
-		uint8 nodeid = Nan::To<Number>(info[0]).ToLocalChecked()->Value();
+		uint8 nodeid = info[0]->Uint32Value();
 		uint8 param  = Nan::To<Number>(info[1]).ToLocalChecked()->Value();
 		int32 value  = Nan::To<Number>(info[2]).ToLocalChecked()->Value();
 		if (info.Length() < 4) {

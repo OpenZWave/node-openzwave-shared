@@ -33,7 +33,7 @@ namespace OZW {
 	{
 		Nan::HandleScope scope;
 		CheckMinArgs(1, "nodeid");
-		uint8 nodeid = Nan::To<Number>(info[0]).ToLocalChecked()->Value();
+		uint8 nodeid = info[0]->Uint32Value();
 		uint8 numGroups = OpenZWave::Manager::Get()->GetNumGroups(homeid, nodeid);
 		info.GetReturnValue().Set(Nan::New<Integer>(numGroups));
 	}
@@ -48,8 +48,8 @@ namespace OZW {
 		Nan::HandleScope scope;
 		CheckMinArgs(2, "nodeid, groupidx");
 		uint8* associations;
-		uint8 nodeid = Nan::To<Number>(info[0]).ToLocalChecked()->Value();
-		uint8 groupidx = Nan::To<Number>(info[1]).ToLocalChecked()->Value();
+		uint8 nodeid = info[0]->Uint32Value();
+		uint8 groupidx = info[1]->Uint32Value();
 
 		uint32 numNodes = OpenZWave::Manager::Get()->GetAssociations(
 			homeid, nodeid,	groupidx, &associations
@@ -77,8 +77,8 @@ namespace OZW {
 	{
 		Nan::HandleScope scope;
 		CheckMinArgs(2, "nodeid, groupidx");
-		uint8 nodeid = Nan::To<Number>(info[0]).ToLocalChecked()->Value();
-		uint8 groupidx = Nan::To<Number>(info[1]).ToLocalChecked()->Value();
+		uint8 nodeid = info[0]->Uint32Value();
+		uint8 groupidx = info[1]->Uint32Value();
 
 		uint8 numMaxAssoc = OpenZWave::Manager::Get()->GetMaxAssociations(
 			homeid, nodeid,	groupidx
@@ -96,8 +96,8 @@ namespace OZW {
 	{
 		Nan::HandleScope scope;
 		CheckMinArgs(2, "nodeid, groupidx");
-		uint8 nodeid = Nan::To<Number>(info[0]).ToLocalChecked()->Value();
-		uint8 groupidx = Nan::To<Number>(info[1]).ToLocalChecked()->Value();
+		uint8 nodeid = info[0]->Uint32Value();
+		uint8 groupidx = info[1]->Uint32Value();
 
 		std::string groupLabel = OpenZWave::Manager::Get()->GetGroupLabel(
 			homeid, nodeid, groupidx
@@ -118,9 +118,9 @@ namespace OZW {
 	{
 		Nan::HandleScope scope;
 		CheckMinArgs(3, "nodeid, groupidx, tgtnodeid");
-		uint8 nodeid = Nan::To<Number>(info[0]).ToLocalChecked()->Value();
-		uint8 groupidx = Nan::To<Number>(info[1]).ToLocalChecked()->Value();
-		uint8 tgtnodeid = Nan::To<Number>(info[2]).ToLocalChecked()->Value();
+		uint8 nodeid = info[0]->Uint32Value();
+		uint8 groupidx = info[1]->Uint32Value();
+		uint8 tgtnodeid = info[2]->Uint32Value();
 
 		OpenZWave::Manager::Get()->AddAssociation(
 			homeid,nodeid,groupidx,tgtnodeid
@@ -136,9 +136,9 @@ namespace OZW {
 	{
 		Nan::HandleScope scope;
 		CheckMinArgs(3, "nodeid, groupidx, tgtnodeid");
-		uint8 nodeid = Nan::To<Number>(info[0]).ToLocalChecked()->Value();
-		uint8 groupidx = Nan::To<Number>(info[1]).ToLocalChecked()->Value();
-		uint8 tgtnodeid = Nan::To<Number>(info[2]).ToLocalChecked()->Value();
+		uint8 nodeid = info[0]->Uint32Value();
+		uint8 groupidx = info[1]->Uint32Value();
+		uint8 tgtnodeid = info[2]->Uint32Value();
 
 		OpenZWave::Manager::Get()->RemoveAssociation(homeid,nodeid,groupidx,tgtnodeid);
 	}
