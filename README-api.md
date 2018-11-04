@@ -99,7 +99,7 @@ zwave.setValue(8, 37, 2, 0, false);// node 8: turn off 2nd relay
 ```
 Useful documentation on [command classes can be found on MiCasaVerde website](http://wiki.micasaverde.com/index.php/ZWave_Command_Classes)
 
-Writing to device metadata (stored on the device itself):
+Writing to device metadata (stored in the `zwcfg-<homeId>.xml` file, under `UserPath`):
 ```js
 zwave.setNodeLocation(nodeid, location);    // arbitrary location string
 zwave.setNodeName(nodeid, name);            // arbitrary name string
