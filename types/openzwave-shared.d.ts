@@ -109,6 +109,7 @@ declare module 'openzwave-shared' {
 		on(event: 'driver ready', cb: (homeId: string) => {});
 		on(event: 'driver failed', cb: () => {});
 		on(event: 'node added', cb: (nodeId: number) => {});
+		on(event: 'node group', cb: (nodeId: number) => {});
 		on(event: 'node event', cb: (nodeId: number, data: any) => {});
 		on(event: 'value added' | 'value changed', cb: (nodeId: number, comClass: string, value: any) => {});
 		on(event: 'value removed', cb: (nodeId: number, comClass: string, index: any) => {});
