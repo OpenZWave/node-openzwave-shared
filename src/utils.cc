@@ -110,7 +110,11 @@ namespace OZW {
  				OpenZWave::Manager::Get()->GetValueListValues(value, &itemsvalues);
  				
  				for (int i = 0; (unsigned)i != items.size(); i++){
- 					items[i]=std::to_string(itemsvalues[i])+"|"+items[i];
+ 					//items[i]=std::to_string(itemsvalues[i])+"|"+items[i];
+
+ 					std::stringstream sstm;
+					sstm << itemsvalues[i] << "|" << items[i];
+					items[i] = sstm.str();
  				}
  					
  				AddArrayOfStringProp(valobj, values, items);
