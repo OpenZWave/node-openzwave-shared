@@ -418,13 +418,18 @@ void handleNotification(NotifInfo *notif)
     break;
   }
   case OpenZWave::Notification::Type_DriverRemoved:
-  case OpenZWave::Notification::Type_Group:
+  case OpenZWave::Notification::Type_Group:{
+      emitinfo[0] = Nan::New<String>("node group").ToLocalChecked();
+      emitinfo[1] = Nan::New<Integer>(notif->nodeid);
+      emit_cb->Call(Nan::New(ctx_obj),  2, emitinfo, resource);
+  
     /* The associations for the node have changed. The
      * application should rebuild any group information it
      * holds about the node.
      */
-    // todo
+    // Send notification
     break;
+  }
 #if OPENZWAVE_SECURITY == 1
   case OpenZWave::Notification::Type_ControllerCommand:
     emitinfo[0] = Nan::New<String>("controller command").ToLocalChecked();
