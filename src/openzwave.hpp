@@ -129,6 +129,17 @@ namespace OZW {
 		static NAN_METHOD(SetNodeManufacturerName);
 		static NAN_METHOD(GetNodeProductName);
 		static NAN_METHOD(SetNodeProductName);
+		
+		static NAN_METHOD(IsNodeInfoReceived);
+		static NAN_METHOD(IsNodeAwake);
+		static NAN_METHOD(IsNodeFailed);
+		static NAN_METHOD(GetNodeDeviceType);
+		static NAN_METHOD(GetNodeRole);
+		static NAN_METHOD(GetNodeRoleString);
+		static NAN_METHOD(GetNodePlusType);	
+		static NAN_METHOD(GetNodePlusTypeString);
+		static NAN_METHOD(GetNodeQueryStage);
+		static NAN_METHOD(GetNodeDeviceTypeString);
 		// plain getters
 		static NAN_METHOD(GetNodeMaxBaudRate);
 		static NAN_METHOD(GetNodeVersion);

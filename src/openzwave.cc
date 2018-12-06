@@ -130,6 +130,16 @@ namespace OZW {
 		Nan::SetPrototypeMethod(t, "setNodeManufacturerName", OZW::SetNodeManufacturerName); // ** new
 		Nan::SetPrototypeMethod(t, "getNodeProductName", OZW::GetNodeProductName); // ** new
 		Nan::SetPrototypeMethod(t, "setNodeProductName", OZW::SetNodeProductName); // ** new
+		
+		Nan::SetPrototypeMethod(t, "isNodeInfoReceived", OZW::IsNodeInfoReceived); // ** new 
+		Nan::SetPrototypeMethod(t, "isNodeAwake", OZW::IsNodeAwake); // ** new 
+		Nan::SetPrototypeMethod(t, "isNodeFailed", OZW::IsNodeFailed); // ** new 
+		Nan::SetPrototypeMethod(t, "getNodeDeviceType", OZW::GetNodeDeviceType); // ** new 
+		Nan::SetPrototypeMethod(t, "getNodeRole", OZW::GetNodeRole); // ** new 
+		Nan::SetPrototypeMethod(t, "getNodeRoleString", OZW::GetNodeRoleString); // ** new 
+		Nan::SetPrototypeMethod(t, "getNodePlusType", OZW::GetNodePlusType); // ** new 
+		Nan::SetPrototypeMethod(t, "getNodePlusTypeString", OZW::GetNodePlusTypeString); // ** new 
+		Nan::SetPrototypeMethod(t, "getNodeQueryStage", OZW::GetNodeQueryStage); // ** new 
 		// getters
 		Nan::SetPrototypeMethod(t, "getNodeMaxBaudRate", OZW::GetNodeMaxBaudRate); // ** new
 		Nan::SetPrototypeMethod(t, "getNodeVersion", OZW::GetNodeVersion); // ** new
