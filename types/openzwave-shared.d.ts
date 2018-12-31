@@ -16,12 +16,9 @@ declare module "openzwave-shared" {
 
 		export interface NodeInfo {
 			manufacturer: string;
-			// noinspection SpellCheckingInspection
 			manufacturerid: string;
 			product: string;
-			// noinspection SpellCheckingInspection
 			producttype: string;
-			// noinspection SpellCheckingInspection
 			productid: string;
 			type: string;
 			name: string;
@@ -29,7 +26,6 @@ declare module "openzwave-shared" {
 		}
 
 		export enum Notification {
-			// noinspection JSUnusedGlobalSymbols
 			MessageComplete = 0,
 			Timeout = 1,
 			Nop = 2,
@@ -80,7 +76,6 @@ declare module "openzwave-shared" {
 			dropped: number;
 			retries: number;
 			callbacks: number;
-			// noinspection SpellCheckingInspection
 			badroutes: number;
 		}
 
@@ -134,7 +129,6 @@ declare module "openzwave-shared" {
 		}
 
 		export interface SceneInfo {
-			// noinspection SpellCheckingInspection
 			sceneid: number;
 			label: string;
 		}
@@ -694,10 +688,7 @@ declare module "openzwave-shared" {
 		 * Returns sceneId.
 		 */
 		createScene(label: string): number;
-
 		removeScene(sceneId: number): void;
-
-		// noinspection SpellCheckingInspection
 		getScenes(): Array<ZWave.SceneInfo>;
 
 		addSceneValue(sceneId: number, value: ZWave.ValueId): void;
