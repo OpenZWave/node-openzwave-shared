@@ -1,54 +1,55 @@
 {
-  "name": "openzwave-shared",
-  "version": "1.4.6",
-  "description": "Node.JS bindings for OpenZWave including management and security functions",
-  "main": "./lib/openzwave-shared.js",
-  "dependencies": {
-    "nan": ">=2.10.0"
-  },
-  "scripts": {
-    "test": "node test.js",
-    "preinstall": "node lib/install-ozw.js",
-    "install": "node-gyp rebuild"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/OpenZWave/node-openzwave-shared.git"
-  },
-  "keywords": [
-    "zwave",
-    "z-wave",
-    "home automation",
-    "openzwave",
-    "open-zwave"
-  ],
-  "author": "Elias Karakoulakis <elias.karakoulakis@gmail.com>",
-  "contributors": [
-    "davide-lr",
-    "Justin Hammond",
-    "Jonathan Perkin (http://www.perkin.org.uk/)",
-    "Luke Hertert (http://werul.com)",
-    "Michiel Mooring",
-    "Thibaut CONSTANT",
-    "Henry Rawas",
-    "Rushi Desai",
-    "Steven Adams",
-    "Jan Erik Hanssen",
-    "Brennan Kinney",
-    "Adam Rensel",
-    "David Moxey",
-    "Bart Bakker",
-    "vectah0",
-    "yybd",
-    "Rob Huehn",
-    "Michael Franken",
-    "Matt Eastman",
-    "codepeon",
-    "Casey Foster"
-  ],
-  "license": {
-    "type": "ISC",
-    "url": "http://opensource.org/licenses/ISC"
-  },
-  "gypfile": true
+	"name": "openzwave-shared",
+	"version": "1.4.6",
+	"description": "Node.JS bindings for OpenZWave including management and security functions",
+	"main": "./lib/openzwave-shared.js",
+	"dependencies": {
+		"nan": ">=2.10.0"
+	},
+	"types": "./types/openzwave-shared.d.ts",
+	"scripts": {
+		"test": "node test.js",
+		"preinstall": "node lib/install-ozw.js",
+		"install": "node-gyp rebuild"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git://github.com/OpenZWave/node-openzwave-shared.git"
+	},
+	"keywords": [
+		"zwave",
+		"z-wave",
+		"home automation",
+		"openzwave",
+		"open-zwave"
+	],
+	"author": "Elias Karakoulakis <elias.karakoulakis@gmail.com>",
+	"contributors": [
+		"davide-lr",
+		"Justin Hammond",
+		"Jonathan Perkin (http://www.perkin.org.uk/)",
+		"Luke Hertert (http://werul.com)",
+		"Michiel Mooring",
+		"Thibaut CONSTANT",
+		"Henry Rawas",
+		"Rushi Desai",
+		"Steven Adams",
+		"Jan Erik Hanssen",
+		"Brennan Kinney",
+		"Adam Rensel",
+		"David Moxey",
+		"Bart Bakker",
+		"vectah0",
+		"yybd",
+		"Rob Huehn",
+		"Michael Franken",
+		"Matt Eastman",
+		"codepeon",
+		"Casey Foster"
+	],
+	"license": {
+		"type": "ISC",
+		"url": "http://opensource.org/licenses/ISC"
+	},
+	"gypfile": true
 }
