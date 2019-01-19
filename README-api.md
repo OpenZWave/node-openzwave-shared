@@ -139,7 +139,8 @@ zwave.createScene(label); 	// create a scene and assign a label, return its nume
 zwave.removeScene(sceneId); // perform #GRExit
 zwave.getScenes();			// get all scenes as an array
 // add a zwave value to a scene
-zwave.addSceneValue(sceneId, nodeId, commandclass, instance, index);
+zwave.addSceneValue(sceneId, nodeId, commandclass, instance, index, value);
+zwave.addSceneValue(sceneId, { node_id:5, class_id: 38, instance:1, index:0}, 50); // Seconds arg can be a valueID object (emitted by ValueAdded event):
 // remove a zwave value from a scene
 zwave.removeSceneValue(sceneId, nodeId, commandclass, instance, index);
 zwave.sceneGetValues(sceneId); // return array of values associated with this scene
