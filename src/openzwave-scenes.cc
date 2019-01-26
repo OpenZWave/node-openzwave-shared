@@ -137,7 +137,7 @@ namespace OZW {
 				}
 				case OpenZWave::ValueID::ValueType_Decimal: {
 					//float val; OpenZWave::Manager::Get()->GetValueAsFloat(*vit, &val);
-					float val = Nan::To<Number>(info[valoffset]).ToLocalChecked()->NumberValue();
+					float val = Nan::To<Number>(info[valoffset]).ToLocalChecked()->Value();
 					OpenZWave::Manager::Get()->AddSceneValue(sceneid, *vit, val);
 					break;
 				}
@@ -150,7 +150,7 @@ namespace OZW {
 				case OpenZWave::ValueID::ValueType_List: {
 					//std::string val; OpenZWave::Manager::Get()->GetValueListSelection(*vit, &val);
 					std::string val(*Nan::Utf8String( info[valoffset] ));
-					OpenZWave::Manager::Get()->AddSceneValue(sceneid, *vit, val);
+					OpenZWave::Manager::Get()->AddSceneValueListSelection(sceneid, *vit, val);
 					break;
 				}
 				case OpenZWave::ValueID::ValueType_Short: {
