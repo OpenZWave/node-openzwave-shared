@@ -1,6 +1,6 @@
 {
   "name": "openzwave-shared",
-  "version": "1.4.6",
+  "version": "1.4.7",
   "description": "Node.JS bindings for OpenZWave including management and security functions",
   "main": "./lib/openzwave-shared.js",
   "dependencies": {
@@ -44,7 +44,10 @@
     "Michael Franken",
     "Matt Eastman",
     "codepeon",
-    "Casey Foster"
+    "Casey Foster",
+    "vibr77",
+    "blackshadev (https://github.com/blackshadev)",
+    "Daniel Lando (https://github.com/robertsLando)"
   ],
   "license": {
     "type": "ISC",
