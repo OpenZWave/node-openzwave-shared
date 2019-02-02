@@ -629,8 +629,14 @@ declare module "openzwave-shared" {
 		/**
 		 * Ask OZW to verify the value change before notifying the application.
 		 */
-		setChangeVerified(valueId: ZWave.ValueId): void;
-
+		setChangeVerified(valueId: ZWave.ValueId, enabled: boolean): void;
+		setChangeVerified(
+			nodeid: number,
+			class_id: number,
+			instance: number,
+			index: number,
+			enabled: boolean
+		): void;
 		/**
 		 * Get number of thermostat switch points.
 		 */
