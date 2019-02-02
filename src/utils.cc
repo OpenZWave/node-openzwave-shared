@@ -174,6 +174,17 @@ namespace OZW {
 				AddStringProp(valobj, value, val);
 				break;
 			}
+			case OpenZWave::ValueID::ValueType_List: {
+				std::string val;
+				std::vector < std::string > items;
+				// populate array of all available items in the list
+				OpenZWave::Manager::Get()->GetValueListItems(value, &items);
+				AddArrayOfStringProp(valobj, values, items);
+				// populated selected element
+				OpenZWave::Manager::Get()->SceneGetValueAsString(sceneid, value, &val);
+				AddStringProp(valobj, value, val.c_str())
+				break;
+			}
 			case OpenZWave::ValueID::ValueType_Int: {
 				int32 val;
 				OpenZWave::Manager::Get()->SceneGetValueAsInt(sceneid, value, &val);
@@ -197,7 +208,6 @@ namespace OZW {
 			*/
 			case OpenZWave::ValueID::ValueType_Button:
 			case OpenZWave::ValueID::ValueType_Schedule:
-			case OpenZWave::ValueID::ValueType_List:
 			case OpenZWave::ValueID::ValueType_Raw: {
 				fprintf(stderr, "unsupported scene value type: 0x%x\n", value.GetType());
 				break;

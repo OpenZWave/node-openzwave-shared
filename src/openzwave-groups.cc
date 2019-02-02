@@ -121,9 +121,13 @@ namespace OZW {
 		uint8 nodeid = info[0]->Uint32Value();
 		uint8 groupidx = info[1]->Uint32Value();
 		uint8 tgtnodeid = info[2]->Uint32Value();
+		uint8 instanceid = 0;
+		if(info.Length() > 3) {
+			instanceid = info[3]->Uint32Value();
+		} 
 
 		OpenZWave::Manager::Get()->AddAssociation(
-			homeid,nodeid,groupidx,tgtnodeid
+			homeid, nodeid, groupidx, tgtnodeid, instanceid
 		);
 	}
 
@@ -139,8 +143,14 @@ namespace OZW {
 		uint8 nodeid = info[0]->Uint32Value();
 		uint8 groupidx = info[1]->Uint32Value();
 		uint8 tgtnodeid = info[2]->Uint32Value();
+		uint8 instanceid = 0;
+		if(info.Length() > 3) {
+			instanceid = info[3]->Uint32Value();
+		} 
 
-		OpenZWave::Manager::Get()->RemoveAssociation(homeid,nodeid,groupidx,tgtnodeid);
+		OpenZWave::Manager::Get()->RemoveAssociation(
+			homeid, nodeid, groupidx, tgtnodeid, instanceid
+		);
 	}
 
 }
