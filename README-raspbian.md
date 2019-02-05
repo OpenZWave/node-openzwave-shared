@@ -44,7 +44,7 @@ sudo sed -i '$a LD_LIBRARY_PATH=/usr/local/lib' /etc/environment
 ```
 Refresh the dynamic libraries cache
 ```
-sudo ldconfig -r
+sudo ldconfig
 ```
 At this step you can ensure Open-Zwave library is correctly installed with
 ```
