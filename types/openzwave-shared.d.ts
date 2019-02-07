@@ -205,7 +205,7 @@ declare module "openzwave-shared" {
 			/**
 			 * Specifically Exclude Command Classes from the Library
 			 */
-			Excldue: string;
+			Exclude: string;
 			/**
 			 * After a Value is Refreshed, should we send a notification to the application
 			 */
