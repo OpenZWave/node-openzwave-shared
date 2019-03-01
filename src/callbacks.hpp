@@ -29,21 +29,21 @@ namespace OZW {
     uint8 buttonid;
     uint8 sceneid;
     uint8 notification;
-    std::list<OpenZWave::ValueID> values;
-    std::string help;
+    ::std::list<OpenZWave::ValueID> values;
+    ::std::string help;
   } NotifInfo;
 
   typedef struct {
     uint32 homeid;
     uint8  nodeid;
     bool   polled;
-    std::list<OpenZWave::ValueID> values;
+    ::std::list<OpenZWave::ValueID> values;
   } NodeInfo;
 
   typedef struct {
     uint32      sceneid;
-    std::string label;
-    std::list<OpenZWave::ValueID> values;
+    ::std::string label;
+    ::std::list<OpenZWave::ValueID> values;
   } SceneInfo;
 
   // OpenZWave callbacks
@@ -72,16 +72,16 @@ namespace OZW {
   * Message passing queue between OpenZWave callback and v8 async handler.
   */
   extern mutex zqueue_mutex;
-  extern std::queue<NotifInfo *> zqueue;
+  extern ::std::queue<NotifInfo *> zqueue;
 
   /*
   * Node state.
   */
   extern mutex znodes_mutex;
-  extern std::map<uint8_t, NodeInfo *> znodes;
+  extern ::std::map<uint8_t, NodeInfo *> znodes;
 
   extern mutex zscenes_mutex;
-  extern std::list<SceneInfo *> zscenes;
+  extern ::std::list<SceneInfo *> zscenes;
 
 } // namespace OZW
 

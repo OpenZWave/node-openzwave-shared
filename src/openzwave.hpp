@@ -35,10 +35,10 @@
 
 #if defined(_WIN32) || defined( __APPLE__)
     #include <unordered_map>
-    typedef ::std::unordered_map <std::string, OpenZWave::Driver::ControllerCommand> CommandMap;
+    typedef ::std::unordered_map < ::std::string, OpenZWave::Driver::ControllerCommand > CommandMap;
 #else
     #include <tr1/unordered_map>
-    typedef ::std::tr1::unordered_map <std::string, OpenZWave::Driver::ControllerCommand> CommandMap;
+    typedef ::std::tr1::unordered_map< ::std::string, OpenZWave::Driver::ControllerCommand > CommandMap;
 #endif
 
 #include "utils.hpp"
@@ -109,7 +109,7 @@ namespace OZW {
 		static NAN_METHOD(SetNodeLevel);
 		static NAN_METHOD(SwitchAllOn);
 		static NAN_METHOD(SwitchAllOff);
-    static NAN_METHOD(PressButton);
+		static NAN_METHOD(PressButton);
 		static NAN_METHOD(ReleaseButton);
 		//
 		static NAN_METHOD(RefreshNodeInfo);
@@ -146,11 +146,11 @@ namespace OZW {
 		static NAN_METHOD(SetValueLabel);
 		static NAN_METHOD(RefreshValue);
 		static NAN_METHOD(SetChangeVerified);
-    static NAN_METHOD(GetNumSwitchPoints);
-    static NAN_METHOD(GetSwitchPoint);
-    static NAN_METHOD(ClearSwitchPoints);
-    static NAN_METHOD(SetSwitchPoint);
-    static NAN_METHOD(RemoveSwitchPoint);
+		static NAN_METHOD(GetNumSwitchPoints);
+		static NAN_METHOD(GetSwitchPoint);
+		static NAN_METHOD(ClearSwitchPoints);
+		static NAN_METHOD(SetSwitchPoint);
+		static NAN_METHOD(RemoveSwitchPoint);
 		// openzwave-polling.cc
 		static NAN_METHOD(GetPollInterval);
 		static NAN_METHOD(SetPollInterval);
@@ -168,10 +168,10 @@ namespace OZW {
 		static NAN_METHOD(SceneGetValues);
 		static NAN_METHOD(ActivateScene);
 
-    // Passing configuration around
-    std::string userpath;
-    std::string option_overrides;
-    std::string config_path;
+		// Passing configuration around
+		::std::string userpath;
+		::std::string option_overrides;
+		::std::string config_path;
 	};
 
 	// our ZWave Home ID

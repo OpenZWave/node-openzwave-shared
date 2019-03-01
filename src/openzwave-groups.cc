@@ -99,7 +99,7 @@ namespace OZW {
 		uint8 nodeid = info[0]->Uint32Value();
 		uint8 groupidx = info[1]->Uint32Value();
 
-		std::string groupLabel = OpenZWave::Manager::Get()->GetGroupLabel(
+		::std::string groupLabel = OpenZWave::Manager::Get()->GetGroupLabel(
 			homeid, nodeid, groupidx
 		);
 

@@ -106,7 +106,7 @@ namespace OZW {
 	const char* getControllerStateAsStr (OpenZWave::Driver::ControllerState _state);
 	const char* getControllerErrorAsStr(OpenZWave::Driver::ControllerError _err);
 
-	const std::string getNotifHelpMsg(OpenZWave::Notification const *n);
+	const ::std::string getNotifHelpMsg(OpenZWave::Notification const *n);
 
 	bool checkType(bool predicate);
 } // namespace OZW
