@@ -42,6 +42,10 @@ make it permanent by adding it to /etc/environment
 ```
 sudo sed -i '$a LD_LIBRARY_PATH=/usr/local/lib' /etc/environment
 ```
+Refresh the dynamic libraries cache
+```
+sudo ldconfig
+```
 At this step you can ensure Open-Zwave library is correctly installed with
 ```
 MinOZW
