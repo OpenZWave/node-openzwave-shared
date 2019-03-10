@@ -29,7 +29,7 @@ namespace OZW {
 	{
 		Nan::HandleScope scope;
 		CheckMinArgs(1, "label");
-    std::string label(*Nan::Utf8String( info[0] ));
+		::std::string label(*Nan::Utf8String( info[0] ));
 		SceneInfo *scene;
 
 		uint8 sceneid = OpenZWave::Manager::Get()->CreateScene();
@@ -90,7 +90,7 @@ namespace OZW {
 		}
 
 		Local<Array> scenes = Nan::New<Array>(zscenes.size());
-		std::list<SceneInfo *>::iterator it;
+		::std::list<SceneInfo *>::iterator it;
 		unsigned j = 0;
 
 		for (it = zscenes.begin(); it != zscenes.end(); ++it) {
@@ -148,8 +148,8 @@ namespace OZW {
 					break;
 				}
 				case OpenZWave::ValueID::ValueType_List: {
-					//std::string val; OpenZWave::Manager::Get()->GetValueListSelection(*vit, &val);
-					std::string val(*Nan::Utf8String( info[valoffset] ));
+					//::std::string val; OpenZWave::Manager::Get()->GetValueListSelection(*vit, &val);
+					::std::string val(*Nan::Utf8String( info[valoffset] ));
 					OpenZWave::Manager::Get()->AddSceneValueListSelection(sceneid, *vit, val);
 					break;
 				}
@@ -160,8 +160,8 @@ namespace OZW {
 					break;
 				}
 				case OpenZWave::ValueID::ValueType_String: {
-					//std::string val; OpenZWave::Manager::Get()->GetValueAsString(*vit, &val);
-					std::string val(*Nan::Utf8String( info[valoffset] ));
+					//::std::string val; OpenZWave::Manager::Get()->GetValueAsString(*vit, &val);
+					::std::string val(*Nan::Utf8String( info[valoffset] ));
 					OpenZWave::Manager::Get()->AddSceneValue(sceneid, *vit, val);
 					break;
 				}
@@ -203,8 +203,8 @@ namespace OZW {
 		CheckMinArgs(1, "sceneid");
 		uint8 sceneid = Nan::To<Number>(info[0]).ToLocalChecked()->Value();
 
-		std::vector<OpenZWave::ValueID> values;
-		std::vector<OpenZWave::ValueID>::iterator vit;
+		::std::vector<OpenZWave::ValueID> values;
+		::std::vector<OpenZWave::ValueID>::iterator vit;
 
 		OpenZWave::Manager::Get()->SceneGetValues(sceneid, &values);
 

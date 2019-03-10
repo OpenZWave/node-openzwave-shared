@@ -16,6 +16,31 @@
 			"src/utils.cc",
 		],
 		"conditions": [
+			['OS=="solaris"', {
+				"variables": {
+					"OZW_INC"         : "<!(pkg-config --cflags-only-I libopenzwave | sed s/-I//g)",
+					"OZW_LIB_PATH"    : "<!(pkg-config --variable=libdir libopenzwave)",
+					"OZW_GITVERSION"  : "<!(pkg-config --variable=gitversion libopenzwave)",
+					"OZW_ETC"         : "<!(pkg-config --variable=sysconfdir libopenzwave)",
+					"OZW_DOC"         : "<!(pkg-config --variable=docdir libopenzwave)"
+				},
+				"defines": [
+					"OPENZWAVE_ETC=<(OZW_ETC)/config",
+					"OPENZWAVE_DOC=<!@(node -p -e \"'<(OZW_DOC)'.length ? '<(OZW_DOC)' : '/usr/local/share/doc/openzwave'\")",
+					"OPENZWAVE_SECURITY=<!@(find <(OZW_INC) -name ZWSecurity.h | wc -l)"
+				],
+				"cflags": [ "-Wno-ignored-qualifiers -Wno-write-strings -Wno-unknown-pragmas" ],
+				"link_settings": {
+				    "libraries": [
+						"-R/opt/local/lib/", "-L/opt/local/lib/", "-lopenzwave"
+					]
+				},
+				"include_dirs": [
+				    "<!(node -p -e \"require('path').dirname(require.resolve('nan'))\")",
+				    '/opt/local/include/openzwave/',
+				    '/opt/local/include/openzwave/value_classes/'
+				]
+			}],
 			['OS=="mac"', {
 				"variables": {
 					"OZW_INC"         : "<!(pkg-config --cflags-only-I libopenzwave | sed s/-I//g)",
@@ -24,28 +49,28 @@
 					"OZW_ETC"         : "<!(pkg-config --variable=sysconfdir libopenzwave)",
 					"OZW_DOC"         : "<!(pkg-config --variable=docdir libopenzwave)"
 				},
-        		"defines": [
+				"defines": [
 					"OPENZWAVE_ETC=<(OZW_ETC)/config",
 					"OPENZWAVE_DOC=<!@(node -p -e \"'<(OZW_DOC)'.length ? '<(OZW_DOC)' : '/usr/local/share/doc/openzwave'\")",
 					"OPENZWAVE_SECURITY=<!@(find <(OZW_INC) -name ZWSecurity.h | wc -l)"
-        		],
+				],
 				"link_settings": {
 				    "libraries": [
 						"-L/usr/local/lib/", "-lopenzwave"
 					]
 				},
-                "include_dirs": [
-                    "<!(node -p -e \"require('path').dirname(require.resolve('nan'))\")",
-                    '/usr/local/include/openzwave/',
-                    '/usr/local/include/openzwave/value_classes/'
-                ],
+				"include_dirs": [
+				    "<!(node -p -e \"require('path').dirname(require.resolve('nan'))\")",
+				    '/usr/local/include/openzwave/',
+				    '/usr/local/include/openzwave/value_classes/'
+				],
 				'xcode_settings': {
 					'MACOSX_DEPLOYMENT_TARGET':'10.9',
-			        'OTHER_CFLAGS': [
+					'OTHER_CFLAGS': [
 						'-Wno-ignored-qualifiers -Wno-write-strings -Wno-unknown-pragmas'
-			        ]
-			      }
-	        }],
+					]
+				}
+			}],
 			["OS=='linux'", {
 				"variables": {
 					"NODE"            : "<!(which node || which nodejs)",
@@ -54,11 +79,11 @@
 					"OZW_ETC"         : "<!(<(NODE) -p \"require('./lib/ozwpaths.js').sysconfdir\")",
 					"OZW_DOC"         : "<!(<(NODE) -p \"require('./lib/ozwpaths.js').docdir\")"
 				},
-        		"defines": [
+				"defines": [
 					"OPENZWAVE_ETC=<!@(<(NODE) -p -e \"'<(OZW_ETC)'.length ? '<(OZW_ETC)' : '/usr/local/etc/openzwave'\")",
 					"OPENZWAVE_DOC=<!@(<(NODE) -p -e \"'<(OZW_DOC)'.length ? '<(OZW_DOC)' : '/usr/local/share/doc/openzwave'\")",
 					"OPENZWAVE_SECURITY=<!@(find <(OZW_INC) -name ZWSecurity.h | wc -l)"
-        		],
+				],
 				"link_settings": {
 					"libraries": ["-lopenzwave"]
 				},

@@ -29,7 +29,7 @@ namespace OZW {
 		Nan::HandleScope scope;
 		CheckMinArgs(1, "path");
 
-		std::string path(*Nan::Utf8String( info[0] ));
+		::std::string path(*Nan::Utf8String( info[0] ));
 
 		uv_async_init(uv_default_loop(), &async, async_cb_handler);
 
@@ -49,7 +49,7 @@ namespace OZW {
 		OpenZWave::Manager* mgr = OpenZWave::Manager::Get();
 		mgr->AddWatcher(ozw_watcher_callback, NULL);
 		mgr->AddDriver(path);
-		std::string version(OpenZWave::Manager::getVersionAsString());
+		::std::string version(OpenZWave::Manager::getVersionAsString());
 
 		Local < v8::Value > cbinfo[16];
 		cbinfo[0] = Nan::New<String>("connected").ToLocalChecked();
@@ -64,7 +64,7 @@ namespace OZW {
 	{
 		Nan::HandleScope scope;
 		CheckMinArgs(1, "path");
-		std::string path(*Nan::Utf8String( info[0] ));
+		::std::string path(*Nan::Utf8String( info[0] ));
 
 		OpenZWave::Manager::Get()->RemoveDriver(path);
 		OpenZWave::Manager::Get()->RemoveWatcher(ozw_watcher_callback, NULL);
@@ -100,8 +100,8 @@ namespace OZW {
 	// ===================================================================
 	{
 		Nan::HandleScope scope;
-	 	uint8 ctrlid = OpenZWave::Manager::Get()->GetControllerNodeId (homeid);
-	 	info.GetReturnValue().Set(
+		uint8 ctrlid = OpenZWave::Manager::Get()->GetControllerNodeId (homeid);
+		info.GetReturnValue().Set(
 			Nan::New<Integer>(ctrlid)
 		);
 	}
@@ -111,8 +111,8 @@ namespace OZW {
 	// ===================================================================
 	{
 		Nan::HandleScope scope;
-	 	uint8 sucid = OpenZWave::Manager::Get()->GetSUCNodeId (homeid);
-	 	info.GetReturnValue().Set(
+		uint8 sucid = OpenZWave::Manager::Get()->GetSUCNodeId (homeid);
+		info.GetReturnValue().Set(
 			Nan::New<Integer>(sucid)
 		);
 	}
@@ -127,8 +127,8 @@ namespace OZW {
 	// ===================================================================
 	{
 		Nan::HandleScope scope;
-	 	bool isprimary = OpenZWave::Manager::Get()->IsPrimaryController (homeid);
-	 	info.GetReturnValue().Set(Nan::New<Boolean>(isprimary));
+		bool isprimary = OpenZWave::Manager::Get()->IsPrimaryController (homeid);
+		info.GetReturnValue().Set(Nan::New<Boolean>(isprimary));
 	}
 
 	/* Query if the controller is a static update controller. A Static
@@ -141,8 +141,8 @@ namespace OZW {
 	// ===================================================================
 	{
 		Nan::HandleScope scope;
-	 	bool issuc = OpenZWave::Manager::Get()->IsStaticUpdateController (homeid);
-	 	info.GetReturnValue().Set(Nan::New<Boolean>(issuc));
+		bool issuc = OpenZWave::Manager::Get()->IsStaticUpdateController (homeid);
+		info.GetReturnValue().Set(Nan::New<Boolean>(issuc));
 	}
 
 	/* Query if the controller is using the bridge controller library.
@@ -154,47 +154,47 @@ namespace OZW {
 	// ===================================================================
 	{
 		Nan::HandleScope scope;
-	 	bool isbridge = OpenZWave::Manager::Get()->IsBridgeController (homeid);
-	 	info.GetReturnValue().Set(Nan::New<Boolean>(isbridge));
+		bool isbridge = OpenZWave::Manager::Get()->IsBridgeController (homeid);
+		info.GetReturnValue().Set(Nan::New<Boolean>(isbridge));
 	}
 
- 	/* Get the version of the Z-Wave API library used by a controller.
- 	 */
- 	// ===================================================================
+	/* Get the version of the Z-Wave API library used by a controller.
+	 */
+	// ===================================================================
 	NAN_METHOD(OZW::GetLibraryVersion)
 	// ===================================================================
 	{
 		Nan::HandleScope scope;
-	 	std::string libver = OpenZWave::Manager::Get()->GetLibraryVersion (homeid);
-	 	info.GetReturnValue().Set(
+		::std::string libver = OpenZWave::Manager::Get()->GetLibraryVersion (homeid);
+		info.GetReturnValue().Set(
 			Nan::New<String>(
 				libver.c_str()
 			).ToLocalChecked()
 		);
 	}
 
- 	/* Get a string containing the Z-Wave API library type used by a
- 	 * controller. The possible library types are:
- 	 * 	Static Controller
- 	 * 	Controller
- 	 * 	Enhanced Slave
- 	 * Slave
- 	 * Installer
- 	 * Routing Slave
- 	 * Bridge Controller
- 	 * Device Under Test
- 	 *
- 	 * The controller should never return a slave library type. For a
- 	 * more efficient test of whether a controller is a Bridge Controller,
- 	 * use the IsBridgeController method.
- 	 */
- 	// ===================================================================
+	/* Get a string containing the Z-Wave API library type used by a
+	 * controller. The possible library types are:
+	 *	Static Controller
+	 *	Controller
+	 *	Enhanced Slave
+	 * Slave
+	 * Installer
+	 * Routing Slave
+	 * Bridge Controller
+	 * Device Under Test
+	 *
+	 * The controller should never return a slave library type. For a
+	 * more efficient test of whether a controller is a Bridge Controller,
+	 * use the IsBridgeController method.
+	 */
+	// ===================================================================
 	NAN_METHOD(OZW::GetLibraryTypeName)
 	// ===================================================================
 	{
 		Nan::HandleScope scope;
-	 	std::string libtype = OpenZWave::Manager::Get()->GetLibraryTypeName (homeid);
-	 	info.GetReturnValue().Set(
+		::std::string libtype = OpenZWave::Manager::Get()->GetLibraryTypeName (homeid);
+		info.GetReturnValue().Set(
 			Nan::New<String>(
 				libtype.c_str()
 			).ToLocalChecked()
@@ -206,8 +206,8 @@ namespace OZW {
 	// ===================================================================
 	{
 		Nan::HandleScope scope;
-	 	uint32 cnt = OpenZWave::Manager::Get()->GetSendQueueCount (homeid);
-	 	info.GetReturnValue().Set(Nan::New<Integer>(cnt));
+		uint32 cnt = OpenZWave::Manager::Get()->GetSendQueueCount (homeid);
+		info.GetReturnValue().Set(Nan::New<Integer>(cnt));
 	}
 
 }
