@@ -29,3 +29,6 @@ bugfix/issue#217 - do not crash when no options object is passed to the construc
 issue #235 - added instanceids to add and remove association
 Fix scene APIs #264
 Fix scene values type 'list' (Partially fix #266) #267 
+
+# 1.4.8
+add support for SmartOS #272
