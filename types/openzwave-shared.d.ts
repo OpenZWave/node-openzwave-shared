@@ -1,127 +1,296 @@
-declare module 'openzwave-shared' {
-	interface NodeInfo {
-		manufacturer: string;
-		// noinspection SpellCheckingInspection
-		manufacturerid: string;
-		product: string;
-		// noinspection SpellCheckingInspection
-		producttype: string;
-		// noinspection SpellCheckingInspection
-		productid: string;
-		type: string;
-		name: string;
-		loc: string;
-	}
+declare module "openzwave-shared" {
+	namespace ZWave {
+		export type ValueType =
+			| "bool"
+			| "byte"
+			| "decimal"
+			| "int"
+			| "list"
+			| "schedule"
+			| "short"
+			| "string"
+			| "button"
+			| "raw"
+			| "max";
+		export type ValueGenre = "basic" | "user" | "system" | "config" | "count";
 
-	enum Notification {
-		// noinspection JSUnusedGlobalSymbols
-		MessageComplete = 0,
-		Timeout = 1,
-		Nop = 2,
-		NodeAwake = 3,
-		NodeSleep = 4,
-		NodeDeal = 5,
-		NodeAlive = 6
-	}
+		export interface NodeInfo {
+			manufacturer: string;
+			manufacturerid: string;
+			product: string;
+			producttype: string;
+			productid: string;
+			type: string;
+			name: string;
+			loc: string;
+		}
 
-	interface DriverStats {
-		SOFCnt: number;
-		ACKWaiting: number;
-		readAborts: number;
-		badChecksum: number;
-		readCnt: number;
-		writeCnt: number;
-		CANCnt: number;
-		NAKCnt: number;
-		ACKCnt: number;
-		OOFCnt: number;
-		dropped: number;
-		retries: number;
-		callbacks: number;
-		// noinspection SpellCheckingInspection
-		badroutes: number;
-	}
+		export enum Notification {
+			MessageComplete = 0,
+			Timeout = 1,
+			Nop = 2,
+			NodeAwake = 3,
+			NodeSleep = 4,
+			NodeDead = 5,
+			NodeAlive = 6
+		}
 
-	interface NodeStats {
-		sentCnt: number;
-		sentFailed: number;
-		retries: number;
-		receivedCnt: number;
-		receivedDups: number;
-		receivedUnsolicited: number;
-		lastRequestRTT: number;
-		lastResponseRTT: number;
-		averageRequestRTT: number;
-		averageResponseRTT: number;
-		quality: number;
-		sentTS: string;
-		receivedTS: string;
-	}
+		export enum ControllerState {
+			Normal = 0,
+			Starting = 1,
+			Cancel = 2,
+			Error = 3,
+			Waiting = 4,
+			Sleeping = 5,
+			InProgress = 6,
+			Completed = 7,
+			Failed = 8,
+			NodeOK = 9,
+			NodeFailed = 10
+		}
 
-	interface Value {
-		value_id: string;
-		node_id: number;
-		class_id: number;
-		type: string;
-		genre: string;
-		instance: number;
-		index: number;
-		label: string;
-		units: string;
-		help: string;
-		read_only: boolean;
-		write_only: boolean;
-		min: number;
-		max: number;
-		is_polled: boolean;
-	}
+		export enum LogLevel {
+			NoLogging = 0,
+			AllMessages = 1,
+			FatalMessagesOnly = 2,
+			ErrorMessagesAndHigher = 3,
+			WarningMessagesAndHigher = 4,
+			AlertMessagesAndHigher = 5,
+			InfoMessagesAndHigher = 6,
+			DetailedMessagesAndHigher = 7,
+			DebugMessagesAndHigher = 8,
+			ProtocolInformationAndHigher = 9
+		}
 
-	interface ValueId {
-		nodeid: number;
-		class_id: number;
-		instance: number;
-		index: number;
-	}
+		export interface DriverStats {
+			SOFCnt: number;
+			ACKWaiting: number;
+			readAborts: number;
+			badChecksum: number;
+			readCnt: number;
+			writeCnt: number;
+			CANCnt: number;
+			NAKCnt: number;
+			ACKCnt: number;
+			OOFCnt: number;
+			dropped: number;
+			retries: number;
+			callbacks: number;
+			badroutes: number;
+		}
 
-	interface SwitchPoint {
-		hours: number;
-		minutes: number;
-		setback: number;
-	}
+		export interface NodeStats {
+			sentCnt: number;
+			sentFailed: number;
+			retries: number;
+			receivedCnt: number;
+			receivedDups: number;
+			receivedUnsolicited: number;
+			lastRequestRTT: number;
+			lastResponseRTT: number;
+			averageRequestRTT: number;
+			averageResponseRTT: number;
+			quality: number;
+			sentTS: string;
+			receivedTS: string;
+		}
 
-	interface SceneInfo {
-		// noinspection SpellCheckingInspection
-		sceneid: number;
-		label: string;
-	}
+		export interface ValueId {
+			node_id: number;
+			class_id: number;
+			instance: number;
+			index: number;
+		}
 
-	export = ZWave;
+		export interface Value<T = boolean | number | string> {
+			value_id: string;
+			node_id: number;
+			class_id: number;
+			type: ValueType;
+			genre: ValueGenre;
+			instance: number;
+			index: number;
+			label: string;
+			units: string;
+			help: string;
+			read_only: boolean;
+			write_only: boolean;
+			min: number;
+			max: number;
+			is_polled: boolean;
+			values?: string[];
+			value: T;
+		}
+
+		export interface SwitchPoint {
+			hours: number;
+			minutes: number;
+			setback: number;
+		}
+
+		export interface SceneInfo {
+			sceneid: number;
+			label: string;
+		}
+
+		export interface IConstructorParameters {
+			/**
+			 * This is the directory location where various files created by the library are stored. Examples include the zwcfg_.xml and LogFiles_
+			 */
+			UserPath: string;
+			/**
+			 * This is the directory where the device database resides
+			 */
+			ConfigPath: string;
+			/**
+			 * Enable Logging in the Library or not
+			 */
+			Logging: boolean;
+			/**
+			 * Enable log output to stdout (or console)
+			 */
+			ConsoleOutput: boolean;
+			/**
+			 * The Log File Name to use (will be output in the UserPath Directory
+			 */
+			LogFileName: string;
+			/**
+			 * On Restart, should we erase old log files, or append to existing log files
+			 */
+			AppendLogFile: boolean;
+			/**
+			 *
+			 */
+			SaveLogLevel: LogLevel;
+			/**
+			 *
+			 */
+			QueueLogLevel: ZWave.LogLevel;
+			/**
+			 *
+			 */
+			DumpTriggerLevel: ZWave.LogLevel;
+			/**
+			 * Automatically Associate the Control with any Groups that have be flagged by specific devices in the Device Database
+			 */
+			Associate: boolean;
+			/**
+			 * When a Message Transaction (via the Zwave Protocol) has been completed, receive a Code_MsgComplete notification via the Notification Interface.
+			 */
+			NotifyTransactions: boolean;
+			/**
+			 * Maximum Attempts the Library will try to Initialize the controller
+			 */
+			DriverMaxAttempts: number;
+			/**
+			 * When Shutting Down, should the library automatically save the Network Configuration in zwcfg_.xml_
+			 */
+			SaveConfiguration: boolean;
+			/**
+			 * How long we should spend polling the entire network, or how long between polls we should wait. (See IntervalBetweenPolls)
+			 */
+			PollInterval: number;
+			/**
+			 * Should the above value be how long to wait between polling the network devices, or how often all devices should be polled
+			 */
+			IntervalBetweenPools: boolean;
+			/**
+			 * After Processing a Group Changed Notification, should we update the Return Routes Map on affected devices
+			 */
+			PerformReturnRoutes: boolean;
+			/**
+			 * Specify Which Command Classes the Library will support
+			 */
+			Include: string;
+			/**
+			 * Specifically Exclude Command Classes from the Library
+			 */
+			Exclude: string;
+			/**
+			 * After a Value is Refreshed, should we send a notification to the application
+			 */
+			SuppressValueRefresh: boolean;
+			/**
+			 * Timeout before retrying to send a message. Defaults to 40 Seconds
+			 */
+			RetryTimeout: number;
+			/**
+			 * Network Key to use for Encrypting Secure Messages over the Network
+			 */
+			NetworkKey: Buffer;
+			/**
+			 * Automatically become a SUC if there is No SUC on the network
+			 */
+			EnableSIS: boolean;
+			/**
+			 * Assume Devices that support the Wakeup Class are awake when starting up OZW
+			 */
+			AssumeAwake: boolean;
+			/**
+			 * Should we refresh all UserCodes in the UserCode CC when we start up
+			 */
+			RefreshAllUserCodes: boolean;
+		}
+	}
 
 	/**
 	 * Open ZWave NodeJS wrapper object interface.
 	 */
 	class ZWave {
-		constructor(settings: any);
+		constructor(settings: Partial<ZWave.IConstructorParameters>);
 
-		on(event: string, cb: Function);
+		on(event: "connected", listener: (version: string) => void): this;
+		on(event: "driver ready", listener: (homeId: number) => void): this;
+		on(event: "driver failed", listener: () => void): this;
+		on(
+			event:
+				| "polling enabled"
+				| "polling disabled"
+				| "node removed"
+				| "node added",
+			listener: (nodeId: number) => void
+		): this;
+		on(
+			event: "node event",
+			listener: (nodeId: number, data: any) => void
+		): this;
+		on(
+			event: "node ready" | "node naming" | "node available",
+			listener: (nodeId: number, nodeInfo: ZWave.NodeInfo) => void
+		): this;
+		on(
+			event: "value added" | "value changed",
+			listener: (nodeId: number, comClass: number, value: ZWave.Value) => void
+		): this;
+		on(
+			event: "value removed",
+			listener: (nodeId: number, comClass: number, index: number) => void
+		): this;
 
-		// !!!
-		on(event: 'driver ready', cb: (homeId: string) => {});
-		on(event: 'driver failed', cb: () => {});
-		on(event: 'node added', cb: (nodeId: number) => {});
-		on(event: 'node event', cb: (nodeId: number, data: any) => {});
-		on(event: 'value added' | 'value changed', cb: (nodeId: number, comClass: string, value: any) => {});
-		on(event: 'value removed', cb: (nodeId: number, comClass: string, index: any) => {});
-		on(event: 'node ready', cb: (nodeId: number, nodeInfo: NodeInfo) => {});
-		on(event: 'notification', cb: (nodeId: number, notification: Notification) => {});
-		on(event: 'scan complete', cb: () => {});
-		on(event: 'controller command', cb: (nodeId: number, retVal: number, state: number, message: string) => {});
-
-		// !!!
+		on(
+			event: "notification",
+			listener: (nodeId: number, notification: ZWave.Notification) => void
+		): this;
+		on(event: "scan complete", listener: () => void): this;
+		on(
+			event: "controller command",
+			listener: (
+				nodeId: number,
+				state: ZWave.ControllerState,
+				notif: number,
+				message: string
+			) => void
+		): this;
+		on(event: string, listener: (...args: any[]) => void): this;
 
 		// Exposed by "openzwave-config.cc"
 
-		setConfigParam(nodeId: number, param: number, value: number, size?: number): void;
+		setConfigParam(
+			nodeId: number,
+			param: number,
+			value: number,
+			size?: number
+		): void;
 		requestConfigParam(nodeId: number, param: number): void;
 		requestAllConfigParams(nodeId: number): void;
 
@@ -144,8 +313,6 @@ declare module 'openzwave-shared' {
 		hardReset(): void;
 
 		softReset(): void;
-
-		on(event: 'connected', cb: (/** Version of OZW lib */ version: string) => {});
 
 		/**
 		 * Return Node ID of the controller itself.
@@ -189,8 +356,15 @@ declare module 'openzwave-shared' {
 		 * more efficient test of whether a controller is a Bridge Controller,
 		 * use the IsBridgeController method.
 		 */
-		getLibraryTypeName(): 'Static Controller' | 'Controller' | 'Enhanced Slave' | 'Slave' | 'Installer' |
-			'Routing Slave' | 'Bridge Controller' | 'Device Under Test';
+		getLibraryTypeName():
+			| "Static Controller"
+			| "Controller"
+			| "Enhanced Slave"
+			| "Slave"
+			| "Installer"
+			| "Routing Slave"
+			| "Bridge Controller"
+			| "Device Under Test";
 
 		getSendQueueCount(): number;
 
@@ -210,9 +384,13 @@ declare module 'openzwave-shared' {
 
 		getGroupLabel(nodeId: number, groupIdx: number): string;
 
-		addAssociation(nodeId: number, groupIdx: number, tgtNodeId: number);
+		addAssociation(nodeId: number, groupIdx: number, tgtNodeId: number): void;
 
-		removeAssociation(nodeId: number, groupIdx: number, tgtNodeId: number);
+		removeAssociation(
+			nodeId: number,
+			groupIdx: number,
+			tgtNodeId: number
+		): void;
 
 		// Exposed by "openzwave-management.cc"
 
@@ -221,7 +399,7 @@ declare module 'openzwave-shared' {
 		 * The Status of the Node Inclusion is communicated via Notifications.
 		 * Specifically, you should monitor ControllerCommand Notifications.
 		 */
-		addNode(doSecurity: boolean = false): boolean;
+		addNode(doSecurity?: boolean): boolean;
 
 		/**
 		 * Remove a Device from the Z-Wave Network
@@ -309,15 +487,15 @@ declare module 'openzwave-shared' {
 		 * LEGACY MODE (using BeginControllerCommand)
 		 * @obsolete
 		 */
-		beginControllerCommand(command: any);
+		beginControllerCommand(command: any): void;
 
 		cancelControllerCommand(): void;
 
 		writeConfig(): void;
 
-		getDriverStatistics(): DriverStats;
+		getDriverStatistics(): ZWave.DriverStats;
 
-		getNodeStatistics(nodeId: number): NodeStats;
+		getNodeStatistics(nodeId: number): ZWave.NodeStats;
 
 		// Exposed by "openzwave-network.cc"
 
@@ -325,21 +503,21 @@ declare module 'openzwave-shared' {
 		 * Test network node. Sends a series of messages to a network node
 		 * for testing network reliability.
 		 */
-		testNetworkNode(nodeId: number, retries: number = 1): void;
+		testNetworkNode(nodeId: number, retries?: number): void;
 
-		testNetwork(retries: number = 1): void;
+		testNetwork(retries?: number): void;
 
 		/**
 		 * Heal network by requesting node's rediscover their neighbors.
 		 * Sends a ControllerCommand_RequestNodeNeighborUpdate to every node.
 		 * Can take a while on larger networks.
 		 */
-		healNetwork(doRR: boolean = false): void;
+		healNetwork(doRR?: boolean): void;
 
 		/**
 		 * Heal network node by requesting the node rediscover their neighbors.
 		 */
-		healNetworkNode(nodeId: number, doRR: boolean = false): void;
+		healNetworkNode(nodeId: number, doRR?: boolean): void;
 
 		// Exposed by "openzwave-nodes.cc"
 
@@ -361,9 +539,9 @@ declare module 'openzwave-shared' {
 
 		switchAllOff(): void;
 
-		pressButton(valueId: ValueId): void;
+		pressButton(valueId: ZWave.ValueId): void;
 
-		releaseButton(valueId: ValueId): void;
+		releaseButton(valueId: ZWave.ValueId): void;
 
 		/**
 		 * Write a new location string to the device, if supported.
@@ -434,28 +612,44 @@ declare module 'openzwave-shared' {
 		/**
 		 * Generic value set.
 		 */
-		setValue(valueId: ValueId, value: Value): void;
+		setValue(
+			nodeid: number,
+			class_id: number,
+			instance: number,
+			index: number,
+			value: string | boolean | number
+		): void;
+		setValue(valueId: ZWave.ValueId, value: string | boolean | number): void;
 
 		/**
 		 * Refresh value from Z-Wave network.
 		 */
-		refreshValue(valueId: ValueId): boolean;
+		refreshValue(valueId: ZWave.ValueId): boolean;
 
 		/**
 		 * Ask OZW to verify the value change before notifying the application.
 		 */
-		setChangeVerified(valueId: ValueId): void;
-
+		setChangeVerified(valueId: ZWave.ValueId, enabled: boolean): void;
+		setChangeVerified(
+			nodeid: number,
+			class_id: number,
+			instance: number,
+			index: number,
+			enabled: boolean
+		): void;
 		/**
 		 * Get number of thermostat switch points.
 		 */
-		getNumSwitchPoints(valueId: ValueId): number;
+		getNumSwitchPoints(valueId: ZWave.ValueId): number;
 
-		getSwitchPoint(valueId: ValueId, index: number): SwitchPoint;
+		getSwitchPoint(valueId: ZWave.ValueId, index: number): ZWave.SwitchPoint;
 
-		clearSwitchPoints(valueId: ValueId): void;
+		clearSwitchPoints(valueId: ZWave.ValueId): void;
 
-		removeSwitchPoint(valueId: ValueId, switchPoint: SwitchPoint): void;
+		removeSwitchPoint(
+			valueId: ZWave.ValueId,
+			switchPoint: ZWave.SwitchPoint
+		): void;
 
 		// Exposed by "openzwave-polling.cc"
 
@@ -478,21 +672,21 @@ declare module 'openzwave-shared' {
 		/**
 		 * Enable polling on a ValueID.
 		 */
-		enablePoll(valueId: ValueId, intensity: number): boolean;
+		enablePoll(valueId: ZWave.ValueId, intensity?: number): boolean;
 
 		/**
 		 * Disable polling on a ValueID.
 		 */
-		disablePoll(valueId: ValueId): boolean;
+		disablePoll(valueId: ZWave.ValueId): boolean;
 
 		/**
 		 * Determine the polling of a device's state.
 		 */
-		isPolled(valueId: ValueId): boolean;
+		isPolled(valueId: ZWave.ValueId): boolean;
 
-		setPollIntensity(valueId: ValueId, intensity: number): void;
+		setPollIntensity(valueId: ZWave.ValueId, intensity: number): void;
 
-		getPollIntensity(valueId: ValueId): number;
+		getPollIntensity(valueId: ZWave.ValueId): number;
 
 		// Exposed by "openzwave-scenes.cc"
 
@@ -500,15 +694,14 @@ declare module 'openzwave-shared' {
 		 * Returns sceneId.
 		 */
 		createScene(label: string): number;
-
 		removeScene(sceneId: number): void;
+		getScenes(): Array<ZWave.SceneInfo>;
 
-		// noinspection SpellCheckingInspection
-		getScenes(): Array<SceneInfo>;
-
-		addSceneValue(sceneId: number, value: ValueId): void;
-		removeSceneValue(sceneId: number, value: ValueId): void;
-		sceneGetValues(sceneId: number): Array<ValueId>;
+		addSceneValue(sceneId: number, value: ZWave.ValueId): void;
+		removeSceneValue(sceneId: number, value: ZWave.ValueId): void;
+		sceneGetValues(sceneId: number): Array<ZWave.ValueId>;
 		activateScene(sceneId: number): void;
 	}
+
+	export = ZWave;
 }

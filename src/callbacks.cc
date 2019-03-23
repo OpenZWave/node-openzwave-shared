@@ -33,14 +33,14 @@ Nan::AsyncResource *resource;
 
 // Message passing queue between OpenZWave callback and v8 async handler.
 mutex zqueue_mutex;
-std::queue<NotifInfo *> zqueue;
+::std::queue<NotifInfo *> zqueue;
 
 // Node state.
 mutex znodes_mutex;
-std::map<uint8_t, NodeInfo *> znodes;
+::std::map<uint8_t, NodeInfo *> znodes;
 
 mutex zscenes_mutex;
-std::list<SceneInfo *> zscenes;
+::std::list<SceneInfo *> zscenes;
 /*
 * OpenZWave callback, registered in Driver::AddWatcher.
 * Just push onto queue and trigger the handler in v8 land.
@@ -115,7 +115,7 @@ void ozw_ctrlcmd_callback(Driver::ControllerState _state,
   notif->event = _err;
   notif->notification = _state;
   notif->homeid = 0; // use as guard value for legacy mode
-  notif->help = std::string("Controller State: ")
+  notif->help = ::std::string("Controller State: ")
                     .append(getControllerStateAsStr(_state))
                     .append(", Error: ")
                     .append(getControllerErrorAsStr(_err));
@@ -179,7 +179,7 @@ void handleNotification(NotifInfo *notif)
   case OpenZWave::Notification::Type_ValueRemoved: {
     //                            ##################
     OpenZWave::ValueID value = notif->values.front();
-    std::list<OpenZWave::ValueID>::iterator vit;
+    ::std::list<OpenZWave::ValueID>::iterator vit;
     if ((node = get_node_info(notif->nodeid))) {
       for (vit = node->values.begin(); vit != node->values.end(); ++vit) {
         if ((*vit) == notif->values.front()) {
