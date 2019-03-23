@@ -72,6 +72,7 @@ namespace OZW {
 		Nan::SetPrototypeMethod(t, "getSendQueueCount", OZW::GetSendQueueCount);	// ** new
 		Nan::SetPrototypeMethod(t, "connect", OZW::Connect);
 		Nan::SetPrototypeMethod(t, "disconnect", OZW::Disconnect);
+		Nan::SetPrototypeMethod(t, "updateOptions", OZW::UpdateOptions);
 		// openzwave-groups.cc
 		Nan::SetPrototypeMethod(t, "getNumGroups", OZW::GetNumGroups);
 		Nan::SetPrototypeMethod(t, "getAssociations", OZW::GetAssociations);
@@ -233,7 +234,13 @@ namespace OZW {
 			}
 		}
 
-		if (log_initialisation) {
+		// Store configuration data for connect.
+		self->config_path = ozw_config_path;
+		self->userpath = ozw_userpath;
+		self->option_overrides = option_overrides;
+		self->log_initialisation = log_initialisation;
+
+		if (self->log_initialisation) {
 			std::ostringstream versionstream;
 			versionstream << ozw_vers_major << "." << ozw_vers_minor << "." << ozw_vers_revision;
 			std::cout << "Initialising OpenZWave " << versionstream.str() << " binary addon for Node.JS.\n";
@@ -250,11 +257,6 @@ namespace OZW {
 				std::cout << "\tOption Overrides :" << option_overrides << "\n";
 			}
 		}
-
-		// Store configuration data for connect.
-		self->config_path = ozw_config_path;
-		self->userpath = ozw_userpath;
-		self->option_overrides = option_overrides;
 
 		ctx_obj = Nan::Persistent<Object>(info.This());
 		resource = new Nan::AsyncResource("openzwave.callback", info.This());

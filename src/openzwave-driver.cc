@@ -59,6 +59,50 @@ namespace OZW {
 	}
 
 	// ===================================================================
+	NAN_METHOD(OZW::UpdateOptions)
+	// ===================================================================
+	{
+		Nan::HandleScope scope;
+		CheckMinArgs(1, "info");
+
+		OZW* self = ObjectWrap::Unwrap<OZW>(info.This());
+		std::string ozw_userpath;
+		std::string ozw_config_path;
+
+		std::string option_overrides;
+		bool log_initialisation = true;
+		// Options are global for all drivers and can only be set once.
+		if (info.Length() > 0) {
+			Local < Object > opts = Nan::To<Object>(info[0]).ToLocalChecked();
+			Local < Array > props = Nan::GetOwnPropertyNames(opts).ToLocalChecked();
+			for (unsigned int i = 0; i < props->Length(); ++i) {
+				Local<Value> key       = props->Get(i);
+				std::string  keyname   = *Nan::Utf8String(key);
+				Local<Value> argval    = Nan::Get(opts, key).ToLocalChecked();
+				std::string  argvalstr = *Nan::Utf8String(argval);
+				// UserPath is directly passed to Manager->Connect()
+				// scan for OpenZWave options.xml in the nodeJS module's '/config' subdirectory
+				if (keyname == "UserPath") {
+					ozw_userpath.assign(argvalstr);
+				} else if (keyname == "ConfigPath") {
+					ozw_config_path.assign(argvalstr);
+				} else if (keyname == "LogInitialisation") {
+					log_initialisation = argval->BooleanValue();
+				} else {
+					option_overrides += " --" + keyname + " " + argvalstr;
+				}
+			}
+		}
+
+		// Update configuration data for connect.
+		self->config_path = ozw_config_path;
+		self->userpath = ozw_userpath;
+		self->option_overrides = option_overrides;
+		self->log_initialisation = log_initialisation;
+
+	}
+
+	// ===================================================================
 	NAN_METHOD(OZW::Disconnect)
 	// ===================================================================
 	{

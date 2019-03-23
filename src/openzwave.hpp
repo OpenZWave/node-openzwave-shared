@@ -67,6 +67,7 @@ namespace OZW {
 		static NAN_METHOD(GetSendQueueCount);
 		static NAN_METHOD(Connect);
 		static NAN_METHOD(Disconnect);
+		static NAN_METHOD(UpdateOptions);
 		// openzwave-groups.cc
 		static NAN_METHOD(GetNumGroups);
 		static NAN_METHOD(GetAssociations);
@@ -172,6 +173,7 @@ namespace OZW {
     std::string userpath;
     std::string option_overrides;
     std::string config_path;
+    bool log_initialisation;
 	};
 
 	// our ZWave Home ID
