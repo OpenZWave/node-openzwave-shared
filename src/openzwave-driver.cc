@@ -66,10 +66,10 @@ namespace OZW {
 		CheckMinArgs(1, "info");
 
 		OZW* self = ObjectWrap::Unwrap<OZW>(info.This());
-		std::string ozw_userpath;
-		std::string ozw_config_path;
+		::std::string ozw_userpath;
+		::std::string ozw_config_path;
 
-		std::string option_overrides;
+		::std::string option_overrides;
 		bool log_initialisation = true;
 		// Options are global for all drivers and can only be set once.
 		if (info.Length() > 0) {
@@ -77,9 +77,9 @@ namespace OZW {
 			Local < Array > props = Nan::GetOwnPropertyNames(opts).ToLocalChecked();
 			for (unsigned int i = 0; i < props->Length(); ++i) {
 				Local<Value> key       = props->Get(i);
-				std::string  keyname   = *Nan::Utf8String(key);
+				::std::string  keyname   = *Nan::Utf8String(key);
 				Local<Value> argval    = Nan::Get(opts, key).ToLocalChecked();
-				std::string  argvalstr = *Nan::Utf8String(argval);
+				::std::string  argvalstr = *Nan::Utf8String(argval);
 				// UserPath is directly passed to Manager->Connect()
 				// scan for OpenZWave options.xml in the nodeJS module's '/config' subdirectory
 				if (keyname == "UserPath") {

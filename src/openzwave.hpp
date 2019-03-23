@@ -169,10 +169,10 @@ namespace OZW {
 		static NAN_METHOD(SceneGetValues);
 		static NAN_METHOD(ActivateScene);
 
-    // Passing configuration around
-    std::string userpath;
-    std::string option_overrides;
-    std::string config_path;
+		// Passing configuration around
+    ::std::string userpath;
+    ::std::string option_overrides;
+    ::std::string config_path;
     bool log_initialisation;
 	};
 
