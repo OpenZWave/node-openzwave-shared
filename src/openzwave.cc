@@ -241,7 +241,7 @@ namespace OZW {
 		self->log_initialisation = log_initialisation;
 
 		if (self->log_initialisation) {
-			std::ostringstream versionstream;
+			::std::ostringstream versionstream;
 
 			versionstream << ozw_vers_major << "." << ozw_vers_minor << "." << ozw_vers_revision;
 			::std::cout << "Initialising OpenZWave " << versionstream.str() << " binary addon for Node.JS.\n";
