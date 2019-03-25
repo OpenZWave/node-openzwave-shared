@@ -30,7 +30,7 @@ function do_disconnect() {
 	setTimeout(function(){
 		zwave.disconnect(zwp);
 		process.exit();
-	}, 10000);
+	}, 5000);
 }
 
 var zwavedriverpaths = {
