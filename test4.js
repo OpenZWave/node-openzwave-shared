@@ -40,7 +40,7 @@ var zwavedriverpaths = {
 }
 
 var zwp = zwavedriverpaths[os.platform()];
-console.log("connecting to %s",zwp);
+console.log("Connecting to %s",zwp);
 zwave.connect(zwp);
 process.on('SIGINT', do_disconnect);
 setTimeout(do_disconnect, 3000);
