@@ -2,7 +2,7 @@ var ZWave = require('./lib/openzwave-shared.js');
 var os = require('os');
 
 var zwave = new ZWave({
-  ConsoleOutput: false
+  ConsoleOutput: true
 });
 
 zwavedriverpaths = {
@@ -20,7 +20,6 @@ zwave.on('driver ready', function(home_id) {
 
 zwave.on('driver failed', function() {
   console.log('failed to start driver');
-  zwave.disconnect();
   process.exit();
 });
 

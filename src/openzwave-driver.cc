@@ -33,24 +33,25 @@ namespace OZW {
 
 		uv_async_init(uv_default_loop(), &async, async_cb_handler);
 
-		Local<Function> callbackHandle = Nan::Get( info.This(),
-			Nan::New<String>("emit").ToLocalChecked()
-		).ToLocalChecked()
-		 .As<Function>();
-
-		emit_cb = new Nan::Callback(callbackHandle);
-
 		OZW* self = ObjectWrap::Unwrap<OZW>(info.This());
-
+		::std::string version("");
+#if OPENZWAVE_EXCEPTIONS
+    try {
+#endif
 		OpenZWave::Options::Create(self->config_path, self->userpath, self->option_overrides);
 		OpenZWave::Options::Get()->Lock();
-
 		OpenZWave::Manager::Create();
-		OpenZWave::Manager* mgr = OpenZWave::Manager::Get();
-		mgr->AddWatcher(ozw_watcher_callback, NULL);
-		mgr->AddDriver(path);
-		::std::string version(OpenZWave::Manager::getVersionAsString());
-
+		OZWManager(AddWatcher, ozw_watcher_callback, NULL);
+		OZWManager(AddDriver, path);
+		version = OpenZWave::Manager::getVersionAsString();
+#if OPENZWAVE_EXCEPTIONS
+	} catch ( OpenZWave::OZWException& e ) {
+		char buffer [100];
+		sprintf(buffer, "Exception connecting in %s(%d): %s",
+			e.GetFile().c_str(), e.GetLine(), e.GetMsg().c_str());
+		Nan::ThrowError( buffer );
+	}
+#endif
 		Local < v8::Value > cbinfo[16];
 		cbinfo[0] = Nan::New<String>("connected").ToLocalChecked();
 		cbinfo[1] = Nan::New<String>(version).ToLocalChecked();
@@ -110,12 +111,27 @@ namespace OZW {
 		CheckMinArgs(1, "path");
 		::std::string path(*Nan::Utf8String( info[0] ));
 
-		OpenZWave::Manager::Get()->RemoveDriver(path);
-		OpenZWave::Manager::Get()->RemoveWatcher(ozw_watcher_callback, NULL);
+		OZWManager( RemoveDriver, path );
+		OZWManager( RemoveWatcher, ozw_watcher_callback, NULL);
+#if OPENZWAVE_EXCEPTIONS
+    try {
+#endif
 		OpenZWave::Manager::Destroy();
 		OpenZWave::Options::Destroy();
-
-		delete emit_cb;
+#if OPENZWAVE_EXCEPTIONS
+	} catch ( OpenZWave::OZWException& e ) {
+		char buffer [100];
+		sprintf(buffer, "Exception disconnecting in %s(%d): %s",
+			 e.GetFile().c_str(), e.GetLine(), e.GetMsg().c_str());
+		Nan::ThrowError( buffer );
+	}
+#endif
+// FIXME: seems some recent innocuous change in NaN causes the context (ctx_obj) to be freed.
+// Therefore, deleting this V8 resource will cause V8 to crash. NOT deleting it could memleak
+// when you're reloading the driver.
+//
+//		delete emit_cb;
+//
 	}
 
 	/*
@@ -127,7 +143,7 @@ namespace OZW {
 	// ===================================================================
 	{
 		Nan::HandleScope scope;
-		OpenZWave::Manager::Get()->ResetController(homeid);
+		OZWManager(ResetController, homeid);
 	}
 
 	// ===================================================================
@@ -135,7 +151,7 @@ namespace OZW {
 	// ===================================================================
 	{
 		Nan::HandleScope scope;
-		OpenZWave::Manager::Get()->SoftReset(homeid);
+		OZWManager(SoftReset, homeid);
 	}
 
 
@@ -144,7 +160,8 @@ namespace OZW {
 	// ===================================================================
 	{
 		Nan::HandleScope scope;
-		uint8 ctrlid = OpenZWave::Manager::Get()->GetControllerNodeId (homeid);
+		uint8 ctrlid = -1;
+		OZWManagerAssign(ctrlid, GetControllerNodeId, homeid);
 		info.GetReturnValue().Set(
 			Nan::New<Integer>(ctrlid)
 		);
@@ -155,7 +172,8 @@ namespace OZW {
 	// ===================================================================
 	{
 		Nan::HandleScope scope;
-		uint8 sucid = OpenZWave::Manager::Get()->GetSUCNodeId (homeid);
+		uint8 sucid = -1;
+		OZWManagerAssign(sucid, GetSUCNodeId, homeid);
 		info.GetReturnValue().Set(
 			Nan::New<Integer>(sucid)
 		);
@@ -171,7 +189,8 @@ namespace OZW {
 	// ===================================================================
 	{
 		Nan::HandleScope scope;
-		bool isprimary = OpenZWave::Manager::Get()->IsPrimaryController (homeid);
+		bool isprimary = false;
+		OZWManagerAssign(isprimary, IsPrimaryController, homeid);
 		info.GetReturnValue().Set(Nan::New<Boolean>(isprimary));
 	}
 
@@ -185,7 +204,8 @@ namespace OZW {
 	// ===================================================================
 	{
 		Nan::HandleScope scope;
-		bool issuc = OpenZWave::Manager::Get()->IsStaticUpdateController (homeid);
+		bool issuc = false;
+		OZWManagerAssign(issuc, IsStaticUpdateController, homeid);
 		info.GetReturnValue().Set(Nan::New<Boolean>(issuc));
 	}
 
@@ -198,7 +218,8 @@ namespace OZW {
 	// ===================================================================
 	{
 		Nan::HandleScope scope;
-		bool isbridge = OpenZWave::Manager::Get()->IsBridgeController (homeid);
+		bool isbridge = false;
+		OZWManagerAssign(isbridge, IsBridgeController, homeid);
 		info.GetReturnValue().Set(Nan::New<Boolean>(isbridge));
 	}
 
@@ -209,7 +230,8 @@ namespace OZW {
 	// ===================================================================
 	{
 		Nan::HandleScope scope;
-		::std::string libver = OpenZWave::Manager::Get()->GetLibraryVersion (homeid);
+		::std::string libver("");
+		OZWManagerAssign(libver, GetLibraryVersion, homeid);
 		info.GetReturnValue().Set(
 			Nan::New<String>(
 				libver.c_str()
@@ -237,7 +259,8 @@ namespace OZW {
 	// ===================================================================
 	{
 		Nan::HandleScope scope;
-		::std::string libtype = OpenZWave::Manager::Get()->GetLibraryTypeName (homeid);
+		::std::string libtype("");
+		OZWManagerAssign(libtype, GetLibraryTypeName, homeid);
 		info.GetReturnValue().Set(
 			Nan::New<String>(
 				libtype.c_str()
@@ -250,7 +273,8 @@ namespace OZW {
 	// ===================================================================
 	{
 		Nan::HandleScope scope;
-		uint32 cnt = OpenZWave::Manager::Get()->GetSendQueueCount (homeid);
+		uint32 cnt = 0;
+		OZWManagerAssign(cnt, GetSendQueueCount, homeid);
 		info.GetReturnValue().Set(Nan::New<Integer>(cnt));
 	}
 
