@@ -212,9 +212,11 @@ namespace OZW {
 		::std::string option_overrides;
 		bool log_initialisation = true;
 		// Options are global for all drivers and can only be set once.
-		if (info.Length() > 0) {
+		if (info.Length() > 0 && !info[0]->IsUndefined()) {
 			Local < Object > opts = Nan::To<Object>(info[0]).ToLocalChecked();
-			Local < Array > props = Nan::GetOwnPropertyNames(opts).ToLocalChecked();
+			MaybeLocal <v8::Array> propsmaybe = Nan::GetOwnPropertyNames(opts);
+			if (propsmaybe.IsUndefined()) return;
+			Local < Array > props = propsmaybe.ToLocalChecked();
 			for (unsigned int i = 0; i < props->Length(); ++i) {
 				Local<Value> key       = props->Get(i);
 				::std::string  keyname   = *Nan::Utf8String(key);
