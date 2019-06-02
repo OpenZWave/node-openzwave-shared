@@ -54,7 +54,8 @@ namespace OZW {
 		Local < FunctionTemplate > t = Nan::New<FunctionTemplate>(OZW::New);
 		t->SetClassName(Nan::New("OZW").ToLocalChecked());
 		t->InstanceTemplate()->SetInternalFieldCount(1);
-
+		// only used to emit dummy event to JS land
+		Nan::SetPrototypeMethod(t, "ping", OZW::Ping);
 		// openzwave-config.cc
 		Nan::SetPrototypeMethod(t, "setConfigParam", OZW::SetConfigParam);
 		Nan::SetPrototypeMethod(t, "requestConfigParam", OZW::RequestConfigParam);
@@ -102,7 +103,9 @@ namespace OZW {
 		Nan::SetPrototypeMethod(t, "beginControllerCommand", OZW::BeginControllerCommand);
 #endif
 		Nan::SetPrototypeMethod(t, "cancelControllerCommand", OZW::CancelControllerCommand);
+#ifdef OPENZWAVE_DEPRECATED16
 		Nan::SetPrototypeMethod(t, "writeConfig", OZW::WriteConfig);
+#endif
 		Nan::SetPrototypeMethod(t, "getDriverStatistics", OZW::GetDriverStatistics);
 		Nan::SetPrototypeMethod(t, "getNodeStatistics", OZW::GetNodeStatistics);
 		// openzwave-network.cc
@@ -111,11 +114,13 @@ namespace OZW {
 		Nan::SetPrototypeMethod(t, "healNetworkNode", OZW::HealNetworkNode);
 		Nan::SetPrototypeMethod(t, "healNetwork", OZW::HealNetwork);
 		// openzwave-nodes.cc
+#ifdef OPENZWAVE_DEPRECATED16
 		Nan::SetPrototypeMethod(t, "setNodeOn", OZW::SetNodeOn);
 		Nan::SetPrototypeMethod(t, "setNodeOff", OZW::SetNodeOff);
 		Nan::SetPrototypeMethod(t, "setNodeLevel", OZW::SetNodeLevel);
 		Nan::SetPrototypeMethod(t, "switchAllOn", OZW::SwitchAllOn);
 		Nan::SetPrototypeMethod(t, "switchAllOff", OZW::SwitchAllOff);
+#endif
 		Nan::SetPrototypeMethod(t, "pressButton", OZW::PressButton);
 		Nan::SetPrototypeMethod(t, "releaseButton", OZW::ReleaseButton);
 		//
@@ -158,6 +163,12 @@ namespace OZW {
 		Nan::SetPrototypeMethod(t, "getSwitchPoint", OZW::GetSwitchPoint);
 		Nan::SetPrototypeMethod(t, "setSwitchPoint", OZW::SetSwitchPoint);
 		Nan::SetPrototypeMethod(t, "removeSwitchPoint", OZW::RemoveSwitchPoint);
+#ifdef OPENZWAVE_DEPRECATED16
+		Nan::SetPrototypeMethod(t, "getValueAsBitSet", OZW::GetValueAsBitSet);
+		Nan::SetPrototypeMethod(t, "setBitMask", OZW::SetBitMask);
+		Nan::SetPrototypeMethod(t, "getBitMask", OZW::GetBitMask);
+		Nan::SetPrototypeMethod(t, "getBitSetSize", OZW::GetBitSetSize);
+#endif
 		// openzwave-polling.cc
 		Nan::SetPrototypeMethod(t, "enablePoll", OZW::EnablePoll);
 		Nan::SetPrototypeMethod(t, "disablePoll", OZW::DisablePoll);
@@ -167,6 +178,7 @@ namespace OZW {
 		Nan::SetPrototypeMethod(t, "getPollIntensity",  OZW::GetPollIntensity); // ** new
 		Nan::SetPrototypeMethod(t, "setPollIntensity",  OZW::SetPollIntensity); // ** new
 		// openzwave-scenes.cc
+#ifdef OPENZWAVE_DEPRECATED16
 		Nan::SetPrototypeMethod(t, "createScene", OZW::CreateScene);
 		Nan::SetPrototypeMethod(t, "removeScene", OZW::RemoveScene);
 		Nan::SetPrototypeMethod(t, "getScenes", OZW::GetScenes);
@@ -174,6 +186,7 @@ namespace OZW {
 		Nan::SetPrototypeMethod(t, "removeSceneValue", OZW::RemoveSceneValue);
 		Nan::SetPrototypeMethod(t, "sceneGetValues", OZW::SceneGetValues);
 		Nan::SetPrototypeMethod(t, "activateScene", OZW::ActivateScene);
+#endif
 		//
 		Nan::Set(target, Nan::New<String>("Emitter").ToLocalChecked(), t->GetFunction());
 		/* for BeginControllerCommand
@@ -210,18 +223,23 @@ namespace OZW {
 		OZW* self = new OZW();
 		self->Wrap(info.This());
 		::std::string option_overrides;
-		bool log_initialisation = true;
+		self->log_initialisation = true;
+
 		// Options are global for all drivers and can only be set once.
-		if (info.Length() > 0 && !info[0]->IsUndefined()) {
+		if ((info.Length() > 0)
+			&& (!info[0]->IsUndefined())
+			&& !(Nan::GetOwnPropertyNames(
+				Nan::To<Object>(info[0]).ToLocalChecked()
+			)).IsEmpty())
+		{
 			Local < Object > opts = Nan::To<Object>(info[0]).ToLocalChecked();
-			MaybeLocal <v8::Array> propsmaybe = Nan::GetOwnPropertyNames(opts);
-			if (propsmaybe.IsUndefined()) return;
+			Nan::MaybeLocal <v8::Array> propsmaybe =  Nan::GetOwnPropertyNames(opts);
 			Local < Array > props = propsmaybe.ToLocalChecked();
 			for (unsigned int i = 0; i < props->Length(); ++i) {
-				Local<Value> key       = props->Get(i);
-				::std::string  keyname   = *Nan::Utf8String(key);
-				Local<Value> argval    = Nan::Get(opts, key).ToLocalChecked();
-				::std::string  argvalstr = *Nan::Utf8String(argval);
+				Local<Value>  key       = props->Get(i);
+				::std::string keyname   = *Nan::Utf8String(key);
+				Local<Value>  argval    = Nan::Get(opts, key).ToLocalChecked();
+				::std::string argvalstr = *Nan::Utf8String(argval);
 				// UserPath is directly passed to Manager->Connect()
 				// scan for OpenZWave options.xml in the nodeJS module's '/config' subdirectory
 				if (keyname == "UserPath") {
@@ -229,18 +247,12 @@ namespace OZW {
 				} else if (keyname == "ConfigPath") {
 					ozw_config_path.assign(argvalstr);
 				} else if (keyname == "LogInitialisation") {
-					log_initialisation = argval->BooleanValue();
+					self->log_initialisation = argval->BooleanValue();
 				} else {
 					option_overrides += " --" + keyname + " " + argvalstr;
 				}
 			}
 		}
-
-		// Store configuration data for connect.
-		self->config_path = ozw_config_path;
-		self->userpath = ozw_userpath;
-		self->option_overrides = option_overrides;
-		self->log_initialisation = log_initialisation;
 
 		if (self->log_initialisation) {
 			::std::ostringstream versionstream;
@@ -261,10 +273,33 @@ namespace OZW {
 			}
 		}
 
+		// Store configuration data for connect.
+		self->config_path = ozw_config_path;
+		self->userpath = ozw_userpath;
+		self->option_overrides = option_overrides;
+
+		Local<Function> callbackHandle = Nan::Get( info.This(),
+			Nan::New<String>("emit").ToLocalChecked()
+		).ToLocalChecked()
+		 .As<Function>();
+
+		emit_cb = new Nan::Callback(callbackHandle);
+
 		ctx_obj = Nan::Persistent<Object>(info.This());
 		resource = new Nan::AsyncResource("openzwave.callback", info.This());
 		//
 		info.GetReturnValue().Set(info.This());
+	}
+
+	// ===================================================================
+	NAN_METHOD(OZW::Ping)
+	// ===================================================================
+	{
+		Nan::HandleScope scope;
+		Local<v8::Value> emitinfo[16];
+
+	    emitinfo[0] = Nan::New<String>("ping").ToLocalChecked();
+		emit_cb->Call(Nan::New(ctx_obj), 1, emitinfo, resource);
 	}
 }
 
