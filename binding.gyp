@@ -129,14 +129,6 @@
 					}
 				}
 			}]
-		],
-		'actions': [
-            {
-                'action_name': 'print_variables',
-                'action': [ 'echo', '\tOZW_INC: <(OZW_INC) | OZW_LIB_PATH: <(OZW_LIB_PATH)', ],
-				'inputs': [],
-				'outputs': ["src/openzwave.cc"]
-            }
-        ],
+		]
 	}]
 }
