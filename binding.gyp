@@ -124,10 +124,16 @@
 					"OPENZWAVE_BITSET=1"
 				],
 				'msvs_settings': {
+					'VCCLCompilerTool': {
+						'ExceptionHandling': 1
+					},
 					'VCLinkerTool': {
-						'AdditionalDependencies': ['setupapi.lib', '<(OZW_HOME)/bin/OpenZWave.lib']
+						'AdditionalDependencies': ['setupapi.lib', '<(OZW_HOME)/bin/OpenZWave.lib', 'ws2_32.lib']
 					}
-				}
+				},
+			    "link_settings": {
+					"libraries": ["ws2_32.lib"]
+		        }
 			}]
 		]
 	}]
