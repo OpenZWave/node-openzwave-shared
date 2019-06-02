@@ -128,11 +128,11 @@
 						'ExceptionHandling': 1
 					},
 					'VCLinkerTool': {
-						'AdditionalDependencies': ['setupapi.lib', '<(OZW_HOME)/bin/OpenZWave.lib', 'ws2_32.lib']
+						'AdditionalDependencies': ['setupapi.lib', '<(OZW_HOME)/bin/OpenZWave.lib', 'dnsapi.lib', 'ws2_32.lib']
 					}
 				},
 			    "link_settings": {
-					"libraries": ["ws2_32.lib"]
+					"libraries": ["dnsapi.lib", "ws2_32.lib"]
 		        }
 			}]
 		]
