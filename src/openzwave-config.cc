@@ -33,11 +33,11 @@ namespace OZW {
 		uint8 param  = Nan::To<Number>(info[1]).ToLocalChecked()->Value();
 		int32 value  = Nan::To<Number>(info[2]).ToLocalChecked()->Value();
 		if (info.Length() < 4) {
-			OpenZWave::Manager::Get()->SetConfigParam(homeid, nodeid, param, value);
+			OZWManager( SetConfigParam, homeid, nodeid, param, value);
 		}
 		else {
 			uint8 size = Nan::To<Number>(info[3]).ToLocalChecked()->Value();
-			OpenZWave::Manager::Get()->SetConfigParam(homeid, nodeid, param, value, size);
+			OZWManager( SetConfigParam, homeid, nodeid, param, value, size);
 		}
 	}
 
@@ -64,7 +64,7 @@ namespace OZW {
 		CheckMinArgs(2, "nodeid, param");
 		uint8 nodeid = Nan::To<Number>(info[0]).ToLocalChecked()->Value();
 		uint8 param = Nan::To<Number>(info[1]).ToLocalChecked()->Value();
-		OpenZWave::Manager::Get()->RequestConfigParam(homeid, nodeid, param);
+		OZWManager( RequestConfigParam, homeid, nodeid, param);
 	}
 
 
@@ -79,7 +79,7 @@ namespace OZW {
 		Nan::HandleScope scope;
 		CheckMinArgs(1, "nodeid");
 		uint8 nodeid = Nan::To<Number>(info[0]).ToLocalChecked()->Value();
-		OpenZWave::Manager::Get()->RequestAllConfigParams (homeid, nodeid);
+		OZWManager( RequestAllConfigParams, homeid, nodeid);
 	}
 
 }

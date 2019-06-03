@@ -34,7 +34,8 @@ namespace OZW {
 		Nan::HandleScope scope;
 		CheckMinArgs(1, "nodeid");
 		uint8 nodeid = info[0]->Uint32Value();
-		uint8 numGroups = OpenZWave::Manager::Get()->GetNumGroups(homeid, nodeid);
+		uint8 numGroups = 0;
+		OZWManagerAssign(numGroups, GetNumGroups, homeid, nodeid);
 		info.GetReturnValue().Set(Nan::New<Integer>(numGroups));
 	}
 
@@ -51,7 +52,8 @@ namespace OZW {
 		uint8 nodeid = info[0]->Uint32Value();
 		uint8 groupidx = info[1]->Uint32Value();
 
-		uint32 numNodes = OpenZWave::Manager::Get()->GetAssociations(
+		uint32 numNodes = 0;
+		OZWManagerAssign(numNodes, GetAssociations,
 			homeid, nodeid,	groupidx, &associations
 		);
 
@@ -80,7 +82,8 @@ namespace OZW {
 		uint8 nodeid = info[0]->Uint32Value();
 		uint8 groupidx = info[1]->Uint32Value();
 
-		uint8 numMaxAssoc = OpenZWave::Manager::Get()->GetMaxAssociations(
+		uint8 numMaxAssoc = 0;
+		OZWManagerAssign(numMaxAssoc, GetMaxAssociations,
 			homeid, nodeid,	groupidx
 		);
 
@@ -99,7 +102,8 @@ namespace OZW {
 		uint8 nodeid = info[0]->Uint32Value();
 		uint8 groupidx = info[1]->Uint32Value();
 
-		::std::string groupLabel = OpenZWave::Manager::Get()->GetGroupLabel(
+		::std::string groupLabel("");
+		OZWManagerAssign(groupLabel, GetGroupLabel,
 			homeid, nodeid, groupidx
 		);
 
@@ -126,7 +130,7 @@ namespace OZW {
 			instanceid = info[3]->Uint32Value();
 		} 
 
-		OpenZWave::Manager::Get()->AddAssociation(
+		OZWManager( AddAssociation,
 			homeid, nodeid, groupidx, tgtnodeid, instanceid
 		);
 	}
@@ -148,7 +152,7 @@ namespace OZW {
 			instanceid = info[3]->Uint32Value();
 		} 
 
-		OpenZWave::Manager::Get()->RemoveAssociation(
+		OZWManager( RemoveAssociation,
 			homeid, nodeid, groupidx, tgtnodeid, instanceid
 		);
 	}

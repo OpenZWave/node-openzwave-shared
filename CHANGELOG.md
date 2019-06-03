@@ -32,3 +32,7 @@ Fix scene values type 'list' (Partially fix #266) #267
 
 # 1.4.8
 add support for SmartOS #272
+
+# (next)
+Updated Raspbian Readme to fix bug when installing on Raspbian stretch #271
+iBetter typescript integration #263

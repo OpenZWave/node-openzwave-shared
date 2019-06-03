@@ -36,37 +36,37 @@ namespace OZW {
 			switch ((*vit).GetType()) {
 				case OpenZWave::ValueID::ValueType_Bool: {
 					bool val = Nan::To<Boolean>(info[validx]).ToLocalChecked()->Value();
-					OpenZWave::Manager::Get()->SetValue(*vit, val);
+					OZWManager( SetValue, *vit, val);
 					break;
 				}
 				case OpenZWave::ValueID::ValueType_Byte: {
 					uint8 val = Nan::To<Integer>(info[validx]).ToLocalChecked()->Value();
-					OpenZWave::Manager::Get()->SetValue(*vit, val);
+					OZWManager( SetValue, *vit, val);
 					break;
 				}
 				case OpenZWave::ValueID::ValueType_Decimal: {
 					float val = Nan::To<Number>(info[validx]).ToLocalChecked()->NumberValue();
-					OpenZWave::Manager::Get()->SetValue(*vit, val);
+					OZWManager( SetValue, *vit, val);
 					break;
 				}
 				case OpenZWave::ValueID::ValueType_Int: {
 					int32 val = Nan::To<Integer>(info[validx]).ToLocalChecked()->Value();
-					OpenZWave::Manager::Get()->SetValue(*vit, val);
+					OZWManager( SetValue, *vit, val);
 					break;
 				}
 				case OpenZWave::ValueID::ValueType_List: {
 					::std::string val(*Nan::Utf8String( info[validx] ));
-					OpenZWave::Manager::Get()->SetValue(*vit, val);
+					OZWManager( SetValue, *vit, val);
 					break;
 				}
 				case OpenZWave::ValueID::ValueType_Short: {
 					int16 val = Nan::To<Integer>(info[validx]).ToLocalChecked()->Value();
-					OpenZWave::Manager::Get()->SetValue(*vit, val);
+					OZWManager( SetValue, *vit, val);
 					break;
 				}
 				case OpenZWave::ValueID::ValueType_String: {
 					::std::string val(*Nan::Utf8String( info[validx] ));
-					OpenZWave::Manager::Get()->SetValue(*vit, val);
+					OZWManager( SetValue, *vit, val);
 					break;
 				}
 				case OpenZWave::ValueID::ValueType_Schedule: {
@@ -76,9 +76,9 @@ namespace OZW {
 				case OpenZWave::ValueID::ValueType_Button: {
 					if (checkType(info[validx]->IsBoolean())) {
 						if (Nan::To<Boolean>(info[validx]).ToLocalChecked()->Value()) {
-							OpenZWave::Manager::Get()->PressButton(*vit);
+							OZWManager( PressButton, *vit);
 						} else {
-							OpenZWave::Manager::Get()->ReleaseButton(*vit);
+							OZWManager( ReleaseButton, *vit);
 						}
 					}
 					break;
@@ -87,9 +87,14 @@ namespace OZW {
 					checkType(Buffer::HasInstance(info[validx]));
 					uint8 *val = (uint8*)Buffer::Data(info[validx]);
 					uint8 len  = Buffer::Length(info[validx]);
-					OpenZWave::Manager::Get()->SetValue(*vit, val, len);
+					OZWManager( SetValue, *vit, val, len);
 					break;
 				}
+#if OPENZWAVE_BITSET
+				case OpenZWave::ValueID::ValueType_BitSet: {
+					// TODO
+				}
+#endif
 			}
 		}
 	}
@@ -99,13 +104,13 @@ namespace OZW {
 	// =================================================================
 	{
 		Nan::HandleScope scope;
-		CheckMinArgs(1, "valueid, label");
+		CheckMinArgs(2, "valueid, label");
 		OpenZWave::ValueID* vit = populateValueId(info);
 		uint8 validx  =  (info[0]->IsObject()) ? 1 : 4;
 		::std::string label(*Nan::Utf8String( info[validx] ));
 
 		if (vit) {
-			OpenZWave::Manager::Get()->SetValueLabel(*vit, label);
+			OZWManager( SetValueLabel, *vit, label);
 		}
 	}
 
@@ -120,7 +125,8 @@ namespace OZW {
 		CheckMinArgs(1, "valueId");
 		OpenZWave::ValueID* vit = populateValueId(info);
 		if (vit) {
-			const bool ok = OpenZWave::Manager::Get()->RefreshValue(*vit);
+			bool ok = false;
+			OZWManagerAssign(ok, RefreshValue, *vit);
 			info.GetReturnValue().Set(Nan::New<Boolean>(ok));
 		}
 	}
@@ -139,7 +145,7 @@ namespace OZW {
 			const uint8 validx = (info[0]->IsObject()) ? 1 : 4;
 			if (checkType(info[validx]->IsBoolean())) {
 				bool b = Nan::To<Boolean>(info[validx]).ToLocalChecked()->Value();
-				OpenZWave::Manager::Get()->SetChangeVerified(*vit, b);
+				OZWManager( SetChangeVerified, *vit, b);
 			}
 		}
 	}
@@ -158,9 +164,9 @@ namespace OZW {
 			if ((*vit).GetType() != OpenZWave::ValueID::ValueType_Schedule)  {
 				Nan::ThrowTypeError("OpenZWave valueId is not a ValueType_Schedule");
 			}
-			info.GetReturnValue().Set(Nan::New<Integer>(
-				OpenZWave::Manager::Get()->GetNumSwitchPoints(*vit)
-			));
+			uint8 i = -1;
+			OZWManagerAssign(i, GetNumSwitchPoints, *vit );
+			info.GetReturnValue().Set(Nan::New<Integer>(i));
 		}
 	}
 
@@ -183,7 +189,7 @@ namespace OZW {
 				Nan::ThrowTypeError("must supply an integer index after the valueId");
 			} else {
 				idx = Nan::To<Number>(info[idxpos]).ToLocalChecked()->Value();
-				OpenZWave::Manager::Get()->GetSwitchPoint(*vit, idx, &o_hours, &o_minutes, &o_setback);
+				OZWManager( GetSwitchPoint, *vit, idx, &o_hours, &o_minutes, &o_setback);
 				Local<Object> o  = Nan::New<Object>();
 				Nan::Set(o,
 					Nan::New<String>("hours").ToLocalChecked(),
@@ -211,7 +217,7 @@ namespace OZW {
 			if ((*vit).GetType() != OpenZWave::ValueID::ValueType_Schedule ) {
 				Nan::ThrowTypeError("OpenZWave valueId is not a ValueType_Schedule");
 			} else {
-				OpenZWave::Manager::Get()->ClearSwitchPoints(*vit);
+				OZWManager( ClearSwitchPoints, *vit);
 			}
 		}
 	}
@@ -232,7 +238,7 @@ namespace OZW {
 					Nan::ThrowTypeError("must supply a switchpoint object");
 				} else {
 					Local<Object> sp = info[idxpos]->ToObject();
-					OpenZWave::Manager::Get()->SetSwitchPoint(*vit,
+					OZWManager( SetSwitchPoint, *vit,
 						Nan::To<Number>(Nan::Get(sp, Nan::New<String>("hours").ToLocalChecked()).ToLocalChecked()).ToLocalChecked()->Value(),
 						Nan::To<Number>(Nan::Get(sp, Nan::New<String>("minutes").ToLocalChecked()).ToLocalChecked()).ToLocalChecked()->Value(),
 						Nan::To<Number>(Nan::Get(sp, Nan::New<String>("setback").ToLocalChecked()).ToLocalChecked()).ToLocalChecked()->Value()
@@ -258,13 +264,89 @@ namespace OZW {
 					Nan::ThrowTypeError("must supply a switchpoint object ");
 				} else {
 					Local<Object> sp = Nan::To<Object>(info[idxpos]).ToLocalChecked();
-					OpenZWave::Manager::Get()->RemoveSwitchPoint(*vit,
+					OZWManager( RemoveSwitchPoint, *vit,
 						Nan::To<Number>(Nan::Get(sp, Nan::New<String>("hours").ToLocalChecked()).ToLocalChecked()).ToLocalChecked()->Value(),
 						Nan::To<Number>(Nan::Get(sp, Nan::New<String>("minutes").ToLocalChecked()).ToLocalChecked()).ToLocalChecked()->Value()
 					);
 				}
 			}
+
 		}
 	}
 
+#if OPENZWAVE_BITSET
+	// =================================================================
+	NAN_METHOD(OZW::GetValueAsBitSet)
+	// =================================================================
+	{
+		CheckMinArgs(2, "valueid, pos");
+		OpenZWave::ValueID* vit = populateValueId(info);
+		if (vit) {
+			if ((*vit).GetType() != OpenZWave::ValueID::ValueType_BitSet ) {
+				Nan::ThrowTypeError("OpenZWave valueId is not a ValueType_BitSet");
+			}
+			uint8 idxpos  =  (info[0]->IsObject()) ? 1 : 4;
+			if ((info.Length() < idxpos) || !info[idxpos]->IsNumber()) {
+				Nan::ThrowTypeError("must supply an integer for _pos after the valueId");
+			} else {
+				bool o_value = false;
+				uint8 _pos = Nan::To<Number>(info[idxpos]).ToLocalChecked()->Value();
+				OZWManager(GetValueAsBitSet, *vit, _pos, &o_value);
+				info.GetReturnValue().Set(Nan::New<Boolean>(o_value));
+			}
+		}
+	}
+
+	// =================================================================
+	NAN_METHOD(OZW::SetBitMask)
+	// =================================================================
+	{
+		CheckMinArgs(2, "valueid, mask");
+		OpenZWave::ValueID* vit = populateValueId(info);
+		if (vit) {
+			if ((*vit).GetType() != OpenZWave::ValueID::ValueType_BitSet ) {
+				Nan::ThrowTypeError("OpenZWave valueId is not a ValueType_BitSet");
+			}
+			uint8 idxpos  =  (info[0]->IsObject()) ? 1 : 4;
+			if ((info.Length() < idxpos) || !info[idxpos]->IsNumber()) {
+				Nan::ThrowTypeError("must supply an integer for _mask after the valueId");
+			} else {
+				uint32 _mask = Nan::To<Number>(info[idxpos]).ToLocalChecked()->Value();
+				OZWManager(SetBitMask, *vit, _mask);
+			}
+		}
+	}
+
+	// =================================================================
+	NAN_METHOD(OZW::GetBitMask)
+	// =================================================================
+	{
+		CheckMinArgs(1, "valueid");
+		OpenZWave::ValueID* vit = populateValueId(info);
+		int32 o_mask = 0;
+		if (vit) {
+			if ((*vit).GetType() != OpenZWave::ValueID::ValueType_BitSet ) {
+				Nan::ThrowTypeError("OpenZWave valueId is not a ValueType_BitSet");
+			}
+			OZWManager(GetBitMask, *vit, &o_mask);
+			info.GetReturnValue().Set(Nan::New<Number>(o_mask));
+		}
+	}
+
+	// =================================================================
+	NAN_METHOD(OZW::GetBitSetSize)
+	// =================================================================
+	{
+		CheckMinArgs(1, "valueid");
+		OpenZWave::ValueID* vit = populateValueId(info);
+		uint8 o_size = 0;
+		if (vit) {
+			if ((*vit).GetType() != OpenZWave::ValueID::ValueType_BitSet ) {
+				Nan::ThrowTypeError("OpenZWave valueId is not a ValueType_BitSet");
+			}
+			OZWManager(GetBitSetSize, *vit, &o_size);
+			info.GetReturnValue().Set(Nan::New<Number>(o_size));
+		}
+	}
+#endif
 }

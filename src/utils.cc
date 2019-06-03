@@ -77,25 +77,25 @@ namespace OZW {
 		switch (value.GetType()) {
 			case OpenZWave::ValueID::ValueType_Bool: {
 				bool val;
-				OpenZWave::Manager::Get()->GetValueAsBool(value, &val);
+				OZWManager( GetValueAsBool, value, &val);
 				AddBooleanProp(valobj, value, val);
 				break;
 			}
 			case OpenZWave::ValueID::ValueType_Byte: {
 				uint8 val;
-				OpenZWave::Manager::Get()->GetValueAsByte(value, &val);
+				OZWManager( GetValueAsByte, value, &val);
 				AddIntegerProp(valobj, value, val);
 				break;
 			}
 			case OpenZWave::ValueID::ValueType_Decimal: {
 				::std::string val;
-				OpenZWave::Manager::Get()->GetValueAsString(value, &val);
+				OZWManager( GetValueAsString, value, &val);
 				AddStringProp(valobj, value, val);
 				break;
 			}
 			case OpenZWave::ValueID::ValueType_Int: {
 				int32 val;
-				OpenZWave::Manager::Get()->GetValueAsInt(value, &val);
+				OZWManager( GetValueAsInt, value, &val);
 				AddIntegerProp(valobj, value, val);
 				break;
 			}
@@ -103,25 +103,30 @@ namespace OZW {
 				::std::string val;
 				::std::vector < ::std::string > items;
 				// populate array of all available items in the list
-				OpenZWave::Manager::Get()->GetValueListItems(value, &items);
+				OZWManager( GetValueListItems, value, &items);
 				AddArrayOfStringProp(valobj, values, items);
 				// populated selected element
-				OpenZWave::Manager::Get()->GetValueListSelection(value, &val);
+				OZWManager( GetValueListSelection, value, &val);
 				AddStringProp(valobj, value, val.c_str())
 				break;
 			}
 			case OpenZWave::ValueID::ValueType_Short: {
 				int16 val;
-				OpenZWave::Manager::Get()->GetValueAsShort(value, &val);
+				OZWManager( GetValueAsShort, value, &val);
 				AddIntegerProp(valobj, value, val);
 				break;
 			}
 			case OpenZWave::ValueID::ValueType_String: {
 				::std::string val;
-				OpenZWave::Manager::Get()->GetValueAsString(value, &val);
+				OZWManager( GetValueAsString, value, &val);
 				AddStringProp(valobj, value, val.c_str())
 				break;
 			}
+#if OPENZWAVE_BITSET
+			case OpenZWave::ValueID::ValueType_BitSet: {
+				// TODO
+			}
+#endif
 			/*
 			* Buttons do not have a value.
 			*/
@@ -133,7 +138,7 @@ namespace OZW {
 			}
 			case OpenZWave::ValueID::ValueType_Raw: {
 				uint8 *val, len;
-				OpenZWave::Manager::Get()->GetValueAsRaw(value, &val, &len);
+				OZWManager( GetValueAsRaw, value, &val, &len);
 				Nan::Set(valobj,
 					Nan::New<String>("value").ToLocalChecked(),
 					Nan::CopyBuffer((char *)val, len).ToLocalChecked()
@@ -148,6 +153,7 @@ namespace OZW {
 		}
 	}
 
+#if OPENZWAVE_SCENES
 	// populate a v8 object with an attribute called 'value' whose value is the
 	// SCENE value (not the current one!) - as returned from its proper typed call
 	// (using Manager::SceneGetValueAsXXX calls)
@@ -158,19 +164,19 @@ namespace OZW {
 		switch (value.GetType()) {
 			case OpenZWave::ValueID::ValueType_Bool: {
 				bool val;
-				OpenZWave::Manager::Get()->SceneGetValueAsBool(sceneid, value, &val);
+				OZWManager( SceneGetValueAsBool, sceneid, value, &val);
 				AddBooleanProp(valobj, value, val);
 				break;
 			}
 			case OpenZWave::ValueID::ValueType_Byte: {
 				uint8 val;
-				OpenZWave::Manager::Get()->SceneGetValueAsByte(sceneid, value, &val);
+				OZWManager( SceneGetValueAsByte, sceneid, value, &val);
 				AddIntegerProp(valobj, value, val);
 				break;
 			}
 			case OpenZWave::ValueID::ValueType_Decimal: {
 				::std::string val;
-				OpenZWave::Manager::Get()->SceneGetValueAsString(sceneid, value, &val);
+				OZWManager( SceneGetValueAsString, sceneid, value, &val);
 				AddStringProp(valobj, value, val);
 				break;
 			}
@@ -178,28 +184,28 @@ namespace OZW {
 				::std::string val;
 				::std::vector < ::std::string > items;
 				// populate array of all available items in the list
-				OpenZWave::Manager::Get()->GetValueListItems(value, &items);
+				OZWManager( GetValueListItems, value, &items);
 				AddArrayOfStringProp(valobj, values, items);
 				// populated selected element
-				OpenZWave::Manager::Get()->SceneGetValueAsString(sceneid, value, &val);
+				OZWManager( SceneGetValueAsString, sceneid, value, &val);
 				AddStringProp(valobj, value, val.c_str())
 				break;
 			}
 			case OpenZWave::ValueID::ValueType_Int: {
 				int32 val;
-				OpenZWave::Manager::Get()->SceneGetValueAsInt(sceneid, value, &val);
+				OZWManager( SceneGetValueAsInt, sceneid, value, &val);
 				AddIntegerProp(valobj, value, val);
 				break;
 			}
 			case OpenZWave::ValueID::ValueType_Short: {
 				int16 val;
-				OpenZWave::Manager::Get()->SceneGetValueAsShort(sceneid, value, &val);
+				OZWManager( SceneGetValueAsShort, sceneid, value, &val);
 				AddIntegerProp(valobj, value, val);
 				break;
 			}
 			case OpenZWave::ValueID::ValueType_String: {
 				::std::string val;
-				OpenZWave::Manager::Get()->SceneGetValueAsString(sceneid, value, &val);
+				OZWManager( SceneGetValueAsString, sceneid, value, &val);
 				AddStringProp(valobj, value, val.c_str())
 				break;
 			}
@@ -214,6 +220,7 @@ namespace OZW {
 			}
 		}
 	}
+#endif
 
 	// populate a v8 Object with useful information about a ZWave node
 	void populateNode(
@@ -268,6 +275,7 @@ namespace OZW {
 		return handle_scope.Escape(valobj);
 	}
 
+#ifdef OPENZWAVE_DEPRECATED16
 	// create a V8 object from a ZWave scene value
 	Local<Object> zwaveSceneValue2v8Value(uint8 sceneId, OpenZWave::ValueID value) {
 		Nan::EscapableHandleScope handle_scope;
@@ -276,6 +284,7 @@ namespace OZW {
 		setSceneValObj(sceneId, valobj, value);
 		return handle_scope.Escape(valobj);
 	}
+#endif
 
 	bool isOzwValue(Local<Object>& o) {
 		return (Nan::HasOwnProperty(o, Nan::New<String>("node_id").ToLocalChecked()).FromJust()

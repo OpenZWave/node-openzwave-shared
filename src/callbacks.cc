@@ -26,7 +26,8 @@ namespace OZW {
 //
 uv_async_t async;
 
-//
+// the Nan::Callback reference needs to be exposed as a globar var
+// because most of the callbacks (that need to bubble up to JS-space) will emanate from the C++ land
 Nan::Callback *emit_cb;
 Nan::CopyablePersistentTraits<v8::Object>::CopyablePersistent ctx_obj;
 Nan::AsyncResource *resource;
@@ -77,13 +78,15 @@ void ozw_watcher_callback(OpenZWave::Notification const *cb, void *ctx)
   case OpenZWave::Notification::Type_ButtonOff:
     notif->buttonid = cb->GetButtonId();
     break;
+#if OPENZWAVE_SCENES
   case OpenZWave::Notification::Type_SceneEvent:
     notif->sceneid = cb->GetSceneId();
     break;
+#endif
   case OpenZWave::Notification::Type_Notification:
     notif->notification = cb->GetNotification();
     break;
-#if OPENZWAVE_SECURITY == 1
+#if OPENZWAVE_SECURITY
   case OpenZWave::Notification::Type_ControllerCommand:
     notif->event = cb->GetEvent();
     notif->notification = cb->GetNotification();
@@ -100,7 +103,7 @@ void ozw_watcher_callback(OpenZWave::Notification const *cb, void *ctx)
 
 // ##### LEGACY MODE ###### //
 #if OPENZWAVE_SECURITY != 1 //
-                            // ######################## //
+// ######################## //
 /*
 * OpenZWave callback, registered in Manager::BeginControllerCommand.
 * Just push onto queue and trigger the handler in v8 land.

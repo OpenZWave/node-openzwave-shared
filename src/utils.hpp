@@ -20,6 +20,33 @@
 #define stringify( x ) stringify_literal( x )
 #define stringify_literal( x ) # x
 
+#if OPENZWAVE_EXCEPTIONS
+#define OZWManager(METHOD,...)               \
+    try {                                    \
+	    OpenZWave::Manager::Get() -> METHOD ( __VA_ARGS__ ); \
+	} catch ( OpenZWave::OZWException& e ) { \
+		char buffer [100];                   \
+		sprintf(buffer, "Exception calling OpenZWave::Manager::%s in %s(%d): %s",      \
+			stringify(METHOD), e.GetFile().c_str(), e.GetLine(), e.GetMsg().c_str()); \
+		Nan::ThrowError( buffer );           \
+	}
+
+#define OZWManagerAssign(VALUE,METHOD,...)    \
+    try {                                     \
+	    VALUE = OpenZWave::Manager::Get() -> METHOD ( __VA_ARGS__ ); \
+	} catch ( OpenZWave::OZWException& e ) {  \
+		char buffer [100];                    \
+		sprintf(buffer, "Exception calling OpenZWave::Manager::%s in %s(%d): %s",     \
+			stringify(METHOD), e.GetFile().c_str(), e.GetLine(), e.GetMsg().c_str()); \
+		Nan::ThrowError( buffer );            \
+	}
+
+#else
+#define OZWManager(METHOD,...)                     OpenZWave::Manager::Get()->METHOD(__VA_ARGS__)
+#define OZWManagerAssign(VALUE,METHOD,...) VALUE = OpenZWave::Manager::Get()->METHOD(__VA_ARGS__)
+#endif
+
+
 #define AddIntegerProp(OBJ,PROPNAME,PROPVALUE) \
 	Nan::Set(OBJ,                                \
 		Nan::New<v8::String>( #PROPNAME ).ToLocalChecked(),  \
@@ -96,10 +123,12 @@ namespace OZW {
 namespace OZW {
 
 	v8::Local<v8::Object> zwaveValue2v8Value(OpenZWave::ValueID value);
-	v8::Local<v8::Object> zwaveSceneValue2v8Value(uint8 sceneId, OpenZWave::ValueID value);
-
 	NodeInfo  *get_node_info(uint8 nodeid);
+
+#ifdef OPENZWAVE_DEPRECATED16
+	v8::Local<v8::Object> zwaveSceneValue2v8Value(uint8 sceneId, OpenZWave::ValueID value);
 	SceneInfo *get_scene_info(uint8 sceneid);
+#endif
 
 	OpenZWave::ValueID* populateValueId(const Nan::FunctionCallbackInfo<v8::Value>& info, uint8 offset=0);
 	void populateNode(v8::Local<v8::Object>& nodeobj, uint32 homeid, uint8 nodeid);

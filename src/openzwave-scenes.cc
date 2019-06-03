@@ -22,6 +22,8 @@ using namespace node;
 
 namespace OZW {
 
+#ifdef OPENZWAVE_DEPRECATED16
+OPENZWAVE_DEPRECATED_WARNINGS_OFF
 	/* OpenZWave scene management functions */
 	// ===================================================================
 	NAN_METHOD(OZW::CreateScene)
@@ -32,18 +34,18 @@ namespace OZW {
 		::std::string label(*Nan::Utf8String( info[0] ));
 		SceneInfo *scene;
 
-		uint8 sceneid = OpenZWave::Manager::Get()->CreateScene();
+		uint8 sceneid = OZWManager( CreateScene();
 
 		if (sceneid > 0) {
-			OpenZWave::Manager::Get()->SetSceneLabel(sceneid, label);
+			OZWManager( SetSceneLabel, sceneid, label);
 			scene = new SceneInfo();
 			scene->sceneid = sceneid;
 			scene->label = label;
 			mutex::scoped_lock sl(zscenes_mutex);
-			zscenes.push_back(scene);
+			zscenes.push_back, scene);
 		}
 
-		info.GetReturnValue().Set(Nan::New< Integer >(sceneid));
+		info.GetReturnValue().Set(Nan::New< Integer >, sceneid));
 	}
 
 	// ===================================================================
@@ -55,10 +57,10 @@ namespace OZW {
 		uint8 sceneid = Nan::To<Number>(info[0]).ToLocalChecked()->Value();
 		SceneInfo *scene;
 
-		if ((scene = get_scene_info(sceneid))) {
-			OpenZWave::Manager::Get()->RemoveScene(sceneid);
+		if (scene = get_scene_info, sceneid))) {
+			OZWManager( RemoveScene, sceneid);
 			mutex::scoped_lock sl(zscenes_mutex);
-			zscenes.remove(scene);
+			zscenes.remove, scene);
 		}
 	}
 
@@ -67,7 +69,7 @@ namespace OZW {
 	// ===================================================================
 	{
 		Nan::HandleScope scope;
-		uint8 numscenes = OpenZWave::Manager::Get()->GetNumScenes();
+		uint8 numscenes = OZWManager( GetNumScenes();
 		SceneInfo *scene;
 
 		if (numscenes != zscenes.size()) {
@@ -78,14 +80,14 @@ namespace OZW {
 			uint8 *sceneids;
 			sceneids = new uint8[numscenes];
 
-			OpenZWave::Manager::Get()->GetAllScenes(&sceneids);
+			OZWManager( GetAllScenes(&sceneids);
 
 			for (unsigned i = 0; i < numscenes; i++) {
 				scene = new SceneInfo();
 				scene->sceneid = sceneids[i];
-				scene->label = OpenZWave::Manager::Get()->GetSceneLabel(sceneids[i]);
+				scene->label = OZWManager( GetSceneLabel, sceneids[i]);
 				mutex::scoped_lock sl(zscenes_mutex);
-				zscenes.push_back(scene);
+				zscenes.push_back, scene);
 			}
 		}
 
@@ -99,17 +101,17 @@ namespace OZW {
 			Local <Object> info = Nan::New<Object>();
 			info->Set(
 				Nan::New<String>("sceneid").ToLocalChecked(),
-				Nan::New<Integer>(scene->sceneid)
+				Nan::New<Integer>, scene->sceneid)
 			);
 			info->Set(
 				Nan::New<String>("label").ToLocalChecked(),
-				Nan::New<String>(scene->label.c_str()).ToLocalChecked()
+				Nan::New<String>, scene->label.c_str()).ToLocalChecked()
 			);
 
 			scenes->Set(Nan::New<Integer>(j++), info);
 		}
 
-		info.GetReturnValue().Set(scenes);
+		info.GetReturnValue().Set, scenes);
 	}
 
 	// ===================================================================
@@ -124,45 +126,45 @@ namespace OZW {
 			uint8 valoffset = ( info[1]->IsObject() ) ? 2 : 5;
 			switch ((*vit).GetType()) {
 				case OpenZWave::ValueID::ValueType_Bool: {
-					//bool val; OpenZWave::Manager::Get()->GetValueAsBool(*vit, &val);
+					//bool val; OZWManager( GetValueAsBool(*vit, &val);
 					bool val = Nan::To<Boolean>(info[valoffset]).ToLocalChecked()->Value();
-					OpenZWave::Manager::Get()->AddSceneValue(sceneid, *vit, val);
+					OZWManager( AddSceneValue, sceneid, *vit, val);
 					break;
 				}
 				case OpenZWave::ValueID::ValueType_Byte: {
-					//uint8 val; OpenZWave::Manager::Get()->GetValueAsByte(*vit, &val);
+					//uint8 val; OZWManager( GetValueAsByte(*vit, &val);
 					uint8 val = Nan::To<Integer>(info[valoffset]).ToLocalChecked()->Value();
-					OpenZWave::Manager::Get()->AddSceneValue(sceneid, *vit, val);
+					OZWManager( AddSceneValue, sceneid, *vit, val);
 					break;
 				}
 				case OpenZWave::ValueID::ValueType_Decimal: {
-					//float val; OpenZWave::Manager::Get()->GetValueAsFloat(*vit, &val);
+					//float val; OZWManager( GetValueAsFloat(*vit, &val);
 					float val = Nan::To<Number>(info[valoffset]).ToLocalChecked()->Value();
-					OpenZWave::Manager::Get()->AddSceneValue(sceneid, *vit, val);
+					OZWManager( AddSceneValue, sceneid, *vit, val);
 					break;
 				}
 				case OpenZWave::ValueID::ValueType_Int: {
-					//uint32 val; OpenZWave::Manager::Get()->GetValueAsInt(*vit, &val);
+					//uint32 val; OZWManager( GetValueAsInt(*vit, &val);
 					int32 val = Nan::To<Integer>(info[valoffset]).ToLocalChecked()->Value();
-					OpenZWave::Manager::Get()->AddSceneValue(sceneid, *vit, val);
+					OZWManager( AddSceneValue, sceneid, *vit, val);
 					break;
 				}
 				case OpenZWave::ValueID::ValueType_List: {
-					//::std::string val; OpenZWave::Manager::Get()->GetValueListSelection(*vit, &val);
+					//::std::string val; OZWManager( GetValueListSelection(*vit, &val);
 					::std::string val(*Nan::Utf8String( info[valoffset] ));
-					OpenZWave::Manager::Get()->AddSceneValueListSelection(sceneid, *vit, val);
+					OZWManager( AddSceneValueListSelection, sceneid, *vit, val);
 					break;
 				}
 				case OpenZWave::ValueID::ValueType_Short: {
-					//int16_t val; OpenZWave::Manager::Get()->GetValueAsShort(*vit, &val);
+					//int16_t val; OZWManager( GetValueAsShort(*vit, &val);
 					uint16 val = Nan::To<Integer>(info[valoffset]).ToLocalChecked()->Value();
-					OpenZWave::Manager::Get()->AddSceneValue(sceneid, *vit, val);
+					OZWManager( AddSceneValue, sceneid, *vit, val);
 					break;
 				}
 				case OpenZWave::ValueID::ValueType_String: {
-					//::std::string val; OpenZWave::Manager::Get()->GetValueAsString(*vit, &val);
+					//::std::string val; OZWManager( GetValueAsString(*vit, &val);
 					::std::string val(*Nan::Utf8String( info[valoffset] ));
-					OpenZWave::Manager::Get()->AddSceneValue(sceneid, *vit, val);
+					OZWManager( AddSceneValue, sceneid, *vit, val);
 					break;
 				}
 				case OpenZWave::ValueID::ValueType_Schedule: {
@@ -186,10 +188,10 @@ namespace OZW {
 		CheckMinArgs(2, "sceneid, value");
 		uint8 sceneid = Nan::To<Number>(info[0]).ToLocalChecked()->Value();
 		SceneInfo *scene;
-		if ((scene = get_scene_info(sceneid))) {
+		if (, scene = get_scene_info, sceneid))) {
 			OpenZWave::ValueID* vit = populateValueId(info, 1);
 			if (vit) {
-				OpenZWave::Manager::Get()->RemoveSceneValue(sceneid, *vit);
+				OZWManager( RemoveSceneValue, sceneid, *vit);
 				scene->values.remove(*vit);
 			}
 		}
@@ -206,20 +208,20 @@ namespace OZW {
 		::std::vector<OpenZWave::ValueID> values;
 		::std::vector<OpenZWave::ValueID>::iterator vit;
 
-		OpenZWave::Manager::Get()->SceneGetValues(sceneid, &values);
+		OZWManager( SceneGetValues, sceneid, &values);
 
 		SceneInfo *scene;
 
-		if ((scene = get_scene_info(sceneid))) {
+		if (, scene = get_scene_info, sceneid))) {
 			scene->values.clear();
 
-			Local<Array> v8values = Nan::New<Array>(scene->values.size());
+			Local<Array> v8values = Nan::New<Array>, scene->values.size());
 
 			unsigned j = 0;
 			for (vit = values.begin(); vit != values.end(); ++vit) {
 				mutex::scoped_lock sl(zscenes_mutex);
 				scene->values.push_back(*vit);
-				v8values->Set(Nan::New<Integer>(j++), zwaveSceneValue2v8Value(sceneid, *vit));
+				v8values->Set(Nan::New<Integer>(j++), zwaveSceneValue2v8Value, sceneid, *vit));
 			}
 			info.GetReturnValue().Set(v8values);
 		}
@@ -234,8 +236,10 @@ namespace OZW {
 		uint8 sceneid = Nan::To<Number>(info[0]).ToLocalChecked()->Value();
 		SceneInfo *scene;
 
-		if ((scene = get_scene_info(sceneid))) {
-			OpenZWave::Manager::Get()->ActivateScene(sceneid);
+		if (, scene = get_scene_info, sceneid))) {
+			OZWManager( ActivateScene, sceneid);
 		}
 	}
+OPENZWAVE_DEPRECATED_WARNINGS_ON
+#endif
 }

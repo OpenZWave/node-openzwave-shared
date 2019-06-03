@@ -27,7 +27,9 @@
 				"defines": [
 					"OPENZWAVE_ETC=<(OZW_ETC)/config",
 					"OPENZWAVE_DOC=<!@(node -p -e \"'<(OZW_DOC)'.length ? '<(OZW_DOC)' : '/usr/local/share/doc/openzwave'\")",
-					"OPENZWAVE_SECURITY=<!@(find <(OZW_INC) -name ZWSecurity.h | wc -l)"
+					"OPENZWAVE_SECURITY=<!@(find <(OZW_INC) -name ZWSecurity.h | wc -l)",
+					"OPENZWAVE_EXCEPTIONS=<!@(find <(OZW_INC) -name OZWException.h | wc -l)",
+					"OPENZWAVE_BITSET=<!@(find <(OZW_INC) -name ValueBitSet.h | wc -l)"
 				],
 				"cflags": [ "-Wno-ignored-qualifiers -Wno-write-strings -Wno-unknown-pragmas" ],
 				"link_settings": {
@@ -52,7 +54,9 @@
 				"defines": [
 					"OPENZWAVE_ETC=<(OZW_ETC)/config",
 					"OPENZWAVE_DOC=<!@(node -p -e \"'<(OZW_DOC)'.length ? '<(OZW_DOC)' : '/usr/local/share/doc/openzwave'\")",
-					"OPENZWAVE_SECURITY=<!@(find <(OZW_INC) -name ZWSecurity.h | wc -l)"
+					"OPENZWAVE_SECURITY=<!@(find <(OZW_INC) -name ZWSecurity.h | wc -l)",
+					"OPENZWAVE_EXCEPTIONS=<!@(find <(OZW_INC) -name OZWException.h | wc -l)",
+					"OPENZWAVE_BITSET=<!@(find <(OZW_INC) -name ValueBitSet.h | wc -l)"
 				],
 				"link_settings": {
 				    "libraries": [
@@ -82,7 +86,9 @@
 				"defines": [
 					"OPENZWAVE_ETC=<!@(<(NODE) -p -e \"'<(OZW_ETC)'.length ? '<(OZW_ETC)' : '/usr/local/etc/openzwave'\")",
 					"OPENZWAVE_DOC=<!@(<(NODE) -p -e \"'<(OZW_DOC)'.length ? '<(OZW_DOC)' : '/usr/local/share/doc/openzwave'\")",
-					"OPENZWAVE_SECURITY=<!@(find <(OZW_INC) -name ZWSecurity.h | wc -l)"
+					"OPENZWAVE_SECURITY=<!@(find <(OZW_INC) -name ZWSecurity.h | wc -l)",
+					"OPENZWAVE_EXCEPTIONS=<!@(find <(OZW_INC) -name OZWException.h | wc -l)",
+					"OPENZWAVE_BITSET=<!@(find <(OZW_INC) -name ValueBitSet.h | wc -l)",
 				],
 				"link_settings": {
 					"libraries": ["-lopenzwave"]
@@ -92,7 +98,15 @@
 					"<(OZW_INC)",
 					"<(OZW_INC)/value_classes"
 				],
-				"cflags": [ "-Wno-ignored-qualifiers -Wno-write-strings -Wno-unknown-pragmas" ],
+				"cflags": [ 
+					"-Wno-ignored-qualifiers",
+					"-Wno-write-strings",
+					"-Wno-unknown-pragmas",
+					"<!@(find <(OZW_INC) -name OZWException.h -exec echo -n \"-fexceptions\" \\;)"
+				],
+				"cflags_cc!": [ 
+					"<!@(find <(OZW_INC) -name OZWException.h -exec echo -n \"-fno-exceptions\" \\;)"
+				]
 			}],
 			['OS=="win"', {
 				"variables": {
@@ -105,14 +119,22 @@
 				],
 				"defines": [
 					"OPENZWAVE_ETC=<(OZW_HOME)/config",
-					"OPENZWAVE_SECURITY=1"
+					"OPENZWAVE_SECURITY=1",
+					"OPENZWAVE_EXCEPTIONS=1",
+					"OPENZWAVE_BITSET=1"
 				],
 				'msvs_settings': {
+					'VCCLCompilerTool': {
+						'ExceptionHandling': 1
+					},
 					'VCLinkerTool': {
-						'AdditionalDependencies': ['setupapi.lib', '<(OZW_HOME)/bin/OpenZWave.lib']
+						'AdditionalDependencies': ['setupapi.lib', '<(OZW_HOME)/bin/OpenZWave.lib', 'dnsapi.lib', 'ws2_32.lib']
 					}
-				}
+				},
+			    "link_settings": {
+					"libraries": ["dnsapi.lib", "ws2_32.lib"]
+		        }
 			}]
-		],
+		]
 	}]
 }

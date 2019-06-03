@@ -28,8 +28,9 @@ namespace OZW {
 	// ===================================================================
 	{
 		Nan::HandleScope scope;
-		uint32 i = OpenZWave::Manager::Get()->GetPollInterval();
-		info.GetReturnValue().Set(Nan::New<Integer>(i));
+		uint32 pi = -1;
+		OZWManagerAssign(pi, GetPollInterval );
+		info.GetReturnValue().Set(Nan::New<Integer>(pi));
 	}
 
 	/* Set the time period between polls of a node's state. Due to patent
@@ -50,7 +51,7 @@ namespace OZW {
 		Nan::HandleScope scope;
 		CheckMinArgs(1, "intervalMillisecs");
 		uint32 intervalMillisecs = info[0]->Uint32Value();
-		OpenZWave::Manager::Get()->SetPollInterval (intervalMillisecs, false);
+		OZWManager( SetPollInterval, intervalMillisecs, false);
 	}
 
 	/*
@@ -68,7 +69,7 @@ namespace OZW {
 			uint8 idxpos  =  (info[0]->IsObject()) ? 1 : 4;
 			uint8 intensity = Nan::To<Number>(info[idxpos]).ToLocalChecked()->Value();
 
-			b = OpenZWave::Manager::Get()->EnablePoll((*vit), intensity);
+			OZWManagerAssign(b, EnablePoll, (*vit), intensity);
 		}
 		info.GetReturnValue().Set(Nan::New<Boolean>(b));
 	}
@@ -82,7 +83,7 @@ namespace OZW {
 		OpenZWave::ValueID* vit = populateValueId(info);
 		bool b = false;
 		if (vit) {
-			b = OpenZWave::Manager::Get()->DisablePoll((*vit));
+			OZWManagerAssign(b, DisablePoll, (*vit));
 		}
 		info.GetReturnValue().Set(Nan::New<Boolean>(b));
 	}
@@ -96,7 +97,8 @@ namespace OZW {
 		CheckMinArgs(1, "valueId");
 		OpenZWave::ValueID* ozwvid = populateValueId(info);
 		if (ozwvid) {
-			bool b = OpenZWave::Manager::Get()->isPolled(*ozwvid);
+			bool b = false;
+			OZWManagerAssign(b, isPolled, *ozwvid);
 			info.GetReturnValue().Set(Nan::New<Boolean>(b));
 		}
 	}
@@ -112,7 +114,7 @@ namespace OZW {
 		if (ozwvid) {
 			uint8 intensity_index = ( info[0]->IsObject() ) ? 1 : 4;
 			intensity = Nan::To<Number>(info[intensity_index]).ToLocalChecked()->Value();
-			OpenZWave::Manager::Get()->SetPollIntensity (*ozwvid, intensity);
+			OZWManager( SetPollIntensity, *ozwvid, intensity);
 		}
 	}
 
@@ -125,7 +127,8 @@ namespace OZW {
 		CheckMinArgs(1, "valueId");
 		OpenZWave::ValueID* ozwvid = populateValueId(info);
 		if (ozwvid) {
-			uint8 i = OpenZWave::Manager::Get()->GetPollIntensity(*ozwvid);
+			uint8 i = -1;
+			OZWManagerAssign(i, GetPollIntensity, *ozwvid);
 			info.GetReturnValue().Set(Nan::New<Integer>(i));
 		}
 	}
