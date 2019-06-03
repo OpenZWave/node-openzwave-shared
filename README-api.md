@@ -1,5 +1,7 @@
 ## API
 
+> This library is as similar as possible to the [C++ OpenZwave::Manager API](http://www.openzwave.com/dev/classOpenZWave_1_1Manager.html) for Node.js. Please note that this is not always possible to have the _exact_ same behaviour as in the C++ library.
+
 Start by loading the addon with `require` and then create a new instance of the addon:
 ```js
 var OZW = require('openzwave-shared');
