@@ -31,7 +31,7 @@ namespace OZW {
 	::std::string ozw_config_path  = stringify( OPENZWAVE_ETC );
 
 	// ===================================================================
-	extern "C" void init(Handle<Object> target, Handle<Object> module) {
+	extern "C" void init(Local<Object> target, Local<Object> module) {
 
 		Nan::HandleScope scope;
 
@@ -187,8 +187,12 @@ namespace OZW {
 		Nan::SetPrototypeMethod(t, "sceneGetValues", OZW::SceneGetValues);
 		Nan::SetPrototypeMethod(t, "activateScene", OZW::ActivateScene);
 #endif
-		//
-		Nan::Set(target, Nan::New<String>("Emitter").ToLocalChecked(), t->GetFunction());
+		// register this class as an emitter
+		Nan::Set(
+			target,
+			Nan::New<String>("Emitter").ToLocalChecked(),
+			Nan::GetFunction(t).ToLocalChecked()
+		);
 		/* for BeginControllerCommand
 	   * http://openzwave.com/dev/classOpenZWave_1_1Manager.html#aa11faf40f19f0cda202d2353a60dbf7b
 	   */
@@ -236,7 +240,9 @@ namespace OZW {
 			Nan::MaybeLocal <v8::Array> propsmaybe =  Nan::GetOwnPropertyNames(opts);
 			Local < Array > props = propsmaybe.ToLocalChecked();
 			for (unsigned int i = 0; i < props->Length(); ++i) {
-				Local<Value>  key       = props->Get(i);
+				Nan::MaybeLocal<Value> keymaybe =  Nan::Get(props, i);
+				if(keymaybe.IsEmpty()) continue;
+				Local<Value>  key       = keymaybe.ToLocalChecked();
 				::std::string keyname   = *Nan::Utf8String(key);
 				Local<Value>  argval    = Nan::Get(opts, key).ToLocalChecked();
 				::std::string argvalstr = *Nan::Utf8String(argval);
@@ -247,7 +253,7 @@ namespace OZW {
 				} else if (keyname == "ConfigPath") {
 					ozw_config_path.assign(argvalstr);
 				} else if (keyname == "LogInitialisation") {
-					self->log_initialisation = argval->BooleanValue();
+					self->log_initialisation = (Nan::To<bool>(argval) == Nan::Just(true));
 				} else {
 					option_overrides += " --" + keyname + " " + argvalstr;
 				}

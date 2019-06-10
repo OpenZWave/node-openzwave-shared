@@ -45,7 +45,7 @@ namespace OZW {
 					break;
 				}
 				case OpenZWave::ValueID::ValueType_Decimal: {
-					float val = Nan::To<Number>(info[validx]).ToLocalChecked()->NumberValue();
+					float val = Nan::To<Number>(info[validx]).ToLocalChecked()->Value();
 					OZWManager( SetValue, *vit, val);
 					break;
 				}
@@ -237,7 +237,9 @@ namespace OZW {
 				if ((info.Length() < idxpos) || !info[idxpos]->IsObject()) {
 					Nan::ThrowTypeError("must supply a switchpoint object");
 				} else {
-					Local<Object> sp = info[idxpos]->ToObject();
+					Nan::MaybeLocal<v8::Object> sp_maybe = Nan::To<v8::Object>(info[idxpos]);
+					if (sp_maybe.IsEmpty()) return;
+					v8::Local<v8::Object> sp = sp_maybe.ToLocalChecked();
 					OZWManager( SetSwitchPoint, *vit,
 						Nan::To<Number>(Nan::Get(sp, Nan::New<String>("hours").ToLocalChecked()).ToLocalChecked()).ToLocalChecked()->Value(),
 						Nan::To<Number>(Nan::Get(sp, Nan::New<String>("minutes").ToLocalChecked()).ToLocalChecked()).ToLocalChecked()->Value(),

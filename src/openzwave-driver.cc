@@ -77,10 +77,12 @@ namespace OZW {
 			Local < Object > opts = Nan::To<Object>(info[0]).ToLocalChecked();
 			Local < Array > props = Nan::GetOwnPropertyNames(opts).ToLocalChecked();
 			for (unsigned int i = 0; i < props->Length(); ++i) {
-				Local<Value> key       = props->Get(i);
-				::std::string  keyname   = *Nan::Utf8String(key);
-				Local<Value> argval    = Nan::Get(opts, key).ToLocalChecked();
-				::std::string  argvalstr = *Nan::Utf8String(argval);
+				Nan::MaybeLocal<Value> keymaybe =  Nan::Get(props, i);
+				if(keymaybe.IsEmpty()) continue;
+				Local<Value>  key       = keymaybe.ToLocalChecked();
+				::std::string keyname   = *Nan::Utf8String(key);
+				Local<Value>  argval    = Nan::Get(opts, key).ToLocalChecked();
+				::std::string argvalstr = *Nan::Utf8String(argval);
 				// UserPath is directly passed to Manager->Connect()
 				// scan for OpenZWave options.xml in the nodeJS module's '/config' subdirectory
 				if (keyname == "UserPath") {
@@ -88,7 +90,7 @@ namespace OZW {
 				} else if (keyname == "ConfigPath") {
 					ozw_config_path.assign(argvalstr);
 				} else if (keyname == "LogInitialisation") {
-					log_initialisation = argval->BooleanValue();
+					log_initialisation = (Nan::To<bool>(argval) == Nan::Just(true));
 				} else {
 					option_overrides += " --" + keyname + " " + argvalstr;
 				}
