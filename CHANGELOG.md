@@ -34,8 +34,8 @@ Fix scene values type 'list' (Partially fix #266) #267
 add support for SmartOS #272
 
 # 1.6.0
-Fix broken Node 12 builds (v8 7.4.xxx)
-Initial support for OpenZWave 1.6
+Fix broken Node 12 builds (v8 7.4.xxx) #302
+Initial support for OpenZWave 1.6 #300
   - implement exception macros
   - [deprecate several legacy OpenZWave calls](https://github.com/OpenZWave/open-zwave/wiki/OpenZWave-1.6-Release-Notes#deprecated-featuresmethods)
 Updated Raspbian Readme to fix bug when installing on Raspbian stretch #271
