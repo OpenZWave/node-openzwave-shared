@@ -31,13 +31,13 @@ namespace OZW {
 		Nan::HandleScope scope;
 		uint8* neighbors;
 		CheckMinArgs(1, "nodeid");
-		uint8 nodeid = info[0]->Uint32Value();
+		uint8 nodeid = Nan::To<Number>(info[0]).ToLocalChecked()->Value();
 		uint8 numNeighbors = -1;
 		OZWManagerAssign(numNeighbors, GetNodeNeighbors, homeid, nodeid, &neighbors);
 		Local<Array> o_neighbors = Nan::New<Array>(numNeighbors);
 		if (numNeighbors > 0) {
 			for (uint8 nr = 0; nr < numNeighbors; nr++) {
-				o_neighbors->Set(Nan::New<Integer>(nr), Nan::New<Integer>(neighbors[nr]));
+				Nan::Set(o_neighbors, nr, Nan::New<Integer>(neighbors[nr]));
 			}
 			delete neighbors;
 		}
@@ -51,7 +51,7 @@ namespace OZW {
 	{
 		Nan::HandleScope scope;
 		CheckMinArgs(1, "nodeid");
-		uint8 nodeid = info[0]->Uint32Value();
+		uint8 nodeid = Nan::To<Number>(info[0]).ToLocalChecked()->Value();
 		OZWManager( SetNodeOn, homeid, nodeid);
 	}
 
@@ -61,7 +61,7 @@ namespace OZW {
 	{
 		Nan::HandleScope scope;
 		CheckMinArgs(1, "nodeid");
-		uint8 nodeid = info[0]->Uint32Value();
+		uint8 nodeid = Nan::To<Number>(info[0]).ToLocalChecked()->Value();
 		OZWManager( SetNodeOff, homeid, nodeid);
 	}
 
@@ -124,7 +124,7 @@ namespace OZW {
 	{
 		Nan::HandleScope scope;
 		CheckMinArgs(2, "nodeid, location");
-		uint8 nodeid = info[0]->Uint32Value();
+		uint8 nodeid = Nan::To<Number>(info[0]).ToLocalChecked()->Value();
 		::std::string location(*Nan::Utf8String( info[1] ));
 		OZWManager( SetNodeLocation, homeid, nodeid, location);
 	}
@@ -138,7 +138,7 @@ namespace OZW {
 	{
 		Nan::HandleScope scope;
 		CheckMinArgs(2, "nodeid, name");
-		uint8 nodeid = info[0]->Uint32Value();
+		uint8 nodeid = Nan::To<Number>(info[0]).ToLocalChecked()->Value();
 		::std::string name(*Nan::Utf8String( info[1] ));
 		OZWManager( SetNodeName, homeid, nodeid, name);
 	}
@@ -159,7 +159,7 @@ namespace OZW {
 	{
 		Nan::HandleScope scope;
 		CheckMinArgs(1, "nodeid");
-		uint8 nodeid = info[0]->Uint32Value();
+		uint8 nodeid = Nan::To<Number>(info[0]).ToLocalChecked()->Value();
 		OZWManager( RefreshNodeInfo, homeid, nodeid);
 	}
 
@@ -172,7 +172,7 @@ namespace OZW {
 	{
 		Nan::HandleScope scope;
 		CheckMinArgs(1, "nodeid");
-		uint8 nodeid = info[0]->Uint32Value();
+		uint8 nodeid = Nan::To<Number>(info[0]).ToLocalChecked()->Value();
 		::std::string result("");
 		OZWManagerAssign(result,  GetNodeManufacturerName, homeid, nodeid);
 		info.GetReturnValue().Set(Nan::New<String>(result.c_str()).ToLocalChecked());
@@ -187,7 +187,7 @@ namespace OZW {
 	{
 		Nan::HandleScope scope;
 		CheckMinArgs(1, "nodeid");
-		uint8 nodeid = info[0]->Uint32Value();
+		uint8 nodeid = Nan::To<Number>(info[0]).ToLocalChecked()->Value();
 		bool result = false;
 		OZWManagerAssign(result,  RequestNodeState, homeid, nodeid);
 		info.GetReturnValue().Set(Nan::New<Boolean>(result));
@@ -202,7 +202,7 @@ namespace OZW {
 	{
 		Nan::HandleScope scope;
 		CheckMinArgs(1, "nodeid");
-		uint8 nodeid = info[0]->Uint32Value();
+		uint8 nodeid = Nan::To<Number>(info[0]).ToLocalChecked()->Value();
 		bool result = false;
 		OZWManagerAssign(result,  RequestNodeDynamic, homeid, nodeid);
 		info.GetReturnValue().Set(Nan::New<Boolean>(result));
@@ -217,7 +217,7 @@ namespace OZW {
 	{
 		Nan::HandleScope scope;
 		CheckMinArgs(1, "nodeid");
-		uint8 nodeid = info[0]->Uint32Value();
+		uint8 nodeid = Nan::To<Number>(info[0]).ToLocalChecked()->Value();
 		bool result = false;
 		OZWManagerAssign(result,  IsNodeListeningDevice, homeid, nodeid);
 		info.GetReturnValue().Set(Nan::New<Boolean>(result));
@@ -232,7 +232,7 @@ namespace OZW {
 	{
 		Nan::HandleScope scope;
 		CheckMinArgs(1, "nodeid");
-		uint8 nodeid = info[0]->Uint32Value();
+		uint8 nodeid = Nan::To<Number>(info[0]).ToLocalChecked()->Value();
 		bool result = false;
 		OZWManagerAssign(result,  IsNodeFrequentListeningDevice, homeid, nodeid);
 		info.GetReturnValue().Set(Nan::New<Boolean>(result));
@@ -247,7 +247,7 @@ namespace OZW {
 	{
 		Nan::HandleScope scope;
 		CheckMinArgs(1, "nodeid");
-		uint8 nodeid = info[0]->Uint32Value();
+		uint8 nodeid = Nan::To<Number>(info[0]).ToLocalChecked()->Value();
 		bool result = false;
 		OZWManagerAssign(result,  IsNodeBeamingDevice, homeid, nodeid);
 		info.GetReturnValue().Set(Nan::New<Boolean>(result));
@@ -262,7 +262,7 @@ namespace OZW {
 	{
 		Nan::HandleScope scope;
 		CheckMinArgs(1, "nodeid");
-		uint8 nodeid = info[0]->Uint32Value();
+		uint8 nodeid = Nan::To<Number>(info[0]).ToLocalChecked()->Value();
 		bool result = false;
 		OZWManagerAssign(result,  IsNodeRoutingDevice, homeid, nodeid);
 		info.GetReturnValue().Set(Nan::New<Boolean>(result));
@@ -277,7 +277,7 @@ namespace OZW {
 	{
 		Nan::HandleScope scope;
 		CheckMinArgs(1, "nodeid");
-		uint8 nodeid = info[0]->Uint32Value();
+		uint8 nodeid = Nan::To<Number>(info[0]).ToLocalChecked()->Value();
 		bool result = false;
 		OZWManagerAssign(result,  IsNodeSecurityDevice, homeid, nodeid);
 		info.GetReturnValue().Set(Nan::New<Boolean>(result));
@@ -292,7 +292,7 @@ namespace OZW {
 	{
 		Nan::HandleScope scope;
 		CheckMinArgs(1, "nodeid");
-		uint8  nodeid = info[0]->Uint32Value();
+		uint8 nodeid = Nan::To<Number>(info[0]).ToLocalChecked()->Value();
 		uint32 result = -1;
 		OZWManagerAssign(result,  GetNodeMaxBaudRate, homeid, nodeid);
 		info.GetReturnValue().Set(Nan::New<Uint32>(result));
@@ -307,7 +307,7 @@ namespace OZW {
 	{
 		Nan::HandleScope scope;
 		CheckMinArgs(1, "nodeid");
-		uint8 nodeid = info[0]->Uint32Value();
+		uint8 nodeid = Nan::To<Number>(info[0]).ToLocalChecked()->Value();
 		uint8 result = -1;
 		OZWManagerAssign(result,  GetNodeVersion, homeid, nodeid);
 		info.GetReturnValue().Set(Nan::New<Integer>(result));
@@ -322,7 +322,7 @@ namespace OZW {
 	{
 		Nan::HandleScope scope;
 		CheckMinArgs(1, "nodeid");
-		uint8 nodeid = info[0]->Uint32Value();
+		uint8 nodeid = Nan::To<Number>(info[0]).ToLocalChecked()->Value();
 		uint8 result = -1;
 		OZWManagerAssign(result,  GetNodeSecurity, homeid, nodeid);
 		info.GetReturnValue().Set(Nan::New<Integer>(result));
@@ -337,7 +337,7 @@ namespace OZW {
 	{
 		Nan::HandleScope scope;
 		CheckMinArgs(1, "nodeid");
-		uint8 nodeid = info[0]->Uint32Value();
+		uint8 nodeid = Nan::To<Number>(info[0]).ToLocalChecked()->Value();
 		uint8 result = -1;
 		OZWManagerAssign(result,  GetNodeBasic, homeid, nodeid);
 		info.GetReturnValue().Set(Nan::New<Integer>(result));
@@ -352,7 +352,7 @@ namespace OZW {
 	{
 		Nan::HandleScope scope;
 		CheckMinArgs(1, "nodeid");
-		uint8 nodeid = info[0]->Uint32Value();
+		uint8 nodeid = Nan::To<Number>(info[0]).ToLocalChecked()->Value();
 		uint8 result = -1;
 		OZWManagerAssign(result,  GetNodeGeneric, homeid, nodeid);
 		info.GetReturnValue().Set(Nan::New<Integer>(result));
@@ -367,7 +367,7 @@ namespace OZW {
 	{
 		Nan::HandleScope scope;
 		CheckMinArgs(1, "nodeid");
-		uint8 nodeid = info[0]->Uint32Value();
+		uint8 nodeid = Nan::To<Number>(info[0]).ToLocalChecked()->Value();
 		uint8 result = -1;
 		OZWManagerAssign(result, GetNodeSpecific, homeid, nodeid);
 		info.GetReturnValue().Set(Nan::New<Integer>(result));
@@ -382,7 +382,7 @@ namespace OZW {
 	{
 		Nan::HandleScope scope;
 		CheckMinArgs(1, "nodeid");
-		uint8 nodeid = info[0]->Uint32Value();
+		uint8 nodeid = Nan::To<Number>(info[0]).ToLocalChecked()->Value();
 		::std::string result("");
 		OZWManagerAssign(result,  GetNodeType, homeid, nodeid);
 		info.GetReturnValue().Set(Nan::New<String>(result.c_str()).ToLocalChecked());
@@ -397,7 +397,7 @@ namespace OZW {
 	{
 		Nan::HandleScope scope;
 		CheckMinArgs(1, "nodeid");
-		uint8 nodeid = info[0]->Uint32Value();
+		uint8 nodeid = Nan::To<Number>(info[0]).ToLocalChecked()->Value();
 		::std::string result("");
 		OZWManagerAssign(result, GetNodeProductName, homeid, nodeid);
 		info.GetReturnValue().Set(Nan::New<String>(result.c_str()).ToLocalChecked());
@@ -412,7 +412,7 @@ namespace OZW {
 	{
 		Nan::HandleScope scope;
 		CheckMinArgs(1, "nodeid");
-		uint8 nodeid = info[0]->Uint32Value();
+		uint8 nodeid = Nan::To<Number>(info[0]).ToLocalChecked()->Value();
 		::std::string result("");
 		OZWManagerAssign(result, GetNodeName, homeid, nodeid);
 		info.GetReturnValue().Set(Nan::New<String>(result.c_str()).ToLocalChecked());
@@ -427,7 +427,7 @@ namespace OZW {
 	{
 		Nan::HandleScope scope;
 		CheckMinArgs(1, "nodeid");
-		uint8 nodeid = info[0]->Uint32Value();
+		uint8 nodeid = Nan::To<Number>(info[0]).ToLocalChecked()->Value();
 		::std::string result("");
 		OZWManagerAssign(result, GetNodeLocation, homeid, nodeid);
 		info.GetReturnValue().Set(Nan::New<String>(result.c_str()).ToLocalChecked());
@@ -442,7 +442,7 @@ namespace OZW {
 	{
 		Nan::HandleScope scope;
 		CheckMinArgs(1, "nodeid");
-		uint8 nodeid = info[0]->Uint32Value();
+		uint8 nodeid = Nan::To<Number>(info[0]).ToLocalChecked()->Value();
 		::std::string result("");
 		OZWManagerAssign(result, GetNodeManufacturerId, homeid, nodeid);
 		info.GetReturnValue().Set(Nan::New<String>(result.c_str()).ToLocalChecked());
@@ -457,7 +457,7 @@ namespace OZW {
 	{
 		Nan::HandleScope scope;
 		CheckMinArgs(1, "nodeid");
-		uint8 nodeid = info[0]->Uint32Value();
+		uint8 nodeid = Nan::To<Number>(info[0]).ToLocalChecked()->Value();
 		::std::string result("");
 		OZWManagerAssign(result, GetNodeProductType, homeid, nodeid);
 		info.GetReturnValue().Set(Nan::New<String>(result.c_str()).ToLocalChecked());
@@ -472,7 +472,7 @@ namespace OZW {
 	{
 		Nan::HandleScope scope;
 		CheckMinArgs(1, "nodeid");
-		uint8 nodeid = info[0]->Uint32Value();
+		uint8 nodeid = Nan::To<Number>(info[0]).ToLocalChecked()->Value();
 		::std::string result("");
 		OZWManagerAssign(result, GetNodeProductId, homeid, nodeid);
 		info.GetReturnValue().Set(Nan::New<String>(result.c_str()).ToLocalChecked());
@@ -487,7 +487,7 @@ namespace OZW {
 	{
 		Nan::HandleScope scope;
 		CheckMinArgs(1, "nodeid");
-		uint8 nodeid = info[0]->Uint32Value();
+		uint8 nodeid = Nan::To<Number>(info[0]).ToLocalChecked()->Value();
 		::std::string name(*Nan::Utf8String( info[1] ));
 		OZWManager( SetNodeManufacturerName, homeid, nodeid, name);
 	}
@@ -501,7 +501,7 @@ namespace OZW {
 	{
 		Nan::HandleScope scope;
 		CheckMinArgs(1, "nodeid");
-		uint8 nodeid = info[0]->Uint32Value();
+		uint8 nodeid = Nan::To<Number>(info[0]).ToLocalChecked()->Value();
 		::std::string name(*Nan::Utf8String( info[1] ));
 		OZWManager( SetNodeProductName, homeid, nodeid, name);
 	}

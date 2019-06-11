@@ -55,7 +55,7 @@
 #define AddBooleanProp(OBJ,PROPNAME,PROPVALUE) \
 	Nan::Set(OBJ,                                \
 		Nan::New<v8::String>( #PROPNAME ).ToLocalChecked(),  \
-		Nan::New<v8::Boolean>( PROPVALUE )->ToBoolean());
+		Nan::New<v8::Boolean>( PROPVALUE ));
 
 #define AddStringProp(OBJ,PROPNAME,PROPVALUE) \
 	Nan::Set(OBJ,                               \

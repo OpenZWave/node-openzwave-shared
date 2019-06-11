@@ -56,7 +56,9 @@
 					"OPENZWAVE_DOC=<!@(node -p -e \"'<(OZW_DOC)'.length ? '<(OZW_DOC)' : '/usr/local/share/doc/openzwave'\")",
 					"OPENZWAVE_SECURITY=<!@(find <(OZW_INC) -name ZWSecurity.h | wc -l)",
 					"OPENZWAVE_EXCEPTIONS=<!@(find <(OZW_INC) -name OZWException.h | wc -l)",
-					"OPENZWAVE_BITSET=<!@(find <(OZW_INC) -name ValueBitSet.h | wc -l)"
+					"OPENZWAVE_BITSET=<!@(find <(OZW_INC) -name ValueBitSet.h | wc -l)",
+					"OPENZWAVE_VALUETYPE_FROM_ENUM=<!@(ldconfig -p | grep 'libopenzwave.so ' | awk '{print $4}' | xargs nm -g --demangle |grep OpenZWave::Value::GetTypeNameFromEnum | wc -l)",
+					"OPENZWAVE_VALUETYPE_FROM_VALUEID=<!@(ldconfig -p | grep 'libopenzwave.so ' | awk '{print $4}' | xargs nm -g --demangle |grep OpenZWave::ValueID::GetTypeAsString | wc -l)",
 				],
 				"link_settings": {
 				    "libraries": [
@@ -89,6 +91,8 @@
 					"OPENZWAVE_SECURITY=<!@(find <(OZW_INC) -name ZWSecurity.h | wc -l)",
 					"OPENZWAVE_EXCEPTIONS=<!@(find <(OZW_INC) -name OZWException.h | wc -l)",
 					"OPENZWAVE_BITSET=<!@(find <(OZW_INC) -name ValueBitSet.h | wc -l)",
+					"OPENZWAVE_VALUETYPE_FROM_ENUM=<!@(ldconfig -p | grep 'libopenzwave.so ' | awk '{print $4}' | xargs nm -g --demangle |grep OpenZWave::Value::GetTypeNameFromEnum | wc -l)",
+					"OPENZWAVE_VALUETYPE_FROM_VALUEID=<!@(ldconfig -p | grep 'libopenzwave.so ' | awk '{print $4}' | xargs nm -g --demangle |grep OpenZWave::ValueID::GetTypeAsString | wc -l)",
 				],
 				"link_settings": {
 					"libraries": ["-lopenzwave"]
@@ -121,7 +125,8 @@
 					"OPENZWAVE_ETC=<(OZW_HOME)/config",
 					"OPENZWAVE_SECURITY=1",
 					"OPENZWAVE_EXCEPTIONS=1",
-					"OPENZWAVE_BITSET=1"
+					"OPENZWAVE_BITSET=1",
+					"OPENZWAVE_VALUETYPE_FROM_VALUEID=1"
 				],
 				'msvs_settings': {
 					'VCCLCompilerTool': {

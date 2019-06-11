@@ -252,8 +252,16 @@ namespace OZW {
 		AddStringProp(nodeobj,  value_id,  buffer.c_str());
 		AddIntegerProp(nodeobj, node_id,   value.GetNodeId());
 		AddIntegerProp(nodeobj, class_id,  value.GetCommandClassId());
+#if OPENZWAVE_VALUETYPE_FROM_VALUEID
+		AddStringProp (nodeobj, type,      value.GetTypeAsString());
+		AddStringProp (nodeobj, genre,     value.GetGenreAsString());
+#elif OPENZWAVE_VALUETYPE_FROM_ENUM
 		AddStringProp (nodeobj, type,      OpenZWave::Value::GetTypeNameFromEnum(value.GetType()));
 		AddStringProp (nodeobj, genre,     OpenZWave::Value::GetGenreNameFromEnum(value.GetGenre()));
+#else
+		AddIntegerProp(nodeobj, type,      value.GetType());
+		AddIntegerProp(nodeobj, genre,     value.GetGenre());
+#endif
 		AddIntegerProp(nodeobj, instance,  value.GetInstance());
 		AddIntegerProp(nodeobj, index,     value.GetIndex());
 		AddStringProp (nodeobj, label,     mgr->GetValueLabel(value).c_str());
