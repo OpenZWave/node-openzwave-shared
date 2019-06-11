@@ -1,5 +1,6 @@
 .cproject
 .project
+.vscode
 *.diff
 *.swo
 *.swp
