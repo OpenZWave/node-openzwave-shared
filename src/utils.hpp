@@ -25,8 +25,8 @@
     try {                                    \
 	    OpenZWave::Manager::Get() -> METHOD ( __VA_ARGS__ ); \
 	} catch ( OpenZWave::OZWException& e ) { \
-		char buffer [100];                   \
-		sprintf(buffer, "Exception calling OpenZWave::Manager::%s in %s(%d): %s",      \
+		char buffer [200];                   \
+		snprintf(buffer, 200, "Exception calling OpenZWave::Manager::%s in %s(%d): %s",      \
 			stringify(METHOD), e.GetFile().c_str(), e.GetLine(), e.GetMsg().c_str()); \
 		Nan::ThrowError( buffer );           \
 	}
@@ -35,8 +35,8 @@
     try {                                     \
 	    VALUE = OpenZWave::Manager::Get() -> METHOD ( __VA_ARGS__ ); \
 	} catch ( OpenZWave::OZWException& e ) {  \
-		char buffer [100];                    \
-		sprintf(buffer, "Exception calling OpenZWave::Manager::%s in %s(%d): %s",     \
+		char buffer [200];                    \
+		snprintf(buffer, 200, "Exception calling OpenZWave::Manager::%s in %s(%d): %s",     \
 			stringify(METHOD), e.GetFile().c_str(), e.GetLine(), e.GetMsg().c_str()); \
 		Nan::ThrowError( buffer );            \
 	}
