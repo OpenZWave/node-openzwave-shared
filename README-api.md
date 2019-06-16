@@ -66,6 +66,7 @@ command class 37:
 ```js
 zwave.setValue(3, 37,  1,  0,  true);  // node 3: turn on
 zwave.setValue(3, 37,  1,  0,  false); // node 3: turn off
+zwave.setValue({ node_id:3, class_id: 37, instance:1, index:0}, false); // the same turn-off command using an object
 ```
 
 Another example: if Zwave Node #5 is a dimmer, use class 38:
@@ -73,23 +74,8 @@ Another example: if Zwave Node #5 is a dimmer, use class 38:
 ```js
 zwave.setValue(5,  38,  1,  0, 50); // 1) passing each individual ValueID constituent:
 zwave.setValue({ node_id:5, class_id: 38, instance:1, index:0}, 50); // 2) or a valueID object (emitted by ValueAdded event):
-
-/*
- * Turn a binary switch on/off.
- */
-zwave.setNodeOn(3); // node 3: switch ON
-zwave.setNodeOff(3);// node 3: switch OFF
-
-/*
- * Set a multi-level device to the specified level (between 0-99).
- * See warning below
- */
-zwave.setLevel(5, 50); // node 5: dim to 50%
 ```
 
-*WARNING: setNodeOn/Off/Level _don't work reliably with all devices_*, as they are
-mere aliases to the BASIC command class. Not all devices support this. Please
-consult your device's manual to see if it supports this command class.
 The 'standard' way to control your devices is by `setValue` which is also the
 _only_ way to control multi-instance devices, such as the Fibaro FGS-221
 (double in-wall 2x1,5kw relay) for example:
@@ -99,6 +85,7 @@ zwave.setValue(8, 37, 1, 0, false);// node 8: turn off 1st relay
 zwave.setValue(8, 37, 2, 0, true); // node 8: turn on 2nd relay
 zwave.setValue(8, 37, 2, 0, false);// node 8: turn off 2nd relay
 ```
+
 Useful documentation on [command classes can be found on MiCasaVerde website](http://wiki.micasaverde.com/index.php/ZWave_Command_Classes)
 
 Writing to device metadata (stored in the `zwcfg-<homeId>.xml` file, under `UserPath`):
@@ -133,20 +120,6 @@ carefully:
 ```js
 zwave.hardReset();      // destructive! will wipe out all known configuration
 zwave.softReset();      // non-destructive, just resets the chip
-```
-
-Scenes control:
-```js
-zwave.createScene(label); 	// create a scene and assign a label, return its numeric id.
-zwave.removeScene(sceneId); // perform #GRExit
-zwave.getScenes();			// get all scenes as an array
-// add a zwave value to a scene
-zwave.addSceneValue(sceneId, nodeId, commandclass, instance, index, value);
-zwave.addSceneValue(sceneId, { node_id:5, class_id: 38, instance:1, index:0}, 50); // Seconds arg can be a valueID object (emitted by ValueAdded event):
-// remove a zwave value from a scene
-zwave.removeSceneValue(sceneId, nodeId, commandclass, instance, index);
-zwave.sceneGetValues(sceneId); // return array of values associated with this scene
-zwave.activateScene(sceneId);  // The Show Must Go On...
 ```
 
 ZWave network commands:
