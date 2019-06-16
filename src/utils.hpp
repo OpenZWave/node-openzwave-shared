@@ -25,8 +25,8 @@
     try {                                    \
 	    OpenZWave::Manager::Get() -> METHOD ( __VA_ARGS__ ); \
 	} catch ( OpenZWave::OZWException& e ) { \
-		char buffer [100];                   \
-		sprintf(buffer, "Exception calling OpenZWave::Manager::%s in %s(%d): %s",      \
+		char buffer [200];                   \
+		snprintf(buffer, 200, "Exception calling OpenZWave::Manager::%s in %s(%d): %s",      \
 			stringify(METHOD), e.GetFile().c_str(), e.GetLine(), e.GetMsg().c_str()); \
 		Nan::ThrowError( buffer );           \
 	}
@@ -35,8 +35,8 @@
     try {                                     \
 	    VALUE = OpenZWave::Manager::Get() -> METHOD ( __VA_ARGS__ ); \
 	} catch ( OpenZWave::OZWException& e ) {  \
-		char buffer [100];                    \
-		sprintf(buffer, "Exception calling OpenZWave::Manager::%s in %s(%d): %s",     \
+		char buffer [200];                    \
+		snprintf(buffer, 200, "Exception calling OpenZWave::Manager::%s in %s(%d): %s",     \
 			stringify(METHOD), e.GetFile().c_str(), e.GetLine(), e.GetMsg().c_str()); \
 		Nan::ThrowError( buffer );            \
 	}
@@ -46,6 +46,13 @@
 #define OZWManagerAssign(VALUE,METHOD,...) VALUE = OpenZWave::Manager::Get()->METHOD(__VA_ARGS__)
 #endif
 
+typedef 
+#if OPENZWAVE_16 
+	uint16_t
+#else
+	uint8_t
+#endif
+OZWValueIdIndex;
 
 #define AddIntegerProp(OBJ,PROPNAME,PROPVALUE) \
 	Nan::Set(OBJ,                                \
@@ -124,6 +131,7 @@ namespace OZW {
 
 	v8::Local<v8::Object> zwaveValue2v8Value(OpenZWave::ValueID value);
 	NodeInfo  *get_node_info(uint8 nodeid);
+	void       delete_node(uint8 nodeid);
 
 #ifdef OPENZWAVE_DEPRECATED16
 	v8::Local<v8::Object> zwaveSceneValue2v8Value(uint8 sceneId, OpenZWave::ValueID value);

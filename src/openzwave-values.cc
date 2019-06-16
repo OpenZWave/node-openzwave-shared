@@ -90,9 +90,11 @@ namespace OZW {
 					OZWManager( SetValue, *vit, val, len);
 					break;
 				}
-#if OPENZWAVE_BITSET
+#if OPENZWAVE_16
 				case OpenZWave::ValueID::ValueType_BitSet: {
-					// TODO
+					uint8 pos = Nan::To<Number>(info[validx]).ToLocalChecked()->Value();
+					bool val = Nan::To<Boolean>(info[validx+1]).ToLocalChecked()->Value();
+					OZWManager( SetValue, *vit, pos, val);
 				}
 #endif
 			}
@@ -276,7 +278,7 @@ namespace OZW {
 		}
 	}
 
-#if OPENZWAVE_BITSET
+#if OPENZWAVE_16
 	// =================================================================
 	NAN_METHOD(OZW::GetValueAsBitSet)
 	// =================================================================

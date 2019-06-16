@@ -43,6 +43,16 @@ namespace OZW {
 		return NULL;
 	}
 
+	/*
+	* Delete NodeInfo after a NodeReset or NodeRemoved notification
+	*/
+	void delete_node(uint8 nodeid) {
+		mutex::scoped_lock sl(znodes_mutex);
+		if (znodes.erase(nodeid)) {
+			// TODO: extra cleanup??
+		}
+	}
+
 	SceneInfo *get_scene_info(uint8 sceneid) {
 		::std::list<SceneInfo *>::iterator it;
 
@@ -122,9 +132,18 @@ namespace OZW {
 				AddStringProp(valobj, value, val.c_str())
 				break;
 			}
-#if OPENZWAVE_BITSET
+#if OPENZWAVE_16
+#define SET(val,offset)   val |=  (1 << offset)
+#define CLEAR(val,offset) val &= ~(1 << offset)
+			// just return the whole bitset, mask your bit in JS land
 			case OpenZWave::ValueID::ValueType_BitSet: {
-				// TODO
+				uint8 val = 0;
+				bool bit;
+				for (uint8 pos = 0; pos < 8; pos++) {
+					OZWManager( GetValueAsBitSet, value, pos, &bit);
+					bit ? SET(val, pos) : CLEAR(val, pos);
+				}
+				AddIntegerProp(valobj, value, val);
 			}
 #endif
 			/*
@@ -313,7 +332,8 @@ namespace OZW {
 		index: the index of the command (usually 0)
 */
 	OpenZWave::ValueID* populateValueId(const Nan::FunctionCallbackInfo<v8::Value> &info, uint8 offset) {
-		uint8 nodeid, comclass, instance, index;
+		uint8 nodeid, comclass, instance;
+		OZWValueIdIndex index;
 		if ( (info.Length() >= offset) && info[offset]->IsObject() ) {
 			Local<Object> o = Nan::To<Object>(info[offset]).ToLocalChecked();
 			if (isOzwValue(o)) {
@@ -461,7 +481,13 @@ const ::std::string getNotifHelpMsg(Notification const *n) {
 				str.append(getControllerStateAsStr((OpenZWave::Driver::ControllerState) n->GetByte()));
 				break;
 			case Notification::Type_DriverRemoved:
-				str = "DriverRemoved";				break;
+				str = "DriverRemoved";	break;
+			case Notification::Type_NodeReset:
+				str = "NodeReset"; break;
+			case Notification::Type_UserAlerts:
+				str = "UserAlerts"; break;
+			case Notification::Type_ManufacturerSpecificDBRead:
+				str = "ManuacturerSpecificDBRead"; break;
 		}
 		return str;
 #endif

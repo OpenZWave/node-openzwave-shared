@@ -157,7 +157,7 @@ namespace OZW {
 		static NAN_METHOD(ClearSwitchPoints);
 		static NAN_METHOD(SetSwitchPoint);
 		static NAN_METHOD(RemoveSwitchPoint);
-#if OPENZWAVE_BITSET
+#if OPENZWAVE_16
 		static NAN_METHOD(GetValueAsBitSet);
 		static NAN_METHOD(SetBitMask);
 		static NAN_METHOD(GetBitMask);

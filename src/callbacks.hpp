@@ -31,6 +31,9 @@ namespace OZW {
     uint8 notification;
     ::std::list<OpenZWave::ValueID> values;
     ::std::string help;
+#if OPENZWAVE_16
+    uint8 command;
+#endif
   } NotifInfo;
 
   typedef struct {
