@@ -440,9 +440,10 @@ void handleNotification(NotifInfo *notif)
      * application should rebuild any group information it
      * holds about the node.
      */
-    emitinfo[0] = Nan::New<String>("group").ToLocalChecked();
-    emit_cb->Call(Nan::New(ctx_obj),  1, emitinfo, resource);
-    break;
+      emitinfo[0] = Nan::New<String>("node group").ToLocalChecked();
+      emitinfo[1] = Nan::New<Integer>(notif->nodeid);
+      emit_cb->Call(Nan::New(ctx_obj),  2, emitinfo, resource);
+      break;
   }
 #if OPENZWAVE_16
   //                            ##############
