@@ -121,6 +121,9 @@ namespace OZW {
 		Nan::SetPrototypeMethod(t, "switchAllOn", OZW::SwitchAllOn);
 		Nan::SetPrototypeMethod(t, "switchAllOff", OZW::SwitchAllOff);
 #endif
+#ifdef OPENZWAVE_16
+		Nan::SetPrototypeMethod(t, "sendRawData", OZW::SendRawData);
+#endif
 		Nan::SetPrototypeMethod(t, "pressButton", OZW::PressButton);
 		Nan::SetPrototypeMethod(t, "releaseButton", OZW::ReleaseButton);
 		//

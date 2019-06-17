@@ -18,6 +18,7 @@
 #ifndef __NODE_OPENZWAVE_HPP_INCLUDED__
 #define __NODE_OPENZWAVE_HPP_INCLUDED__
 
+#include <algorithm>
 #include <iostream>
 #include <sstream>
 #include <list>
@@ -114,6 +115,9 @@ namespace OZW {
 		static NAN_METHOD(SetNodeLevel);
 		static NAN_METHOD(SwitchAllOn);
 		static NAN_METHOD(SwitchAllOff);
+#endif
+#ifdef OPENZWAVE_16
+		static NAN_METHOD(SendRawData);
 #endif
 		static NAN_METHOD(PressButton);
 		static NAN_METHOD(ReleaseButton);

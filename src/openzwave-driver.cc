@@ -46,8 +46,8 @@ namespace OZW {
 		version = OpenZWave::Manager::getVersionAsString();
 #if OPENZWAVE_EXCEPTIONS
 	} catch ( OpenZWave::OZWException& e ) {
-		char buffer [100];
-		sprintf(buffer, "Exception connecting in %s(%d): %s",
+		char buffer [200];
+		snprintf(buffer, 200, "Exception connecting in %s(%d): %s",
 			e.GetFile().c_str(), e.GetLine(), e.GetMsg().c_str());
 		Nan::ThrowError( buffer );
 	}
@@ -122,8 +122,8 @@ namespace OZW {
 		OpenZWave::Options::Destroy();
 #if OPENZWAVE_EXCEPTIONS
 	} catch ( OpenZWave::OZWException& e ) {
-		char buffer [100];
-		sprintf(buffer, "Exception disconnecting in %s(%d): %s",
+		char buffer [200];
+		snprintf(buffer, 200, "Exception disconnecting in %s(%d): %s",
 			 e.GetFile().c_str(), e.GetLine(), e.GetMsg().c_str());
 		Nan::ThrowError( buffer );
 	}

@@ -2,14 +2,11 @@
 
 > This library is as similar as possible to the [C++ OpenZwave::Manager API](http://www.openzwave.com/dev/classOpenZWave_1_1Manager.html) for Node.js. Please note that this is not always possible to have the _exact_ same behaviour as in the C++ library.
 
-Start by loading the addon with `require` and then create a new instance of the addon:
+Start by loading the addon with `require` and then create a new instance of the addon. You can also pass in an optional object specifying any desired option overrides:
 ```js
 var OZW = require('openzwave-shared');
 var zwave = new OZW();
-```
-
-You can also pass in an optional object specifying any desired option overrides:
-```js
+// OR pass extra options
 var zwave = new OZW({
     Logging: false,     // disable file logging (OZWLog.txt)
     ConsoleOutput: true // enable console logging
@@ -44,6 +41,7 @@ zwave.disconnect('dev/ttyUSB0');// disconnect from the current connection
 zwave.connect('\\\\.\\COM3');  // connect to a USB ZWave controller on COM3
 zwave.disconnect('\\\\.\\COM3');// disconnect from the current connection on COM3
 ```
+
 **Important notice**: the connect() call is asynchronous following the
 node/v8 javascript paradigm.  This means that connect() will yield
 control to your script *immediately*, but the underlying OpenZWave C++
@@ -60,26 +58,19 @@ Javascipt object or as 4 discrete integer arguments:
 - 3: Instance and
 - 4: Index
 
-For example if Zwave Node #3 is a binary switch, to turn it on and off, use
-command class 37:
+Some examples:
 
 ```js
+// if Zwave Node #3 is a binary switch, to turn it on and off, use command class 37
 zwave.setValue(3, 37,  1,  0,  true);  // node 3: turn on
 zwave.setValue(3, 37,  1,  0,  false); // node 3: turn off
 zwave.setValue({ node_id:3, class_id: 37, instance:1, index:0}, false); // the same turn-off command using an object
-```
-
-Another example: if Zwave Node #5 is a dimmer, use class 38:
-
-```js
+// if Zwave Node #5 is a dimmer, use class 38:
 zwave.setValue(5,  38,  1,  0, 50); // 1) passing each individual ValueID constituent:
 zwave.setValue({ node_id:5, class_id: 38, instance:1, index:0}, 50); // 2) or a valueID object (emitted by ValueAdded event):
-```
-
-The 'standard' way to control your devices is by `setValue` which is also the
-_only_ way to control multi-instance devices, such as the Fibaro FGS-221
-(double in-wall 2x1,5kw relay) for example:
-```js
+// The 'standard' way to control your devices is by `setValue` which is also the
+// _only_ way to control multi-instance devices, such as the Fibaro FGS-221
+// (double in-wall 2x1,5kw relay) for example:
 zwave.setValue(8, 37, 1, 0, true); // node 8: turn on 1st relay
 zwave.setValue(8, 37, 1, 0, false);// node 8: turn off 1st relay
 zwave.setValue(8, 37, 2, 0, true); // node 8: turn on 2nd relay
@@ -161,3 +152,5 @@ zwave.requestAllConfigParams(nodeId);
 zwave.requestConfigParam(nodeId, paramId);
 zwave.setConfigParam(nodeId, paramId, paramValue, <sizeof paramValue>);
 ```
+
+You can always refer to [the official OpenZWave::Manager API](http://www.openzwave.com/dev/classOpenZWave_1_1Manager.html) for more details on calling Manager methods. The aim of this wrapper is to provide a 1-to-1 mapping to all available methods, with the only change here being that the first letter of each method is downcased (eg. `RequestNodeInfo` in C++ is named `requestNodeInfo` in Javascript)

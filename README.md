@@ -3,6 +3,7 @@ node-openzwave-shared
 [Linux![Linux Build Status](https://travis-ci.org/OpenZWave/node-openzwave-shared.svg?branch=master)](https://travis-ci.org/OpenZWave/node-openzwave-shared)
 [Windows![Windows Build status](https://ci.appveyor.com/api/projects/status/txg360huomtpgc8o?svg=true)](https://ci.appveyor.com/project/ekarak/node-openzwave-shared)
 [![Join the chat at https://gitter.im/OpenZWave/node-openzwave-shared](https://badges.gitter.im/OpenZWave/node-openzwave-shared.svg)](https://gitter.im/OpenZWave/node-openzwave-shared?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Google group](http://www.google.com/images/icons/product/groups-32.png)](https://groups.google.com/d/forum/node-openzwave-shared)
 
 This is the homepage for *node-openzwave-shared*, the official binary add-on for
 Node.js, which wraps [Open ZWave](http://openzwave.com/), a high quality C++
@@ -147,7 +148,8 @@ download the
 - [Management of nodes](../master/README-mgmt.md)
 - [Security API](../master/README-security.md)
 - [Usage example](../master/README-example.md)
-
+- [Deprecated API calls in OpenZWave 1.6](../master/README-deprecated-16.md)
+  
 ## Environment-specific documentation
 - [Installing on Rapsbian](../master/README-raspbian.md)
 - [Installing on Ubuntu 15.04](../master/README-ubuntu.md)
