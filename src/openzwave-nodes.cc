@@ -93,7 +93,30 @@ namespace OZW {
 		OZWManager( SwitchAllOff, homeid);
 	}
 #endif
-
+#ifdef OPENZWAVE_16
+	// ===================================================================
+	NAN_METHOD(OZW::SendRawData)
+	// ===================================================================
+	{
+		Nan::HandleScope scope;
+		CheckMinArgs(5, "nodeid, logText<str>, msgType<uint8>, sendSecure<bool>, content<Buffer> (,length)");
+		uint8 nodeid     = Nan::To<Number>(info[0]).ToLocalChecked()->Value();
+		::std::string logText(*Nan::Utf8String( info[1] ));
+		uint8 msgType    = Nan::To<Number>(info[2]).ToLocalChecked()->Value();
+		bool sendSecure  = Nan::To<Boolean>(info[3]).ToLocalChecked()->Value();
+		checkType(Buffer::HasInstance(info[4]));
+		uint8 *content   = (uint8*)Buffer::Data(info[4]);
+		double buflength =  Buffer::Length(info[4]);
+		uint8 length    = 0;
+		// can either deduce length from JS buffer, or use the length provided
+		if (info.Length() > 5) {
+			length = ::std::min<double>( Nan::To<Number>(info[5]).ToLocalChecked()->Value(), buflength );
+		} else {
+			length = buflength;
+		}
+		OZWManager( SendRawData, homeid, nodeid, logText, msgType, sendSecure, content, length );
+	}
+#endif
 	// ===================================================================
 	NAN_METHOD(OZW::PressButton)
 	// ===================================================================

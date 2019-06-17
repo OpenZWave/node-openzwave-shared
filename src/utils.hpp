@@ -80,8 +80,8 @@ OZWValueIdIndex;
 
 #define CheckMinArgs(NUM, DESC) \
 	if(info.Length() < NUM) { \
-		char buffer [100]; \
-		sprintf(buffer, "This OpenZwave method requires at least %d argument(s): %s", NUM, DESC); \
+		char buffer [200]; \
+		snprintf(buffer, 200, "This OpenZwave method requires at least %d argument(s): %s", NUM, DESC); \
 		Nan::ThrowError( buffer ); \
 	}
 
