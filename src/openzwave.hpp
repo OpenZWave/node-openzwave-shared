@@ -38,7 +38,7 @@
     typedef ::std::unordered_map < ::std::string, OpenZWave::Driver::ControllerCommand > CommandMap;
 #else
     #include <tr1/unordered_map>
-    typedef ::std::tr1::unordered_map< ::std::string, OpenZWave::Driver::ControllerCommand > CommandMap;
+    typedef ::std::tr1::unordered_map < ::std::string, OpenZWave::Driver::ControllerCommand > CommandMap;
 #endif
 
 #include "utils.hpp"
@@ -158,6 +158,9 @@ namespace OZW {
 		static NAN_METHOD(GetNodeProductType);
 		static NAN_METHOD(GetNodeProductId);
 		static NAN_METHOD(GetNodeNeighbors);
+		// openzwave-metadata.cc
+		static NAN_METHOD(GetMetaData);
+		static NAN_METHOD(GetChangeLog);
 		// openzwave-values.cc
 		static NAN_METHOD(SetValue);
 		static NAN_METHOD(SetValueLabel);

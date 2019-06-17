@@ -8,6 +8,7 @@
 			"src/openzwave-driver.cc",
 			"src/openzwave-groups.cc",
 			"src/openzwave-management.cc",
+			"src/openzwave-metadata.cc",
 			"src/openzwave-network.cc",
 			"src/openzwave-nodes.cc",
 			"src/openzwave-polling.cc",
