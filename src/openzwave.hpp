@@ -77,6 +77,9 @@ namespace OZW {
 		static NAN_METHOD(GetGroupLabel);
 		static NAN_METHOD(AddAssociation);
 		static NAN_METHOD(RemoveAssociation);
+#ifdef OPENZWAVE_16
+    static NAN_METHOD(IsGroupMultiInstance);
+#endif
 #if OPENZWAVE_SECURITY == 1
 		static NAN_METHOD(AddNode);
 		static NAN_METHOD(RemoveNode);
@@ -139,14 +142,14 @@ namespace OZW {
 		static NAN_METHOD(SetNodeManufacturerName);
 		static NAN_METHOD(GetNodeProductName);
 		static NAN_METHOD(SetNodeProductName);
-		
+
 		static NAN_METHOD(IsNodeInfoReceived);
 		static NAN_METHOD(IsNodeAwake);
 		static NAN_METHOD(IsNodeFailed);
 		static NAN_METHOD(GetNodeDeviceType);
 		static NAN_METHOD(GetNodeRole);
 		static NAN_METHOD(GetNodeRoleString);
-		static NAN_METHOD(GetNodePlusType);	
+		static NAN_METHOD(GetNodePlusType);
 		static NAN_METHOD(GetNodePlusTypeString);
 		static NAN_METHOD(GetNodeQueryStage);
 		static NAN_METHOD(GetNodeDeviceTypeString);

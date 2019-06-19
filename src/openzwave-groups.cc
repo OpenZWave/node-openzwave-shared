@@ -128,7 +128,7 @@ namespace OZW {
 		uint8 instanceid = 0;
 		if(info.Length() > 3) {
 			instanceid = Nan::To<Number>(info[3]).ToLocalChecked()->Value();
-		} 
+		}
 
 		OZWManager( AddAssociation,
 			homeid, nodeid, groupidx, tgtnodeid, instanceid
@@ -150,11 +150,31 @@ namespace OZW {
 		uint8 instanceid = 0;
 		if(info.Length() > 3) {
 			instanceid = Nan::To<Number>(info[3]).ToLocalChecked()->Value();
-		} 
+		}
 
 		OZWManager( RemoveAssociation,
 			homeid, nodeid, groupidx, tgtnodeid, instanceid
 		);
 	}
+
+#ifdef OPENZWAVE_16
+	/*
+	 *
+	 */
+	// ===================================================================
+	NAN_METHOD(OZW::IsGroupMultiInstance)
+	// ===================================================================
+	{
+		Nan::HandleScope scope;
+		bool isMultiInstance = false;
+
+		CheckMinArgs(2, "nodeid, groupidx");
+		uint8 nodeid = Nan::To<Number>(info[0]).ToLocalChecked()->Value();
+		uint8 groupidx = Nan::To<Number>(info[1]).ToLocalChecked()->Value();
+
+		OZWManagerAssign(isMultiInstance, IsMultiInstance, homeid, nodeid, groupidx);
+		info.GetReturnValue().Set(Nan::New<Boolean>(isMultiInstance));
+	}
+#endif
 
 }
