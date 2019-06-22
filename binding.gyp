@@ -74,6 +74,7 @@
 				],
 				'xcode_settings': {
 					'MACOSX_DEPLOYMENT_TARGET':'10.9',
+					'GCC_ENABLE_CPP_EXCEPTIONS': '<!(find <(OZW_INC) -name OZWException.h | grep -q "." && echo -n YES || echo -n NO)',
 					'OTHER_CFLAGS': [
 						'-Wno-ignored-qualifiers -Wno-write-strings -Wno-unknown-pragmas'
 					]
