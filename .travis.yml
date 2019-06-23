@@ -7,9 +7,9 @@ addons:
     sources:
       - ubuntu-toolchain-r-test
     packages:
-      - clang
-      - clang++
       - libudev-dev
+
+compiler: clang
 
 before_install:
   - wget https://github.com/OpenZWave/open-zwave/archive/master.zip
