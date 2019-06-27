@@ -111,17 +111,17 @@ namespace OZW {
 			}
 			case OpenZWave::ValueID::ValueType_List: {
  				int32 val;
- 				std::vector < std::string > items;
- 				std::vector < int32> itemsvalues;
+ 				::std::vector < ::std::string > items;
+ 				::std::vector < int32> itemsvalues;
 
  				// populate array of all available items in the list
 				OZWManager( GetValueListItems, value, &items);
 				OZWManager( GetValueListValues, value, &itemsvalues);
  				
  				for (int i = 0; (unsigned)i != items.size(); i++){
- 					//items[i]=std::to_string(itemsvalues[i])+"|"+items[i];
+ 					//items[i]=::std::to_string(itemsvalues[i])+"|"+items[i];
 
- 					std::stringstream sstm;
+ 					::std::stringstream sstm;
 					sstm << itemsvalues[i] << "|" << items[i];
 					items[i] = sstm.str();
  				}
