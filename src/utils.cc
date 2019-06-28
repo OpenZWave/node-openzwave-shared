@@ -110,26 +110,14 @@ namespace OZW {
 				break;
 			}
 			case OpenZWave::ValueID::ValueType_List: {
- 				int32 val;
- 				::std::vector < ::std::string > items;
- 				::std::vector < int32> itemsvalues;
-
- 				// populate array of all available items in the list
+ 				::std::string val;
+				::std::vector < ::std::string > items;
+				// populate array of all available items in the list
 				OZWManager( GetValueListItems, value, &items);
-				OZWManager( GetValueListValues, value, &itemsvalues);
- 				
- 				for (int i = 0; (unsigned)i != items.size(); i++){
- 					//items[i]=::std::to_string(itemsvalues[i])+"|"+items[i];
-
- 					::std::stringstream sstm;
-					sstm << itemsvalues[i] << "|" << items[i];
-					items[i] = sstm.str();
- 				}
- 					
- 				AddArrayOfStringProp(valobj, values, items);
- 				// populated selected element
- 				OZWManager( GetValueListSelection, value, &val);
- 				AddIntegerProp(valobj, value, val);
+				AddArrayOfStringProp(valobj, values, items);
+				// populated selected element
+				OZWManager( GetValueListSelection, value, &val);
+				AddStringProp(valobj, value, val.c_str())
  				break;
 			}
 			case OpenZWave::ValueID::ValueType_Short: {
