@@ -275,8 +275,8 @@ namespace OZW {
 		AddStringProp (nodeobj, type,      value.GetTypeAsString());
 		AddStringProp (nodeobj, genre,     value.GetGenreAsString());
 #elif OPENZWAVE_VALUETYPE_FROM_ENUM
-		AddStringProp (nodeobj, type,      OpenZWave::Value::GetTypeNameFromEnum(value.GetType()));
-		AddStringProp (nodeobj, genre,     OpenZWave::Value::GetGenreNameFromEnum(value.GetGenre()));
+		AddStringProp (nodeobj, type,      OpenZWave::Internal::VC::ValueList::GetTypeNameFromEnum(value.GetType()));
+		AddStringProp (nodeobj, genre,     OpenZWave::Internal::VC::ValueList::GetGenreNameFromEnum(value.GetGenre()));
 #else
 		AddIntegerProp(nodeobj, type,      value.GetType());
 		AddIntegerProp(nodeobj, genre,     value.GetGenre());
