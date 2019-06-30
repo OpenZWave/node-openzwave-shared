@@ -30,8 +30,8 @@
 					"OPENZWAVE_SECURITY=<!@(find <(OZW_INC) -name ZWSecurity.h | wc -l)",
 					"OPENZWAVE_EXCEPTIONS=<!@(find <(OZW_INC) -name OZWException.h | wc -l)",
 					"OPENZWAVE_16=<!@(find <(OZW_INC) -name ValueBitSet.h | wc -l)",
-					"OPENZWAVE_VALUETYPE_FROM_ENUM=<!@(grep -r GetTypeNameFromEnum <(OZW_INC)value_classes | wc -l)",
-					"OPENZWAVE_VALUETYPE_FROM_VALUEID=<!@(grep -r GetTypeAsString <(OZW_INC)value_classes | wc -l)"
+					"OPENZWAVE_VALUETYPE_FROM_ENUM=<!@(grep -r GetTypeNameFromEnum <(OZW_INC)/value_classes | wc -l)",
+					"OPENZWAVE_VALUETYPE_FROM_VALUEID=<!@(grep -r GetTypeAsString <(OZW_INC)/value_classes | wc -l)"
 				],
 				"cflags": [
 					"-Wno-ignored-qualifiers",
@@ -67,8 +67,8 @@
 					"OPENZWAVE_SECURITY=<!@(find <(OZW_INC) -name ZWSecurity.h | wc -l)",
 					"OPENZWAVE_EXCEPTIONS=<!@(find <(OZW_INC) -name OZWException.h | wc -l)",
 					"OPENZWAVE_16=<!@(find <(OZW_INC) -name ValueBitSet.h | wc -l)",
-					"OPENZWAVE_VALUETYPE_FROM_ENUM=<!@(grep -r GetTypeNameFromEnum <(OZW_INC)value_classes | wc -l)",
-					"OPENZWAVE_VALUETYPE_FROM_VALUEID=<!@(grep -r GetTypeAsString <(OZW_INC)value_classes | wc -l)"
+					"OPENZWAVE_VALUETYPE_FROM_ENUM=<!@(grep -r GetTypeNameFromEnum <(OZW_INC)/value_classes | wc -l)",
+					"OPENZWAVE_VALUETYPE_FROM_VALUEID=<!@(grep -r GetTypeAsString <(OZW_INC)/value_classes | wc -l)"
 				],
 				"link_settings": {
 				    "libraries": [
@@ -102,8 +102,8 @@
 					"OPENZWAVE_SECURITY=<!@(find <(OZW_INC) -name ZWSecurity.h | wc -l)",
 					"OPENZWAVE_EXCEPTIONS=<!@(find <(OZW_INC) -name OZWException.h | wc -l)",
 					"OPENZWAVE_16=<!@(find <(OZW_INC) -name ValueBitSet.h | wc -l)",
-					"OPENZWAVE_VALUETYPE_FROM_ENUM=<!@(grep -r GetTypeNameFromEnum <(OZW_INC)value_classes | wc -l)",
-					"OPENZWAVE_VALUETYPE_FROM_VALUEID=<!@(grep -r GetTypeAsString <(OZW_INC)value_classes | wc -l)"
+					"OPENZWAVE_VALUETYPE_FROM_ENUM=<!@(grep -r GetTypeNameFromEnum <(OZW_INC)/value_classes | wc -l)",
+					"OPENZWAVE_VALUETYPE_FROM_VALUEID=<!@(grep -r GetTypeAsString <(OZW_INC)/value_classes | wc -l)"
 				],
 				"link_settings": {
 					"libraries": ["-lopenzwave"]
