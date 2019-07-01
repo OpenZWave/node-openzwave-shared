@@ -172,7 +172,7 @@ namespace OZW {
 		uint8 nodeid = Nan::To<Number>(info[0]).ToLocalChecked()->Value();
 		uint8 groupidx = Nan::To<Number>(info[1]).ToLocalChecked()->Value();
 
-		OZWManagerAssign(isMultiInstance, IsMultiInstance, homeid, nodeid, groupidx);
+		OZWManagerAssign(isMultiInstance, homeid, nodeid, groupidx);
 		info.GetReturnValue().Set(Nan::New<Boolean>(isMultiInstance));
 	}
 #endif
