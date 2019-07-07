@@ -78,7 +78,7 @@ namespace OZW {
 		static NAN_METHOD(AddAssociation);
 		static NAN_METHOD(RemoveAssociation);
 #ifdef OPENZWAVE_16
-    static NAN_METHOD(IsGroupMultiInstance);
+    static NAN_METHOD(IsMultiInstance);
 #endif
 #if OPENZWAVE_SECURITY == 1
 		static NAN_METHOD(AddNode);

@@ -162,7 +162,7 @@ namespace OZW {
 	 *
 	 */
 	// ===================================================================
-	NAN_METHOD(OZW::IsGroupMultiInstance)
+	NAN_METHOD(OZW::IsMultiInstance)
 	// ===================================================================
 	{
 		Nan::HandleScope scope;
