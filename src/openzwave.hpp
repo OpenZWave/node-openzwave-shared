@@ -77,7 +77,7 @@ namespace OZW {
 		static NAN_METHOD(GetGroupLabel);
 		static NAN_METHOD(AddAssociation);
 		static NAN_METHOD(RemoveAssociation);
-#ifdef OPENZWAVE_16
+#if OPENZWAVE_16
     static NAN_METHOD(IsMultiInstance);
 #endif
 #if OPENZWAVE_SECURITY == 1
@@ -119,7 +119,7 @@ namespace OZW {
 		static NAN_METHOD(SwitchAllOn);
 		static NAN_METHOD(SwitchAllOff);
 #endif
-#ifdef OPENZWAVE_16
+#if OPENZWAVE_16
 		static NAN_METHOD(SendRawData);
 #endif
 		static NAN_METHOD(PressButton);

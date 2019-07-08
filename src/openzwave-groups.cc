@@ -157,7 +157,7 @@ namespace OZW {
 		);
 	}
 
-#ifdef OPENZWAVE_16
+#if OPENZWAVE_16
 	/*
 	 *
 	 */

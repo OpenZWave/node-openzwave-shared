@@ -93,7 +93,7 @@ namespace OZW {
 		OZWManager( SwitchAllOff, homeid);
 	}
 #endif
-#ifdef OPENZWAVE_16
+#if OPENZWAVE_16
 	// ===================================================================
 	NAN_METHOD(OZW::SendRawData)
 	// ===================================================================
