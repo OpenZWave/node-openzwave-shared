@@ -81,7 +81,7 @@ namespace OZW {
 		Nan::SetPrototypeMethod(t, "getGroupLabel", OZW::GetGroupLabel);
 		Nan::SetPrototypeMethod(t, "addAssociation", OZW::AddAssociation);
 		Nan::SetPrototypeMethod(t, "removeAssociation", OZW::RemoveAssociation);
-#ifdef OPENZWAVE_16
+#if OPENZWAVE_16
 		Nan::SetPrototypeMethod(t, "isMultiInstance", OZW::IsMultiInstance);
 #endif
 
@@ -125,7 +125,7 @@ namespace OZW {
 		Nan::SetPrototypeMethod(t, "switchAllOn", OZW::SwitchAllOn);
 		Nan::SetPrototypeMethod(t, "switchAllOff", OZW::SwitchAllOff);
 #endif
-#ifdef OPENZWAVE_16
+#if OPENZWAVE_16
 		Nan::SetPrototypeMethod(t, "sendRawData", OZW::SendRawData);
 #endif
 		Nan::SetPrototypeMethod(t, "pressButton", OZW::PressButton);
