@@ -307,6 +307,11 @@ declare module "openzwave-shared" {
 		disconnect(path: string): void;
 
 		/**
+		 * @param {settings} settings Update the running options.
+		 */
+		updateOptions(settings: Partial<ZWave.IConstructorParameters>): void;
+
+		/**
 		 * Reset the ZWave controller chip.  A hard reset is destructive and wipes
 		 * out all known configuration, a soft reset just restarts the chip.
 		 */
