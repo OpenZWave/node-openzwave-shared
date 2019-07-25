@@ -264,7 +264,7 @@ declare module "openzwave-shared" {
 		): this;
 		on(
 			event: "value removed",
-			listener: (nodeId: number, comClass: number, index: number) => void
+			listener: (nodeId: number, comClass: number, instance: number, index: number) => void
 		): this;
 
 		on(
@@ -305,6 +305,11 @@ declare module "openzwave-shared" {
 		 * @param {string} path Usually a name of COM port, such as /dev/ttyACM0
 		 */
 		disconnect(path: string): void;
+
+		/**
+		 * @param {settings} settings Update the running options.
+		 */
+		updateOptions(settings: Partial<ZWave.IConstructorParameters>): void;
 
 		/**
 		 * Reset the ZWave controller chip.  A hard reset is destructive and wipes
@@ -376,7 +381,7 @@ declare module "openzwave-shared" {
 		 * in calls to GetAssociations, AddAssociation and RemoveAssociation
 		 * will be a number between 1 and 4.
 		 */
-		getNumGroups(): number;
+		getNumGroups(nodeId: number): number;
 
 		getAssociations(nodeId: number, groupIdx: number): Array<number>;
 
