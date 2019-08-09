@@ -163,9 +163,11 @@ void setValObj(Local<Object> &valobj, OpenZWave::ValueID &value)
 
 		bool bit;
 
-		v8::Local<v8::Object> &bitSetIds
+		v8::Local<v8::Object> &bitSetIds;
 
-		for (uint8 pos = 0; pos < 8; pos++)
+		uint8 pos = 0;
+
+		for (pos = 0; pos < 8; pos++)
 		{
 			OZWManager(GetValueAsBitSet, value, pos, &bit);
 			bit ? SET(val, pos) : CLEAR(val, pos);
@@ -178,11 +180,11 @@ void setValObj(Local<Object> &valobj, OpenZWave::ValueID &value)
 				OZWManager(GetValueHelp, value, &label, pos);
 				AddStringProp(bitObj, help, help.c_str());
 				AddStringProp(bitObj, label, label.c_str());
-				Nan::Set(bitObj, Nan::New<v8::String>(::std::to_string(pos)).ToLocalChecked(), Nan::New<v8::Object>(bitObj));
+				Nan::Set(bitObj, Nan::New<v8::String>(::std::to_string(pos)).ToLocalChecked(), bitObj);
 			}
 		}
-
-		Nan::Set(valobj, Nan::New<v8::String>("bitSetIds").ToLocalChecked(), Nan::New<v8::Object>(bitSetIds));
+		
+		Nan::Set(valobj, Nan::New<v8::String>("bitSetIds").ToLocalChecked(), bitSetIds);
 
 		AddIntegerProp(valobj, bitMask, mask);
 		AddIntegerProp(valobj, value, val);
