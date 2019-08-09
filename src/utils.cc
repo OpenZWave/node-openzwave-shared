@@ -163,7 +163,7 @@ void setValObj(Local<Object> &valobj, OpenZWave::ValueID &value)
 
 		bool bit;
 
-		v8::Local<v8::Object> &bitSetIds;
+		v8::Local<v8::Object> bitSetIds;
 
 		uint8 pos = 0;
 
@@ -174,7 +174,7 @@ void setValObj(Local<Object> &valobj, OpenZWave::ValueID &value)
 			// check if bit is set in mask
 			if (1 == ((mask >> bit) & 1))
 			{
-				v8::Local<v8::Object> &bitObj;
+				v8::Local<v8::Object> bitObj;
 				::std::string help, label;
 				OZWManager(GetValueLabel, value, &help, pos);
 				OZWManager(GetValueHelp, value, &label, pos);
