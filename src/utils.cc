@@ -176,8 +176,8 @@ void setValObj(Local<Object> &valobj, OpenZWave::ValueID &value)
 			{
 				v8::Local<v8::Object> bitObj;
 				::std::string help, label;
-				OZWManager(GetValueLabel, value, &help, pos);
-				OZWManager(GetValueHelp, value, &label, pos);
+				OZWManagerAssign(label, GetValueLabel, value, pos);
+				OZWManagerAssign(help, GetValueHelp, value, pos);
 				AddStringProp(bitObj, help, help.c_str());
 				AddStringProp(bitObj, label, label.c_str());
 				Nan::Set(bitSetIds, Nan::New<v8::String>(::std::to_string(pos)).ToLocalChecked(), bitObj);
