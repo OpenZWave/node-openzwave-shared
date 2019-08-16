@@ -180,7 +180,7 @@ namespace OZW {
 		Nan::SetPrototypeMethod(t, "getSwitchPoint", OZW::GetSwitchPoint);
 		Nan::SetPrototypeMethod(t, "setSwitchPoint", OZW::SetSwitchPoint);
 		Nan::SetPrototypeMethod(t, "removeSwitchPoint", OZW::RemoveSwitchPoint);
-#ifdef OPENZWAVE_DEPRECATED16
+#ifdef OPENZWAVE_16
 		Nan::SetPrototypeMethod(t, "getValueAsBitSet", OZW::GetValueAsBitSet);
 		Nan::SetPrototypeMethod(t, "setBitMask", OZW::SetBitMask);
 		Nan::SetPrototypeMethod(t, "getBitMask", OZW::GetBitMask);
