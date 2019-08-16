@@ -291,7 +291,8 @@ declare module "openzwave-shared" {
 				nodeId: number,
 				state: ZWave.ControllerState,
 				notif: number,
-				message: string
+				message: string,
+				command: number,
 			) => void
 		): this;
 		on(event: string, listener: (...args: any[]) => void): this;
