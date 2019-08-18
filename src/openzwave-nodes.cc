@@ -648,6 +648,7 @@ namespace OZW {
 		OZWManager( SetNodeProductName, homeid, nodeid, name);
 	}
 
+#if OPENZWAVE_16
 	/*
 	 *
 	 */
@@ -664,7 +665,6 @@ namespace OZW {
 		info.GetReturnValue().Set(Nan::New<String>(result.c_str()).ToLocalChecked());
 	}
 
-#if OPENZWAVE_16
 	/*
 	 *
 	 */
