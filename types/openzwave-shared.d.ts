@@ -160,15 +160,15 @@ declare module "openzwave-shared" {
 			 */
 			AppendLogFile: boolean;
 			/**
-			 *
+			 * Save (to file) log messages equal to or above LogLevel_Detail
 			 */
 			SaveLogLevel: LogLevel;
 			/**
-			 *
+			 * Save (in RAM) log messages equal to or above LogLevel_Debug
 			 */
 			QueueLogLevel: ZWave.LogLevel;
 			/**
-			 *
+			 * Default is to never dump RAM-stored log messages
 			 */
 			DumpTriggerLevel: ZWave.LogLevel;
 			/**
@@ -230,7 +230,43 @@ declare module "openzwave-shared" {
 			/**
 			 * Should we refresh all UserCodes in the UserCode CC when we start up
 			 */
-			RefreshAllUserCodes: boolean;
+      RefreshAllUserCodes: boolean;
+      /**
+       * Should we send the Node/Value Notifications on Driver Unloading - Read comments in Driver::~Driver() method about possible race conditions
+       */
+      NotifyOnDriverUnload: boolean;
+      /**
+       * Alters how OZW determines when to Encrypt Messages to certain CommandClasses.
+       * Options are:
+       * "ESSENTIAL" - Those CommandClasses that MUST be encrypted.
+       * "SUPPORTED" (default) is any CommandClass advertisied in the SecureNIF frame
+       * "CUSTOM" - A list of CommandClasses specified in the "CustomSecureCC" option
+       */
+      SecurityStrategy: 'ESSENTIAL' | 'SUPPORTED' | 'CUSTOM'
+      /**
+       * What List of Custom CC should we always encrypt if SecurityStrategy is CUSTOM
+       */
+      CustomSecuredCC: string;
+      /**
+       * if we recieve a clear text message for a CC that is Secured, should we drop the message
+       */
+      EnforceSecureReception: boolean;
+      /**
+       * if we should automatically update config files for devices if they are out of date
+       */
+      AutoUpdateConfigFile: boolean;
+      /**
+       * Should we automatically Reload Nodes after a update
+       */
+      ReloadAfterUpdate: 'AWAKE' | 'NEVER' | 'IMMEDIATE';
+      /**
+       * Language we should use
+       */
+      Language: string;
+      /**
+       * Should we include the Instance Label in Value Labels on MultiInstance Devices
+       */
+      IncludeInstanceLabel: boolean;
 		}
 	}
 
