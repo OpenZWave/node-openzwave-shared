@@ -11,7 +11,8 @@ declare module "openzwave-shared" {
 			| "string"
 			| "button"
 			| "raw"
-			| "max";
+			| "max"
+			| "bitset";
 		export type ValueGenre = "basic" | "user" | "system" | "config" | "count";
 
 		export interface NodeInfo {
@@ -259,7 +260,19 @@ declare module "openzwave-shared" {
 			listener: (nodeId: number, nodeInfo: ZWave.NodeInfo) => void
 		): this;
 		on(
-			event: "value added" | "value changed",
+			event: "node reset",
+			listener: (nodeid: number) => void
+		): this;
+		on(
+			event: "user alert",
+			listener: (notification: ZWave.Notification, help: string) => void
+		): this;
+		on(
+			event: "manufacturer specific DB ready",
+			listener: () => void
+		): this;
+		on(
+			event: "value added" | "value changed" | "value refreshed",
 			listener: (nodeId: number, comClass: number, value: ZWave.Value) => void
 		): this;
 		on(
@@ -269,7 +282,7 @@ declare module "openzwave-shared" {
 
 		on(
 			event: "notification",
-			listener: (nodeId: number, notification: ZWave.Notification) => void
+			listener: (nodeId: number, notification: ZWave.Notification, help: string) => void
 		): this;
 		on(event: "scan complete", listener: () => void): this;
 		on(
@@ -278,7 +291,8 @@ declare module "openzwave-shared" {
 				nodeId: number,
 				state: ZWave.ControllerState,
 				notif: number,
-				message: string
+				message: string,
+				command: number,
 			) => void
 		): this;
 		on(event: string, listener: (...args: any[]) => void): this;
@@ -309,7 +323,7 @@ declare module "openzwave-shared" {
 		/**
 		 * @param {settings} settings Update the running options.
 		 */
-		updateOptions(settings: Partial<ZWave.IConstructorParameters>): void;
+		updateOptions(info: Partial<ZWave.IConstructorParameters>): void;
 
 		/**
 		 * Reset the ZWave controller chip.  A hard reset is destructive and wipes
@@ -396,6 +410,11 @@ declare module "openzwave-shared" {
 			groupIdx: number,
 			tgtNodeId: number
 		): void;
+
+		isMultiInstance(
+			nodeId: number,
+			groupIdx: number,
+		): boolean;
 
 		// Exposed by "openzwave-management.cc"
 
@@ -496,6 +515,10 @@ declare module "openzwave-shared" {
 
 		cancelControllerCommand(): void;
 
+		/**
+		 * LEGACY MODE (using writeConfig)
+		 * @deprecated
+		 */
 		writeConfig(): void;
 
 		getDriverStatistics(): ZWave.DriverStats;
@@ -531,17 +554,34 @@ declare module "openzwave-shared" {
 		 */
 		getNodeNeighbors(nodeId: number): Array<number>;
 
+		/**
+		 * LEGACY MODE (using setNodeOn)
+		 * @deprecated
+		 */
 		setNodeOn(nodeId: number): void;
 
+		/**
+		 * LEGACY MODE (using setNodeOff)
+		 * @deprecated
+		 */
 		setNodeOff(nodeId: number): void;
 
 		/**
 		 * Generic dimmer control
+		 * @deprecated
 		 */
 		setNodeLevel(nodeId: number, level: number): void;
 
+		/**
+		 * LEGACY MODE (using switchAllOn)
+		 * @deprecated
+		 */
 		switchAllOn(): void;
 
+		/**
+		 * LEGACY MODE (using switchAllOff)
+		 * @deprecated
+		 */
 		switchAllOff(): void;
 
 		pressButton(valueId: ZWave.ValueId): void;
@@ -656,6 +696,24 @@ declare module "openzwave-shared" {
 			switchPoint: ZWave.SwitchPoint
 		): void;
 
+		getValueAsBitSet(
+			valueId: ZWave.ValueId,
+			pos: number
+		): number;
+
+		setBitMask(
+			valueId: ZWave.ValueId,
+			mask: number
+		): void;
+
+		getBitMask(
+			valueId: ZWave.ValueId
+		): number;
+
+		getBitSetSize(
+			valueId: ZWave.ValueId
+		): number;
+
 		// Exposed by "openzwave-polling.cc"
 
 		/**
@@ -697,14 +755,38 @@ declare module "openzwave-shared" {
 
 		/**
 		 * Returns sceneId.
+		 * @deprecated
 		 */
 		createScene(label: string): number;
+
+		/**
+		 * @deprecated
+		 */
 		removeScene(sceneId: number): void;
+
+		/**
+		 * @deprecated
+		 */
 		getScenes(): Array<ZWave.SceneInfo>;
 
+		/**
+		 * @deprecated
+		 */
 		addSceneValue(sceneId: number, value: ZWave.ValueId): void;
+
+		/**
+		 * @deprecated
+		 */
 		removeSceneValue(sceneId: number, value: ZWave.ValueId): void;
+
+		/**
+		 * @deprecated
+		 */
 		sceneGetValues(sceneId: number): Array<ZWave.ValueId>;
+
+		/**
+		 * @deprecated
+		 */
 		activateScene(sceneId: number): void;
 	}
 
