@@ -78,7 +78,7 @@ void ozw_watcher_callback(OpenZWave::Notification const *cb, void *ctx)
   case OpenZWave::Notification::Type_ButtonOff:
     notif->buttonid = cb->GetButtonId();
     break;
-#if OPENZWAVE_SCENES
+#if !(OPENZWAVE_16)
   case OpenZWave::Notification::Type_SceneEvent:
     notif->sceneid = cb->GetSceneId();
     break;

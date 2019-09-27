@@ -220,7 +220,7 @@ void setValObj(Local<Object> &valobj, OpenZWave::ValueID &value)
 	}
 }
 
-#if OPENZWAVE_SCENES
+#if !(OPENZWAVE_16)
 // populate a v8 object with an attribute called 'value' whose value is the
 // SCENE value (not the current one!) - as returned from its proper typed call
 // (using Manager::SceneGetValueAsXXX calls)
