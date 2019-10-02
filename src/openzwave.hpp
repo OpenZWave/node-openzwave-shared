@@ -77,6 +77,7 @@ namespace OZW {
 		static NAN_METHOD(GetGroupLabel);
 		static NAN_METHOD(AddAssociation);
 		static NAN_METHOD(RemoveAssociation);
+        static NAN_METHOD(GetAssociationsInstances);
 #if OPENZWAVE_16
     static NAN_METHOD(IsMultiInstance);
 #endif

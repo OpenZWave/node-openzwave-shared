@@ -83,6 +83,7 @@ namespace OZW {
 		Nan::SetPrototypeMethod(t, "removeAssociation", OZW::RemoveAssociation);
 #if OPENZWAVE_16
 		Nan::SetPrototypeMethod(t, "isMultiInstance", OZW::IsMultiInstance);
+        Nan::SetPrototypeMethod(t, "getAssociationsInstances", OZW::GetAssociationsInstances);
 #endif
 
 		// openzwave-management.cc
