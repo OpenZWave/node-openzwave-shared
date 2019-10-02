@@ -10,7 +10,32 @@
   "scripts": {
     "test": "node test.js",
     "preinstall": "node lib/install-ozw.js",
-    "install": "node-gyp rebuild"
+    "install": "node-gyp rebuild",
+    "release": "read -p 'GITHUB_TOKEN: ' GITHUB_TOKEN && export GITHUB_TOKEN=$GITHUB_TOKEN && release-it",
+    "changelog": "auto-changelog -p && git add CHANGELOG.md"
+  },
+  "auto-changelog": {
+    "commitLimit": false
+  },
+  "release-it": {
+    "github": {
+      "release": true
+    },
+    "git": {
+      "tagName": "v${version}"
+    },
+    "hooks": {
+      "before:init": [
+        "npm run install",
+        "npm run test"
+      ],
+      "after:bump": [
+        "npm run changelog"
+      ]
+    },
+    "npm": {
+      "publish": true
+    }
   },
   "repository": {
     "type": "git",
