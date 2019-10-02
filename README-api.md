@@ -105,6 +105,7 @@ zwave.getMaxAssociations(nodeid, group);
 zwave.addAssociation(nodeid, group, target_nodeid);
 zwave.removeAssociation(nodeid, group, target_nodeid);
 zwave.isGroupMultiInstance(nodeid, group);
+zwave.getAssociationsInstances(nodeid, group);
 ```
 
 Resetting the controller.  Calling `hardReset` will clear any associations, so use

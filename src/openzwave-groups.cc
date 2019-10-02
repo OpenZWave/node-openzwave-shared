@@ -74,6 +74,48 @@ namespace OZW {
 	 *
 	 */
 	// ===================================================================
+	NAN_METHOD(OZW::GetAssociationsInstances)
+	// ===================================================================
+	{
+		Nan::HandleScope scope;
+		CheckMinArgs(2, "nodeid, groupidx");
+		OpenZWave::InstanceAssociation* associations;
+		uint8 nodeid   = Nan::To<Number>(info[0]).ToLocalChecked()->Value();
+		uint8 groupidx = Nan::To<Number>(info[1]).ToLocalChecked()->Value();
+
+		uint32 numNodes = 0;
+		OZWManagerAssign(numNodes, GetAssociations,
+			homeid, nodeid,	groupidx, &associations
+		);
+
+		Local<Array> o_assocs = Nan::New<Array>(numNodes);
+
+		for (uint8 i = 0; i < numNodes; i++) {
+			Local <Object> info = Nan::New<Object>();
+			info->Set(
+				Nan::New<String>("instance").ToLocalChecked(),
+				Nan::New<Integer>(associations[i].m_instance)
+			);
+			info->Set(
+				Nan::New<String>("nodeid").ToLocalChecked(),
+				Nan::New<Integer>(associations[i].m_nodeId)
+			);
+
+			o_assocs->Set(Nan::New<Integer>(i), info);
+		}
+
+		if (numNodes > 0) {
+			// The caller is responsible for freeing the array memory with a call to delete [].
+			delete associations;
+		}
+
+		info.GetReturnValue().Set(o_assocs);
+	}
+
+	/*
+	 *
+	 */
+	// ===================================================================
 	NAN_METHOD(OZW::GetMaxAssociations)
 	// ===================================================================
 	{

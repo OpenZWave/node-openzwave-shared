@@ -134,6 +134,11 @@ declare module "openzwave-shared" {
 			label: string;
 		}
 
+		export interface InstanceAssociation {
+			nodeid: number;
+			instance: number;
+		}
+
 		export interface IConstructorParameters {
 			/**
 			 * This is the directory location where various files created by the library are stored. Examples include the zwcfg_.xml and LogFiles_
@@ -415,6 +420,8 @@ declare module "openzwave-shared" {
 			nodeId: number,
 			groupIdx: number,
 		): boolean;
+
+		getAssociationsInstances(nodeId: number, groupIdx: number): Array<InstanceAssociation>;
 
 		// Exposed by "openzwave-management.cc"
 
