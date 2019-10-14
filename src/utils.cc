@@ -82,7 +82,7 @@ SceneInfo *get_scene_info(uint8 sceneid)
 	snprintf(buffer, 32, "%d-%d-%d-%d", value.GetNodeId(), value.GetCommandClassId(), value.GetInstance(), value.GetIndex());
 	return ::std::string(buffer);
 }
-::std::string getValueIdDescriptor(uint8 node_id, uint8 class_id, OZWValueIdIndex instance, uint8 index)
+::std::string getValueIdDescriptor(uint8 node_id, uint8 class_id, uint8 instance, OZWValueIdIndex index)
 {
 	char buffer[32];
 	snprintf(buffer, 32, "%d-%d-%d-%d", node_id, class_id, instance, index);
