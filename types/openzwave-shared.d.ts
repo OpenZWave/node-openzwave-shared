@@ -457,7 +457,7 @@ declare module "openzwave-shared" {
 			groupIdx: number,
 		): boolean;
 
-		getAssociationsInstances(nodeId: number, groupIdx: number): Array<InstanceAssociation>;
+		getAssociationsInstances(nodeId: number, groupIdx: number): Array<ZWave.InstanceAssociation>;
 
 		// Exposed by "openzwave-management.cc"
 
