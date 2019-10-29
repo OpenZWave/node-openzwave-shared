@@ -21,17 +21,17 @@
 #define stringify_literal( x ) # x
 
 #if OPENZWAVE_EXCEPTIONS
-#define OZWManager(METHOD,...)               \
-    try {                                    \
+#define OZWManager(METHOD,...) \
+	try {                                    \
 	    OpenZWave::Manager::Get() -> METHOD ( __VA_ARGS__ ); \
 	} catch ( OpenZWave::OZWException& e ) { \
 		char buffer [200];                   \
 		snprintf(buffer, 200, "Exception calling OpenZWave::Manager::%s in %s(%d): %s",      \
 			stringify(METHOD), e.GetFile().c_str(), e.GetLine(), e.GetMsg().c_str()); \
 		Nan::ThrowError( buffer );           \
-	}
+	} 
 
-#define OZWManagerAssign(VALUE,METHOD,...)    \
+#define OZWManagerAssign(VALUE,METHOD,...) \
     try {                                     \
 	    VALUE = OpenZWave::Manager::Get() -> METHOD ( __VA_ARGS__ ); \
 	} catch ( OpenZWave::OZWException& e ) {  \
@@ -133,7 +133,7 @@ namespace OZW {
 	NodeInfo  *get_node_info(uint8 nodeid);
 	void       delete_node(uint8 nodeid);
 
-#ifdef OPENZWAVE_DEPRECATED16
+#ifdef OPENZWAVE16_DEPRECATED
 	v8::Local<v8::Object> zwaveSceneValue2v8Value(uint8 sceneId, OpenZWave::ValueID value);
 	SceneInfo *get_scene_info(uint8 sceneid);
 #endif

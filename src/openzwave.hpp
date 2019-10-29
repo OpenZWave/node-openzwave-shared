@@ -102,7 +102,7 @@ namespace OZW {
 		static NAN_METHOD(BeginControllerCommand);
 #endif
 		static NAN_METHOD(CancelControllerCommand);
-#ifndef OPENZWAVE_DEPRECATED16
+#ifdef OPENZWAVE16_DEPRECATED
 		static NAN_METHOD(WriteConfig);
 #endif
 		static NAN_METHOD(GetDriverStatistics);
@@ -113,7 +113,7 @@ namespace OZW {
 		static NAN_METHOD(HealNetworkNode);
 		static NAN_METHOD(HealNetwork);
 		// openzwave-nodes.cc
-#ifndef OPENZWAVE_DEPRECATED16
+#ifdef OPENZWAVE16_DEPRECATED
 		static NAN_METHOD(SetNodeOn);
 		static NAN_METHOD(SetNodeOff);
 		static NAN_METHOD(SetNodeLevel);
@@ -191,8 +191,8 @@ namespace OZW {
 		static NAN_METHOD(SetPollIntensity);
 		static NAN_METHOD(GetPollIntensity);
 		// openzwave-scenes.cc
-#ifdef OPENZWAVE_DEPRECATED16
-OPENZWAVE_DEPRECATED_WARNINGS_OFF
+#ifdef OPENZWAVE16_DEPRECATED
+//OPENZWAVE_DEPRECATED_WARNINGS_OFF
 		static NAN_METHOD(CreateScene);
 		static NAN_METHOD(RemoveScene);
 		static NAN_METHOD(GetScenes);
@@ -200,7 +200,7 @@ OPENZWAVE_DEPRECATED_WARNINGS_OFF
 		static NAN_METHOD(RemoveSceneValue);
 		static NAN_METHOD(SceneGetValues);
 		static NAN_METHOD(ActivateScene);
-OPENZWAVE_DEPRECATED_WARNINGS_ON
+//OPENZWAVE_DEPRECATED_WARNINGS_ON
 #endif
 		// Passing configuration around
 		::std::string userpath;

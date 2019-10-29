@@ -5,9 +5,13 @@
 var OpenZWave = require('./lib/openzwave-shared.js');
 var os = require('os');
 
+
 // this test assumes no actual ZWave controller exists on the system
 // and is just a rudimentary check that the driver can initialise itself.
 var zwave = new OpenZWave();
+
+//console.log("WriteConfig:", typeof zwave.writeConfig === 'function');
+
 
 zwave.on('ping', function() {
     console.log('driver is emitting events properly');

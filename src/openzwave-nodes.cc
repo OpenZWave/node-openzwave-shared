@@ -44,7 +44,7 @@ namespace OZW {
 		info.GetReturnValue().Set( o_neighbors );
 	}
 
-#ifdef OPENZWAVE_DEPRECATED16
+#ifdef OPENZWAVE16_DEPRECATED
 	// =================================================================
 	NAN_METHOD(OZW::SetNodeOn)
 	// =================================================================

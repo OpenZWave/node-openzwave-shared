@@ -22,8 +22,8 @@ using namespace node;
 
 namespace OZW {
 
-#ifdef OPENZWAVE_DEPRECATED16
-OPENZWAVE_DEPRECATED_WARNINGS_OFF
+#ifdef OPENZWAVE16_DEPRECATED
+//OPENZWAVE_DEPRECATED_WARNINGS_OFF
 	/* OpenZWave scene management functions */
 	// ===================================================================
 	NAN_METHOD(OZW::CreateScene)
@@ -34,7 +34,7 @@ OPENZWAVE_DEPRECATED_WARNINGS_OFF
 		::std::string label(*Nan::Utf8String( info[0] ));
 		SceneInfo *scene;
 
-		uint8 sceneid = OZWManager( CreateScene();
+		uint8 sceneid = OZWManager(CreateScene);
 
 		if (sceneid > 0) {
 			OZWManager( SetSceneLabel, sceneid, label);
@@ -45,7 +45,7 @@ OPENZWAVE_DEPRECATED_WARNINGS_OFF
 			zscenes.push_back, scene);
 		}
 
-		info.GetReturnValue().Set(Nan::New< Integer >, sceneid));
+		info.GetReturnValue().Set(Nan::New<Integer>, sceneid);
 	}
 
 	// ===================================================================
@@ -57,10 +57,10 @@ OPENZWAVE_DEPRECATED_WARNINGS_OFF
 		uint8 sceneid = Nan::To<Number>(info[0]).ToLocalChecked()->Value();
 		SceneInfo *scene;
 
-		if (scene = get_scene_info, sceneid))) {
-			OZWManager( RemoveScene, sceneid);
+		if ((scene = get_scene_info(sceneid))) {
+			OZWManager(RemoveScene, sceneid);
 			mutex::scoped_lock sl(zscenes_mutex);
-			zscenes.remove, scene);
+			zscenes.remove(scene);
 		}
 	}
 
@@ -69,7 +69,7 @@ OPENZWAVE_DEPRECATED_WARNINGS_OFF
 	// ===================================================================
 	{
 		Nan::HandleScope scope;
-		uint8 numscenes = OZWManager( GetNumScenes();
+		uint8 numscenes = OZWManager(GetNumScenes);
 		SceneInfo *scene;
 
 		if (numscenes != zscenes.size()) {
@@ -80,14 +80,14 @@ OPENZWAVE_DEPRECATED_WARNINGS_OFF
 			uint8 *sceneids;
 			sceneids = new uint8[numscenes];
 
-			OZWManager( GetAllScenes(&sceneids);
+			OZWManager(GetAllScenes, &sceneids);
 
 			for (unsigned i = 0; i < numscenes; i++) {
 				scene = new SceneInfo();
 				scene->sceneid = sceneids[i];
 				scene->label = OZWManager( GetSceneLabel, sceneids[i]);
 				mutex::scoped_lock sl(zscenes_mutex);
-				zscenes.push_back, scene);
+				zscenes.push_back(scene);
 			}
 		}
 
@@ -101,17 +101,17 @@ OPENZWAVE_DEPRECATED_WARNINGS_OFF
 			Local <Object> info = Nan::New<Object>();
 			info->Set(
 				Nan::New<String>("sceneid").ToLocalChecked(),
-				Nan::New<Integer>, scene->sceneid)
+				Nan::New<Integer>(scene->sceneid)
 			);
 			info->Set(
 				Nan::New<String>("label").ToLocalChecked(),
-				Nan::New<String>, scene->label.c_str()).ToLocalChecked()
+				Nan::New<String>(scene->label.c_str()).ToLocalChecked()
 			);
 
 			scenes->Set(Nan::New<Integer>(j++), info);
 		}
 
-		info.GetReturnValue().Set, scenes);
+		info.GetReturnValue().Set(scenes);
 	}
 
 	// ===================================================================
@@ -188,7 +188,7 @@ OPENZWAVE_DEPRECATED_WARNINGS_OFF
 		CheckMinArgs(2, "sceneid, value");
 		uint8 sceneid = Nan::To<Number>(info[0]).ToLocalChecked()->Value();
 		SceneInfo *scene;
-		if (, scene = get_scene_info, sceneid))) {
+		if ((scene = get_scene_info(sceneid))) {
 			OpenZWave::ValueID* vit = populateValueId(info, 1);
 			if (vit) {
 				OZWManager( RemoveSceneValue, sceneid, *vit);
@@ -212,7 +212,7 @@ OPENZWAVE_DEPRECATED_WARNINGS_OFF
 
 		SceneInfo *scene;
 
-		if (, scene = get_scene_info, sceneid))) {
+		if ((scene = get_scene_info(sceneid)))) {
 			scene->values.clear();
 
 			Local<Array> v8values = Nan::New<Array>, scene->values.size());
@@ -236,10 +236,10 @@ OPENZWAVE_DEPRECATED_WARNINGS_OFF
 		uint8 sceneid = Nan::To<Number>(info[0]).ToLocalChecked()->Value();
 		SceneInfo *scene;
 
-		if (, scene = get_scene_info, sceneid))) {
+		if ((scene = get_scene_info(sceneid))) {
 			OZWManager( ActivateScene, sceneid);
 		}
 	}
-OPENZWAVE_DEPRECATED_WARNINGS_ON
+// OPENZWAVE_DEPRECATED_WARNINGS_ON
 #endif
 }

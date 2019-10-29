@@ -108,7 +108,7 @@ namespace OZW {
 		Nan::SetPrototypeMethod(t, "beginControllerCommand", OZW::BeginControllerCommand);
 #endif
 		Nan::SetPrototypeMethod(t, "cancelControllerCommand", OZW::CancelControllerCommand);
-#ifdef OPENZWAVE_DEPRECATED16
+#ifdef OPENZWAVE16_DEPRECATED
 		Nan::SetPrototypeMethod(t, "writeConfig", OZW::WriteConfig);
 #endif
 		Nan::SetPrototypeMethod(t, "getDriverStatistics", OZW::GetDriverStatistics);
@@ -119,7 +119,7 @@ namespace OZW {
 		Nan::SetPrototypeMethod(t, "healNetworkNode", OZW::HealNetworkNode);
 		Nan::SetPrototypeMethod(t, "healNetwork", OZW::HealNetwork);
 		// openzwave-nodes.cc
-#ifdef OPENZWAVE_DEPRECATED16
+#ifdef OPENZWAVE16_DEPRECATED
 		Nan::SetPrototypeMethod(t, "setNodeOn", OZW::SetNodeOn);
 		Nan::SetPrototypeMethod(t, "setNodeOff", OZW::SetNodeOff);
 		Nan::SetPrototypeMethod(t, "setNodeLevel", OZW::SetNodeLevel);
@@ -196,7 +196,7 @@ namespace OZW {
 		Nan::SetPrototypeMethod(t, "getPollIntensity",  OZW::GetPollIntensity); // ** new
 		Nan::SetPrototypeMethod(t, "setPollIntensity",  OZW::SetPollIntensity); // ** new
 		// openzwave-scenes.cc
-#ifdef OPENZWAVE_DEPRECATED16
+#ifdef OPENZWAVE16_DEPRECATED
 		Nan::SetPrototypeMethod(t, "createScene", OZW::CreateScene);
 		Nan::SetPrototypeMethod(t, "removeScene", OZW::RemoveScene);
 		Nan::SetPrototypeMethod(t, "getScenes", OZW::GetScenes);

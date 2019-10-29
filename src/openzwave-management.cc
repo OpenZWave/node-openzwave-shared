@@ -357,7 +357,7 @@ namespace OZW {
 		OZWManager( CancelControllerCommand, homeid);
 	}
 
-#if OPENZWAVE_DEPRECATED16
+#ifdef OPENZWAVE16_DEPRECATED
 	// =================================================================
 	NAN_METHOD(OZW::WriteConfig)
 	// =================================================================

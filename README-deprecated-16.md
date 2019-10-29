@@ -4,7 +4,7 @@ There are numerous changes in the upcoming 1.6 release. This document describes 
 
 ## SetNodeOn/Off, SetLevel
 
-Just define `OPENZWAVE_DEPRECATED` preprocessor symbol to have these included in the build:
+Just define `OPENZWAVE16_DEPRECATED` preprocessor symbol to have these included in the build:
 
 ```js
 /*

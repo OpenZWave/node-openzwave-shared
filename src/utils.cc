@@ -360,7 +360,7 @@ Local<Object> zwaveValue2v8Value(OpenZWave::ValueID value)
 	return handle_scope.Escape(valobj);
 }
 
-#ifdef OPENZWAVE_DEPRECATED16
+#ifdef OPENZWAVE16_DEPRECATED
 // create a V8 object from a ZWave scene value
 Local<Object> zwaveSceneValue2v8Value(uint8 sceneId, OpenZWave::ValueID value)
 {
