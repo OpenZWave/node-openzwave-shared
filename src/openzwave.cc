@@ -108,7 +108,7 @@ namespace OZW {
 		Nan::SetPrototypeMethod(t, "beginControllerCommand", OZW::BeginControllerCommand);
 #endif
 		Nan::SetPrototypeMethod(t, "cancelControllerCommand", OZW::CancelControllerCommand);
-#ifdef OPENZWAVE16_DEPRECATED
+#if !(OPENZWAVE_16)
 		Nan::SetPrototypeMethod(t, "writeConfig", OZW::WriteConfig);
 #endif
 		Nan::SetPrototypeMethod(t, "getDriverStatistics", OZW::GetDriverStatistics);

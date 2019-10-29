@@ -102,7 +102,7 @@ namespace OZW {
 		static NAN_METHOD(BeginControllerCommand);
 #endif
 		static NAN_METHOD(CancelControllerCommand);
-#ifdef OPENZWAVE16_DEPRECATED
+#if !(OPENZWAVE_16)
 		static NAN_METHOD(WriteConfig);
 #endif
 		static NAN_METHOD(GetDriverStatistics);
