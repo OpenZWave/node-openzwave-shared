@@ -171,6 +171,10 @@ namespace OZW {
 		Nan::SetPrototypeMethod(t, "isNodeBeamingDevice", OZW::IsNodeBeamingDevice); // ** new
 		Nan::SetPrototypeMethod(t, "isNodeRoutingDevice", OZW::IsNodeRoutingDevice); // ** new
 		Nan::SetPrototypeMethod(t, "isNodeSecurityDevice", OZW::IsNodeSecurityDevice); // ** new
+#if OPENZWAVE_16
+		Nan::SetPrototypeMethod(t, "getMetaData", OZW::GetMetaData);
+		Nan::SetPrototypeMethod(t, "getChangeLog", OZW::GetChangeLog);
+#endif
 		// openzwave-values.cc
 		Nan::SetPrototypeMethod(t, "setValue", OZW::SetValue);
 		Nan::SetPrototypeMethod(t, "setValueLabel", OZW::SetValueLabel);

@@ -305,14 +305,14 @@ namespace OZW {
 		OZWManagerAssign(result,  IsNodeSecurityDevice, homeid, nodeid);
 		info.GetReturnValue().Set(Nan::New<Boolean>(result));
 	}
-	
+
 	// ===================================================================
 	NAN_METHOD(OZW::GetNodePlusTypeString)
 	// ===================================================================
 	{
 		Nan::HandleScope scope;
 		CheckMinArgs(1, "nodeid");
-		uint8  nodeid = Nan::To<Number>(info[0]).ToLocalChecked()->Value();		
+		uint8  nodeid = Nan::To<Number>(info[0]).ToLocalChecked()->Value();
 		::std::string result = OpenZWave::Manager::Get()->GetNodePlusTypeString(homeid, nodeid);
 		info.GetReturnValue().Set(Nan::New<String>(result.c_str()).ToLocalChecked());
 	}
@@ -324,7 +324,7 @@ namespace OZW {
 	{
 		Nan::HandleScope scope;
 		CheckMinArgs(1, "nodeid");
-		uint8  nodeid = Nan::To<Number>(info[0]).ToLocalChecked()->Value();		
+		uint8  nodeid = Nan::To<Number>(info[0]).ToLocalChecked()->Value();
 		::std::string result = OpenZWave::Manager::Get()->GetNodeRoleString(homeid, nodeid);
 		info.GetReturnValue().Set(Nan::New<String>(result.c_str()).ToLocalChecked());
 	}
@@ -336,7 +336,7 @@ namespace OZW {
 	{
 		Nan::HandleScope scope;
 		CheckMinArgs(1, "nodeid");
-		uint8  nodeid = Nan::To<Number>(info[0]).ToLocalChecked()->Value();		
+		uint8  nodeid = Nan::To<Number>(info[0]).ToLocalChecked()->Value();
 		uint8 result = OpenZWave::Manager::Get()->GetNodePlusType(homeid, nodeid);
 		info.GetReturnValue().Set(Nan::New<Integer>(result));
 	}
@@ -348,7 +348,7 @@ namespace OZW {
 	{
 		Nan::HandleScope scope;
 		CheckMinArgs(1, "nodeid");
-		uint8  nodeid = Nan::To<Number>(info[0]).ToLocalChecked()->Value();		
+		uint8  nodeid = Nan::To<Number>(info[0]).ToLocalChecked()->Value();
 		uint8 result = OpenZWave::Manager::Get()->GetNodeRole(homeid, nodeid);
 		info.GetReturnValue().Set(Nan::New<Integer>(result));
 	}
@@ -360,7 +360,7 @@ namespace OZW {
 	{
 		Nan::HandleScope scope;
 		CheckMinArgs(1, "nodeid");
-		uint8  nodeid = Nan::To<Number>(info[0]).ToLocalChecked()->Value();		
+		uint8  nodeid = Nan::To<Number>(info[0]).ToLocalChecked()->Value();
 		::std::string result = OpenZWave::Manager::Get()->GetNodeDeviceTypeString(homeid, nodeid);
 		info.GetReturnValue().Set(Nan::New<String>(result.c_str()).ToLocalChecked());
 	}
@@ -372,7 +372,7 @@ namespace OZW {
 	{
 		Nan::HandleScope scope;
 		CheckMinArgs(1, "nodeid");
-		uint8  nodeid = Nan::To<Number>(info[0]).ToLocalChecked()->Value();		
+		uint8  nodeid = Nan::To<Number>(info[0]).ToLocalChecked()->Value();
 		uint16 result = OpenZWave::Manager::Get()->GetNodeDeviceType(homeid, nodeid);
 		info.GetReturnValue().Set(Nan::New<Integer>(result));
 	}
@@ -647,5 +647,46 @@ namespace OZW {
 		::std::string name(*Nan::Utf8String( info[1] ));
 		OZWManager( SetNodeProductName, homeid, nodeid, name);
 	}
+
+#if OPENZWAVE_16
+	/*
+	 *
+	 */
+	// ===================================================================
+	NAN_METHOD(OZW::GetMetaData)
+	// ===================================================================
+	{
+		Nan::HandleScope scope;
+		CheckMinArgs(2, "nodeid, metadata");
+		uint8 nodeid = Nan::To<Number>(info[0]).ToLocalChecked()->Value();
+		OpenZWave::Node::MetaDataFields metadata = static_cast<OpenZWave::Node::MetaDataFields>(Nan::To<int>(info[1]).ToChecked());
+		::std::string result("");
+		OZWManagerAssign(result, GetMetaData, homeid, nodeid, metadata);
+		info.GetReturnValue().Set(Nan::New<String>(result.c_str()).ToLocalChecked());
+	}
+
+	/*
+	 *
+	 */
+	// ===================================================================
+	NAN_METHOD(OZW::GetChangeLog)
+	// ===================================================================
+	{
+		Nan::HandleScope scope;
+		CheckMinArgs(2, "nodeid, revision");
+		uint8 nodeid = Nan::To<Number>(info[0]).ToLocalChecked()->Value();
+		uint32_t revision = Nan::To<Number>(info[1]).ToLocalChecked()->Value();
+
+		OpenZWave::Node::ChangeLogEntry result;
+		OZWManagerAssign(result, GetChangeLog, homeid, nodeid, revision);
+
+		Local <Object> changeLog = Nan::New<Object>();
+		AddStringProp(changeLog, author, result.author);
+		AddStringProp(changeLog, date, result.date);
+		AddIntegerProp(changeLog, revision, result.revision);
+		AddStringProp(changeLog, description, result.description);
+		info.GetReturnValue().Set(changeLog);
+	}
+#endif
 
 }

@@ -35,3 +35,21 @@ export enum LogLevel {
 	DebugMessagesAndHigher = 8,
 	ProtocolInformationAndHigher = 9
 }
+
+export enum MetaDataFields {
+	OzwInfoPage_URL = 0,
+	ZWProductPage_URL = 1,
+	ProductPic = 2,
+	Description = 3,
+	ProductManual_URL = 4,
+	ProductPage_URL = 5,
+	InclusionHelp = 6,
+	ExclusionHelp = 7,
+	ResetHelp = 8,
+	WakeupHelp = 9,
+	ProductSupport_URL = 10,
+	Frequency = 11,
+	Name = 12,
+	Identifier = 13,
+	Invalid = 255
+}

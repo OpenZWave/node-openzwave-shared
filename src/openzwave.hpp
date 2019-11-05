@@ -134,6 +134,7 @@ namespace OZW {
 		static NAN_METHOD(IsNodeBeamingDevice);
 		static NAN_METHOD(IsNodeRoutingDevice);
 		static NAN_METHOD(IsNodeSecurityDevice);
+
 		// getter+setter pairs
 		static NAN_METHOD(GetNodeLocation);
 		static NAN_METHOD(SetNodeLocation);
@@ -166,6 +167,10 @@ namespace OZW {
 		static NAN_METHOD(GetNodeProductType);
 		static NAN_METHOD(GetNodeProductId);
 		static NAN_METHOD(GetNodeNeighbors);
+	#if OPENZWAVE_16
+		static NAN_METHOD(GetMetaData);
+		static NAN_METHOD(GetChangeLog);
+#endif
 		// openzwave-values.cc
 		static NAN_METHOD(SetValue);
 		static NAN_METHOD(SetValueLabel);
