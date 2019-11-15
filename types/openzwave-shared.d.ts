@@ -502,6 +502,13 @@ declare module "openzwave-shared" {
 		removeNode(): boolean;
 
 		/**
+		 * Remove a specific failed node from the controller's memory.
+		 * The Status of the Node Removal is communicated via Notifications.
+		 * Specifically, you should monitor ControllerCommand Notifications.
+		 */
+		removeFailedNode(nodeId: number): boolean;
+
+		/**
 		 * Check if the Controller Believes a Node has Failed.
 		 * This is different from `thevIsNodeFailed` call in that we test the Controllers
 		 * Failed Node List, where as `vtheIsNodeFailed` is testing our list of Failed Nodes,
