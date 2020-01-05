@@ -503,12 +503,18 @@ void handleNotification(NotifInfo *notif)
 void async_cb_handler(uv_async_t *handle)
 // ===================================================================
 {
-  NotifInfo *notif;
-
-  mutex::scoped_lock sl(zqueue_mutex);
-
-  while (!zqueue.empty()) {
-    notif = zqueue.front();
+  NotifInfo* notif;
+  std::queue<NotifInfo*> notifications;
+  // consume all the queued notifications
+  {
+    mutex::scoped_lock sl(zqueue_mutex);
+    // http://media2.giphy.com/media/MS0fQBmGGMaRy/giphy.gif
+    swap(notifications, zqueue);
+  }
+  // process notifications
+  while (!notifications.empty()) {
+    notif = notifications.front();
+    notifications.pop();
 #if OPENZWAVE_SECURITY != 1
     if (notif->homeid == 0) {
       handleControllerCommand(notif);
@@ -518,8 +524,6 @@ void async_cb_handler(uv_async_t *handle)
 #else
     handleNotification(notif);
 #endif
-    delete notif;
-    zqueue.pop();
   }
 }
 
