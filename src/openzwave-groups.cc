@@ -92,16 +92,16 @@ namespace OZW {
 
 		for (uint8 i = 0; i < numNodes; i++) {
 			Local <Object> info = Nan::New<Object>();
-			info->Set(
+			Nan::Set(info,
 				Nan::New<String>("instance").ToLocalChecked(),
 				Nan::New<Integer>(associations[i].m_instance)
 			);
-			info->Set(
+			Nan::Set(info,
 				Nan::New<String>("nodeid").ToLocalChecked(),
 				Nan::New<Integer>(associations[i].m_nodeId)
 			);
 
-			o_assocs->Set(Nan::New<Integer>(i), info);
+			Nan::Set(o_assocs, Nan::New<Integer>(i), info);
 		}
 
 		if (numNodes > 0) {
