@@ -69,6 +69,7 @@ namespace OZW {
 		Nan::SetPrototypeMethod(t, "isStaticUpdateController", OZW::IsStaticUpdateController); // ** new
 		Nan::SetPrototypeMethod(t, "isBridgeController", OZW::IsBridgeController); // ** new
 		Nan::SetPrototypeMethod(t, "getLibraryVersion", OZW::GetLibraryVersion); // ** new
+		Nan::SetPrototypeMethod(t, "getOzwVersion", OZW::GetOzwVersion); // ** new
 		Nan::SetPrototypeMethod(t, "getLibraryTypeName", OZW::GetLibraryTypeName); // ** new
 		Nan::SetPrototypeMethod(t, "getSendQueueCount", OZW::GetSendQueueCount);	// ** new
 		Nan::SetPrototypeMethod(t, "connect", OZW::Connect);

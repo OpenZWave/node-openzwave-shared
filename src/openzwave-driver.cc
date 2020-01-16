@@ -241,6 +241,23 @@ namespace OZW {
 		);
 	}
 
+	/* Get the version of Openzwave
+	 */
+	// ===================================================================
+	NAN_METHOD(OZW::GetOzwVersion)
+	// ===================================================================
+	{
+		Nan::HandleScope scope;
+		::std::string version("");
+		version = OpenZWave::Manager::getVersionAsString();
+		//OZWManagerAssign(version, GetVersionAsString);
+		info.GetReturnValue().Set(
+			Nan::New<String>(
+				version.c_str()
+			).ToLocalChecked()
+		);
+	}
+
 	/* Get a string containing the Z-Wave API library type used by a
 	 * controller. The possible library types are:
 	 *	Static Controller

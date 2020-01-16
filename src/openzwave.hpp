@@ -65,6 +65,7 @@ namespace OZW {
 		static NAN_METHOD(IsStaticUpdateController);
 		static NAN_METHOD(IsBridgeController);
 		static NAN_METHOD(GetLibraryVersion);
+		static NAN_METHOD(GetOzwVersion);
 		static NAN_METHOD(GetLibraryTypeName);
 		static NAN_METHOD(GetSendQueueCount);
 		static NAN_METHOD(Connect);
