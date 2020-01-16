@@ -4,51 +4,39 @@ This is a list of all the events emitted by the library. This list is not exhaus
 ## Driver events
 Events emitted by the OpenZWave Driver class:
 
-
 * `zwave.on('driver ready', function(homeid){...})`
 
 the OpenZWave driver has initialised and scanning has started.  Returns a unique `homeid` which identifies this particular ZWave network.
-
-
-
 
 * `zwave.on('driver failed', function(){...})`
 
 The OpenZWave driver failed to initialise.
 
+* `zwave.on('connected', function(version){...})`
 
-
+the OpenZWave driver is connected.  Returns `version` which identifies the Openzwave Library version.
 
 * `zwave.on('scan complete', function(){...})`
 
 The initial network scan has finished.
 
-
-
-
-## Node events:
+## Node events
 
 * `zwave.on('node added', function(nodeid){...})`
 
 A new node has been found on the network.  At this point you can allocate resources to hold information about this node.
 
-
 * `zwave.on('node removed', function(nodeid){...})`
 
 A node with the provided id has been just been removed from the network. You need to deallocate all resources for this nodeid.
-
 
 * `zwave.on('node naming', function(nodeid, nodeinfo){...})`
 
 Useful information about the node is returned as a plain JS object. It includes elements like 'manufacturer', 'product', 'type' and 'name' amongst others.
 
-
-
 * `zwave.on('node available', function(nodeid, nodeinfo){...})`
 
 This corresponds to OpenZWave's `EssentialNodeQueriesComplete` notification, which means that the node is now available for operation, but don't expect all of its info structures (nodeinfo, see below) to be filled in.
-
-
 
 * `zwave.on('node ready', function(nodeid, nodeinfo){...})`
 
@@ -65,11 +53,9 @@ This corresponds to OpenZWave's `NodeQueriesComplete` notification. The node is 
 
 
 
-
 * `zwave.on('polling enabled/disabled', function(nodeid){...})`
 
 Polling for a node has been enabled or disabled.
-
 
 
 
@@ -102,10 +88,7 @@ It would send:
 	As an example, an Aeon Labs Water sensor will fire this event and `data` would
 	be 255 when water is detected and 0 when it isn't.
 
-
-
-
-## Value events:
+## Value events
 
 * `zwave.on('value added', function(nodeid, commandclass, valueId){...})`
 
