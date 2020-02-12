@@ -34,7 +34,7 @@
 #include "Options.h"
 #include "Value.h"
 
-#if defined(_WIN32) || defined( __APPLE__)
+#if defined(_WIN32) || defined( __APPLE__) || __cplusplus >= 201103L
     #include <unordered_map>
     typedef ::std::unordered_map < ::std::string, OpenZWave::Driver::ControllerCommand > CommandMap;
 #else
