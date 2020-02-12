@@ -126,6 +126,43 @@
 					"<!@(find <(OZW_INC) -name OZWException.h -exec echo -n \"-fno-exceptions\" \\;)"
 				]
 			}],
+			['OS=="freebsd"', {
+				"variables": {
+					"OZW_INC"         : "<!(pkg-config --cflags-only-I libopenzwave | sed s/-I//g)",
+					"OZW_LIB_PATH"    : "<!(pkg-config --variable=libdir libopenzwave)",
+					"OZW_GITVERSION"  : "<!(pkg-config --variable=gitversion libopenzwave)",
+					"OZW_ETC"         : "<!(pkg-config --variable=sysconfdir libopenzwave)",
+					"OZW_DOC"         : "<!(pkg-config --variable=docdir libopenzwave)"
+				},
+				"defines": [
+					"OPENZWAVE_ETC=<(OZW_ETC)/config",
+					"OPENZWAVE_DOC=<!@(node -p -e \"'<(OZW_DOC)'.length ? '<(OZW_DOC)' : '/usr/local/share/doc/openzwave'\")",
+					"OPENZWAVE_SECURITY=<!@(find <(OZW_INC) -name ZWSecurity.h | wc -l)",
+					"OPENZWAVE_EXCEPTIONS=<!@(find <(OZW_INC) -name OZWException.h | wc -l)",
+					"OPENZWAVE_16=<!@(find <(OZW_INC) -name ValueBitSet.h | wc -l)",
+					"OPENZWAVE_VALUETYPE_FROM_ENUM=<!@(grep -r GetTypeNameFromEnum <(OZW_INC)/value_classes | wc -l)",
+					"OPENZWAVE_VALUETYPE_FROM_VALUEID=<!@(grep -r GetTypeAsString <(OZW_INC)/value_classes | wc -l)"
+				],
+				"cflags": [
+					"-Wno-ignored-qualifiers",
+					"-Wno-write-strings",
+					"-Wno-unknown-pragmas",
+					"<!@(find <(OZW_INC) -name OZWException.h -exec echo -n \"-fexceptions\" \\;)"
+				],
+				"cflags_cc!": [
+					"<!@(find <(OZW_INC) -name OZWException.h -exec echo -n \"-fno-exceptions\" \\;)"
+				],
+				"link_settings": {
+				    "libraries": [
+						"-L/usr/local/lib/", "-lopenzwave"
+					]
+				},
+				"include_dirs": [
+				    "<!(node -p -e \"require('path').dirname(require.resolve('nan'))\")",
+				    '/usr/local/include/openzwave/',
+				    '/usr/local/include/openzwave/value_classes/'
+				],
+			}],      
 			['OS=="win"', {
 				"variables": {
 					"OZW_HOME": "<!(node lib/install-ozw.js --get-ozw-home)"
