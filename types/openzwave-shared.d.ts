@@ -318,9 +318,9 @@ declare module "openzwave-shared" {
 			event: "node ready" | "node naming" | "node available",
 			listener: (nodeId: number, nodeInfo: ZWave.NodeInfo) => void,
 		): this;
-		on(event: "node reset",	listener: (nodeid: number) => void): this;
-		on(event: "user alert",	listener: (notification: ZWave.Notification, help: string) => void): this;
-		on(event: "manufacturer specific DB ready",	listener: () => void): this;
+		on(event: "node reset", listener: (nodeid: number) => void): this;
+		on(event: "user alert", listener: (notification: ZWave.Notification, help: string) => void): this;
+		on(event: "manufacturer specific DB ready", listener: () => void): this;
 		on(
 			event: "value added" | "value changed" | "value refreshed",
 			listener: (nodeId: number, comClass: number, value: ZWave.Value) => void,
@@ -450,9 +450,9 @@ declare module "openzwave-shared" {
 
 		addAssociation(nodeId: number, groupIdx: number, tgtNodeId: number): void;
 
-        removeAssociation(nodeId: number, groupIdx: number, tgtNodeId: number): void;
+		removeAssociation(nodeId: number, groupIdx: number, tgtNodeId: number): void;
 
-        isMultiInstance(nodeId: number, groupIdx: number): boolean;
+		isMultiInstance(nodeId: number, groupIdx: number): boolean;
 
 		getAssociationsInstances(nodeId: number, groupIdx: number): Array<ZWave.InstanceAssociation>;
 
@@ -713,7 +713,8 @@ declare module "openzwave-shared" {
 			class_id: number,
 			instance: number,
 			index: number,
-			value: string | boolean | number): void;
+			value: string | boolean | number,
+		): void;
 		setValue(valueId: ZWave.ValueId, value: string | boolean | number): void;
 
 		/**
@@ -735,15 +736,15 @@ declare module "openzwave-shared" {
 
 		clearSwitchPoints(valueId: ZWave.ValueId): void;
 
-        removeSwitchPoint(valueId: ZWave.ValueId, switchPoint: ZWave.SwitchPoint): void;
+		removeSwitchPoint(valueId: ZWave.ValueId, switchPoint: ZWave.SwitchPoint): void;
 
-        getValueAsBitSet(valueId: ZWave.ValueId, pos: number): number;
+		getValueAsBitSet(valueId: ZWave.ValueId, pos: number): number;
 
-        setBitMask(valueId: ZWave.ValueId, mask: number): void;
+		setBitMask(valueId: ZWave.ValueId, mask: number): void;
 
-        getBitMask(valueId: ZWave.ValueId): number;
+		getBitMask(valueId: ZWave.ValueId): number;
 
-        getBitSetSize(valueId: ZWave.ValueId): number;
+		getBitSetSize(valueId: ZWave.ValueId): number;
 
 		// Exposed by "openzwave-polling.cc"
 
