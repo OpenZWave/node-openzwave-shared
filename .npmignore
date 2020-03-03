@@ -10,3 +10,5 @@ build
 zwcfg*
 zwscene.xml
 node_modules
+
+ozwcache_*.xml
