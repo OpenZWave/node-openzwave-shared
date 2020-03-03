@@ -71,8 +71,8 @@ NAN_METHOD(OZW::UpdateOptions)
 	CheckMinArgs(1, "info");
 
 	OZW *self = ObjectWrap::Unwrap<OZW>(info.This());
-	::std::string ozw_userpath;
-	::std::string ozw_config_path;
+	::std::string ozw_userpath = self->userpath;
+	::std::string ozw_config_path = self->config_path;
 
 	::std::string option_overrides;
 	bool log_initialisation = true;
@@ -90,6 +90,10 @@ NAN_METHOD(OZW::UpdateOptions)
 			::std::string keyname = *Nan::Utf8String(key);
 			Local<Value> argval = Nan::Get(opts, key).ToLocalChecked();
 			::std::string argvalstr = *Nan::Utf8String(argval);
+
+			if(argvalstr.empty())
+				continue;
+
 			// UserPath is directly passed to Manager->Connect()
 			// scan for OpenZWave options.xml in the nodeJS module's '/config' subdirectory
 			if (keyname == "UserPath")
@@ -116,6 +120,26 @@ NAN_METHOD(OZW::UpdateOptions)
 	self->userpath = ozw_userpath;
 	self->option_overrides = option_overrides;
 	self->log_initialisation = log_initialisation;
+
+	if (self->log_initialisation) {
+			::std::ostringstream versionstream;
+
+			versionstream << ozw_vers_major << "." << ozw_vers_minor << "." << ozw_vers_revision;
+			::std::cout << "Initialising OpenZWave " << versionstream.str() << " binary addon for Node.JS.\n";
+
+#if OPENZWAVE_SECURITY == 1
+			::std::cout << "\tOpenZWave Security API is ENABLED\n";
+#else
+			::std::cout << "\tSecurity API not found, using legacy BeginControllerCommand() instead\n";
+#endif
+
+			::std::cout << "\tZWave device db    : " << ozw_config_path << "\n";
+			::std::cout << "\tUser settings path : " << ozw_userpath << "\n";
+			if (option_overrides.length() > 0) {
+				::std::cout << "\tOption Overrides :" << option_overrides << "\n";
+			}
+		}
+
 }
 
 // ===================================================================
