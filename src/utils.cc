@@ -128,25 +128,14 @@ void setValObj(Local<Object> &valobj, OpenZWave::ValueID &value)
 	}
 	case OpenZWave::ValueID::ValueType_List:
 	{
-		int32 val;
-		::std::vector <::std::string > items;
-		::std::vector <int32> itemsvalues;
-		v8::Local<v8::Object> values = Nan::New<v8::Object>();
-
+		::std::string val;
+		::std::vector<::std::string> items;
 		// populate array of all available items in the list
-		OZWManager( GetValueListItems, value, &items);
-		OZWManager( GetValueListValues, value, &itemsvalues);
-		
-		// popolate the object value: item
-		for (int i = 0; (unsigned)i < items.size(); i++) {
-			Nan::Set(values, Nan::New<v8::String>(::std::to_string(itemsvalues[i])).ToLocalChecked(), Nan::New<v8::String>(items[i].c_str()).ToLocalChecked());
-		}
-			
-		Nan::Set(valobj, Nan::New<v8::String>("values").ToLocalChecked(), values);
+		OZWManager(GetValueListItems, value, &items);
+		AddArrayOfStringProp(valobj, values, items);
 		// populated selected element
-		OZWManager( GetValueListSelection, value, &val);
-		AddIntegerProp(valobj, value, val);
-		break;
+		OZWManager(GetValueListSelection, value, &val);
+		AddStringProp(valobj, value, val.c_str()) break;
 	}
 	case OpenZWave::ValueID::ValueType_Short:
 	{

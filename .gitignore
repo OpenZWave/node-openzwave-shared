@@ -12,5 +12,3 @@ node_modules
 .idea
 .tags
 .vscode
-
-ozwcache_*.xml
