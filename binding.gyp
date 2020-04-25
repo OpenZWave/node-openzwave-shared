@@ -113,7 +113,7 @@
 					"<(OZW_INC)",
 					"<(OZW_INC)/value_classes"
 				],
-				"cflags": [ 
+				"cflags": [
 					"-Wno-ignored-qualifiers",
 					"-Wno-write-strings",
 					"-Wno-unknown-pragmas",
@@ -122,7 +122,7 @@
 				"cflags_cc": [
 					"-std=c++11"
 				],
-				"cflags_cc!": [ 
+				"cflags_cc!": [
 					"<!@(find <(OZW_INC) -name OZWException.h -exec echo -n \"-fno-exceptions\" \\;)"
 				]
 			}],
@@ -162,7 +162,7 @@
 				    '/usr/local/include/openzwave/',
 				    '/usr/local/include/openzwave/value_classes/'
 				],
-			}],      
+			}],
 			['OS=="win"', {
 				"variables": {
 					"OZW_HOME": "<!(node lib/install-ozw.js --get-ozw-home)"
@@ -190,6 +190,44 @@
 			    "link_settings": {
 					"libraries": ["dnsapi.lib", "ws2_32.lib"]
 		        }
+			}],
+			["OS=='android'", {
+				"variables": {
+					"NODE"            : "<!(which node || which nodejs)",
+					"OZW_INC"         : "<!(<(NODE) -p \"require('./lib/ozwpaths.js').includedir || '/usr/*/include'\")",
+					"OZW_LIB_PATH"    : "<!(<(NODE) -p \"require('./lib/ozwpaths.js').libdir\")",
+					"OZW_ETC"         : "<!(<(NODE) -p \"require('./lib/ozwpaths.js').sysconfdir\")",
+					"OZW_DOC"         : "<!(<(NODE) -p \"require('./lib/ozwpaths.js').docdir\")"
+				},
+				"defines": [
+					"OPENZWAVE_ETC=<!@(<(NODE) -p -e \"'<(OZW_ETC)'.length ? '<(OZW_ETC)' : '/usr/local/etc/openzwave'\")",
+					"OPENZWAVE_DOC=<!@(<(NODE) -p -e \"'<(OZW_DOC)'.length ? '<(OZW_DOC)' : '/usr/local/share/doc/openzwave'\")",
+					"OPENZWAVE_SECURITY=<!@(find <(OZW_INC) -name ZWSecurity.h | wc -l)",
+					"OPENZWAVE_EXCEPTIONS=<!@(find <(OZW_INC) -name OZWException.h | wc -l)",
+					"OPENZWAVE_16=<!@(find <(OZW_INC) -name ValueBitSet.h | wc -l)",
+					"OPENZWAVE_VALUETYPE_FROM_ENUM=<!@(grep -r GetTypeNameFromEnum <(OZW_INC)/value_classes | wc -l)",
+					"OPENZWAVE_VALUETYPE_FROM_VALUEID=<!@(grep -r GetTypeAsString <(OZW_INC)/value_classes | wc -l)"
+				],
+				"link_settings": {
+					"libraries": ["-lopenzwave"]
+				},
+				"include_dirs": [
+					"<!(<(NODE) -p -e \"require('path').dirname(require.resolve('nan'))\")",
+					"<(OZW_INC)",
+					"<(OZW_INC)/value_classes"
+				],
+				"cflags": [
+					"-Wno-ignored-qualifiers",
+					"-Wno-write-strings",
+					"-Wno-unknown-pragmas",
+					"<!@(find <(OZW_INC) -name OZWException.h -exec echo -n \"-fexceptions\" \\;)"
+				],
+				"cflags_cc": [
+					"-std=c++11"
+				],
+				"cflags_cc!": [
+					"<!@(find <(OZW_INC) -name OZWException.h -exec echo -n \"-fno-exceptions\" \\;)"
+				]
 			}]
 		]
 	}]
