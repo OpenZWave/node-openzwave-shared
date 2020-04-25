@@ -1,16 +1,29 @@
 version: 1.0.{build}
 
+environment:
+  nodejs_version: "10"
+
+# Install scripts. (runs after repo cloning)
+install:
+  # Get the latest stable version of Node.js or io.js
+  - ps: Install-Product node $env:nodejs_version
+  # install modules
+  - npm install
+
 # branches to build
 branches:
   # whitelist
   only:
     - master
+    - appveyor
 
-# Build worker image (VM template)
-image: Visual Studio 2015
+# Post-install test scripts.
+test_script:
+  # Output useful info for debugging.
+  - node --version
+  - npm --version
+  # run tests
+  #- npm test
 
-platform:
-  - x86
-
-build_script:
-- cmd: npm install
+# Don't actually build.
+build: off
