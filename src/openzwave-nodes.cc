@@ -44,6 +44,22 @@ namespace OZW {
 		info.GetReturnValue().Set( o_neighbors );
 	}
 
+	/*
+	* Gets the Command Class Version for a node
+	*/
+	// ===================================================================
+	NAN_METHOD(OZW::GetNodeClassInformation)
+	// =================================================================
+	{
+		Nan::HandleScope scope;
+		CheckMinArgs(2, "nodeid, commClass");
+		uint8 nodeid = Nan::To<Integer>(info[0]).ToLocalChecked()->Value();
+		uint8 commClass  = Nan::To<Integer>(info[1]).ToLocalChecked()->Value();
+		uint8 commClassVersion = 0;
+		OZWManager( GetNodeClassInformation, homeid, nodeid, commClass, NULL, &commClassVersion);
+		info.GetReturnValue().Set(Nan::New<Integer>(commClassVersion));
+	}
+
 #ifdef OPENZWAVE16_DEPRECATED
 	// =================================================================
 	NAN_METHOD(OZW::SetNodeOn)
