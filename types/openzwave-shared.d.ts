@@ -494,6 +494,12 @@ declare module "openzwave-shared" {
 		 */
 		requestNodeNeighborUpdate(nodeId: number): boolean;
 
+        /**
+         * Ask a Node to update its update its Return Route to the Controller
+         * This command will ask a Node to update its Return Route to the Controller.
+         */
+        assignReturnRoute(nodeId: number): boolean;
+
 		/**
 		 * Ask a Node to delete all Return Route.
 		 * This command will ask a Node to delete all its return routes, and will
