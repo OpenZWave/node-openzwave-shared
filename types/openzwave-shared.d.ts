@@ -26,8 +26,7 @@ declare module "openzwave-shared" {
 			loc: string;
 		}
 
-		export interface ChangeLogEntry
-		{
+		export interface ChangeLogEntry {
 			author: string;
 			date: string;
 			revision: number;
@@ -41,7 +40,7 @@ declare module "openzwave-shared" {
 			NodeAwake = 3,
 			NodeSleep = 4,
 			NodeDead = 5,
-			NodeAlive = 6
+			NodeAlive = 6,
 		}
 
 		export enum ControllerState {
@@ -55,7 +54,7 @@ declare module "openzwave-shared" {
 			Completed = 7,
 			Failed = 8,
 			NodeOK = 9,
-			NodeFailed = 10
+			NodeFailed = 10,
 		}
 
 		export enum LogLevel {
@@ -68,7 +67,7 @@ declare module "openzwave-shared" {
 			InfoMessagesAndHigher = 6,
 			DetailedMessagesAndHigher = 7,
 			DebugMessagesAndHigher = 8,
-			ProtocolInformationAndHigher = 9
+			ProtocolInformationAndHigher = 9,
 		}
 
 		export enum MetaDataFields {
@@ -86,7 +85,7 @@ declare module "openzwave-shared" {
 			Frequency = 11,
 			Name = 12,
 			Identifier = 13,
-			Invalid = 255
+			Invalid = 255,
 		}
 
 		export interface DriverStats {
@@ -261,43 +260,43 @@ declare module "openzwave-shared" {
 			/**
 			 * Should we refresh all UserCodes in the UserCode CC when we start up
 			 */
-      RefreshAllUserCodes: boolean;
-      /**
-       * Should we send the Node/Value Notifications on Driver Unloading - Read comments in Driver::~Driver() method about possible race conditions
-       */
-      NotifyOnDriverUnload: boolean;
-      /**
-       * Alters how OZW determines when to Encrypt Messages to certain CommandClasses.
-       * Options are:
-       * "ESSENTIAL" - Those CommandClasses that MUST be encrypted.
-       * "SUPPORTED" (default) is any CommandClass advertisied in the SecureNIF frame
-       * "CUSTOM" - A list of CommandClasses specified in the "CustomSecureCC" option
-       */
-      SecurityStrategy: 'ESSENTIAL' | 'SUPPORTED' | 'CUSTOM'
-      /**
-       * What List of Custom CC should we always encrypt if SecurityStrategy is CUSTOM
-       */
-      CustomSecuredCC: string;
-      /**
-       * if we recieve a clear text message for a CC that is Secured, should we drop the message
-       */
-      EnforceSecureReception: boolean;
-      /**
-       * if we should automatically update config files for devices if they are out of date
-       */
-      AutoUpdateConfigFile: boolean;
-      /**
-       * Should we automatically Reload Nodes after a update
-       */
-      ReloadAfterUpdate: 'AWAKE' | 'NEVER' | 'IMMEDIATE';
-      /**
-       * Language we should use
-       */
-      Language: string;
-      /**
-       * Should we include the Instance Label in Value Labels on MultiInstance Devices
-       */
-      IncludeInstanceLabel: boolean;
+			RefreshAllUserCodes: boolean;
+			/**
+			 * Should we send the Node/Value Notifications on Driver Unloading - Read comments in Driver::~Driver() method about possible race conditions
+			 */
+			NotifyOnDriverUnload: boolean;
+			/**
+			 * Alters how OZW determines when to Encrypt Messages to certain CommandClasses.
+			 * Options are:
+			 * "ESSENTIAL" - Those CommandClasses that MUST be encrypted.
+			 * "SUPPORTED" (default) is any CommandClass advertisied in the SecureNIF frame
+			 * "CUSTOM" - A list of CommandClasses specified in the "CustomSecureCC" option
+			 */
+			SecurityStrategy: "ESSENTIAL" | "SUPPORTED" | "CUSTOM";
+			/**
+			 * What List of Custom CC should we always encrypt if SecurityStrategy is CUSTOM
+			 */
+			CustomSecuredCC: string;
+			/**
+			 * if we recieve a clear text message for a CC that is Secured, should we drop the message
+			 */
+			EnforceSecureReception: boolean;
+			/**
+			 * if we should automatically update config files for devices if they are out of date
+			 */
+			AutoUpdateConfigFile: boolean;
+			/**
+			 * Should we automatically Reload Nodes after a update
+			 */
+			ReloadAfterUpdate: "AWAKE" | "NEVER" | "IMMEDIATE";
+			/**
+			 * Language we should use
+			 */
+			Language: string;
+			/**
+			 * Should we include the Instance Label in Value Labels on MultiInstance Devices
+			 */
+			IncludeInstanceLabel: boolean;
 		}
 	}
 
@@ -311,45 +310,29 @@ declare module "openzwave-shared" {
 		on(event: "driver ready", listener: (homeId: number) => void): this;
 		on(event: "driver failed", listener: () => void): this;
 		on(
-			event:
-				| "polling enabled"
-				| "polling disabled"
-				| "node removed"
-				| "node added",
-			listener: (nodeId: number) => void
+			event: "polling enabled" | "polling disabled" | "node removed" | "node added",
+			listener: (nodeId: number) => void,
 		): this;
-		on(
-			event: "node event",
-			listener: (nodeId: number, data: any) => void
-		): this;
+		on(event: "node event", listener: (nodeId: number, data: any) => void): this;
 		on(
 			event: "node ready" | "node naming" | "node available",
-			listener: (nodeId: number, nodeInfo: ZWave.NodeInfo) => void
+			listener: (nodeId: number, nodeInfo: ZWave.NodeInfo) => void,
 		): this;
-		on(
-			event: "node reset",
-			listener: (nodeid: number) => void
-		): this;
-		on(
-			event: "user alert",
-			listener: (notification: ZWave.Notification, help: string) => void
-		): this;
-		on(
-			event: "manufacturer specific DB ready",
-			listener: () => void
-		): this;
+		on(event: "node reset", listener: (nodeid: number) => void): this;
+		on(event: "user alert", listener: (notification: ZWave.Notification, help: string) => void): this;
+		on(event: "manufacturer specific DB ready", listener: () => void): this;
 		on(
 			event: "value added" | "value changed" | "value refreshed",
-			listener: (nodeId: number, comClass: number, value: ZWave.Value) => void
+			listener: (nodeId: number, comClass: number, value: ZWave.Value) => void,
 		): this;
 		on(
 			event: "value removed",
-			listener: (nodeId: number, comClass: number, instance: number, index: number) => void
+			listener: (nodeId: number, comClass: number, instance: number, index: number) => void,
 		): this;
 
 		on(
 			event: "notification",
-			listener: (nodeId: number, notification: ZWave.Notification, help: string) => void
+			listener: (nodeId: number, notification: ZWave.Notification, help: string) => void,
 		): this;
 		on(event: "scan complete", listener: () => void): this;
 		on(
@@ -360,18 +343,13 @@ declare module "openzwave-shared" {
 				notif: number,
 				message: string,
 				command: number,
-			) => void
+			) => void,
 		): this;
 		on(event: string, listener: (...args: any[]) => void): this;
 
 		// Exposed by "openzwave-config.cc"
 
-		setConfigParam(
-			nodeId: number,
-			param: number,
-			value: number,
-			size?: number
-		): void;
+		setConfigParam(nodeId: number, param: number, value: number, size?: number): void;
 		requestConfigParam(nodeId: number, param: number): void;
 		requestAllConfigParams(nodeId: number): void;
 
@@ -472,16 +450,9 @@ declare module "openzwave-shared" {
 
 		addAssociation(nodeId: number, groupIdx: number, tgtNodeId: number): void;
 
-		removeAssociation(
-			nodeId: number,
-			groupIdx: number,
-			tgtNodeId: number
-		): void;
+		removeAssociation(nodeId: number, groupIdx: number, tgtNodeId: number): void;
 
-		isMultiInstance(
-			nodeId: number,
-			groupIdx: number,
-		): boolean;
+		isMultiInstance(nodeId: number, groupIdx: number): boolean;
 
 		getAssociationsInstances(nodeId: number, groupIdx: number): Array<ZWave.InstanceAssociation>;
 
@@ -747,7 +718,7 @@ declare module "openzwave-shared" {
 			class_id: number,
 			instance: number,
 			index: number,
-			value: string | boolean | number
+			value: string | boolean | number,
 		): void;
 		setValue(valueId: ZWave.ValueId, value: string | boolean | number): void;
 
@@ -760,13 +731,7 @@ declare module "openzwave-shared" {
 		 * Ask OZW to verify the value change before notifying the application.
 		 */
 		setChangeVerified(valueId: ZWave.ValueId, enabled: boolean): void;
-		setChangeVerified(
-			nodeid: number,
-			class_id: number,
-			instance: number,
-			index: number,
-			enabled: boolean
-		): void;
+		setChangeVerified(nodeid: number, class_id: number, instance: number, index: number, enabled: boolean): void;
 		/**
 		 * Get number of thermostat switch points.
 		 */
@@ -776,28 +741,15 @@ declare module "openzwave-shared" {
 
 		clearSwitchPoints(valueId: ZWave.ValueId): void;
 
-		removeSwitchPoint(
-			valueId: ZWave.ValueId,
-			switchPoint: ZWave.SwitchPoint
-		): void;
+		removeSwitchPoint(valueId: ZWave.ValueId, switchPoint: ZWave.SwitchPoint): void;
 
-		getValueAsBitSet(
-			valueId: ZWave.ValueId,
-			pos: number
-		): number;
+		getValueAsBitSet(valueId: ZWave.ValueId, pos: number): number;
 
-		setBitMask(
-			valueId: ZWave.ValueId,
-			mask: number
-		): void;
+		setBitMask(valueId: ZWave.ValueId, mask: number): void;
 
-		getBitMask(
-			valueId: ZWave.ValueId
-		): number;
+		getBitMask(valueId: ZWave.ValueId): number;
 
-		getBitSetSize(
-			valueId: ZWave.ValueId
-		): number;
+		getBitSetSize(valueId: ZWave.ValueId): number;
 
 		// Exposed by "openzwave-polling.cc"
 
