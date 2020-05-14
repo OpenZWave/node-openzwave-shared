@@ -356,7 +356,7 @@ declare module "openzwave-shared" {
 			listener: (
 				nodeId: number,
 				state: ZWave.ControllerState,
-				notif: number,
+				notif: ZWave.ControllerError,
 				message: string,
 				command: number,
 			) => void,
