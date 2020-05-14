@@ -225,7 +225,7 @@ declare module "openzwave-shared" {
 			/**
 			 * Should the above value be how long to wait between polling the network devices, or how often all devices should be polled
 			 */
-			IntervalBetweenPools: boolean;
+			IntervalBetweenPolls: boolean;
 			/**
 			 * After Processing a Group Changed Notification, should we update the Return Routes Map on affected devices
 			 */
