@@ -168,6 +168,7 @@ namespace OZW {
 		static NAN_METHOD(GetNodeProductType);
 		static NAN_METHOD(GetNodeProductId);
 		static NAN_METHOD(GetNodeNeighbors);
+		static NAN_METHOD(GetNodeClassInformation);
 	#if OPENZWAVE_16
 		static NAN_METHOD(GetMetaData);
 		static NAN_METHOD(GetChangeLog);

@@ -631,6 +631,11 @@ declare module "openzwave-shared" {
 		getNodeNeighbors(nodeId: number): Array<number>;
 
 		/**
+		 * Gets the Command Class Version for a node.
+		 */
+		getNodeClassInformation(nodeId: number, commClass: number): number;
+
+		/**
 		 * LEGACY MODE (using setNodeOn)
 		 * @deprecated
 		 */
