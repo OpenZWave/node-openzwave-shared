@@ -57,6 +57,22 @@ declare module "openzwave-shared" {
 			NodeFailed = 10,
 		}
 
+        export enum ControllerError {
+            None = 0,
+            ButtonNotFound = 1, /* Button */
+            NodeNotFound = 2,   /* Button */
+            NotBridge = 3,      /* Button */
+            NotSUC = 4,         /* CreateNewPrimary */
+            NotSecondary = 5,   /* CreateNewPrimary */
+            NotPrimary = 6,     /* RemoveFailedNode, AddNodeToNetwork */
+            IsPrimary = 7,      /* ReceiveConfiguration */
+            NotFound = 8,       /* RemoveFailedNode */
+            Busy = 9,           /* RemoveFailedNode, RequestNetworkUpdate */
+            Failed = 10,        /* RemoveFailedNode, RequestNetworkUpdate */
+            Disabled = 11,      /* RequestNetworkUpdate error */
+            Overflow = 12,      /* RequestNetworkUpdate error */
+        }
+
 		export enum LogLevel {
 			NoLogging = 0,
 			AllMessages = 1,
@@ -340,7 +356,7 @@ declare module "openzwave-shared" {
 			listener: (
 				nodeId: number,
 				state: ZWave.ControllerState,
-				notif: number,
+				notif: ZWave.ControllerError,
 				message: string,
 				command: number,
 			) => void,
@@ -493,6 +509,12 @@ declare module "openzwave-shared" {
 		 * This command will ask a Node to update its Neighbor Tables.
 		 */
 		requestNodeNeighborUpdate(nodeId: number): boolean;
+
+        /**
+         * Ask a Node to update its update its Return Route to the Controller
+         * This command will ask a Node to update its Return Route to the Controller.
+         */
+        assignReturnRoute(nodeId: number): boolean;
 
 		/**
 		 * Ask a Node to delete all Return Route.
