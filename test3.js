@@ -1,4 +1,4 @@
-var ZWaveModule = require('openzwave-shared');
+var ZWaveModule = require('./lib/openzwave-shared.js');
 var zwave = new ZWaveModule();
 
 console.log(zwave);
