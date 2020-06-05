@@ -2,6 +2,11 @@ node-openzwave-shared
 =====================
 [Linux![Linux Build Status](https://travis-ci.org/OpenZWave/node-openzwave-shared.svg?branch=master)](https://travis-ci.org/OpenZWave/node-openzwave-shared)
 [Windows![Windows Build status](https://ci.appveyor.com/api/projects/status/txg360huomtpgc8o?svg=true)](https://ci.appveyor.com/project/ekarak/node-openzwave-shared)
+
+![Linux Build status](https://github.com/OpenZWave/node-openzwave-shared/workflows/Linux%20Builds/badge.svg)
+
+![Windows Build status](https://github.com/OpenZWave/node-openzwave-shared/workflows/Windows%20Builds/badge.svg)
+
 [![Join the chat at https://gitter.im/OpenZWave/node-openzwave-shared](https://badges.gitter.im/OpenZWave/node-openzwave-shared.svg)](https://gitter.im/OpenZWave/node-openzwave-shared?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![Google group](http://www.google.com/images/icons/product/groups-32.png)](https://groups.google.com/d/forum/node-openzwave-shared)
 

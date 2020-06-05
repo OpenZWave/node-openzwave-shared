@@ -1,0 +1,31 @@
+name: Linux Builds
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [0.12, 4.x, 6.x, 8.x, 10.x, 11.x, 12.x]
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install ubuntu-toolchain-r/test      
+      run: sudo add-apt-repository ppa:ubuntu-toolchain-r/test
+    - name: Install libudev-dev
+      run: sudo apt install libudev-dev
+    - name: Build open-zwave-latest
+      run: wget https://github.com/OpenZWave/open-zwave/archive/master.zip && unzip master.zip && cd open-zwave-master && sudo make install && sudo ldconfig /usr/local/lib /usr/local/lib64 && cd ..
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+    - run: npm install -g node-gyp
+    - run: npm install
+    - run: npm run build --if-present
+    - run: npm test
+      env:
+        CI: true
