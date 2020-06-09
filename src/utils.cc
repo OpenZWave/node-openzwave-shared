@@ -316,7 +316,6 @@ void populateNode(
 void populateValueId(v8::Local<v8::Object> &nodeobj, OpenZWave::ValueID value)
 {
 	Nan::EscapableHandleScope handle_scope;
-	OpenZWave::Manager *mgr = OpenZWave::Manager::Get();
 	::std::string buffer = getValueIdDescriptor(value);
 	/*
 		* Common value types.
@@ -340,14 +339,28 @@ void populateValueId(v8::Local<v8::Object> &nodeobj, OpenZWave::ValueID value)
 #endif
 	AddIntegerProp(nodeobj, instance, value.GetInstance());
 	AddIntegerProp(nodeobj, index, value.GetIndex());
-	AddStringProp(nodeobj, label, mgr->GetValueLabel(value).c_str());
-	AddStringProp(nodeobj, units, mgr->GetValueUnits(value).c_str());
-	AddStringProp(nodeobj, help, mgr->GetValueHelp(value).c_str());
-	AddBooleanProp(nodeobj, read_only, mgr->IsValueReadOnly(value));
-	AddBooleanProp(nodeobj, write_only, mgr->IsValueWriteOnly(value));
-	AddIntegerProp(nodeobj, min, mgr->GetValueMin(value));
-	AddIntegerProp(nodeobj, max, mgr->GetValueMax(value));
-	AddBooleanProp(nodeobj, is_polled, mgr->IsValuePolled(value));
+
+	::std::string help, label, units;
+	bool read_only, write_only, is_polled;
+	int32 min, max
+
+	OZWManagerAssign(label, GetValueLabel, value);
+	OZWManagerAssign(units, GetValueUnits, value);
+	OZWManagerAssign(help, GetValueHelp, value);
+	OZWManagerAssign(read_only, IsValueReadOnly, value);
+	OZWManagerAssign(write_only, IsValueWriteOnly, value);
+	OZWManagerAssign(min, GetValueMin, value);
+	OZWManagerAssign(max, GetValueMax, value);
+	OZWManagerAssign(is_polled, IsValuePolled, value);
+
+	AddStringProp(nodeobj, label, label);
+	AddStringProp(nodeobj, units, units);
+	AddStringProp(nodeobj, help, help);
+	AddBooleanProp(nodeobj, read_only, read_only);
+	AddBooleanProp(nodeobj, write_only, write_only);
+	AddIntegerProp(nodeobj, min, min);
+	AddIntegerProp(nodeobj, max, max);
+	AddBooleanProp(nodeobj, is_polled, is_polled);
 }
 
 // create a V8 object from a OpenZWave::ValueID
