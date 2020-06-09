@@ -340,27 +340,27 @@ void populateValueId(v8::Local<v8::Object> &nodeobj, OpenZWave::ValueID value)
 	AddIntegerProp(nodeobj, instance, value.GetInstance());
 	AddIntegerProp(nodeobj, index, value.GetIndex());
 
-	::std::string help, label, units;
-	bool read_only, write_only, is_polled;
-	int32 min, max
+	::std::string helpVal, labelVal, unitsVal;
+	bool read_onlyVal = false, write_onlyVal = false, is_polledVal = false;
+	int32 minVal = 0, maxVal = 0;
 
-	OZWManagerAssign(label, GetValueLabel, value);
-	OZWManagerAssign(units, GetValueUnits, value);
-	OZWManagerAssign(help, GetValueHelp, value);
-	OZWManagerAssign(read_only, IsValueReadOnly, value);
-	OZWManagerAssign(write_only, IsValueWriteOnly, value);
-	OZWManagerAssign(min, GetValueMin, value);
-	OZWManagerAssign(max, GetValueMax, value);
-	OZWManagerAssign(is_polled, IsValuePolled, value);
+	OZWManagerAssign(labelVal, GetValueLabel, value);
+	OZWManagerAssign(unitsVal, GetValueUnits, value);
+	OZWManagerAssign(helpVal, GetValueHelp, value);
+	OZWManagerAssign(read_onlyVal, IsValueReadOnly, value);
+	OZWManagerAssign(write_onlyVal, IsValueWriteOnly, value);
+	OZWManagerAssign(minVal, GetValueMin, value);
+	OZWManagerAssign(maxVal, GetValueMax, value);
+	OZWManagerAssign(is_polledVal, IsValuePolled, value);
 
-	AddStringProp(nodeobj, label, label);
-	AddStringProp(nodeobj, units, units);
-	AddStringProp(nodeobj, help, help);
-	AddBooleanProp(nodeobj, read_only, read_only);
-	AddBooleanProp(nodeobj, write_only, write_only);
-	AddIntegerProp(nodeobj, min, min);
-	AddIntegerProp(nodeobj, max, max);
-	AddBooleanProp(nodeobj, is_polled, is_polled);
+	AddStringProp(nodeobj, label, labelVal);
+	AddStringProp(nodeobj, units, unitsVal);
+	AddStringProp(nodeobj, help, helpVal);
+	AddBooleanProp(nodeobj, read_only, read_onlyVal);
+	AddBooleanProp(nodeobj, write_only, write_onlyVal);
+	AddIntegerProp(nodeobj, min, minVal);
+	AddIntegerProp(nodeobj, max, maxVal);
+	AddBooleanProp(nodeobj, is_polled, is_polledVal);
 }
 
 // create a V8 object from a OpenZWave::ValueID
