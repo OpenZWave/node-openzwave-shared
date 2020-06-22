@@ -25,7 +25,7 @@ sudo dpkg -i *openzwave*.deb
 ```
 
 Or you can choose Hercules' path of blight and
-### Download the OpenZWave Unix source from [the official website](http://old.openzave.com/downloads/)
+### Download the OpenZWave Unix source from [the official website](http://old.openzwave.com/downloads/)
 ```wget http://old.openzwave.com/downloads/openzwave-1.4.1.tar.gz```
 
 #### Untar
