@@ -430,6 +430,11 @@ declare module "openzwave-shared" {
 		getLibraryVersion(): string;
 
 		/**
+		 * Get the version of OpenZWave.
+		 */
+		getOzwVersion(): String;
+
+		/**
 		 * Get a string containing the Z-Wave API library type used by a controller.
 		 *
 		 * The controller should never return a slave library type. For a
