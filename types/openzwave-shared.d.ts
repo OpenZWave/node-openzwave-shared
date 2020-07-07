@@ -57,21 +57,21 @@ declare module "openzwave-shared" {
 			NodeFailed = 10,
 		}
 
-        export enum ControllerError {
-            None = 0,
-            ButtonNotFound = 1, /* Button */
-            NodeNotFound = 2,   /* Button */
-            NotBridge = 3,      /* Button */
-            NotSUC = 4,         /* CreateNewPrimary */
-            NotSecondary = 5,   /* CreateNewPrimary */
-            NotPrimary = 6,     /* RemoveFailedNode, AddNodeToNetwork */
-            IsPrimary = 7,      /* ReceiveConfiguration */
-            NotFound = 8,       /* RemoveFailedNode */
-            Busy = 9,           /* RemoveFailedNode, RequestNetworkUpdate */
-            Failed = 10,        /* RemoveFailedNode, RequestNetworkUpdate */
-            Disabled = 11,      /* RequestNetworkUpdate error */
-            Overflow = 12,      /* RequestNetworkUpdate error */
-        }
+		export enum ControllerError {
+			None = 0,
+			ButtonNotFound = 1, /* Button */
+			NodeNotFound = 2,   /* Button */
+			NotBridge = 3,      /* Button */
+			NotSUC = 4,         /* CreateNewPrimary */
+			NotSecondary = 5,   /* CreateNewPrimary */
+			NotPrimary = 6,     /* RemoveFailedNode, AddNodeToNetwork */
+			IsPrimary = 7,      /* ReceiveConfiguration */
+			NotFound = 8,       /* RemoveFailedNode */
+			Busy = 9,           /* RemoveFailedNode, RequestNetworkUpdate */
+			Failed = 10,        /* RemoveFailedNode, RequestNetworkUpdate */
+			Disabled = 11,      /* RequestNetworkUpdate error */
+			Overflow = 12,      /* RequestNetworkUpdate error */
+		}
 
 		export enum LogLevel {
 			NoLogging = 0,
@@ -428,6 +428,11 @@ declare module "openzwave-shared" {
 		 * Get the version of the Z-Wave API library used by a controller.
 		 */
 		getLibraryVersion(): string;
+
+		/**
+		 * Get the version of OpenZWave.
+		 */
+		getOzwVersion(): String;
 
 		/**
 		 * Get a string containing the Z-Wave API library type used by a controller.
