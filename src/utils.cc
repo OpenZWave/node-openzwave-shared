@@ -627,8 +627,8 @@ const ::std::string getNotifHelpMsg(Notification const *n)
 	case Notification::Type_UserAlerts:
 		str = "UserAlerts";
 		break;
-	case Notification::Type_ManufacturerSpecificDBRead:
-		str = "ManuacturerSpecificDBRead";
+	case Notification::Type_ManufacturerSpecificDBReady:
+		str = "ManuacturerSpecificDBReady";
 		break;
 	}
 	return str;
